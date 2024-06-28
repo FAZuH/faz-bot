@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
   faz-bot:
+    container_name: faz-bot
     build:
       context: ./faz-bot
     restart: unless-stopped
@@ -16,6 +17,7 @@ services:
       - mysql
 
   faz-db:
+    container_name: faz-db
     build:
       context: ./faz-db
     restart: unless-stopped
