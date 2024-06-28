@@ -1,0 +1,6 @@
+[submodule "faz-bot"]
+	path = faz-bot
+	url = git@github.com:FAZuH/faz-bot
+[submodule "faz-db"]
+	path = faz-db
+	url = git@github.com:FAZuH/faz-db
