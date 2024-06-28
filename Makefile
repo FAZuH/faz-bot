@@ -12,8 +12,12 @@ down:
 
 .PHONY: sql
 sql:
-	docker-compose -f ./docker-compose.yml exec mysql mariadb -uroot -ppassword fazbot
+	docker-compose -f ./docker-compose.yml exec mysql mariadb -uroot -ppassword
 
+
+.PHONY: db-build
+db-build:
+	docker-compose --file ./docker-compose.yml up --detach --build faz-db
 
 .PHONY: db-up
 db-up:
@@ -23,6 +27,11 @@ db-up:
 db-down:
 	docker-compose --file ./docker-compose.yml down faz-db
 
+
+.PHONY: bot-build
+bot-build:
+	docker-compose --file ./docker-compose.yml up --detach --build faz-bot
+
 .PHONY: bot-up
 bot-up:
 	docker-compose --file ./docker-compose.yml up --detach faz-bot
@@ -31,6 +40,11 @@ bot-up:
 bot-down:
 	docker-compose --file ./docker-compose.yml down faz-bot
 
+
+.PHONY: sql-build
+sql-build:
+	docker-compose --file ./docker-compose.yml up --detach --build mysql
+
 .PHONY: sql-up
 sql-up:
 	docker-compose --file ./docker-compose.yml up --detach mysql
@@ -38,6 +52,7 @@ sql-up:
 .PHONY: sql-down
 sql-down:
 	docker-compose --file ./docker-compose.yml down mysql
+
 
 
 .PHONY: test-sql-up
