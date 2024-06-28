@@ -1,10 +1,15 @@
 .PHONY: build
-build:
+build: wait-for-mysql
 	docker-compose -f ./docker-compose.yml up --detach --build
 
 .PHONY: up
-up:
+up: wait-for-mysql
 	docker-compose -f ./docker-compose.yml up --detach
+
+.PHONY: wait-for-mysql
+wait-for-mysql:
+	@echo "Waiting for MySQL to be ready..."
+	@./wait-for-it.sh -t 5 mysql:3306 -- echo "MySQL is ready!"
 
 .PHONY: down
 down:
