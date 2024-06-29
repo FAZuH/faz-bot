@@ -44,8 +44,3 @@ services:
     volumes:
       - ./mysql/data:/var/lib/mysql
       - ./mysql/init:/docker-entrypoint-initdb.d
-    healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -ppassword"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
