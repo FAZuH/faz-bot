@@ -32,6 +32,7 @@ services:
 
   mysql:
     image: mariadb:11.4.2
+    container_name: mysql
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: password

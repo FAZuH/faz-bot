@@ -28,6 +28,10 @@ db-up:
 db-down:
 	docker-compose --file ./docker-compose.yml down faz-db
 
+.PHONY: db-bash
+db-bash:
+	docker exec -it faz-db /bin/bash
+
 .PHONY: db
 db:
 	docker attach --no-stdin faz-db
@@ -44,6 +48,10 @@ bot-up:
 .PHONY: bot-down
 bot-down:
 	docker-compose --file ./docker-compose.yml down faz-bot
+
+.PHONY: bot-bash
+bot-bash:
+	docker exec -it bot-bash /bin/bash
 
 .PHONY: bot
 bot:
@@ -62,6 +70,10 @@ sql-up:
 sql-down:
 	docker-compose --file ./docker-compose.yml down mysql
 
+.PHONY: sql-bash
+sql-bash:
+	docker exec -it mysql /bin/bash
+
 .PHONY: sql
 sql:
 	docker-compose --file ./docker-compose.yml exec mysql mariadb -uroot -ppassword
@@ -69,11 +81,11 @@ sql:
 
 .PHONY: pma-up
 pma-up:
-	docker-compose --file ./docker-compose.yml up --detach mysql
+	docker-compose --file ./docker-compose.yml up --detach phpmyadmin
 
 .PHONY: pma-down
 pma-down:
-	docker-compose --file ./docker-compose.yml down mysql
+	docker-compose --file ./docker-compose.yml down phpmyadmin
 
 
 
