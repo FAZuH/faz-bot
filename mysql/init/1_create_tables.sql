@@ -1,4 +1,23 @@
-### ----- faz-db database create tables -----
+### ----- create faz-bot database tables -----
+
+USE `faz-bot`;
+
+CREATE TABLE IF NOT EXISTS `banned_user` (
+    `user_id` bigint NOT NULL,
+    `reason` varchar(255) DEFAULT '',
+    `from` datetime NOT NULL,
+    `until` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `whitelisted_guild` (
+    `guild_id` bigint NOT NULL,
+    `guild_name` varchar(32) NOT NULL,
+    `from` datetime NOT NULL,
+    `until` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+### ----- create faz-db database tables -----
 
 USE `faz-db`;
 
@@ -119,3 +138,4 @@ CREATE TABLE IF NOT EXISTS `player_info` (
     `first_join` datetime NOT NULL,
     PRIMARY KEY (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
