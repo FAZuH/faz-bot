@@ -44,3 +44,15 @@ services:
     volumes:
       - ./mysql/data:/var/lib/mysql
       - ./mysql/init:/docker-entrypoint-initdb.d
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      - PMA_HOST=mysql
+      - PMA_USER=faz
+      - PMA_PASSWORD=password
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql

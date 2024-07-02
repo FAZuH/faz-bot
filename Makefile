@@ -1,10 +1,10 @@
 .PHONY: build
 build: wait-for-mysql
-	docker-compose -f ./docker-compose.yml up --detach --build
+	docker-compose --file ./docker-compose.yml up --detach --build
 
 .PHONY: up
 up: wait-for-mysql
-	docker-compose -f ./docker-compose.yml up --detach
+	docker-compose --file ./docker-compose.yml up --detach
 
 .PHONY: wait-for-mysql
 wait-for-mysql:
@@ -13,11 +13,7 @@ wait-for-mysql:
 
 .PHONY: down
 down:
-	docker-compose -f ./docker-compose.yml down
-
-.PHONY: sql
-sql:
-	docker-compose -f ./docker-compose.yml exec mysql mariadb -uroot -ppassword
+	docker-compose --file ./docker-compose.yml down
 
 
 .PHONY: db-build
@@ -32,6 +28,10 @@ db-up:
 db-down:
 	docker-compose --file ./docker-compose.yml down faz-db
 
+.PHONY: db
+db:
+	docker attach --no-stdin faz-db
+
 
 .PHONY: bot-build
 bot-build:
@@ -45,6 +45,10 @@ bot-up:
 bot-down:
 	docker-compose --file ./docker-compose.yml down faz-bot
 
+.PHONY: bot
+bot:
+	docker attach --no-stdin faz-bot
+
 
 .PHONY: sql-build
 sql-build:
@@ -56,6 +60,19 @@ sql-up:
 
 .PHONY: sql-down
 sql-down:
+	docker-compose --file ./docker-compose.yml down mysql
+
+.PHONY: sql
+sql:
+	docker-compose --file ./docker-compose.yml exec mysql mariadb -uroot -ppassword
+
+
+.PHONY: pma-up
+pma-up:
+	docker-compose --file ./docker-compose.yml up --detach mysql
+
+.PHONY: pma-down
+pma-down:
 	docker-compose --file ./docker-compose.yml down mysql
 
 
@@ -76,17 +93,6 @@ test-sql-down:
 	docker stop fazbot-test-db
 
 
-
-.PHONY: run
-run:
-	source .venv/bin/activate
-	python -m fazbot
-
-.PHONY: install
-install:
-	python3.12 -m venv .venv
-	. .venv/bin/activate && pip install -r requirements.txt
-	cp .env-example .env
 
 .PHONY: lint
 lint:
