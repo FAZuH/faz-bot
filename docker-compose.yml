@@ -29,6 +29,10 @@ services:
       MYSQL_FAZDB_DATABASE: faz-db
     depends_on:
       - mysql
+    expose:
+      - 8000
+    networks:
+      - monitoring
 
   mysql:
     image: mariadb:11.4.2
@@ -41,7 +45,7 @@ services:
     expose:
       - 3306
     ports:
-      - "3306:3306"
+      - "127.21.0.2:3306:3306"
     volumes:
       - ./mysql/data:/var/lib/mysql
       - ./mysql/init:/docker-entrypoint-initdb.d
@@ -50,10 +54,36 @@ services:
     image: phpmyadmin/phpmyadmin
     container_name: phpmyadmin
     environment:
-      - PMA_HOST=mysql
-      - PMA_USER=faz
-      - PMA_PASSWORD=password
+      PMA_HOST: mysql
+      PMA_USER: faz
+      PMA_PASSWORD: password
     ports:
-      - "8080:80"
+      - "127.0.0.1:8080:80"
     depends_on:
       - mysql
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "127.0.0.1:9090:9090"
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+    driver: bridge

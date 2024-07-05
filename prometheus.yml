@@ -1,0 +1,7 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "faz-db"
+    static_configs:
+      - targets: ["faz-db:8000"]
