@@ -88,22 +88,22 @@ pma-down:
 	docker-compose --file ./docker-compose.yml down phpmyadmin
 
 
-.PHONY: prom-up
-prom-up:
-	docker-compose --file ./docker-compose.yml up --detach prometheus
-
-.PHONY: prom-down
-prom-down:
-	docker-compose --file ./docker-compose.yml down prometheus
-
-
-.PHONY: graf-up
-graf-up:
-	docker-compose --file ./docker-compose.yml up --detach grafana
-
-.PHONY: graf-down
-graf-down:
-	docker-compose --file ./docker-compose.yml down grafana
+# .PHONY: prom-up
+# prom-up:
+# 	docker-compose --file ./docker-compose.yml up --detach prometheus
+#
+# .PHONY: prom-down
+# prom-down:
+# 	docker-compose --file ./docker-compose.yml down prometheus
+#
+#
+# .PHONY: graf-up
+# graf-up:
+# 	docker-compose --file ./docker-compose.yml up --detach grafana
+#
+# .PHONY: graf-down
+# graf-down:
+# 	docker-compose --file ./docker-compose.yml down grafana
 
 
 
