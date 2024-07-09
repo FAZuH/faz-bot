@@ -7,16 +7,12 @@ services:
       context: ./faz-bot
     restart: unless-stopped
     environment:
-      MYSQL_HOST: mysql
+      MYSQL_HOST: "mysql"
       MYSQL_PORT: 3306
       MYSQL_USER: faz
       MYSQL_PASSWORD: password
       MYSQL_FAZBOT_DATABASE: faz-bot
       MYSQL_FAZDB_DATABASE: faz-db
-    depends_on:
-      - mysql
-    networks:
-      - faz-network
 
   faz-db:
     container_name: faz-db
@@ -24,7 +20,7 @@ services:
       context: ./faz-db
     restart: unless-stopped
     environment:
-      MYSQL_HOST: mysql
+      MYSQL_HOST: "mysql"
       MYSQL_PORT: 3306
       MYSQL_USER: faz
       MYSQL_PASSWORD: password
@@ -35,6 +31,8 @@ services:
       - 8000
     networks:
       - faz-network
+    volumes:
+      - ./faz-db/logs:/app/logs
 
   mysql:
     image: mariadb:11.4.2
@@ -47,7 +45,7 @@ services:
     expose:
       - 3306
     ports:
-      - "3306:3306"
+      - "127.0.0.1:3306:3306"
     volumes:
       - ./mysql/data:/var/lib/mysql
       - ./mysql/init:/docker-entrypoint-initdb.d
@@ -65,6 +63,8 @@ services:
       - "127.0.0.1:8080:80"
     depends_on:
       - mysql
+    networks:
+      - faz-network
 
   prometheus:
     image: prom/prometheus
@@ -73,8 +73,6 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "127.0.0.1:9090:9090"
-    networks:
-      - faz-network
 
   grafana:
     image: grafana/grafana
@@ -85,9 +83,6 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     depends_on:
       - prometheus
-    networks:
-      - faz-network
 
 networks:
   faz-network:
-    driver: bridge
