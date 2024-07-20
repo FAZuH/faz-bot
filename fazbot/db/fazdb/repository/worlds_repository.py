@@ -1,8 +1,9 @@
 from __future__ import annotations
-from typing import Any, Iterable, TYPE_CHECKING
+from typing import Any, Iterable, Literal, Sequence, TYPE_CHECKING
 
 from ..._base_repository import BaseRepository
 from ..model import Worlds
+from loguru import logger
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
@@ -20,3 +21,11 @@ class WorldsRepository(BaseRepository[Worlds, Any]):
         async with self.database.enter_async_session() as session:
             await session.execute(stmt)
             await self.insert(entity, session=session, replace_on_duplicate=True, columns_to_replace=["player_count"])
+
+    async def get_worlds(self, sortby: Literal["player", "time"]) -> Sequence[Worlds]:
+        orderby_ = self.model.player_count if sortby == "player" else self.model.time_created
+        # stmt = self.table.select().order_by(orderby_)
+        stmt = self.table.select()
+        async with self.database.enter_async_session() as session:
+            result = await session.execute(stmt)
+            return result.scalars().all()
