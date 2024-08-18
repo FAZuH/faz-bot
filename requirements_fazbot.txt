@@ -57,6 +57,7 @@ setuptools==70.0.0
 six==1.16.0
 SQLAlchemy==2.0.31
 stack-data==0.6.3
+tabulate==0.9.0
 tornado==6.4.1
 traitlets==5.14.3
 typing_extensions==4.12.2

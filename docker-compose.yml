@@ -4,23 +4,31 @@ services:
   faz-bot:
     container_name: faz-bot
     build:
-      context: ./faz-bot
+      context: .
+      dockerfile: Dockerfile.bot
     restart: unless-stopped
     environment:
-      MYSQL_HOST: "mysql"
+      MYSQL_HOST: mysql
       MYSQL_PORT: 3306
       MYSQL_USER: faz
       MYSQL_PASSWORD: password
       MYSQL_FAZBOT_DATABASE: faz-bot
       MYSQL_FAZDB_DATABASE: faz-db
+    depends_on:
+      - mysql
+    networks:
+      - faz-network
+    volumes:
+      - ./logs/fazbot:/app/logs
 
   faz-db:
     container_name: faz-db
     build:
-      context: ./faz-db
+      context: .
+      dockerfile: Dockerfile.db
     restart: unless-stopped
     environment:
-      MYSQL_HOST: "mysql"
+      MYSQL_HOST: mysql
       MYSQL_PORT: 3306
       MYSQL_USER: faz
       MYSQL_PASSWORD: password
@@ -32,7 +40,7 @@ services:
     networks:
       - faz-network
     volumes:
-      - ./faz-db/logs:/app/logs
+      - ./logs/fazdb:/app/logs
 
   mysql:
     image: mariadb:11.4.2
