@@ -1,3 +1,6 @@
 .git
 mysql/data
+.vscode
+.env
+logs
 
