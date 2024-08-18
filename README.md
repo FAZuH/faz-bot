@@ -1,6 +1,10 @@
 # faz-docker
 
-Docker deployment repository for faz-bot and faz-db. Inspired by motoki317's [moto-bot](https://github.com/motoki317/moto-bot/blob/master/README.md).
+Wynncraft utility and statistics discord bot. Inspired by motoki317's [moto-bot](https://github.com/motoki317/moto-bot/blob/master/README.md).
+
+> [!WARNING]
+> 
+> This repository is currently in development phase, and may undergo many unstable and/or breaking changes.
 
 ## Development
 
@@ -16,10 +20,12 @@ For debugging:
 - `make bot-down` to stop only the faz-bot container.
 - `make bot-bash` to open bash shell on faz-bot container.
 - `make bot` to attach to faz-bot container standard output.
+
 - `make db-up` to launch only the faz-db container.
 - `make db-down` to stop only the faz-db container.
 - `make db-bash` to open bash shell on faz-db container.
 - `make db` to attach to faz-db container standard output.
+
 - `make sql-up` to launch only the DB container.
 - `make sql-down` to stop only the DB container.
 - `make sql-bash` to open bash shell on DB container.
