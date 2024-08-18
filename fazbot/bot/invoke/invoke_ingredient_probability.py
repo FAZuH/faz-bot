@@ -1,7 +1,7 @@
 from __future__ import annotations
 from decimal import Decimal
 import re
-from typing import Any, TYPE_CHECKING
+from typing import Any, TYPE_CHECKING, override
 
 from nextcord import Embed, Interaction
 
@@ -27,7 +27,7 @@ class InvokeIngredientProbability(Invoke):
         self._loot_quality = loot_quality
         self._ing_util = IngredientUtil(self._base_chance, self._loot_quality, self._loot_bonus)
 
-    # override
+    @override
     @classmethod
     def set_assets(cls, assets: dict[str, File]) -> None:
         cls.ASSET_DECAYINGHEART = cls._get_from_assets(assets, "decayingheart.png")

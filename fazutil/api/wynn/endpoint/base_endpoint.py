@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ..._http_request import HttpRequest
+    from ...http_request import HttpRequest
 
 
 class BaseEndpoint(ABC):

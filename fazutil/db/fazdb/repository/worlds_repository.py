@@ -3,12 +3,12 @@ from typing import Any, Iterable, Literal, Sequence, TYPE_CHECKING
 
 from sqlalchemy import desc, select
 
-from ..._base_repository import BaseRepository
+from ...base_repository import BaseRepository
 from ..model import Worlds
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
-    from ..._base_mysql_database import BaseMySQLDatabase
+    from ...base_mysql_database import BaseMySQLDatabase
 
 
 class WorldsRepository(BaseRepository[Worlds, Any]):

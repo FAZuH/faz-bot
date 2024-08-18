@@ -1,4 +1,4 @@
-from .._base_mysql_database import BaseMySQLDatabase
+from ..base_mysql_database import BaseMySQLDatabase
 from .model.base_fazdb_model import BaseFazdbModel
 from .repository import *
 

@@ -1,5 +1,5 @@
 from abc import ABC
-from ._base_database import BaseDatabase
+from .base_database import BaseDatabase
 
 
 class BaseMySQLDatabase(BaseDatabase, ABC):

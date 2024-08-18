@@ -1,6 +1,6 @@
 from __future__ import annotations
 from decimal import Decimal
-from typing import Any, Callable, TYPE_CHECKING
+from typing import Any, Callable, TYPE_CHECKING, override
 
 from nextcord import ButtonStyle, Embed, Interaction, ui
 
@@ -31,7 +31,7 @@ class InvokeCraftedProbability(Invoke):
         self._craftutil = CraftedUtil(self._parse_ings_str(ing_strs))
         self._view = self._View(self)
 
-    # override
+    @override
     @classmethod
     def set_assets(cls, assets: dict[str, File]) -> None:
         cls.ASSET_CRAFTINGTABLE = cls._get_from_assets(assets, "craftingtable.png")
@@ -129,7 +129,7 @@ class InvokeCraftedProbability(Invoke):
             self._interaction = cmd._interaction
             self._craftutil = cmd._craftutil
 
-        # override
+        @override
         async def on_timeout(self) -> None:
             # Disable all items on timeout
             for item in self.children:

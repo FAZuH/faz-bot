@@ -1,7 +1,7 @@
 from __future__ import annotations
 from asyncio import subprocess
 import subprocess
-from typing import Any, Iterable
+from typing import Any, Iterable, override
 
 import nextcord
 from nextcord import Interaction
@@ -13,13 +13,13 @@ from ._cog_base import CogBase
 
 class Admin(CogBase):
 
-    # override
+    @override
     def _setup(self, whitelisted_guild_ids: Iterable[int]) -> None:
         for app_cmd in self.application_commands:
             app_cmd.add_guild_rollout(self._bot.app.properties.DEV_SERVER_ID)
             self._bot.client.add_application_command(app_cmd, overwrite=True, use_rollout=True)
 
-    # override
+    @override
     def cog_application_command_check(self, interaction: Interaction[Any]):  # type: ignore
         return self._bot.checks.is_admin(interaction)
 

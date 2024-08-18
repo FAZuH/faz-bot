@@ -1,21 +1,18 @@
 from __future__ import annotations
-from threading import Thread
 from typing import TYPE_CHECKING
 
-from fazutil.heartbeat._heartbeat_task import HeartbeatTask
 from .task import RequestQueue, ResponseQueue, TaskApiRequest, TaskDbInsert
+from fazutil.heartbeat import BaseHeartbeat
 
 if TYPE_CHECKING:
     from fazutil.api import WynnApi
-    from fazutil.db.fazdb import FazdbDatabase
-    from fazutil.heartbeat.task import ITask
+    from fazutil.db import FazdbDatabase
 
 
-class Heartbeat(Thread):
+class Heartbeat(BaseHeartbeat):
 
     def __init__(self, api: WynnApi, db: FazdbDatabase) -> None:
-        super().__init__(target=self.run, daemon=True)
-        self._tasks: list[HeartbeatTask] = []
+        super().__init__()
 
         request_queue = RequestQueue()
         response_queue = ResponseQueue()
@@ -24,14 +21,3 @@ class Heartbeat(Thread):
 
         self._add_task(api_request)
         self._add_task(db_insert)
-
-    def start(self) -> None:
-        for task in self._tasks:
-            task.start()
-
-    def stop(self) -> None:
-        for task in self._tasks:
-            task.cancel()
-
-    def _add_task(self, task: ITask) -> None:
-        self._tasks.append(HeartbeatTask(task))

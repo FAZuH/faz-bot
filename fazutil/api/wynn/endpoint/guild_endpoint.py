@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, override
 
 from ..response import GuildResponse
 from .base_endpoint import BaseEndpoint
@@ -21,7 +21,7 @@ class GuildEndpoint(BaseEndpoint):
         )
         return GuildResponse(response.body, response.headers)
 
-    # override
     @property
+    @override
     def path(self) -> str:
         return "/v3/guild"

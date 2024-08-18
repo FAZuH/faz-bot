@@ -9,8 +9,8 @@ from sqlalchemy.dialects.mysql import insert
 if TYPE_CHECKING:
     from sqlalchemy import Table
     from sqlalchemy.ext.asyncio import AsyncSession
-    from ._base_mysql_database import BaseMySQLDatabase
-    from ._base_model import BaseModel
+    from .base_mysql_database import BaseMySQLDatabase
+    from .base_model import BaseModel
 
 
 class BaseRepository[T: BaseModel, ID](ABC):

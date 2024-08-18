@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import Any, TYPE_CHECKING
 
-from .._http_request import HttpRequest
+from ..http_request import HttpRequest
 from ._wynn_ratelimit_handler import WynnRatelimitHandler
 from .endpoint import GuildEndpoint, PlayerEndpoint
 

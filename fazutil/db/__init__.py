@@ -5,7 +5,7 @@ from .fazdb import FazdbDatabase
 
 
 if TYPE_CHECKING:
-    from ._base_database import BaseDatabase
-    from ._base_mysql_database import BaseMySQLDatabase
-    from ._base_model import BaseModel
-    from ._base_repository import BaseRepository
+    from .base_database import BaseDatabase
+    from .base_mysql_database import BaseMySQLDatabase
+    from .base_model import BaseModel
+    from .base_repository import BaseRepository

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Any, TYPE_CHECKING
+from typing import Any, TYPE_CHECKING, override
 
 from nextcord import Embed, Interaction
 
@@ -23,7 +23,7 @@ class InvokeConvertEmerald(Invoke):
         self._emeralds = Emeralds.from_string(emerald_string)
         self._emeralds.simplify()
 
-    # override
+    @override
     @classmethod
     def set_assets(cls, assets: dict[str, File]) -> None:
         cls.ASSET_LIQUIDEMERALD = cls._get_from_assets(assets, "liquidemerald.png")
@@ -34,14 +34,12 @@ class InvokeConvertEmerald(Invoke):
 
     def _get_embed(self, interaction: Interaction[Any], emeralds: Emeralds) -> Embed:
         set_price_tm, set_price_silverbull = EmeraldUtil.get_set_price(emeralds)
-        set_price_tm.simplify()
-        set_price_silverbull.simplify()
         embed_resp = Embed(title="Emerald Convertor", color=8894804)
 
         self._set_embed_thumbnail_with_asset(embed_resp, self.ASSET_LIQUIDEMERALD.filename)
         embed_resp.description = (f"Converted: **{emeralds}**\n" f"Emeralds Total: **{emeralds.total}e**")
-        embed_resp.add_field(name="TM Set Price", value=f"{set_price_tm}", inline=True)
-        embed_resp.add_field(name="Silverbull Set Price", value=f"{set_price_silverbull}", inline=True)
+        embed_resp.add_field(name="TM Set Price", value=f"{set_price_tm.emeralds}", inline=True)
+        embed_resp.add_field(name="Silverbull Set Price", value=f"{set_price_silverbull.emeralds}", inline=True)
         if interaction.user:
             embed_resp.set_author(name=interaction.user.display_name, icon_url=interaction.user.display_avatar.url)
         return embed_resp

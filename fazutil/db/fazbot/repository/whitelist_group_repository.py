@@ -6,11 +6,11 @@ from typing import Sequence, TYPE_CHECKING
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ..._base_repository import BaseRepository
+from ...base_repository import BaseRepository
 from ..model import WhitelistGroup
 
 if TYPE_CHECKING:
-    from ..._base_mysql_database import BaseMySQLDatabase
+    from ...base_mysql_database import BaseMySQLDatabase
 
 
 class WhitelistGroupRepository(BaseRepository[WhitelistGroup, tuple[int, str]]):
