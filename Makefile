@@ -23,11 +23,17 @@ wait-for-mysql:
 	@echo "Waiting for MySQL to be ready..."
 	@./$(DOCKER_DIR)/wait-for-it.sh -t 5 mysql:3306 -- echo "MySQL is ready!"
 
-build-all: wait-for-mysql
-	docker-compose --file $(DOCKER_COMPOSE) up --detach --build
+build-all:
+	make sql build
+	make wait-for-mysql
+	make db build
+	make bot build
 
-up-all: wait-for-mysql
-	docker-compose --file $(DOCKER_COMPOSE) up --detach
+up-all:
+	make sql up
+	make wait-for-mysql
+	make db up
+	make bot up
 
 down-all:
 	docker-compose --file $(DOCKER_COMPOSE) down
