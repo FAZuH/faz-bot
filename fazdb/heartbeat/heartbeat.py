@@ -1,8 +1,9 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
-from .task import RequestQueue, ResponseQueue, TaskApiRequest, TaskDbInsert
 from fazutil.heartbeat import BaseHeartbeat
+
+from .task import RequestQueue, ResponseQueue, TaskApiRequest, TaskDbInsert
 
 if TYPE_CHECKING:
     from fazutil.api import WynnApi

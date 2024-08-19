@@ -4,7 +4,6 @@ import nextcord
 from nextcord import Interaction
 
 from ..invoke import InvokeWorldlist
-
 from ._cog_base import CogBase
 
 

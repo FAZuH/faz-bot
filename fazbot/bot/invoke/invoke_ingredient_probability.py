@@ -9,7 +9,6 @@ from fazbot.wynn import IngredientUtil
 
 from ..errors import *
 from ._invoke import Invoke
-
 if TYPE_CHECKING:
     from nextcord import File
     from ._asset import Asset

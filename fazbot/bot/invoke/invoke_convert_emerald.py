@@ -6,7 +6,6 @@ from nextcord import Embed, Interaction
 from fazbot.wynn import EmeraldUtil, Emeralds
 
 from ._invoke import Invoke
-
 if TYPE_CHECKING:
     from nextcord import File
     from ._asset import Asset

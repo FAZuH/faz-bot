@@ -12,7 +12,6 @@ from fazutil.util import LoggerSetup
 
 from .properties import Properties
 
-
 class App:
 
     def __init__(self) -> None:

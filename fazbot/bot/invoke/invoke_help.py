@@ -1,6 +1,6 @@
 from __future__ import annotations
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Sized
+from typing import Any, Sized, TYPE_CHECKING
 
 from nextcord import (
     ApplicationCommandOption,

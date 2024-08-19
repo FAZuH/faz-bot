@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional, Any
+from typing import Any, Optional
 
 from sqlalchemy.dialects.mysql import BIGINT, VARCHAR
 from sqlalchemy.orm import Mapped, mapped_column
