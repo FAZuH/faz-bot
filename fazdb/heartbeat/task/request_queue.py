@@ -5,8 +5,8 @@ from typing import Any, Coroutine, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from fazutil.api import BaseResponse
-    type BaseResponse_ = BaseResponse[Any, Any]
-    type ResponseCoro = Coroutine[BaseResponse_, Any, Any]
+    type Resp = BaseResponse[Any, Any]
+    type RespCoro = Coroutine[Resp, Any, Any]
 
 
 class RequestQueue:
@@ -15,9 +15,9 @@ class RequestQueue:
         self._list: list[RequestQueue.RequestItem] = []
         self._lock: Lock = Lock()
 
-    def dequeue(self, amount: int) -> list[ResponseCoro]:
+    def dequeue(self, amount: int) -> list[RespCoro]:
         now = datetime.now().timestamp()
-        ret: list[ResponseCoro] = []
+        ret: list[RespCoro] = []
         with self._lock:
             for _ in range(amount):
                 try:
@@ -32,7 +32,7 @@ class RequestQueue:
     def enqueue(
         self,
         request_ts: float,
-        coro: ResponseCoro,
+        coro: RespCoro,
         priority: int = 100
     ) -> None:
         with self._lock:
@@ -44,7 +44,7 @@ class RequestQueue:
 
         def __init__(
             self,
-            coro: ResponseCoro,
+            coro: RespCoro,
             priority: int,
             req_ts: float,
         ) -> None:
@@ -75,9 +75,9 @@ class RequestQueue:
             if self.priority != other.priority:
                 # Higher priority is favored
                 return self.priority > other.priority
-            else:
-                # Favor requests that has expired longer
-                return self.req_ts < other.req_ts
+
+            # Favor requests that has expired longer
+            return self.req_ts < other.req_ts
 
         @property
         def req_ts(self) -> float:
@@ -85,7 +85,7 @@ class RequestQueue:
             return self._req_ts
 
         @property
-        def coro(self) -> ResponseCoro:
+        def coro(self) -> RespCoro:
             return self._coro
 
         @property

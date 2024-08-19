@@ -100,8 +100,8 @@ class BaseDatabase(ABC):
         if connection:
             yield connection
         else:
-            with self.enter_connection() as connection:
-                yield connection
+            with self.enter_connection() as conn:
+                yield conn
 
     @contextmanager
     def must_enter_session(self, session: Session | None = None) -> Generator[Session, None]:
@@ -116,8 +116,8 @@ class BaseDatabase(ABC):
         if session:
             yield session
         else:
-            with self.enter_session() as session:
-                yield session
+            with self.enter_session() as ses:
+                yield ses
 
     @asynccontextmanager
     async def enter_async_connection(self) -> AsyncGenerator[AsyncConnection, None]:
@@ -154,8 +154,8 @@ class BaseDatabase(ABC):
         if connection:
             yield connection
         else:
-            async with self.enter_async_connection() as connection:
-                yield connection
+            async with self.enter_async_connection() as conn:
+                yield conn
 
     @asynccontextmanager
     async def must_enter_async_session(self, session: AsyncSession | None = None) -> AsyncGenerator[AsyncSession, None]:
@@ -170,8 +170,8 @@ class BaseDatabase(ABC):
         if session:
             yield session
         else:
-            async with self.enter_async_session() as session:
-                yield session
+            async with self.enter_async_session() as ses:
+                yield ses
 
     @property
     def async_engine(self) -> AsyncEngine:

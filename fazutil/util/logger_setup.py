@@ -40,7 +40,7 @@ class LoggerSetup:
     @classmethod
     def _warning_discord_sink(cls, message: str) -> None:
         cls._send_embed_to_webhook("WARNING", message, colour=Colour.yellow())
-        
+
     @classmethod
     def _success_discord_sink(cls, message: str) -> None:
         cls._send_embed_to_webhook("SUCCESS", message, colour=Colour.green())

@@ -25,10 +25,10 @@ class Properties:
     @classmethod
     def setup(cls) -> None:
         """Bootstraps application properties."""
-        cls.__read_env()
+        cls._read_env()
 
     @classmethod
-    def __read_env(cls) -> None:
+    def _read_env(cls) -> None:
         load_dotenv()
         cls.ADMIN_DISCORD_ID = cls._must_get_env("ADMIN_DISCORD_ID", int)
         cls.DISCORD_LOG_WEBHOOK = cls._must_get_env("FAZDB_DISCORD_LOG_WEBHOOK")
@@ -45,5 +45,5 @@ class Properties:
         try:
             env = os.getenv(key)
             return type_strategy(env)  # type: ignore
-        except ValueError:
-            raise ValueError(f"Failed parsing environment variable {key} into type {type_strategy}")
+        except ValueError as exc:
+            raise ValueError(f"Failed parsing environment variable {key} into type {type_strategy}") from exc

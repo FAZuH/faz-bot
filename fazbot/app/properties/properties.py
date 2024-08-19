@@ -61,5 +61,5 @@ class Properties:
         try:
             env = os.getenv(key)
             return type_strategy(env)  # type: ignore
-        except ValueError:
-            raise ValueError(f"Failed parsing environment variable {key} into type {type_strategy}")
+        except ValueError as exc:
+            raise ValueError(f"Failed parsing environment variable {key} into type {type_strategy}") from exc

@@ -1,6 +1,6 @@
 from __future__ import annotations
 from decimal import Decimal
-from typing import Any, Generator, Self, TYPE_CHECKING
+from typing import Any, Self, TYPE_CHECKING
 
 from sqlalchemy.ext.asyncio import AsyncAttrs
 from sqlalchemy.orm import ColumnProperty, DeclarativeBase, class_mapper
@@ -22,16 +22,13 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
         return self.__class__(**self.to_dict())
 
     def to_dict(self, *, actual_column_names = True) -> dict[str, Any]:
-        if actual_column_names:
-            return {
-                k: getattr(self, k)
-                for k in self.get_column_attribute_names()
-            }
-        else:
-            return {
-                getattr(self.__class__, k).name: getattr(self, k)
-                for k in self.get_column_attribute_names()
-            }
+        return {
+            k: getattr(self, k)
+            for k in self.get_column_attribute_names()
+        } if actual_column_names else {
+            getattr(self.__class__, k).name: getattr(self, k)
+            for k in self.get_column_attribute_names()
+        }
 
     @classmethod
     def get_column_attribute_names(cls, *, includes_primary_key: bool = True) -> list[str]:
@@ -54,7 +51,8 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
     def __eq__(self, other: object) -> bool:
         primary_key = self.get_table().primary_key
         for k, v in self.to_dict().items():
-            if k not in primary_key: continue
+            if k not in primary_key:
+                continue
             v_other = getattr(other, k)
             if v != v_other:
                 return False

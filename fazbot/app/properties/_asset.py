@@ -70,13 +70,13 @@ class Asset:
             # Strict search
             if key == fp.stem:
                 return fp
-        else:
-            # Less strict search
-            for fp in self._files:
-                if key in fp.name:
-                    return fp
-            else:
-                raise KeyError(f"Asset with key {key} not found")
+
+        # Less strict search
+        for fp in self._files:
+            if key in fp.name:
+                return fp
+
+        raise KeyError(f"Asset with key {key} not found")
 
     @property
     def files(self) -> dict[Path, bytes]:

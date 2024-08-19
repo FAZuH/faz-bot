@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from .request_queue import RequestQueue
     from .response_queue import ResponseQueue
     from fazutil.api import WynnApi, BaseResponse
-    type BaseResponse_ = BaseResponse[Any, Any]
+    type Resp = BaseResponse[Any, Any]
 
 
 class TaskApiRequest(ITask):
@@ -26,7 +26,7 @@ class TaskApiRequest(ITask):
 
         self._event_loop = asyncio.new_event_loop()
         self._latest_run = datetime.now()
-        self._running_requests: list[asyncio.Task[BaseResponse_]] = []
+        self._running_requests: list[asyncio.Task[Resp]] = []
 
     def setup(self) -> None:
         logger.debug(f"Setting up {self.name}")
@@ -66,7 +66,7 @@ class TaskApiRequest(ITask):
             self._running_requests.extend(new_requests)
 
     def _check_responses(self) -> None:
-        ok_results: list[BaseResponse_] = []
+        ok_results: list[Resp] = []
         tasks_to_remove = []
         for task in self._running_requests:
             if not task.done():

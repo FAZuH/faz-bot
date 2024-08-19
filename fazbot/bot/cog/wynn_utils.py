@@ -10,13 +10,15 @@ from ..invoke import (
 )
 from ._cog_base import CogBase
 
+type Intr = Interaction[Any]
+
 
 class WynnUtils(CogBase):
 
     @nextcord.slash_command(name="crafted_probability")
     async def crafted_probability(
             self,
-            interaction: Interaction[Any],
+            interaction: Intr,
             ingredient1: str = InvokeCraftedProbability.INGSTR_DEFAULT,
             ingredient2: str = InvokeCraftedProbability.INGSTR_DEFAULT,
             ingredient3: str = InvokeCraftedProbability.INGSTR_DEFAULT,
@@ -47,7 +49,7 @@ class WynnUtils(CogBase):
         ).run()
 
     @nextcord.slash_command(name="convert_emerald")
-    async def convert_emerald(self, interaction: Interaction[Any], emerald_string: str = "") -> None:
+    async def convert_emerald(self, interaction: Intr, emerald_string: str = "") -> None:
         """Converts input emeralds into common emerald units.
 
         Parameters
@@ -58,7 +60,7 @@ class WynnUtils(CogBase):
         await InvokeConvertEmerald(self._bot, interaction, emerald_string).run()
 
     @nextcord.slash_command(name="ingredient_probability")
-    async def ingredient_probability(self, interaction: Interaction[Any], base_chance: str, loot_bonus: int = 0, loot_quality: int = 0) -> None:
+    async def ingredient_probability(self, interaction: Intr, base_chance: str, loot_bonus: int = 0, loot_quality: int = 0) -> None:
         """Computes boosted ingredient drop probability after loot bonus and loot quality.
 
         Parameters
@@ -71,4 +73,3 @@ class WynnUtils(CogBase):
             Loot quality value.
         """
         await InvokeIngredientProbability(self._bot, interaction, base_chance, loot_bonus, loot_quality).run()
-

@@ -17,7 +17,7 @@ class InvokeWorldlist(Invoke):
 
     def __init__(self, bot: Bot, interaction: Interaction[Any], sort_by: Literal["Player Count", "Time Created"]) -> None:
         self._sort_by: Literal["player", "time"] = "player" if sort_by == "Player Count" else "time"
-        super().__init__(bot, interaction) 
+        super().__init__(bot, interaction)
 
     async def run(self):
         self._worlds = await self._bot.fazdb_db.worlds_repository.get_worlds(self._sort_by)
@@ -51,7 +51,7 @@ class InvokeWorldlist(Invoke):
         minutes = remainder // 60
         ret = (str(hours) + "h " if hours > 0 else "") + str(minutes) + "m"
         return ret
-        
+
     class _View(View):
         def __init__(self, cmd: InvokeWorldlist, page_count: int):
             super().__init__(timeout=120)

@@ -33,7 +33,7 @@ class BaseRepository[T: BaseModel, ID](ABC):
         Decimal
             Size of the table in bytes.
         """
-        SQL = f"""
+        sql = """
             SELECT
                 ROUND(((data_length + index_length)), 2) AS "size_bytes"
             FROM
@@ -48,7 +48,7 @@ class BaseRepository[T: BaseModel, ID](ABC):
         }
 
         async with self._database.must_enter_async_session(session) as session:
-            result = await session.execute(text(SQL), params)
+            result = await session.execute(text(sql), params)
 
         row = result.fetchone()
         ret = Decimal(row["size_bytes"]) if (row and row["size_bytes"] is not None) else Decimal(0)  # type: ignore
@@ -207,10 +207,7 @@ class BaseRepository[T: BaseModel, ID](ABC):
 
     @staticmethod
     def _ensure_iterable[U](obj: Iterable[U] | U) -> Iterable[U]:
-        if isinstance(obj, Iterable):
-            return obj
-        else:
-            return [obj]
+        return obj if isinstance(obj, Iterable) else [obj]
 
     def _convert_comparable(self, id_: Iterable[ID] | ID) -> list[tuple[ID, ...]]:
         ids = self._ensure_iterable(id_)

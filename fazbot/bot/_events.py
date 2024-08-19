@@ -31,7 +31,7 @@ class Events:
 
     async def on_ready(self) -> None:
         if self._bot.client.user is not None:
-            logger.success(f"Started discord client")
+            logger.success("Started discord client")
 
         await self._bot.client.change_presence(activity=Activity(type=ActivityType.playing, name="/help"))
 
@@ -50,7 +50,7 @@ class Events:
             error = error.original
         if isinstance(error, errors.ApplicationCheckFailure):
             await interaction.send(
-                ("You do not have permission to use this command. " 
+                ("You do not have permission to use this command. "
                 "Please contact bot developer if you believe this is a mistake."),
                 ephemeral=True
             )
@@ -86,7 +86,7 @@ class Events:
                 if "options" in opt:
                     # Convert to string to avoid potential formatting issues
                     args.append(str(opt["options"]))
-        
+
         message_parts = [
             f"fired event {event}",
             f"name={cmdname}",
@@ -99,7 +99,7 @@ class Events:
 
         message_parts.append(f"args={args}")
         message = ", ".join(message_parts).replace("{", "{{").replace("}", "}}")
-        
+
         logger.info(message, discord=True)
 
     async def _send_unexpected_error(self, interaction: Interaction[Any], exception: Exception) -> None:

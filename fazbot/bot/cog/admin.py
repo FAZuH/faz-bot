@@ -1,5 +1,4 @@
 from __future__ import annotations
-from asyncio import subprocess
 import subprocess
 from typing import Any, Iterable, override
 
@@ -9,6 +8,8 @@ from nextcord import Interaction
 from .._utils import Utils
 from ..errors import ApplicationException
 from ._cog_base import CogBase
+
+type Intr = Interaction[Any]
 
 
 class Admin(CogBase):
@@ -20,16 +21,16 @@ class Admin(CogBase):
             self._bot.client.add_application_command(app_cmd, overwrite=True, use_rollout=True)
 
     @override
-    def cog_application_command_check(self, interaction: Interaction[Any]):  # type: ignore
+    def cog_application_command_check(self, interaction: Intr):  # type: ignore
         return self._bot.checks.is_admin(interaction)
 
     @nextcord.slash_command(name="admin", description="Admin commands.")
-    async def admin(self, interaction: Interaction[Any]) -> None: ...
-  
+    async def admin(self, interaction: Intr) -> None: ...
+
     @admin.subcommand(name="ban")
     async def ban(
             self,
-            interaction: Interaction[Any],
+            interaction: Intr,
             user_id: str,
             reason: str | None = None,
             until: str | None = None
@@ -61,7 +62,7 @@ class Admin(CogBase):
         await self._respond_successful(interaction, f"Banned user `{user.name}` (`{user.id}`).")
 
     @admin.subcommand(name="unban")
-    async def unban(self, interaction: Interaction[Any], user_id: str) -> None:
+    async def unban(self, interaction: Intr, user_id: str) -> None:
         """(dev only) Unbans an user from using the bot.
 
         Parameters
@@ -82,7 +83,7 @@ class Admin(CogBase):
         await self._respond_successful(interaction, f"Unbanned user `{user.name}` (`{user.id}`).")
 
     @admin.subcommand(name="echo")
-    async def echo(self, interaction: Interaction[Any], message: str) -> None:
+    async def echo(self, interaction: Intr, message: str) -> None:
         """(dev only) Echoes a message.
 
         Parameters
@@ -93,14 +94,14 @@ class Admin(CogBase):
         await interaction.send(message)
 
     @admin.subcommand(name="reload_asset")
-    async def reload_asset(self, interaction: Interaction[Any]) -> None:
+    async def reload_asset(self, interaction: Intr) -> None:
         """(dev only) Reloads asset."""
         self._bot.app.properties.ASSET.read_all()
         self._bot.asset_manager.setup()
         await self._respond_successful(interaction, "Reloaded asset successfully.")
 
     @admin.subcommand(name="send")
-    async def send(self, interaction: Interaction[Any], channel_id: str, message: str) -> None:
+    async def send(self, interaction: Intr, channel_id: str, message: str) -> None:
         """(dev only) Unbans an user from using the bot.
 
         Parameters
@@ -113,24 +114,24 @@ class Admin(CogBase):
         channel = await Utils.must_get_channel(self._bot.client, channel_id)
 
         if not self._is_channel_sendable(channel):
-            raise ApplicationException(f"Channel of type `{type(channel)}` does not support sending messages.") 
+            raise ApplicationException(f"Channel of type `{type(channel)}` does not support sending messages.")
 
         try:
             await channel.send(message)  # type: ignore
-        except nextcord.DiscordException as e:
-            raise ApplicationException(f"Failed sending message: {e}")
+        except nextcord.DiscordException as exc:
+            raise ApplicationException(f"Failed sending message: {exc}") from exc
 
         await self._respond_successful(interaction, f"Sent message on channel `{channel.name}` (`{channel.id}`).")  # type: ignore
 
     @admin.subcommand(name="sync_guild")
-    async def sync_guild(self, interaction: Interaction[Any], guild_id: str) -> None:
+    async def sync_guild(self, interaction: Intr, guild_id: str) -> None:
         """(dev only) Syncs app commands for a specific guild.
 
         Parameters
         ----------
         guild_id : str
             The guild ID to sync app commands to.
-        """        
+        """
         await interaction.response.defer()
         guild = await Utils.must_get_guild(self._bot.client, guild_id)
 
@@ -147,20 +148,20 @@ class Admin(CogBase):
         )
 
     @admin.subcommand(name="sync")
-    async def sync(self, interaction: Interaction[Any]) -> None:
+    async def sync(self, interaction: Intr) -> None:
         """(dev only) Synchronizes all app commands with Discord."""
         await interaction.response.defer()
         await self._bot.client.sync_all_application_commands()
-        await self._respond_successful(interaction, f"Synchronized app commands.")
+        await self._respond_successful(interaction, "Synchronized app commands.")
 
     @admin.subcommand(name="shutdown", description="Shuts down the bot.")
-    async def shutdown(self, interaction: Interaction[Any]) -> None:
+    async def shutdown(self, interaction: Intr) -> None:
         """(dev only) Shutdowns the bot enitirely."""
         await self._respond_successful(interaction, "Shutting down...")
         self._bot.app.stop()
 
     @admin.subcommand(name="whisper")
-    async def whisper(self, interaction: Interaction[Any], user_id: str, message: str) -> None:
+    async def whisper(self, interaction: Intr, user_id: str, message: str) -> None:
         """(dev only) Whispers a message to a user.
 
         Parameters
@@ -174,14 +175,13 @@ class Admin(CogBase):
 
         try:
             await user.send(message)
-        except nextcord.DiscordException as e:
-            raise ApplicationException(f"Failed whispering message to user {user.display_name}: `{e}`")
+        except nextcord.DiscordException as exc:
+            raise ApplicationException(f"Failed whispering message to user {user.display_name}: `{exc}`") from exc
 
         await self._respond_successful(interaction, f"Whispered message to `{user.name}` (`{user.id}`).")
 
-    # TODO: manage syncing database and local memory
     @admin.subcommand(name="whitelist")
-    async def whitelist(self, interaction: Interaction[Any], guild_id: str, until: str | None = None) -> None:
+    async def whitelist(self, interaction: Intr, guild_id: str, until: str | None = None) -> None:
         """(dev only) Whitelists or unwhitelists a guild from using the bot.
 
         Parameters
@@ -202,11 +202,11 @@ class Admin(CogBase):
             await repo.whitelist_guild(
                 guild.id, until=Utils.must_parse_date_string(until) if until else None, session=session
             )
-            
+
         await self._respond_successful(interaction, f"Whitelisted guild `{guild.name}` (`{guild.id}`).")
 
     @admin.subcommand(name="unwhitelist")
-    async def unwhitelist(self, interaction: Interaction[Any], guild_id: str) -> None:
+    async def unwhitelist(self, interaction: Intr, guild_id: str) -> None:
         """(dev only) Unwhitelists a guild from using the bot.
 
         Parameters
@@ -227,7 +227,7 @@ class Admin(CogBase):
         await self._respond_successful(interaction, f"Unwhitelisted guild `{guild.name}` (`{guild.id}`).")
 
     @admin.subcommand(name="execute")
-    async def execute(self, interaction: Interaction[Any], command: str) -> None:
+    async def execute(self, interaction: Intr, command: str) -> None:
         """(dev only) Execute `command` directly to the host device.
 
         Parameters
@@ -236,7 +236,7 @@ class Admin(CogBase):
             The command to execute.
         """
         command_ = command.split(' ')
-        result = subprocess.run(command_, capture_output=True, text=True)
+        result = subprocess.run(command_, capture_output=True, text=True, check=False)
 
         if result.returncode == 0:
             success_msg = (

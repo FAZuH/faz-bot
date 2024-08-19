@@ -69,5 +69,5 @@ test-sql-down:
 	docker stop fazbot-test-db
 
 lint:
-	pylint fazbot \
-		--disable=R0901,R0913,R0916,R0912,R0902,R0914,R01702,R0917,R0904,R0911,R0915,R0903,C0301,C0114,C0115,C0116,W
+	pylint fazbot fazdb fazutil \
+		--disable=R0801,R0901,R0913,R0916,R0912,R0902,R0914,R01702,R0917,R0904,R0911,R0915,R0903,C0301,C0114,C0115,C0116,W

@@ -97,9 +97,9 @@ class Emeralds:
     def __eq__(self, other: Emeralds | int | str | object) -> bool:
         if isinstance(other, Emeralds):
             return self._total == other.total
-        elif isinstance(other, int):
+        if isinstance(other, int):
             return self._total == other
-        elif isinstance(other, str):
+        if isinstance(other, str):
             return str(self) == other
         return False
 

@@ -3,7 +3,7 @@ from typing import Any
 import nextcord
 
 from ..errors import ApplicationException
-from ..invoke import InvokeHelp as InvokeHelp
+from ..invoke import InvokeHelp
 from ._cog_base import CogBase
 
 
@@ -14,5 +14,5 @@ class Help(CogBase):
         if not interaction.guild:
             raise ApplicationException("You can only use this command in a guild channel.")
 
-        cmds = [cmd for cmd in interaction.guild.get_application_commands()]
+        cmds = list(interaction.guild.get_application_commands())
         await InvokeHelp(self._bot, interaction, cmds).run()

@@ -80,7 +80,8 @@ class TaskDbInsert(ITask):
         await self._insert_guild_response(guild_resps)
 
     async def _insert_online_players_response(self, resp: OnlinePlayersResponse | None) -> None:
-        if not resp or not resp.body.raw: return
+        if not resp or not resp.body.raw:
+            return
         adapter = self._response_adapter.OnlinePlayers
 
         online_players = adapter.to_online_players(resp)
@@ -93,7 +94,8 @@ class TaskDbInsert(ITask):
         await db.worlds_repository.update_worlds(worlds)
 
     async def _insert_player_responses(self, resps: list[PlayerResponse]) -> None:
-        if not resps: return
+        if not resps:
+            return
 
         adapter = self._response_adapter.Player
         character_history = []
@@ -113,7 +115,8 @@ class TaskDbInsert(ITask):
         await db.character_history_repository.insert(character_history, ignore_on_duplicate=True)
 
     async def _insert_guild_response(self, resps: list[GuildResponse]) -> None:
-        if not resps: return
+        if not resps:
+            return
 
         adapter = self._response_adapter.Guild
         guild_info = []
@@ -163,19 +166,22 @@ class TaskDbInsert(ITask):
             self._logged_on_players: set[str] = set()
 
         def handle_onlineplayers_response(self, resp: None | OnlinePlayersResponse) -> None:
-            if not resp or not resp.body.raw: return
+            if not resp or not resp.body.raw:
+                return
             self._process_onlineplayers_response(resp)
             self._requeue_onlineplayers(resp)
             self._enqueue_player()
 
         def handle_player_response(self, resps: Iterable[PlayerResponse]) -> None:
-            if not resps: return
+            if not resps:
+                return
             self._process_player_response(resps)
             self._requeue_player(resps)
             self._enqueue_guild()
 
         def handle_guild_response(self, resps: Iterable[GuildResponse]) -> None:
-            if not resps: return
+            if not resps:
+                return
             self._requeue_guild(resps)
 
         # OnlinePlayersResponse
@@ -229,7 +235,7 @@ class TaskDbInsert(ITask):
                     guild = self.online_guilds.get(guild_name)
                     if not guild or uuid not in guild:
                         continue
-                    
+
                     guild.remove(uuid)
 
                     # Check the guild dictionary, if the set is empty, remove the guild from the dictionary.

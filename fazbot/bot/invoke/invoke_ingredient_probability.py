@@ -7,13 +7,14 @@ from nextcord import Embed, Interaction
 
 from fazbot.wynn import IngredientUtil
 
-from ..errors import *
+from ..errors import BadArgument
 from ._invoke import Invoke
+
 if TYPE_CHECKING:
     from nextcord import File
     from ._asset import Asset
     from .. import Bot
-    
+
 
 class InvokeIngredientProbability(Invoke):
 
@@ -58,13 +59,11 @@ class InvokeIngredientProbability(Invoke):
     def _parse_base_chance(self, base_chance: str) -> Decimal:
         if base_chance.endswith('%'):
             return Decimal(base_chance[:-1]) / 100
-        elif '/' in base_chance:
+        if '/' in base_chance:
             match = re.match(r'^(\d+(?:\.\d+)?)/(\d+(?:\.\d+)?)$', base_chance)
             if match:
                 numerator = float(match.group(1))
                 denominator = float(match.group(2))
                 return Decimal(numerator) / Decimal(denominator)
-            else:
-                raise BadArgument("Invalid format: .")
-        else:
-            return Decimal(base_chance)
+            raise BadArgument("Invalid format: .")
+        return Decimal(base_chance)

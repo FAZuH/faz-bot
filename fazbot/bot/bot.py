@@ -32,7 +32,7 @@ class Bot:
         intents.members = True
         intents.presences = True
         self._client = commands.Bot(intents=intents, help_command=None)
-        
+
         self._event_loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self._event_loop)
         self._discord_bot_thread = Thread(target=self._start, name=self._get_cls_qualname())
@@ -47,16 +47,16 @@ class Bot:
         self.fazdb_db.create_all()
 
     def start(self) -> None:
-        logger.info(f"Starting Bot")
+        logger.info("Starting Bot")
         self._discord_bot_thread.start()
         # Note: thread.start() runs self._start()
-        logger.success(f"Started discord thread")
+        logger.success("Started discord thread")
 
     def stop(self) -> None:
-        logger.info(f"Stopping Bot")
+        logger.info("Stopping Bot")
         asyncio.run_coroutine_threadsafe(self._async_teardown(), self._event_loop).result()
         self._event_loop.stop()
-        logger.success(f"Stopped Bot")
+        logger.success("Stopped Bot")
 
     async def _async_teardown(self) -> None:
         await self.client.close()
@@ -103,7 +103,7 @@ class Bot:
         return self._events
 
     def _start(self) -> None:
-        logger.info(f"Starting discord client")
+        logger.info("Starting discord client")
         asyncio.set_event_loop(self._event_loop)
         coro = self.client.start(self.app.properties.DISCORD_BOT_TOKEN)
         self._event_loop.create_task(coro)

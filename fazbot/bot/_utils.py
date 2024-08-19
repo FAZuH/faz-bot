@@ -37,8 +37,8 @@ class Utils:
     async def must_get_id[T](get_strategy: Callable[[int], T | None], id_: Any) -> T:
         try:
             parsed_id = int(id_)
-        except ParseFailure:
-            raise ParseFailure(f"Failed parsing {id_} into an integer.")
+        except ParseFailure as exc:
+            raise ParseFailure(f"Failed parsing {id_} into an integer.") from exc
         if not (ret := get_strategy(parsed_id)):
             raise ParseFailure(f"Failed getting object from ID {id_}")
         return ret

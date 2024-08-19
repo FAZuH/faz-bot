@@ -7,7 +7,7 @@ from prometheus_client import Counter, Summary, start_http_server
 
 
 class Metrics:
-    
+
     def start(self) -> None:
         start_http_server(8000)
         logger.info("Started prometheus metrics on port 8000")

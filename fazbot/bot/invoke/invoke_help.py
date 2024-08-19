@@ -129,4 +129,3 @@ class InvokeHelp(Invoke):
             self._current_page = self._help_embed_max_page
             self._embed_content = self._command._get_embed_page(self._commands, self._current_page)
             await interaction.response.edit_message(embed=self._embed_content)
-

@@ -62,7 +62,7 @@ class App:
         register_lambda: Callable[[Callable[..., Any]], None] = lambda func: RetryHandler.register(
             func, self.properties.FAZDB_DB_MAX_RETRIES, Exception
         )
-        
+
         # Register retry handler to database
         repositories = self.db.repositories
         for repo in repositories:

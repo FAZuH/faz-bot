@@ -71,4 +71,3 @@ class CraftedUtil:
             if crafted_roll_chance == 0:
                 continue
             self.craft_probs[int(roll)] = Decimal(crafted_roll_chance)
-

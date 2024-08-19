@@ -7,8 +7,9 @@ from nextcord import ButtonStyle, Embed, Interaction, ui
 from fazbot.wynn import CraftedUtil, IngredientField
 from fazutil.util import CacheUtil
 
-from ..errors import *
+from ..errors import BadArgument
 from ._invoke import Invoke
+
 if TYPE_CHECKING:
     from nextcord import File
     from ._asset import Asset
@@ -50,8 +51,8 @@ class InvokeCraftedProbability(Invoke):
                 raise BadArgument(f"Invalid format on {ing_str}. Value must be 'min,max[,efficiency]'")
             try:
                 parsed_ing_vals: list[int] = [int(v) for v in ing_vals]
-            except ValueError:
-                raise BadArgument(f"Failed parsing ingredient value on {ing_str}")
+            except ValueError as exc:
+                raise BadArgument(f"Failed parsing ingredient value on {ing_str}") from exc
             try:
                 res.append(IngredientField(*parsed_ing_vals))
             except ValueError as e:
@@ -64,7 +65,7 @@ class InvokeCraftedProbability(Invoke):
         if interaction.user:
             embed.set_author(name=interaction.user.display_name, icon_url=interaction.user.display_avatar.url)
         # Embed descriptions
-        embed_desc = [f"Ingredients:"]
+        embed_desc = ["Ingredients:"]
         for i, ing in enumerate(craftutil.ingredients, start=1):
             ing_info = f"- `[{i}]`: {ing.min_value} to {ing.max_value}"  # -[nth]: min to max
             ing_info += f", {ing.boost}% boost" if ing.boost != 0 else ""  # Add boost to info if exist

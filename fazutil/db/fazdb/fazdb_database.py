@@ -4,7 +4,7 @@ from .repository import *
 
 
 class FazdbDatabase(BaseMySQLDatabase):
-    
+
     def __init__(self, user: str, password: str, host: str, port: int, database: str) -> None:
         super().__init__(user, password, host, port, database)
         self._base_model = BaseFazdbModel()

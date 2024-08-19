@@ -27,7 +27,7 @@ class CogBase(commands.Cog):
             f"Added cog {self.__class__.__qualname__} "
             f"with {len(self.application_commands)} application commands"
         )
- 
+
     async def _respond_successful(self, interaction: Interaction[Any], message: str) -> None:
         embed = Embed(title="Success", description=message, color=Colour.dark_green())
         await interaction.send(embed=embed)

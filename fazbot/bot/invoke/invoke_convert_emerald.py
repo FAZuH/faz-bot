@@ -6,6 +6,7 @@ from nextcord import Embed, Interaction
 from fazbot.wynn import EmeraldUtil, Emeralds
 
 from ._invoke import Invoke
+
 if TYPE_CHECKING:
     from nextcord import File
     from ._asset import Asset
@@ -36,7 +37,7 @@ class InvokeConvertEmerald(Invoke):
         embed_resp = Embed(title="Emerald Convertor", color=8894804)
 
         self._set_embed_thumbnail_with_asset(embed_resp, self.ASSET_LIQUIDEMERALD.filename)
-        embed_resp.description = (f"Converted: **{emeralds}**\n" f"Emeralds Total: **{emeralds.total}e**")
+        embed_resp.description = f"Converted: **{emeralds}**\n" f"Emeralds Total: **{emeralds.total}e**"
         embed_resp.add_field(name="TM Set Price", value=f"{set_price_tm.emeralds}", inline=True)
         embed_resp.add_field(name="Silverbull Set Price", value=f"{set_price_silverbull.emeralds}", inline=True)
         if interaction.user:

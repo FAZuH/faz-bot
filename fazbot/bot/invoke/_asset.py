@@ -18,4 +18,3 @@ class Asset:
     @property
     def filename(self) -> str:
         return self._file_name
-

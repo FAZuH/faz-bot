@@ -141,7 +141,7 @@ class ApiResponseAdapter:
                 for uuid in resp.body.players
                 if uuid.is_uuid() is True
             )
-        
+
         @staticmethod
         def to_worlds(resp: OnlinePlayersResponse) -> list[Worlds]:
             worldlist: dict[str, int] = {}
