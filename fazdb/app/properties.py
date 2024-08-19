@@ -9,7 +9,7 @@ class Properties:
     # Application constants
     AUTHOR = "FAZuH"
     VERSION = "0.0.1"
-    LOG_DIR = "./logs/fazdb"
+    LOG_DIR = "./logs"
 
     # .env
     ADMIN_DISCORD_ID: int
