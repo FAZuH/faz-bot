@@ -7,16 +7,16 @@ SCRIPT := ./makefile.sh
 
 help:
 	@echo "Usage:"
-	@echo "  make build-all						# Build all docker services"
-	@echo "  make up-all 						# Up all docker services"
-	@echo "  make down-all 						# Down all docker services"
-	@echo "  make db [build|up|down|bash]		# Manage db service"
-	@echo "  make bot [build|up|down|bash]  	# Manage bot service"
-	@echo "  make mysql [build|up|down|bash]  	# Manage sql service"
-	@echo "  make pma [build|up|down|bash]  	# Manage phpmyadmin service"
-	@echo "  test-sql-up                    	# Up test sql container"
-	@echo "  test-sql-down                  	# Down test sql container"
-	@echo "  make lint					    	# Run linting"
+	@echo "  make build-all							# Build all docker services"
+	@echo "  make up-all 							# Up all docker services"
+	@echo "  make down-all 							# Down all docker services"
+	@echo "  make db ACT=[build|up|down|bash]		# Manage db service"
+	@echo "  make bot ACT=[build|up|down|bash]  	# Manage bot service"
+	@echo "  make mysql ACT=[build|up|down|bash]  	# Manage sql service"
+	@echo "  make pma ACT=[build|up|down|bash]  	# Manage phpmyadmin service"
+	@echo "  test-sql-up                    		# Up test sql container"
+	@echo "  test-sql-down                  		# Down test sql container"
+	@echo "  make lint					    		# Run linting"
 
 
 wait-for-mysql:
@@ -24,35 +24,35 @@ wait-for-mysql:
 	@./$(DOCKER_DIR)/wait-for-it.sh -t 5 mysql:3306 -- echo "MySQL is ready!"
 
 build-all:
-	make sql build
+	make sql ACT=build
 	make wait-for-mysql
-	make db build
-	make bot build
+	make db ACT=build
+	make bot ACT=build
 
 up-all:
-	make sql up
+	make sql ACT=up
 	make wait-for-mysql
-	make db up
-	make bot up
+	make db ACT=up
+	make bot ACT=up
 
 down-all:
 	docker-compose --file $(DOCKER_COMPOSE) down
 
 
 db:
-	$(SCRIPT) fazdb $(word 2,$(MAKECMDGOALS))
+	$(SCRIPT) fazdb $(ACT)
 
 bot:
-	$(SCRIPT) fazbot $(word 2,$(MAKECMDGOALS))
+	$(SCRIPT) fazbot $(ACT)
 
 sql:
-	$(SCRIPT) mysql $(word 2,$(MAKECMDGOALS))
+	$(SCRIPT) mysql $(ACT)
 
 test-sql:
-	$(SCRIPT) test-sql $(word 2,$(MAKECMDGOALS))
+	$(SCRIPT) test-sql $(ACT)
 
 pma:
-	$(SCRIPT) pma $(word 2,$(MAKECMDGOALS))
+	$(SCRIPT) pma $(ACT)
 
 
 test-sql-up:
