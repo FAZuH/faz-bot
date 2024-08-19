@@ -18,36 +18,36 @@ down:
 
 .PHONY: db-build
 db-build:
-	docker-compose --file ./docker-compose.yml up --detach --build faz-db
+	docker-compose --file ./docker-compose.yml up --detach --build fazdb
 
 .PHONY: db-up
 db-up:
-	docker-compose --file ./docker-compose.yml up --detach faz-db
+	docker-compose --file ./docker-compose.yml up --detach fazdb
 
 .PHONY: db-down
 db-down:
-	docker-compose --file ./docker-compose.yml down faz-db
+	docker-compose --file ./docker-compose.yml down fazdb
 
 .PHONY: db-bash
 db-bash:
-	docker exec -it faz-db /bin/bash
+	docker exec -it fazdb /bin/bash
 
 .PHONY: db
 db:
-	docker attach --no-stdin faz-db
+	docker attach --no-stdin fazdb
 
 
 .PHONY: bot-build
 bot-build:
-	docker-compose --file ./docker-compose.yml up --detach --build faz-bot
+	docker-compose --file ./docker-compose.yml up --detach --build fazbot
 
 .PHONY: bot-up
 bot-up:
-	docker-compose --file ./docker-compose.yml up --detach faz-bot
+	docker-compose --file ./docker-compose.yml up --detach fazbot
 
 .PHONY: bot-down
 bot-down:
-	docker-compose --file ./docker-compose.yml down faz-bot
+	docker-compose --file ./docker-compose.yml down fazbot
 
 .PHONY: bot-bash
 bot-bash:
@@ -55,7 +55,7 @@ bot-bash:
 
 .PHONY: bot
 bot:
-	docker attach --no-stdin faz-bot
+	docker attach --no-stdin fazbot
 
 
 .PHONY: sql-build
