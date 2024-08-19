@@ -8,8 +8,8 @@ from loguru import logger
 from fazbot.bot import Bot
 from fazbot.heartbeat import Heartbeat
 from fazutil.db import FazbotDatabase, FazdbDatabase
+from fazutil.util import LoggerSetup
 
-from ._logger_setup import LoggerSetup
 from .properties import Properties
 
 

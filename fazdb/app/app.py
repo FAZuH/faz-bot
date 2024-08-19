@@ -6,9 +6,8 @@ from loguru import logger
 from fazdb.heartbeat import Heartbeat
 from fazutil.api import WynnApi
 from fazutil.db.fazdb import FazdbDatabase
-from fazutil.util import RetryHandler
+from fazutil.util import RetryHandler, LoggerSetup
 
-from ._logger_setup import LoggerSetup
 from ._metrics import Metrics
 from .properties import Properties
 
