@@ -1,10 +1,11 @@
 services:
   fazbot:
+    # image: ghcr.io/fazuh/fazbot:main
     container_name: fazbot
+    restart: unless-stopped
     build:
       context: ..
       dockerfile: docker/Dockerfile.bot
-    restart: unless-stopped
     environment:
       MYSQL_HOST: mysql
       MYSQL_PORT: 3306
@@ -20,11 +21,12 @@ services:
       - ../logs/fazbot:/app/logs
 
   fazdb:
+    # image: ghcr.io/fazuh/fazbot:main
     container_name: fazdb
+    restart: unless-stopped
     build:
       context: ..
       dockerfile: docker/Dockerfile.db
-    restart: unless-stopped
     environment:
       MYSQL_HOST: mysql
       MYSQL_PORT: 3306
