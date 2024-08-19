@@ -9,8 +9,18 @@ class FazbotDatabase(BaseMySQLDatabase):
         super().__init__(user, password, host, port, database)
         self._base_model = BaseFazbotModel()
 
+        self._discord_guild_repository = DiscordGuildRepository(self)
+        self._discord_user_repository = DiscordUserRepository(self)
         self._whitelist_group_repository = WhitelistGroupRepository(self)
         self.repositories.append(self.whitelist_group_repository)
+
+    @property
+    def discord_guild_repository(self) -> DiscordGuildRepository:
+        return self._discord_guild_repository
+
+    @property
+    def discord_user_repository(self) -> DiscordUserRepository:
+        return self._discord_user_repository
 
     @property
     def whitelist_group_repository(self) -> WhitelistGroupRepository:
