@@ -12,25 +12,20 @@ class Properties:
     AUTHOR = "FAZuH"
     VERSION = "0.0.1"
     ASSET_DIR = "asset"
-    LOG_DIR = "./logs"
+    LOG_DIR = "./logs/fazbot"
 
     # .env
     DISCORD_BOT_TOKEN: str
-
     ADMIN_DISCORD_ID: int
     DEV_SERVER_ID: int
-
     DISCORD_LOG_WEBHOOK: str
     DISCORD_STATUS_WEBHOOK: str
-
     MYSQL_HOST: str
     MYSQL_PORT: int
     MYSQL_USERNAME: str
     MYSQL_PASSWORD: str
-
     FAZDB_DB_NAME: str
     FAZBOT_DB_NAME: str
-
     FAZBOT_DB_MAX_RETRIES: int
     FAZDB_DB_MAX_RETRIES: int
 
