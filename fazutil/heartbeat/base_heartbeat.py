@@ -12,8 +12,8 @@ if TYPE_CHECKING:
 
 class BaseHeartbeat(Thread):
 
-    def __init__(self) -> None:
-        super().__init__(target=self.run, daemon=True)
+    def __init__(self, name: str | None = None) -> None:
+        super().__init__(target=self.run, daemon=True, name=name)
         self._tasks: list[HeartbeatTask] = []
 
     def start(self) -> None:

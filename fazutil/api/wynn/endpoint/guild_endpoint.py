@@ -14,10 +14,10 @@ class GuildEndpoint(BaseEndpoint):
 
     async def _get(self, *args: Any, **kwargs: Any) -> GuildResponse:
         response = await self._request.get(
-                *args,
-                **kwargs,
-                retries=self._retries,
-                retry_on_exc=self._retry_on_exc,
+            *args,
+            **kwargs,
+            retries=self._retries,
+            retry_on_exc=self._retry_on_exc,
         )
         return GuildResponse(response.body, response.headers)
 

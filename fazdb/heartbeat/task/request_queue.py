@@ -1,37 +1,38 @@
 from __future__ import annotations
 from datetime import datetime
 from threading import Lock
-from typing import Any, Coroutine, Generator, TYPE_CHECKING
+from typing import Any, Coroutine, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from fazutil.api import BaseResponse
     type BaseResponse_ = BaseResponse[Any, Any]
+    type ResponseCoro = Coroutine[BaseResponse_, Any, Any]
 
 
 class RequestQueue:
 
     def __init__(self) -> None:
-        # self._api: Api  # TODO: inject dependency into constructor
         self._list: list[RequestQueue.RequestItem] = []
         self._lock: Lock = Lock()
 
-    def dequeue(self, amount: int) -> list[Coroutine[BaseResponse_, Any, Any]]:
+    def dequeue(self, amount: int) -> list[ResponseCoro]:
         now = datetime.now().timestamp()
-
-        ret: list[Coroutine[BaseResponse_, Any, Any]] = []
+        ret: list[ResponseCoro] = []
         with self._lock:
             for _ in range(amount):
-                item = self._dequeue_one(now)
-                if item is None:
-                    # Stop yielding because the rest of the list is not eligible
+                try:
+                    item = min(self._list)
+                except ValueError:
                     break
-                ret.append(item.coro)
+                if item.is_eligible(now):
+                    self._list.remove(item)
+                    ret.append(item.coro)
         return ret
 
     def enqueue(
         self,
         request_ts: float,
-        coro: Coroutine[BaseResponse_, Any, Any],
+        coro: ResponseCoro,
         priority: int = 100
     ) -> None:
         with self._lock:
@@ -39,25 +40,11 @@ class RequestQueue:
             if item not in self._list:
                 self._list.append(item)
 
-    def iter(self) -> Generator[RequestItem, Any, None]:
-        with self._lock:
-            yield from self._list
-
-    def _dequeue_one(self, ts: None | float) -> None | RequestQueue.RequestItem:
-        if len(self._list) < 1:
-            return None
-
-        item = min(self._list)
-        if item.is_eligible(ts):
-            self._list.remove(item)
-            return item
-
-
     class RequestItem:
 
         def __init__(
             self,
-            coro: Coroutine[BaseResponse_, Any, Any],
+            coro: ResponseCoro,
             priority: int,
             req_ts: float,
         ) -> None:
@@ -72,8 +59,9 @@ class RequestQueue:
         def __eq__(self, other: object | RequestQueue.RequestItem) -> bool:
             if isinstance(other, RequestQueue.RequestItem):
                 return (
-                        (self.coro.cr_frame.f_locals == other.coro.cr_frame.f_locals) and
-                        (self.coro.__qualname__ == other.coro.__qualname__)
+                    # HACK
+                    (self.coro.cr_frame.f_locals == other.coro.cr_frame.f_locals) and
+                    (self.coro.__class__ == other.coro.__class__)
                 )
             return False
 
@@ -81,7 +69,7 @@ class RequestQueue:
             """For min() function.
             Return true to get favored more in min() function."""
             if self.is_eligible() is False:
-                # items not eligible (expired endpoint) obviously shouldn't be favored in min()
+                # items not eligible obviously shouldn't be returned in min()
                 return False
 
             if self.priority != other.priority:
@@ -97,7 +85,7 @@ class RequestQueue:
             return self._req_ts
 
         @property
-        def coro(self) -> Coroutine[BaseResponse_, Any, Any]:
+        def coro(self) -> ResponseCoro:
             return self._coro
 
         @property

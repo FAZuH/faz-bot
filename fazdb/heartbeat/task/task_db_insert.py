@@ -83,22 +83,14 @@ class TaskDbInsert(ITask):
         if not resp or not resp.body.raw: return
         adapter = self._response_adapter.OnlinePlayers
 
+        online_players = adapter.to_online_players(resp)
+        player_activity_history = adapter.to_player_activity_history(resp, self._response_handler.online_players)
+        worlds = list(adapter.to_worlds(resp))
+
         db = self._db
-        async with db.enter_async_session() as session:
-            await db.online_players_repository.truncate(session=session)
-            await db.online_players_repository.insert(adapter.to_online_players(resp), session=session)
-            await session.flush()
-
-            await db.player_activity_history_repository.insert(
-                adapter.to_player_activity_history(resp, self._response_handler.online_players),
-                session=session,
-                replace_on_duplicate=True
-            )
-            await session.flush()
-
-            worlds = list(adapter.to_worlds(resp))
-            await db.worlds_repository.update_worlds(worlds, session=session)
-            await session.flush()
+        await db.online_players_repository.update(online_players)
+        await db.player_activity_history_repository.insert(player_activity_history, replace_on_duplicate=True)
+        await db.worlds_repository.update_worlds(worlds)
 
     async def _insert_player_responses(self, resps: list[PlayerResponse]) -> None:
         if not resps: return
@@ -233,13 +225,17 @@ class TaskDbInsert(ITask):
                         self.online_guilds[guild_name].add(uuid)
 
                 # If an uuid is offline, and in dictionary, remove the uuid from the set of that guild
-                if (is_online is False) and (guild_name in self.online_guilds) and (uuid in self.online_guilds[guild_name]):
-                    self.online_guilds[guild_name].remove(uuid)
+                else:
+                    guild = self.online_guilds.get(guild_name)
+                    if not guild or uuid not in guild:
+                        continue
+                    
+                    guild.remove(uuid)
 
                     # Check the guild dictionary, if the set is empty, remove the guild from the dictionary.
                     # This also means that the guild is LOGGED OFF
-                    if len(self.online_guilds[guild_name]) == 0:
-                        del self.online_guilds[guild_name]
+                    if len(guild) == 0:
+                        self.online_guilds.pop(guild_name)
 
             self._logged_on_guilds = logged_on_guilds.copy()
 

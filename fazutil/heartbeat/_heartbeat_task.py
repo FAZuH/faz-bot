@@ -13,7 +13,8 @@ class HeartbeatTask:
 
     def __init__(self, task: ITask) -> None:
         self._task = task
-        self._timer: Timer = Timer(self.task.first_delay, self._run)
+        self._timer = Timer(self.task.first_delay, self._run)
+        self._set_timer_name(self._timer)
 
     def start(self) -> None:
         self._task.setup()
@@ -23,6 +24,10 @@ class HeartbeatTask:
         self._timer.cancel()
         self._task.teardown()
 
+    @property
+    def task(self) -> ITask:
+        return self._task
+
     def _run(self) -> None:
         t1 = perf_counter()
         self._task.run()
@@ -31,8 +36,8 @@ class HeartbeatTask:
 
     def _reschedule(self) -> None:
         self._timer = Timer(self.task.interval, self._run)
+        self._set_timer_name(self._timer)
         self._timer.start()
 
-    @property
-    def task(self) -> ITask:
-        return self._task
+    def _set_timer_name(self, timer: Timer) -> None:
+        timer.name = f"HeartbeatTask_{self._task.name}"
