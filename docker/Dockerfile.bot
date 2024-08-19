@@ -6,7 +6,7 @@ COPY asset ./asset
 COPY fazbot ./fazbot
 COPY fazutil ./fazutil
 COPY .env .
-COPY requirements_fazbot.txt requirements.txt
+COPY docker/requirements_fazbot.txt requirements.txt
 
 RUN pip3 install --no-cache-dir -r requirements.txt
 

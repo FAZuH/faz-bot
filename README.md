@@ -1,4 +1,4 @@
-# faz-docker
+# faz-bot
 
 Wynncraft utility and statistics discord bot. Inspired by motoki317's [moto-bot](https://github.com/motoki317/moto-bot/blob/master/README.md).
 
@@ -16,20 +16,16 @@ Some useful shortcuts for development are written in `Makefile`.
 
 For debugging:
 
-- `make bot-up` to launch only the faz-bot container.
-- `make bot-down` to stop only the faz-bot container.
-- `make bot-bash` to open bash shell on faz-bot container.
-- `make bot` to attach to faz-bot container standard output.
+- `make bot [build|up|down|bash]` Manage container related to fazbot service.
+- `make db [build|up|down|bash]` Manage container related to fazdb service.
+- `make sql [build|up|down|bash]` Manage container related to mysql service.
 
-- `make db-up` to launch only the faz-db container.
-- `make db-down` to stop only the faz-db container.
-- `make db-bash` to open bash shell on faz-db container.
-- `make db` to attach to faz-db container standard output.
-
-- `make sql-up` to launch only the DB container.
-- `make sql-down` to stop only the DB container.
-- `make sql-bash` to open bash shell on DB container.
-- `make sql` to connect to DB (password: `password`).
+Actions:
+- `build` to (re-build) the image and launch the service.
+- `up` to launch to launch the service (does not rebuild the image).
+- `down` to stop the service.
+- `bash` to open bash shell on the container.
+- Empty action to attach to the service's standard output.
 
 Access your SQL database remotely through SSH by forwarding the remote port to a local port on your machine:
 
@@ -51,9 +47,9 @@ Using docker might be easier but overheads could be a problem in small servers.
 1. Clone this repository.
 
 ```sh
-git clone https://github.com/FAZuH/faz-docker.git
+git clone https://github.com/FAZuH/faz-bot.git
 
-cd faz-docker
+cd faz-bot
 ```
 
 2. Create a file named `.env` and set environment variables (see `.env-example`).

@@ -1,38 +1,36 @@
-version: "3.8"
-
 services:
   fazbot:
     container_name: fazbot
     build:
-      context: .
-      dockerfile: Dockerfile.bot
+      context: ..
+      dockerfile: docker/Dockerfile.bot
     restart: unless-stopped
     environment:
       MYSQL_HOST: mysql
       MYSQL_PORT: 3306
       MYSQL_USER: faz
       MYSQL_PASSWORD: password
-      MYSQL_FAZBOT_DATABASE: fazbot
-      MYSQL_FAZDB_DATABASE: fazdb
+      MYSQL_FAZBOT_DATABASE: faz-bot
+      MYSQL_FAZDB_DATABASE: faz-db
     depends_on:
       - mysql
     networks:
       - faz-network
     volumes:
-      - ./logs/fazbot:/app/logs
+      - ../logs/fazbot:/app/logs
 
   fazdb:
     container_name: fazdb
     build:
-      context: .
-      dockerfile: Dockerfile.db
+      context: ..
+      dockerfile: docker/Dockerfile.db
     restart: unless-stopped
     environment:
       MYSQL_HOST: mysql
       MYSQL_PORT: 3306
       MYSQL_USER: faz
       MYSQL_PASSWORD: password
-      MYSQL_FAZDB_DATABASE: fazdb
+      MYSQL_FAZDB_DATABASE: faz-db
     depends_on:
       - mysql
     expose:
@@ -40,7 +38,7 @@ services:
     networks:
       - faz-network
     volumes:
-      - ./logs/fazdb:/app/logs
+      - ../logs/fazdb:/app/logs
 
   mysql:
     image: mariadb:11.4.2
@@ -55,8 +53,8 @@ services:
     ports:
       - "127.0.0.1:3306:3306"
     volumes:
-      - ./mysql/data:/var/lib/mysql
-      - ./mysql/init:/docker-entrypoint-initdb.d
+      - ../mysql/data:/var/lib/mysql
+      - ../mysql/init:/docker-entrypoint-initdb.d
     networks:
       - faz-network
 
