@@ -4,7 +4,6 @@ WORKDIR /app
 
 COPY fazdb ./fazdb
 COPY fazutil ./fazutil
-COPY .env .
 COPY requirements_fazdb.txt requirements.txt
 
 RUN pip3 install --no-cache-dir -r requirements.txt

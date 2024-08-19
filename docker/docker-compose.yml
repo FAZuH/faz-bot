@@ -1,11 +1,10 @@
 services:
   fazbot:
-    # image: ghcr.io/fazuh/fazbot:main
     container_name: fazbot
-    restart: unless-stopped
     build:
       context: ..
       dockerfile: docker/Dockerfile.bot
+    restart: unless-stopped
     environment:
       MYSQL_HOST: mysql
       MYSQL_PORT: 3306
@@ -13,6 +12,7 @@ services:
       MYSQL_PASSWORD: password
       MYSQL_FAZBOT_DATABASE: faz-bot
       MYSQL_FAZDB_DATABASE: faz-db
+    env_file: ../.env
     depends_on:
       - mysql
     networks:
@@ -21,18 +21,18 @@ services:
       - ../logs/fazbot:/app/logs
 
   fazdb:
-    # image: ghcr.io/fazuh/fazbot:main
     container_name: fazdb
-    restart: unless-stopped
     build:
       context: ..
       dockerfile: docker/Dockerfile.db
+    restart: unless-stopped
     environment:
       MYSQL_HOST: mysql
       MYSQL_PORT: 3306
       MYSQL_USER: faz
       MYSQL_PASSWORD: password
       MYSQL_FAZDB_DATABASE: faz-db
+    env_file: ../.env
     depends_on:
       - mysql
     expose:
