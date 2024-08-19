@@ -82,8 +82,7 @@ class TaskApiRequest(ITask):
             if task.get_coro().__qualname__ == self._api.player.get_online_uuids.__qualname__:
                 self._request_list.enqueue(0, self._api.player.get_online_uuids(), priority=999)
 
-            with logger.catch():
-                raise exc
+            logger.opt(exception=True).error(exc)
 
         for task in tasks_to_remove:
             self._running_requests.remove(task)
