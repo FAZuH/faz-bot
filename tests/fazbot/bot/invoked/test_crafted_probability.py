@@ -14,15 +14,9 @@ class TestCraftedProbability(unittest.IsolatedAsyncioTestCase):
 
     async def test_run(self) -> None:
         interaction = MagicMock()
-        ing_strs = [
-            "1,2,50",
-            "1,2,50",
-            "1,2,50",
-            "1,2,50"
-        ]
+        ing_strs = ["1,2,50", "1,2,50", "1,2,50", "1,2,50"]
         craftedprob = InvokeCraftedProbability(interaction, ing_strs)
         for ing in craftedprob._craftutil.ingredients:
             self.assertEqual(ing.min_value, 1)
             self.assertEqual(ing.max_value, 2)
             self.assertEqual(ing.boost, 50)
-

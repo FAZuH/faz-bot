@@ -5,6 +5,7 @@ from typing import Any, Coroutine, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from fazutil.api import BaseResponse
+
     type Resp = BaseResponse[Any, Any]
     type RespCoro = Coroutine[Resp, Any, Any]
 
@@ -29,12 +30,7 @@ class RequestQueue:
                     ret.append(item.coro)
         return ret
 
-    def enqueue(
-        self,
-        request_ts: float,
-        coro: RespCoro,
-        priority: int = 100
-    ) -> None:
+    def enqueue(self, request_ts: float, coro: RespCoro, priority: int = 100) -> None:
         with self._lock:
             item = self.RequestItem(coro, priority, request_ts)
             if item not in self._list:
@@ -60,8 +56,8 @@ class RequestQueue:
             if isinstance(other, RequestQueue.RequestItem):
                 return (
                     # HACK
-                    (self.coro.cr_frame.f_locals == other.coro.cr_frame.f_locals) and
-                    (self.coro.__class__ == other.coro.__class__)
+                    (self.coro.cr_frame.f_locals == other.coro.cr_frame.f_locals)
+                    and (self.coro.__class__ == other.coro.__class__)
                 )
             return False
 

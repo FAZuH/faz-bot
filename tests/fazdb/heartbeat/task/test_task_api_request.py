@@ -47,8 +47,16 @@ class TestTaskApiRequest(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(self.task._running_requests), 2)
 
     def test_check_responses(self):
-        task1 = MagicMock(done=MagicMock(return_value=True), exception=MagicMock(return_value=None), result=MagicMock())
-        task2 = MagicMock(done=MagicMock(return_value=True), exception=MagicMock(return_value=None), result=MagicMock())
+        task1 = MagicMock(
+            done=MagicMock(return_value=True),
+            exception=MagicMock(return_value=None),
+            result=MagicMock(),
+        )
+        task2 = MagicMock(
+            done=MagicMock(return_value=True),
+            exception=MagicMock(return_value=None),
+            result=MagicMock(),
+        )
         task3 = MagicMock(done=MagicMock(return_value=False))
         self.task._running_requests = [task1, task2, task3]
         self.task._response_list.put = MagicMock()

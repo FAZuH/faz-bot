@@ -5,7 +5,9 @@ from fazutil.db.fazbot.repository import WhitelistGroupRepository
 from ._common_fazbot_repository_test import CommonFazbotRepositoryTest
 
 
-class TestWhitelistGroupRepository(CommonFazbotRepositoryTest.Test[WhitelistGroupRepository]):
+class TestWhitelistGroupRepository(
+    CommonFazbotRepositoryTest.Test[WhitelistGroupRepository]
+):
 
     async def test_ban_user(self) -> None:
         await self.repo.ban_user(1)  # act
@@ -13,7 +15,7 @@ class TestWhitelistGroupRepository(CommonFazbotRepositoryTest.Test[WhitelistGrou
         all = await self.repo.select_all()
         ids = [e.id for e in all]
         self.assertIn(1, ids)
-        
+
     async def test_unban_user(self) -> None:
         await self.repo.ban_user(1)  # prepare
         await self.repo.unban_user(1)  # act
@@ -36,7 +38,7 @@ class TestWhitelistGroupRepository(CommonFazbotRepositoryTest.Test[WhitelistGrou
         all = await self.repo.select_all()
         ids = [e.id for e in all]
         self.assertIn(1, ids)
-        
+
     async def test_unwhitelist_guild(self) -> None:
         await self.repo.ban_user(1)  # prepare
         await self.repo.unwhitelist_guild(1)  # act
@@ -65,12 +67,18 @@ class TestWhitelistGroupRepository(CommonFazbotRepositoryTest.Test[WhitelistGrou
     @override
     def _get_mock_data(self):
         model = self.repo.model
-        mock_data1 = model(id=1, type='a', reason='a', from_=self._get_mock_datetime(), until=self._get_mock_datetime())
+        mock_data1 = model(
+            id=1,
+            type="a",
+            reason="a",
+            from_=self._get_mock_datetime(),
+            until=self._get_mock_datetime(),
+        )
         mock_data2 = mock_data1.clone()
         mock_data3 = mock_data1.clone()
         mock_data3.id = 2
         mock_data4 = mock_data1.clone()
-        mock_data4.reason = 'b'
+        mock_data4.reason = "b"
         return (mock_data1, mock_data2, mock_data3, mock_data4, "reason")
 
     @property

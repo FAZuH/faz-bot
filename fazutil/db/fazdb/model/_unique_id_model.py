@@ -13,9 +13,10 @@ class UniqueIdModel(BaseFazdbModel):
 
     def _compute_unique_id(self) -> None:
         columns = [
-            str(getattr(self, col.name)) for col in self.get_table().columns
+            str(getattr(self, col.name))
+            for col in self.get_table().columns
             if col.name not in {"unique_id", "datetime"}
         ]
-        to_hash = ''.join(columns).encode()
+        to_hash = "".join(columns).encode()
         hashed_columns = hashlib.md5(to_hash).digest()
         self.unique_id = hashed_columns

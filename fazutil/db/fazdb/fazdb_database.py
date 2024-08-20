@@ -5,7 +5,9 @@ from .repository import *
 
 class FazdbDatabase(BaseMySQLDatabase):
 
-    def __init__(self, user: str, password: str, host: str, port: int, database: str) -> None:
+    def __init__(
+        self, user: str, password: str, host: str, port: int, database: str
+    ) -> None:
         super().__init__(user, password, host, port, database)
         self._base_model = BaseFazdbModel()
 
@@ -21,19 +23,21 @@ class FazdbDatabase(BaseMySQLDatabase):
         self._player_info_repository = PlayerInfoRepository(self)
         self._worlds_repository = WorldsRepository(self)
 
-        self.repositories.extend([
-            self._character_history_repository,
-            self._character_info_repository,
-            self._fazdb_uptime_repository,
-            self._guild_history_repository,
-            self._guild_info_repository,
-            self._guild_member_history_repository,
-            self._online_players_repository,
-            self._player_activity_history_repository,
-            self._player_history_repository,
-            self._player_info_repository,
-            self._worlds_repository
-        ])
+        self.repositories.extend(
+            [
+                self._character_history_repository,
+                self._character_info_repository,
+                self._fazdb_uptime_repository,
+                self._guild_history_repository,
+                self._guild_info_repository,
+                self._guild_member_history_repository,
+                self._online_players_repository,
+                self._player_activity_history_repository,
+                self._player_history_repository,
+                self._player_info_repository,
+                self._worlds_repository,
+            ]
+        )
 
     @property
     def character_history_repository(self) -> CharacterHistoryRepository:

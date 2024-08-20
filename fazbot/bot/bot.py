@@ -35,7 +35,9 @@ class Bot:
 
         self._event_loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self._event_loop)
-        self._discord_bot_thread = Thread(target=self._start, name=self._get_cls_qualname())
+        self._discord_bot_thread = Thread(
+            target=self._start, name=self._get_cls_qualname()
+        )
 
         # Define self._client before initializing the modules below
         self._asset_manager = AssetManager(self)
@@ -54,7 +56,9 @@ class Bot:
 
     def stop(self) -> None:
         logger.info("Stopping Bot")
-        asyncio.run_coroutine_threadsafe(self._async_teardown(), self._event_loop).result()
+        asyncio.run_coroutine_threadsafe(
+            self._async_teardown(), self._event_loop
+        ).result()
         self._event_loop.stop()
         logger.success("Stopped Bot")
 
@@ -121,15 +125,18 @@ class Bot:
         """Synchronizes commands registered to dev guild into discord."""
         dev_server_id = self.app.properties.DEV_SERVER_ID
         await self.client.sync_application_commands(guild_id=dev_server_id)
-        logger.info(f"Synchronized application commands for dev guild id {dev_server_id}")
+        logger.info(
+            f"Synchronized application commands for dev guild id {dev_server_id}"
+        )
 
     async def _whitelist_dev_guild(self) -> None:
         """Adds dev guild to whitelist database, if not already added."""
-        guild = await Utils.must_get_guild(self.client, self.app.properties.DEV_SERVER_ID)
+        guild = await Utils.must_get_guild(
+            self.client, self.app.properties.DEV_SERVER_ID
+        )
         try:
             await self.fazbot_db.whitelist_group_repository.whitelist_guild(
-                guild.id,
-                reason="DEV GUILD"
+                guild.id, reason="DEV GUILD"
             )
         except IntegrityError:
             pass

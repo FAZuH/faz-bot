@@ -16,22 +16,57 @@ class LoggerSetup:
         cls._admin_discord_id = admin_discord_id
 
         logger.remove()
-        logger.add(sink=sys.stderr, level="DEBUG", backtrace=False, diagnose=False, enqueue=True)
+        logger.add(
+            sink=sys.stderr,
+            level="DEBUG",
+            backtrace=False,
+            diagnose=False,
+            enqueue=True,
+        )
 
         os.makedirs(log_directory, exist_ok=True)
         log_file = os.path.join(log_directory, "logs.log")
-        logger.add(sink=log_file, level="DEBUG", rotation="10 MB", compression="zip", enqueue=True, backtrace=True)
+        logger.add(
+            sink=log_file,
+            level="DEBUG",
+            rotation="10 MB",
+            compression="zip",
+            enqueue=True,
+            backtrace=True,
+        )
 
         default_disc = {"format": cls._discord_exception_formatter, "enqueue": True}
-        logger.add(sink=cls._critical_discord_sink, filter=cls._discord_filter("CRITICAL"), **default_disc)
-        logger.add(sink=cls._error_discord_sink, filter=cls._discord_filter("ERROR"), **default_disc)
-        logger.add(sink=cls._warning_discord_sink, filter=cls._discord_filter("WARNING"), **default_disc)
-        logger.add(sink=cls._success_discord_sink, filter=cls._discord_filter("SUCCESS"), **default_disc)
-        logger.add(sink=cls._info_discord_sink, filter=cls._discord_filter("INFO"), **default_disc)
+        logger.add(
+            sink=cls._critical_discord_sink,
+            filter=cls._discord_filter("CRITICAL"),
+            **default_disc,
+        )
+        logger.add(
+            sink=cls._error_discord_sink,
+            filter=cls._discord_filter("ERROR"),
+            **default_disc,
+        )
+        logger.add(
+            sink=cls._warning_discord_sink,
+            filter=cls._discord_filter("WARNING"),
+            **default_disc,
+        )
+        logger.add(
+            sink=cls._success_discord_sink,
+            filter=cls._discord_filter("SUCCESS"),
+            **default_disc,
+        )
+        logger.add(
+            sink=cls._info_discord_sink,
+            filter=cls._discord_filter("INFO"),
+            **default_disc,
+        )
 
     @classmethod
     def _critical_discord_sink(cls, message: str) -> None:
-        cls._send_embed_to_webhook("CRITICAL", message, colour=Colour.red(), is_admin_ping=True)
+        cls._send_embed_to_webhook(
+            "CRITICAL", message, colour=Colour.red(), is_admin_ping=True
+        )
 
     @classmethod
     def _error_discord_sink(cls, message: str) -> None:
@@ -52,7 +87,10 @@ class LoggerSetup:
     @classmethod
     def _discord_filter(cls, level):
         def filter(record):
-            return record["extra"].get("discord", False) and record["level"].name == level
+            return (
+                record["extra"].get("discord", False) and record["level"].name == level
+            )
+
         return filter
 
     @staticmethod
@@ -69,11 +107,20 @@ class LoggerSetup:
 
     @classmethod
     def _send_embed_to_webhook(
-        cls, title: str, description: str, *, colour: Colour | None = None, is_admin_ping: bool = False
+        cls,
+        title: str,
+        description: str,
+        *,
+        colour: Colour | None = None,
+        is_admin_ping: bool = False,
     ) -> None:
         webhook = SyncWebhook.from_url(cls._webhook_url)
-        embed = Embed(title=title, description=f"```{description[:4090]}```", colour=colour)
-        embed.add_field(name="Timestamp", value=f"<t:{int(datetime.now().timestamp())}:R>")
+        embed = Embed(
+            title=title, description=f"```{description[:4090]}```", colour=colour
+        )
+        embed.add_field(
+            name="Timestamp", value=f"<t:{int(datetime.now().timestamp())}:R>"
+        )
         admin_ping = f"<@{cls._admin_discord_id}>"
         if is_admin_ping:
             webhook.send(content=admin_ping, embed=embed)

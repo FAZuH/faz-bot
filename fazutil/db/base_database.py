@@ -17,15 +17,15 @@ class BaseDatabase(ABC):
     """Abstract base class for database operations, supporting both synchronous and asynchronous drivers."""
 
     def __init__(
-            self,
-            sync_driver: str,
-            async_driver: str,
-            user: str,
-            password: str,
-            host: str,
-            port: int,
-            database: str,
-        ) -> None:
+        self,
+        sync_driver: str,
+        async_driver: str,
+        user: str,
+        password: str,
+        host: str,
+        port: int,
+        database: str,
+    ) -> None:
         """Initialize the database with connection parameters.
 
         Args:
@@ -88,7 +88,9 @@ class BaseDatabase(ABC):
                 yield session
 
     @contextmanager
-    def must_enter_connection(self, connection: Connection | None = None) -> Generator[Connection, None]:
+    def must_enter_connection(
+        self, connection: Connection | None = None
+    ) -> Generator[Connection, None]:
         """Provide a context manager for synchronous database connections, optionally reusing an existing connection.
 
         Args:
@@ -104,7 +106,9 @@ class BaseDatabase(ABC):
                 yield conn
 
     @contextmanager
-    def must_enter_session(self, session: Session | None = None) -> Generator[Session, None]:
+    def must_enter_session(
+        self, session: Session | None = None
+    ) -> Generator[Session, None]:
         """Provide a context manager for synchronous database sessions, optionally reusing an existing session.
 
         Args:
@@ -137,12 +141,16 @@ class BaseDatabase(ABC):
             AsyncGenerator[AsyncSession, None]: Asynchronous database session.
         """
         async with self.enter_async_connection() as conn:
-            async_session = async_sessionmaker(bind=conn, autoflush=False, expire_on_commit=False)
+            async_session = async_sessionmaker(
+                bind=conn, autoflush=False, expire_on_commit=False
+            )
             async with async_session.begin() as session:
                 yield session
 
     @asynccontextmanager
-    async def must_enter_async_connection(self, connection: AsyncConnection | None = None) -> AsyncGenerator[AsyncConnection, None]:
+    async def must_enter_async_connection(
+        self, connection: AsyncConnection | None = None
+    ) -> AsyncGenerator[AsyncConnection, None]:
         """Provide a context manager for asynchronous database connections, optionally reusing an existing connection.
 
         Args:
@@ -158,7 +166,9 @@ class BaseDatabase(ABC):
                 yield conn
 
     @asynccontextmanager
-    async def must_enter_async_session(self, session: AsyncSession | None = None) -> AsyncGenerator[AsyncSession, None]:
+    async def must_enter_async_session(
+        self, session: AsyncSession | None = None
+    ) -> AsyncGenerator[AsyncSession, None]:
         """Provide a context manager for asynchronous database sessions, optionally reusing an existing session.
 
         Args:

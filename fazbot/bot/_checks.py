@@ -29,7 +29,7 @@ class Checks:
         if not is_admin:
             logger.warning(
                 f"is_admin check for user {interaction.user.global_name} ({user_id}) returned False",
-                discord=True
+                discord=True,
             )
 
         return is_admin
@@ -45,7 +45,7 @@ class Checks:
         if is_banned:
             logger.warning(
                 f"is_banned check for user {interaction.user.global_name} ({user_id}) returned True",
-                discord=True
+                discord=True,
             )
 
         return is_banned
@@ -56,12 +56,14 @@ class Checks:
         guild_id = interaction.guild.id
 
         db = self.bot.fazbot_db
-        is_whitelisted = await db.whitelist_group_repository.is_whitelisted_guild(guild_id)
+        is_whitelisted = await db.whitelist_group_repository.is_whitelisted_guild(
+            guild_id
+        )
 
         if not is_whitelisted:
             logger.warning(
                 f"is_whitelisted check for guild {interaction.guild.name} ({guild_id}) returned False",
-                discord=True
+                discord=True,
             )
 
         return is_whitelisted

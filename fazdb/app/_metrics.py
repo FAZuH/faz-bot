@@ -12,7 +12,9 @@ class Metrics:
         start_http_server(8000)
         logger.info("Started prometheus metrics on port 8000")
 
-    def register_summary(self, method: Callable[..., Any], name: str, description: str) -> None:
+    def register_summary(
+        self, method: Callable[..., Any], name: str, description: str
+    ) -> None:
         summary_metric = Summary(name, description)
 
         @wraps(method)
@@ -32,7 +34,9 @@ class Metrics:
 
         self.__replace(method, wrapped)
 
-    def register_counter(self, method: Callable[..., Any], name: str, description: str) -> None:
+    def register_counter(
+        self, method: Callable[..., Any], name: str, description: str
+    ) -> None:
         counter_metric = Counter(name, description)
 
         @wraps(method)
@@ -55,6 +59,8 @@ class Metrics:
         self.__replace(method, wrapped)
 
     @staticmethod
-    def __replace(old_method: Callable[..., Any], new_method: Callable[..., Any]) -> None:
+    def __replace(
+        old_method: Callable[..., Any], new_method: Callable[..., Any]
+    ) -> None:
         setattr(new_method, "__self__", old_method.__self__)  # type: ignore
         setattr(old_method.__self__, old_method.__name__, new_method)  # type: ignore

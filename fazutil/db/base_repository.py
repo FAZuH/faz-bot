@@ -44,14 +44,13 @@ class BaseRepository[T: BaseModel, ID](ABC):
         """
         params = {
             "schema": self._database.async_engine.url.database,
-            "table_name": self.table_name
+            "table_name": self.table_name,
         }
 
         async with self._database.must_enter_async_session(session) as session:
             result = await session.execute(text(sql), params)
-
-        row = result.fetchone()
-        ret = Decimal(row["size_bytes"]) if (row and row["size_bytes"] is not None) else Decimal(0)  # type: ignore
+            row = result.fetchone()
+            ret = Decimal(row["size_bytes"]) if (row and row["size_bytes"] is not None) else Decimal(0)  # type: ignore
         return ret
 
     async def create_table(self) -> None:
@@ -65,7 +64,7 @@ class BaseRepository[T: BaseModel, ID](ABC):
         session: None | AsyncSession = None,
         ignore_on_duplicate: bool = False,
         replace_on_duplicate: bool = False,
-        columns_to_replace: Iterable[str] | None = None
+        columns_to_replace: Iterable[str] | None = None,
     ) -> None:
         """Insert one or more entities into the database.
 
@@ -78,7 +77,9 @@ class BaseRepository[T: BaseModel, ID](ABC):
             If not provided, a new session will be created.
         """
         if ignore_on_duplicate and replace_on_duplicate:
-            raise ValueError("ignore_on_duplicate and replace_on_duplicate cannot be both True")
+            raise ValueError(
+                "ignore_on_duplicate and replace_on_duplicate cannot be both True"
+            )
 
         entities = self._ensure_iterable(entity)
 
@@ -102,7 +103,9 @@ class BaseRepository[T: BaseModel, ID](ABC):
         async with self.database.must_enter_async_session(session) as session:
             await session.execute(stmt)
 
-    async def delete(self, id_: ID | list[ID], *, session: AsyncSession | None = None) -> None:
+    async def delete(
+        self, id_: ID | list[ID], *, session: AsyncSession | None = None
+    ) -> None:
         """Deletes an entry from the repository based on `id_`
 
         Parameters
@@ -119,7 +122,9 @@ class BaseRepository[T: BaseModel, ID](ABC):
         async with self.database.must_enter_async_session(session) as session:
             await session.execute(stmt)
 
-    async def delete_many(self, id_: list[ID], *, session: AsyncSession | None = None) -> None:
+    async def delete_many(
+        self, id_: list[ID], *, session: AsyncSession | None = None
+    ) -> None:
         """Deletes an entry from the repository based on `id_`
 
         Parameters
@@ -195,7 +200,9 @@ class BaseRepository[T: BaseModel, ID](ABC):
 
     def _get_primary_key(self) -> Tuple[Column[Any], ...] | Column[Any]:
         model_cls = self.model
-        primary_keys: tuple[Column[Any], ...] | Column[Any] = model_cls.__mapper__.primary_key
+        primary_keys: tuple[Column[Any], ...] | Column[Any] = (
+            model_cls.__mapper__.primary_key
+        )
 
         if not isinstance(primary_keys, tuple):  # type: ignore
             return tuple_(primary_keys)

@@ -5,7 +5,9 @@ from fazutil.db.fazdb.repository import CharacterHistoryRepository
 from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
 
 
-class TestCharacterHistoryRepository(CommonFazdbRepositoryTest.Test[CharacterHistoryRepository]):
+class TestCharacterHistoryRepository(
+    CommonFazdbRepositoryTest.Test[CharacterHistoryRepository]
+):
 
     # override
     def _get_mock_data(self):
@@ -14,13 +16,37 @@ class TestCharacterHistoryRepository(CommonFazdbRepositoryTest.Test[CharacterHis
 
         model = self.repo.model
         mock_data1 = model(
-            character_uuid=uuid1, level=1, xp=1, wars=1, playtime=1.0,
-            mobs_killed=1, chests_found=1, logins=1, deaths=1, discoveries=1,
-            hardcore=False, ultimate_ironman=False, ironman=False, craftsman=False,
-            hunted=False, alchemism=1.0, armouring=1.0, cooking=1.0, jeweling=1.0,
-            scribing=1.0, tailoring=1.0, weaponsmithing=1.0, woodworking=1.0,
-            mining=1.0, woodcutting=1.0, farming=1.0, fishing=1.0, dungeon_completions=1,
-            quest_completions=1, raid_completions=1, datetime=self._get_mock_datetime(),
+            character_uuid=uuid1,
+            level=1,
+            xp=1,
+            wars=1,
+            playtime=1.0,
+            mobs_killed=1,
+            chests_found=1,
+            logins=1,
+            deaths=1,
+            discoveries=1,
+            hardcore=False,
+            ultimate_ironman=False,
+            ironman=False,
+            craftsman=False,
+            hunted=False,
+            alchemism=1.0,
+            armouring=1.0,
+            cooking=1.0,
+            jeweling=1.0,
+            scribing=1.0,
+            tailoring=1.0,
+            weaponsmithing=1.0,
+            woodworking=1.0,
+            mining=1.0,
+            woodcutting=1.0,
+            farming=1.0,
+            fishing=1.0,
+            dungeon_completions=1,
+            quest_completions=1,
+            raid_completions=1,
+            datetime=self._get_mock_datetime(),
         )
         mock_data2 = mock_data1.clone()
         mock_data3 = mock_data1.clone()

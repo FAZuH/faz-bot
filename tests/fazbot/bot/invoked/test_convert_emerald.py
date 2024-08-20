@@ -12,7 +12,7 @@ class TestConvertEmerald(IsolatedAsyncioTestCase):
 
         self.obj = InvokeConvertEmerald(self.interaction, "100le")
         self.obj.set_assets(self.asset)
-    
+
     def test_set_assets(self) -> None:
         # PREPARE
         file = MagicMock()
@@ -24,6 +24,7 @@ class TestConvertEmerald(IsolatedAsyncioTestCase):
         # ASSERT
         self.assertEqual(file, self.obj.ASSET_LIQUIDEMERALD._file)
         self.assertEqual(filename, self.obj.ASSET_LIQUIDEMERALD.filename)
+
     #
     # async def test_run(self) -> None:
     #     # PREPARE
@@ -41,10 +42,10 @@ class TestConvertEmerald(IsolatedAsyncioTestCase):
     #     self.interaction.user.display_name = "name"
     #     self.interaction.user.display_avatar.url = "url"
     #
-    #     # ACT 
+    #     # ACT
     #     get_embed_method = getattr(self.obj, "_InvokeConvertEmerald__get_embed")
     #     embed = get_embed_method(self.interaction, self.obj._emeralds)
-    #     
+    #
     #     # ASSERT
     #     self.assertEqual(embed.title, "Emerald Convertor")
     #     self.assertEqual(embed.color.value, 8894804)  # type: ignore

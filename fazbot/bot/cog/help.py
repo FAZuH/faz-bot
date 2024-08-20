@@ -12,7 +12,9 @@ class Help(CogBase):
     @nextcord.slash_command(name="help", description="Help command")
     async def _help(self, interaction: nextcord.Interaction[Any]) -> None:
         if not interaction.guild:
-            raise ApplicationException("You can only use this command in a guild channel.")
+            raise ApplicationException(
+                "You can only use this command in a guild channel."
+            )
 
         cmds = list(interaction.guild.get_application_commands())
         await InvokeHelp(self._bot, interaction, cmds).run()

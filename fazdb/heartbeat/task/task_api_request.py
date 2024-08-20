@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from .request_queue import RequestQueue
     from .response_queue import ResponseQueue
     from fazutil.api import WynnApi, BaseResponse
+
     type Resp = BaseResponse[Any, Any]
 
 
@@ -19,7 +20,9 @@ class TaskApiRequest(ITask):
 
     _CONCURRENT_REQUESTS = 15
 
-    def __init__(self, api: WynnApi, request_queue: RequestQueue, response_queue: ResponseQueue) -> None:
+    def __init__(
+        self, api: WynnApi, request_queue: RequestQueue, response_queue: ResponseQueue
+    ) -> None:
         self._api = api
         self._request_list = request_queue
         self._response_list = response_queue
@@ -79,8 +82,13 @@ class TaskApiRequest(ITask):
                 ok_results.append(task.result())
                 continue
 
-            if task.get_coro().__qualname__ == self._api.player.get_online_uuids.__qualname__:
-                self._request_list.enqueue(0, self._api.player.get_online_uuids(), priority=999)
+            if (
+                task.get_coro().__qualname__
+                == self._api.player.get_online_uuids.__qualname__
+            ):
+                self._request_list.enqueue(
+                    0, self._api.player.get_online_uuids(), priority=999
+                )
 
             logger.opt(exception=True).error(exc)
 

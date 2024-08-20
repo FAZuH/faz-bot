@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 class AssetManager:
     """Class for managing assets for Invoke classes. Assets passed or set into the `asset` property
-    is automatically converted into a dictionary of `dict[str, File]`. The converted asset is then 
+    is automatically converted into a dictionary of `dict[str, File]`. The converted asset is then
     passed into class variables of Invoke subclasses automatically."""
 
     def __init__(self, bot: Bot) -> None:
@@ -25,7 +25,9 @@ class AssetManager:
         self.setup()
 
     def setup(self) -> None:
-        self._assets = self._convert_asset_file_type(self._bot.app.properties.ASSET.files)
+        self._assets = self._convert_asset_file_type(
+            self._bot.app.properties.ASSET.files
+        )
         InvokeConvertEmerald.set_assets(self._assets)
         InvokeCraftedProbability.set_assets(self._assets)
         InvokeIngredientProbability.set_assets(self._assets)

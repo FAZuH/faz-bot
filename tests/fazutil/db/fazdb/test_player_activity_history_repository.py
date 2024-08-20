@@ -7,7 +7,9 @@ from fazutil.db.fazdb.repository.player_activity_history_repository import (
 from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
 
 
-class TestPlayerActivityHistoryRepository(CommonFazdbRepositoryTest.Test[PlayerActivityHistoryRepository]):
+class TestPlayerActivityHistoryRepository(
+    CommonFazdbRepositoryTest.Test[PlayerActivityHistoryRepository]
+):
 
     # override
     def _get_mock_data(self):
@@ -16,7 +18,9 @@ class TestPlayerActivityHistoryRepository(CommonFazdbRepositoryTest.Test[PlayerA
         uuid1 = UUID("b30f5e97-957d-47f6-bf1e-9e48d9fea200").bytes
         uuid2 = UUID("33c3ad56-5e9b-4bfe-9685-9fc4df2a67fa").bytes
         mock_data1 = model(
-            uuid=uuid1, logon_datetime=self._get_mock_datetime(), logoff_datetime=self._get_mock_datetime().replace(day=1)
+            uuid=uuid1,
+            logon_datetime=self._get_mock_datetime(),
+            logoff_datetime=self._get_mock_datetime().replace(day=1),
         )
         mock_data2 = mock_data1.clone()
         mock_data3 = mock_data1.clone()

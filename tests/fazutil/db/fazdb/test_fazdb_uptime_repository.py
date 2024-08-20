@@ -11,7 +11,7 @@ class TestFazdbUptimeRepository(CommonFazdbRepositoryTest.Test[FazdbUptimeReposi
 
         mock_data1 = model(
             start_time=self._get_mock_datetime().replace(day=1),
-            stop_time=self._get_mock_datetime().replace(day=2)
+            stop_time=self._get_mock_datetime().replace(day=2),
         )
         mock_data2 = mock_data1.clone()
         mock_data3 = mock_data1.clone()

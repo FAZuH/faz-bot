@@ -16,8 +16,8 @@ class WynnApi:
         self._request = HttpRequest(
             "https://beta-api.wynncraft.com",
             ratelimit=self.ratelimit,
-            headers={"User-Agent": f"faz-db", "Content-Type": "application/json"
-        })
+            headers={"User-Agent": f"faz-db", "Content-Type": "application/json"},
+        )
 
         self._guild_endpoint = GuildEndpoint(self.request, 3, True)
         self._player_endpoint = PlayerEndpoint(self.request, 3, True)

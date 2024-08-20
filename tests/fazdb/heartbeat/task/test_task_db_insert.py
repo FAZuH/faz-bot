@@ -3,7 +3,11 @@ import unittest
 from unittest.mock import AsyncMock, MagicMock, Mock
 
 from fazutil.api import WynnApi
-from fazutil.api.wynn.response import GuildResponse, OnlinePlayersResponse, PlayerResponse
+from fazutil.api.wynn.response import (
+    GuildResponse,
+    OnlinePlayersResponse,
+    PlayerResponse,
+)
 from fazutil.db.fazdb import FazdbDatabase
 from fazdb.heartbeat.task import RequestQueue, ResponseQueue, TaskDbInsert
 
@@ -15,7 +19,9 @@ class TestTaskDbInsert(unittest.TestCase):
         self._db = Mock(spec=FazdbDatabase)
         self._request_list = Mock(spec_set=RequestQueue)
         self._response_list = Mock(spec_set=ResponseQueue)
-        self._task = TaskDbInsert(self._api, self._db, self._request_list, self._response_list)
+        self._task = TaskDbInsert(
+            self._api, self._db, self._request_list, self._response_list
+        )
 
     def test_setup(self) -> None:
         # PREPARE
@@ -26,7 +32,9 @@ class TestTaskDbInsert(unittest.TestCase):
 
         # ASSERT
         self._db.create_all.assert_called_once()
-        self._request_list.enqueue.assert_called_once_with(0, self._api.player.get_online_uuids(), priority=999)
+        self._request_list.enqueue.assert_called_once_with(
+            0, self._api.player.get_online_uuids(), priority=999
+        )
 
     def test_run(self) -> None:
         # PREPARE
@@ -62,9 +70,15 @@ class TestTaskDbInsert(unittest.TestCase):
         await self._task._run()
 
         # ASSERT
-        self._task._response_handler.handle_onlineplayers_response.assert_called_once_with(online_players)
-        self._task._response_handler.handle_player_response.assert_called_once_with(player)
-        self._task._response_handler.handle_guild_response.assert_called_once_with(guild)
+        self._task._response_handler.handle_onlineplayers_response.assert_called_once_with(
+            online_players
+        )
+        self._task._response_handler.handle_player_response.assert_called_once_with(
+            player
+        )
+        self._task._response_handler.handle_guild_response.assert_called_once_with(
+            guild
+        )
         self._db.fazdb_uptime_repository.insert.assert_called_once()
         self._db.online_players_repository.insert.assert_called_once()
         self._db.player_activity_history_repository.insert.assert_called_once()
@@ -127,10 +141,9 @@ class TestResponseHandler(unittest.TestCase):
         # NOTE: Assert that player 1 and 2 has logged on.
         self.assertSetEqual(self._manager.logged_on_players, {uuid0, uuid1})
         # NOTE: Assert that player 1 and 2 is online, with the correct logged on datetime.
-        self.assertDictEqual(self._manager.online_players, {
-                uuid0: datetime0,
-                uuid1: datetime0
-        })
+        self.assertDictEqual(
+            self._manager.online_players, {uuid0: datetime0, uuid1: datetime0}
+        )
 
         # ACT
         self._manager._process_onlineplayers_response(resp1)
@@ -139,10 +152,9 @@ class TestResponseHandler(unittest.TestCase):
         # NOTE: Assert that only player 2 has logged on because player 1 is already logged on.
         self.assertSetEqual(self._manager._logged_on_players, {uuid2})
         # NOTE: Assert that player 0 is no longer online, while player 1 and player 2 has the correct logged on datetime.
-        self.assertDictEqual(self._manager.online_players, {
-                uuid1: datetime0,
-                uuid2: datetime1
-        })
+        self.assertDictEqual(
+            self._manager.online_players, {uuid1: datetime0, uuid2: datetime1}
+        )
 
     def test_enqueue_player_stats(self) -> None:
         # PREPARE
@@ -156,7 +168,9 @@ class TestResponseHandler(unittest.TestCase):
         # NOTE: Assert that the correct player is being queued.
         self._api.player.get_full_stats.assert_called_once_with(uuid0)
         # NOTE: Assert that enqueue is called with the correct arguments.
-        self.__request_list.enqueue.assert_called_once_with(0, self._api.player.get_full_stats())
+        self.__request_list.enqueue.assert_called_once_with(
+            0, self._api.player.get_full_stats()
+        )
 
     def test_requeueonline_players(self) -> None:
         # PREPARE
@@ -168,8 +182,9 @@ class TestResponseHandler(unittest.TestCase):
 
         # ASSERT
         # NOTE: Assert that enqueue is called with the correct arguments.
-        self.__request_list.enqueue.assert_called_once_with(69, self._api.player.get_online_uuids(), priority=500)
-
+        self.__request_list.enqueue.assert_called_once_with(
+            69, self._api.player.get_online_uuids(), priority=500
+        )
 
     # PlayerResponse
     def test_process_player_response(self) -> None:
@@ -199,9 +214,7 @@ class TestResponseHandler(unittest.TestCase):
         # NOTE: Assert that guild "test0" is logged on.
         self.assertSetEqual(self._manager._logged_on_guilds, {guild0})
         # NOTE: Assert that guild "test0" is online with correct players.
-        self.assertDictEqual(self._manager.online_guilds, {
-                guild0: {uuid0}
-        })
+        self.assertDictEqual(self._manager.online_guilds, {guild0: {uuid0}})
 
         # ACT
         self._manager._process_player_response([mock2, mock3])
@@ -210,10 +223,9 @@ class TestResponseHandler(unittest.TestCase):
         # NOTE: Assert that only guild test1 is logged on, because test0 is already logged on.
         self.assertSetEqual(self._manager._logged_on_guilds, {guild1})
         # NOTE: Assert that both guilds are online with correct players.
-        self.assertDictEqual(self._manager.online_guilds, {
-                guild0: {uuid0, uuid1},
-                guild1: {uuid2}
-        })
+        self.assertDictEqual(
+            self._manager.online_guilds, {guild0: {uuid0, uuid1}, guild1: {uuid2}}
+        )
 
         # PREPARE
         mock3.body.online = False
@@ -223,9 +235,7 @@ class TestResponseHandler(unittest.TestCase):
 
         # ASSERT
         # NOTE: Assert that guild test1 is no longer online.
-        self.assertDictEqual(self._manager.online_guilds, {
-                guild0: {uuid0, uuid1}
-        })
+        self.assertDictEqual(self._manager.online_guilds, {guild0: {uuid0, uuid1}})
 
     def test_enqueue_guild(self) -> None:
         # PREPARE
@@ -256,8 +266,9 @@ class TestResponseHandler(unittest.TestCase):
         # NOTE: Assert that self._api.player.get_online_uuids() is called with the correct arguments
         self._api.player.get_full_stats.assert_called_once()
         # NOTE: Assert that enqueue is called with the correct arguments.
-        self.__request_list.enqueue.assert_called_once_with(69, self._api.player.get_full_stats())
-
+        self.__request_list.enqueue.assert_called_once_with(
+            69, self._api.player.get_full_stats()
+        )
 
     # GuildResponse
     def test_requeue_guild(self) -> None:

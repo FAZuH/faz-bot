@@ -17,14 +17,14 @@ class WynnUtils(CogBase):
 
     @nextcord.slash_command(name="crafted_probability")
     async def crafted_probability(
-            self,
-            interaction: Intr,
-            ingredient1: str = InvokeCraftedProbability.INGSTR_DEFAULT,
-            ingredient2: str = InvokeCraftedProbability.INGSTR_DEFAULT,
-            ingredient3: str = InvokeCraftedProbability.INGSTR_DEFAULT,
-            ingredient4: str = InvokeCraftedProbability.INGSTR_DEFAULT,
-            ingredient5: str = InvokeCraftedProbability.INGSTR_DEFAULT,
-            ingredient6: str = InvokeCraftedProbability.INGSTR_DEFAULT,
+        self,
+        interaction: Intr,
+        ingredient1: str = InvokeCraftedProbability.INGSTR_DEFAULT,
+        ingredient2: str = InvokeCraftedProbability.INGSTR_DEFAULT,
+        ingredient3: str = InvokeCraftedProbability.INGSTR_DEFAULT,
+        ingredient4: str = InvokeCraftedProbability.INGSTR_DEFAULT,
+        ingredient5: str = InvokeCraftedProbability.INGSTR_DEFAULT,
+        ingredient6: str = InvokeCraftedProbability.INGSTR_DEFAULT,
     ) -> None:
         """Computes crafted roll probabilities.
         Improved with help from afterfive.
@@ -45,11 +45,22 @@ class WynnUtils(CogBase):
             min,max[,efficiency]
         """
         await InvokeCraftedProbability(
-                self._bot, interaction, [ingredient1, ingredient2, ingredient3, ingredient4, ingredient5, ingredient6]
+            self._bot,
+            interaction,
+            [
+                ingredient1,
+                ingredient2,
+                ingredient3,
+                ingredient4,
+                ingredient5,
+                ingredient6,
+            ],
         ).run()
 
     @nextcord.slash_command(name="convert_emerald")
-    async def convert_emerald(self, interaction: Intr, emerald_string: str = "") -> None:
+    async def convert_emerald(
+        self, interaction: Intr, emerald_string: str = ""
+    ) -> None:
         """Converts input emeralds into common emerald units.
 
         Parameters
@@ -60,7 +71,13 @@ class WynnUtils(CogBase):
         await InvokeConvertEmerald(self._bot, interaction, emerald_string).run()
 
     @nextcord.slash_command(name="ingredient_probability")
-    async def ingredient_probability(self, interaction: Intr, base_chance: str, loot_bonus: int = 0, loot_quality: int = 0) -> None:
+    async def ingredient_probability(
+        self,
+        interaction: Intr,
+        base_chance: str,
+        loot_bonus: int = 0,
+        loot_quality: int = 0,
+    ) -> None:
         """Computes boosted ingredient drop probability after loot bonus and loot quality.
 
         Parameters
@@ -72,4 +89,6 @@ class WynnUtils(CogBase):
         loot_quality: int
             Loot quality value.
         """
-        await InvokeIngredientProbability(self._bot, interaction, base_chance, loot_bonus, loot_quality).run()
+        await InvokeIngredientProbability(
+            self._bot, interaction, base_chance, loot_bonus, loot_quality
+        ).run()

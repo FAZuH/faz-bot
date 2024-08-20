@@ -15,14 +15,20 @@ if TYPE_CHECKING:
 class Utils:
 
     @staticmethod
-    async def must_get_channel(bot: Bot, channel_id: Any) -> GuildChannel | Thread | PrivateChannel | PartialMessageable:
+    async def must_get_channel(
+        bot: Bot, channel_id: Any
+    ) -> GuildChannel | Thread | PrivateChannel | PartialMessageable:
         return await Utils.must_get_id(bot.get_channel, channel_id)
 
     @staticmethod
-    async def must_get_sendable_channel(bot: Bot, channel_id: Any) -> GuildChannel | Thread | PrivateChannel | PartialMessageable:
+    async def must_get_sendable_channel(
+        bot: Bot, channel_id: Any
+    ) -> GuildChannel | Thread | PrivateChannel | PartialMessageable:
         channel = await Utils.must_get_id(bot.get_channel, channel_id)
         if not hasattr(channel, "send"):
-            raise ParseFailure(f"Channel with id {channel_id} does not support sending messages.")
+            raise ParseFailure(
+                f"Channel with id {channel_id} does not support sending messages."
+            )
         return channel
 
     @staticmethod

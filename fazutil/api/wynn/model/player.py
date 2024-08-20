@@ -16,7 +16,9 @@ class Player:
         self._uuid = UuidField(raw["uuid"])
         self._rank = raw["rank"]
         self._rank_badge = raw["rankBadge"]
-        self._legacy_rank_colour = Nullable(self.LegacyRankColour, raw.get("legacyRankColour"))
+        self._legacy_rank_colour = Nullable(
+            self.LegacyRankColour, raw.get("legacyRankColour")
+        )
         self._shortened_rank = raw["shortenedRank"]
         self._support_rank = raw["supportRank"]
         self._veteran = raw["veteran"] or False
@@ -37,7 +39,9 @@ class Player:
     def get_character_uuids(self) -> list[UuidField]:
         return list(self.characters.keys())
 
-    def iter_characters(self) -> Generator[tuple[UuidField, Player.Character], Any, None]:
+    def iter_characters(
+        self,
+    ) -> Generator[tuple[UuidField, Player.Character], Any, None]:
         for character_uuid, character in self._characters.items():
             yield (character_uuid, character)
 

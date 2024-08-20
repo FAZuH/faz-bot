@@ -4,6 +4,7 @@ from typing import Any, Iterable, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from fazutil.api import BaseResponse
+
     type Resp = BaseResponse[Any, Any]
 
 

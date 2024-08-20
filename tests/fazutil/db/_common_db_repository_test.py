@@ -18,7 +18,9 @@ if TYPE_CHECKING:
 class CommonDbRepositoryTest:
 
     # Nesting test classes like this prevents CommonDbRepositoryTest.Test from being run by unittest.
-    class Test[DB: BaseMySQLDatabase, R: BaseRepository[BaseModel, Any]](unittest.IsolatedAsyncioTestCase, ABC):
+    class Test[DB: BaseMySQLDatabase, R: BaseRepository[BaseModel, Any]](
+        unittest.IsolatedAsyncioTestCase, ABC
+    ):
 
         # override
         async def asyncSetUp(self) -> None:
@@ -28,7 +30,7 @@ class CommonDbRepositoryTest:
                 Properties.MYSQL_PASSWORD,
                 Properties.MYSQL_HOST,
                 Properties.MYSQL_PORT,
-                self.db_name
+                self.db_name,
             )
             self._database.drop_all()
             self._database.create_all()
@@ -63,7 +65,7 @@ class CommonDbRepositoryTest:
             self.assertSetEqual(set(rows), set(to_insert))
 
         async def test_insert_ignore_on_duplicate(self) -> None:
-            """Test if insert method inserts entries properly 
+            """Test if insert method inserts entries properly
             with ignore_on_duplicate argument set to True"""
             mock_data = self._get_mock_data()
             await self.repo.insert(mock_data[0])
@@ -73,13 +75,10 @@ class CommonDbRepositoryTest:
 
             rows = await self.repo.select_all()
             self.assertEqual(len(rows), 1)
-            self.assertSetEqual(
-                set(rows),
-                set((mock_data[0],))
-            )
+            self.assertSetEqual(set(rows), set((mock_data[0],)))
 
         async def test_insert_replace_on_duplicate(self) -> None:
-            """Test if insert method replace duplicate entries properly 
+            """Test if insert method replace duplicate entries properly
             with replace_on_duplicate argument set to True"""
             mock_data = self._get_mock_data()
             await self.repo.insert(mock_data[0])
@@ -97,16 +96,29 @@ class CommonDbRepositoryTest:
             await self.repo.insert(mock_data[0])
 
             # Insert the same data again. This should replace previous insert
-            await self.repo.insert(mock_data[3], replace_on_duplicate=True, columns_to_replace=[modified_column_name])
+            await self.repo.insert(
+                mock_data[3],
+                replace_on_duplicate=True,
+                columns_to_replace=[modified_column_name],
+            )
 
             # Assert that only 'columns_to_replace' was changed
             rows = await self.repo.select_all()
             self.assertEqual(len(rows), 1)
             row = rows[0]
-            non_modified_values_lambda = lambda x: {k: v for k, v in x.to_dict().items() if k != modified_column_name}
-            modified_values_lambda = lambda x: {k: v for k, v in x.to_dict().items() if k == modified_column_name}
-            self.assertEqual(non_modified_values_lambda(row), non_modified_values_lambda(mock_data[3]))
-            self.assertNotEqual(modified_values_lambda(row), modified_values_lambda(mock_data[0]))
+            non_modified_values_lambda = lambda x: {
+                k: v for k, v in x.to_dict().items() if k != modified_column_name
+            }
+            modified_values_lambda = lambda x: {
+                k: v for k, v in x.to_dict().items() if k == modified_column_name
+            }
+            self.assertEqual(
+                non_modified_values_lambda(row),
+                non_modified_values_lambda(mock_data[3]),
+            )
+            self.assertNotEqual(
+                modified_values_lambda(row), modified_values_lambda(mock_data[0])
+            )
 
         async def test_delete_successful(self) -> None:
             """Test if delete() method deletes 1 target entry properly."""
@@ -148,7 +160,7 @@ class CommonDbRepositoryTest:
             res = await self.repo.select_all()
             self.assertEqual(len(res), 2)
             self.assertSetEqual(set(res), {mock_data[0], mock_data[2]})
-        
+
         # override
         async def asyncTearDown(self) -> None:
             self.database.drop_all()
@@ -173,7 +185,6 @@ class CommonDbRepositoryTest:
         def _get_mock_datetime() -> datetime:
             return datetime.now().replace(microsecond=0)
 
-
         @property
         def database(self) -> DB:
             return self._database
@@ -183,7 +194,9 @@ class CommonDbRepositoryTest:
         def database_type(self) -> type[DB]: ...
 
         @abstractmethod
-        def _get_mock_data(self) -> tuple[BaseModel, BaseModel, BaseModel, BaseModel, Any]:
+        def _get_mock_data(
+            self,
+        ) -> tuple[BaseModel, BaseModel, BaseModel, BaseModel, Any]:
             """Create tuple of mock data to be tested by test methods.
             Second mock data is a duplicate of the first.
             Third mock data is duplicate of first with different primary key value.

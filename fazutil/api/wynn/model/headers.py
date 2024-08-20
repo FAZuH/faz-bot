@@ -24,7 +24,9 @@ class Headers:
             datetime: The timestamp of the response.
         """
         expiry_date: datetime = self.expires.to_datetime()
-        cache_control: timedelta = timedelta(seconds=int(self.cache_control.split("=")[1]))
+        cache_control: timedelta = timedelta(
+            seconds=int(self.cache_control.split("=")[1])
+        )
         return expiry_date - cache_control
 
     @property

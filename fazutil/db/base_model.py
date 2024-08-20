@@ -21,21 +21,26 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
     def clone(self) -> Self:
         return self.__class__(**self.to_dict())
 
-    def to_dict(self, *, actual_column_names = True) -> dict[str, Any]:
-        return {
-            k: getattr(self, k)
-            for k in self.get_column_attribute_names()
-        } if actual_column_names else {
-            getattr(self.__class__, k).name: getattr(self, k)
-            for k in self.get_column_attribute_names()
-        }
+    def to_dict(self, *, actual_column_names=True) -> dict[str, Any]:
+        return (
+            {k: getattr(self, k) for k in self.get_column_attribute_names()}
+            if actual_column_names
+            else {
+                getattr(self.__class__, k).name: getattr(self, k)
+                for k in self.get_column_attribute_names()
+            }
+        )
 
     @classmethod
-    def get_column_attribute_names(cls, *, includes_primary_key: bool = True) -> list[str]:
+    def get_column_attribute_names(
+        cls, *, includes_primary_key: bool = True
+    ) -> list[str]:
         if cls.__column_attribute_names__ is None:
             cls.__column_attribute_names__ = [
-                p.key for p in class_mapper(cls).iterate_properties
-                if isinstance(p, ColumnProperty) and (includes_primary_key or not p.columns[0].primary_key)
+                p.key
+                for p in class_mapper(cls).iterate_properties
+                if isinstance(p, ColumnProperty)
+                and (includes_primary_key or not p.columns[0].primary_key)
             ]
         return cls.__column_attribute_names__
 
@@ -43,7 +48,8 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
     def get_primarykey_attribute_names(cls) -> list[str]:
         if cls.__primarykey_attribute_names__ is None:
             cls.__primarykey_attribute_names__ = [
-                p.key for p in class_mapper(cls).iterate_properties
+                p.key
+                for p in class_mapper(cls).iterate_properties
                 if isinstance(p, ColumnProperty) and p.columns[0].primary_key
             ]
         return cls.__primarykey_attribute_names__
@@ -64,7 +70,7 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
     def __repr__(self) -> str:
         items = self.to_dict()
         sorted_items = sorted(items.items(), key=lambda x: x[0])
-        params = ', '.join(f'{k}={self._handle_repr_types(v)}' for k, v in sorted_items)
+        params = ", ".join(f"{k}={self._handle_repr_types(v)}" for k, v in sorted_items)
         return f"{self.__class__.__name__}({params})"
 
     @staticmethod

@@ -19,7 +19,9 @@ if TYPE_CHECKING:
 class TestAdmin(unittest.IsolatedAsyncioTestCase):
 
     @asynccontextmanager
-    async def _mock_enter_db_session(self) -> AsyncGenerator[tuple[FazbotDatabase, AsyncSession], None]:
+    async def _mock_enter_db_session(
+        self,
+    ) -> AsyncGenerator[tuple[FazbotDatabase, AsyncSession], None]:
         async with self.db.enter_async_session() as session:
             yield self.db, session
 
@@ -32,7 +34,7 @@ class TestAdmin(unittest.IsolatedAsyncioTestCase):
             Properties.MYSQL_PASSWORD,
             Properties.MYSQL_HOST,
             Properties.MYSQL_PORT,
-            f"{Properties.FAZDB_DB_NAME}_test"
+            f"{Properties.FAZDB_DB_NAME}_test",
         )
 
         self.db.create_all()
@@ -45,17 +47,22 @@ class TestAdmin(unittest.IsolatedAsyncioTestCase):
 
     @unittest.skip("not ready")
     @patch("fazbot.bot.bot.Bot")
-    async def test_ban_user_not_banned(self, mock_must_get_user: MagicMock, mock_interaction: MagicMock) -> None:
+    async def test_ban_user_not_banned(
+        self, mock_must_get_user: MagicMock, mock_interaction: MagicMock
+    ) -> None:
         """Test if ban() method successfully bans user that's not already banned."""
         self.admin._respond_successful = AsyncMock()
         mock_must_get_user.return_value = self._get_mock_user()
 
-        await self.admin.ban.invoke_callback(mock_interaction, user_id="10", reason="test")
+        await self.admin.ban.invoke_callback(
+            mock_interaction, user_id="10", reason="test"
+        )
         self.admin._respond_successful.assert_awaited_once()
 
-
     @patch("fazbot.bot._utils.Utils.must_get_user")
-    async def test_ban_user_already_banned(self, mock_must_get_user: MagicMock, mock_interaction: MagicMock) -> None:
+    async def test_ban_user_already_banned(
+        self, mock_must_get_user: MagicMock, mock_interaction: MagicMock
+    ) -> None:
         """Test if ban() method fails banning user that's already banned."""
         self.admin._respond_error = AsyncMock()  # type: ignore
         mock_must_get_user.return_value = self._get_mock_user()
@@ -63,11 +70,13 @@ class TestAdmin(unittest.IsolatedAsyncioTestCase):
         repo = self.db.whitelist_group_repository
         await repo.insert(self._get_dummy_banned_user_entity())
         with self.assertRaises(ApplicationError):
-            await self.admin.ban.invoke_callback(mock_interaction, user_id="10", reason="test")
+            await self.admin.ban.invoke_callback(
+                mock_interaction, user_id="10", reason="test"
+            )
 
     # async def test_unban(self) -> None:
     #     pass
-    
+
     # async def test_echo(self) -> None:
     #     pass
     #
@@ -106,7 +115,7 @@ class TestAdmin(unittest.IsolatedAsyncioTestCase):
             type="guild",
             guild_name="test",
             from_=datetime.now().replace(microsecond=0),
-            until=(datetime.now() + timedelta(days=1)).replace(microsecond=0)
+            until=(datetime.now() + timedelta(days=1)).replace(microsecond=0),
         )
         return entity
 
@@ -117,7 +126,7 @@ class TestAdmin(unittest.IsolatedAsyncioTestCase):
             type="guild",
             reason="test",
             from_=datetime.now().replace(microsecond=0),
-            until=(datetime.now() + timedelta(days=1)).replace(microsecond=0)
+            until=(datetime.now() + timedelta(days=1)).replace(microsecond=0),
         )
         return entity
 

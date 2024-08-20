@@ -7,7 +7,9 @@ from fazutil.db.fazdb.repository.guild_member_history_repository import (
 from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
 
 
-class TestGuildMemberHistoryRepository(CommonFazdbRepositoryTest.Test[GuildMemberHistoryRepository]):
+class TestGuildMemberHistoryRepository(
+    CommonFazdbRepositoryTest.Test[GuildMemberHistoryRepository]
+):
 
     # override
     def _get_mock_data(self):
@@ -16,7 +18,10 @@ class TestGuildMemberHistoryRepository(CommonFazdbRepositoryTest.Test[GuildMembe
         uuid1 = UUID("b30f5e97-957d-47f6-bf1e-9e48d9fea200").bytes
         uuid2 = UUID("33c3ad56-5e9b-4bfe-9685-9fc4df2a67fa").bytes
         mock_data1 = model(
-            uuid=uuid1, contributed=1, joined=self._get_mock_datetime(), datetime=self._get_mock_datetime()
+            uuid=uuid1,
+            contributed=1,
+            joined=self._get_mock_datetime(),
+            datetime=self._get_mock_datetime(),
         )
         mock_data2 = mock_data1.clone()
         mock_data3 = mock_data1.clone()

@@ -25,7 +25,9 @@ class Guild:
             for season, season_rank_info in raw["seasonRanks"].items()
         }
 
-    def iter_seasonranks(self) -> Generator[tuple[str, Guild.SeasonRankInfo], Any, None]:
+    def iter_seasonranks(
+        self,
+    ) -> Generator[tuple[str, Guild.SeasonRankInfo], Any, None]:
         yield from self.season_ranks.items()
 
     class Members:
@@ -41,25 +43,35 @@ class Guild:
         def get_online_members(self) -> int:
             return len(tuple(self.iter_online_members()))
 
-        def iter_online_members(self) -> Generator[tuple[str, UsernameOrUuidField, Guild.Members.MemberInfo], Any, None]:
+        def iter_online_members(
+            self,
+        ) -> Generator[
+            tuple[str, UsernameOrUuidField, Guild.Members.MemberInfo], Any, None
+        ]:
             for rank, uuid, memberinfo in self.iter_members():
                 if memberinfo.online:
                     yield (rank, uuid, memberinfo)
 
-        def iter_members(self) -> Generator[tuple[str, UsernameOrUuidField, Guild.Members.MemberInfo], Any, None]:
+        def iter_members(
+            self,
+        ) -> Generator[
+            tuple[str, UsernameOrUuidField, Guild.Members.MemberInfo], Any, None
+        ]:
             all_: dict[str, dict[UsernameOrUuidField, Guild.Members.MemberInfo]] = {
                 "owner": self.owner,
                 "chief": self.chief,
                 "strategist": self.strategist,
                 "captain": self.captain,
                 "recruiter": self.recruiter,
-                "recruit": self.recruit
+                "recruit": self.recruit,
             }
             for rank, members in all_.items():
                 for identifier, member in members.items():
                     yield (rank, identifier, member)
 
-        def _members_constructor(self, node: dict[str, Any]) -> dict[UsernameOrUuidField, Guild.Members.MemberInfo]:
+        def _members_constructor(
+            self, node: dict[str, Any]
+        ) -> dict[UsernameOrUuidField, Guild.Members.MemberInfo]:
             return {
                 UsernameOrUuidField(identifier): Guild.Members.MemberInfo(member)
                 for identifier, member in node.items()
@@ -68,7 +80,7 @@ class Guild:
         class MemberInfo:
             def __init__(self, node: dict[str, Any]) -> None:
                 self._uuid = Nullable(UuidField, node.get("uuid"))
-                self._username = node.get("username" )
+                self._username = node.get("username")
                 self._online = node["online"]
                 self._server = node["server"]
                 self._contributed = node["contributed"]
@@ -136,10 +148,7 @@ class Guild:
             self._base = node["base"]
             self._tier = node["tier"]
             self._structure = node.get("structure")
-            self._layers = [
-                Guild.Banner.LayerInfo(layer)
-                for layer in node["layers"]
-            ]
+            self._layers = [Guild.Banner.LayerInfo(layer) for layer in node["layers"]]
 
         class LayerInfo:
             def __init__(self, node: dict[str, Any]) -> None:

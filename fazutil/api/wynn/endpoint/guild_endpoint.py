@@ -7,7 +7,7 @@ from .base_endpoint import BaseEndpoint
 class GuildEndpoint(BaseEndpoint):
 
     async def get(self, name: str) -> GuildResponse:
-        return await self._get(f'{self.path}/{name}')
+        return await self._get(f"{self.path}/{name}")
 
     async def get_from_prefix(self, prefix: str) -> GuildResponse:
         return await self._get(f"{self.path}/prefix/{prefix}")

@@ -41,5 +41,4 @@ class Invoke(ABC):
         return asset
 
     @classmethod
-    def set_assets(cls, assets: dict[str, File]) -> None:
-        ...
+    def set_assets(cls, assets: dict[str, File]) -> None: ...

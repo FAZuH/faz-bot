@@ -20,7 +20,7 @@ class HttpRequest:
         api_key: None | str = None,
         headers: dict[str, Any] = {},
         ratelimit: None | BaseRatelimitHandler = None,
-        timeout: int = 120
+        timeout: int = 120,
     ) -> None:
         self._api_key = api_key
         self._base_url = base_url
@@ -33,21 +33,21 @@ class HttpRequest:
         self._session: None | ClientSession = None
 
     async def start(self) -> None:
-        self._session = ClientSession(self._base_url, headers=self._headers, timeout=ClientTimeout(self._timeout))
+        self._session = ClientSession(
+            self._base_url, headers=self._headers, timeout=ClientTimeout(self._timeout)
+        )
 
     async def close(self) -> None:
         if self._session is not None:
             await self._session.close()
 
     async def get(
-            self,
-            url_param: str,
-            *,
-            retries: None | int = None,
-            retry_on_exc: bool = False
-        ) -> BaseResponse[Any, Any]:
+        self, url_param: str, *, retries: None | int = None, retry_on_exc: bool = False
+    ) -> BaseResponse[Any, Any]:
         if retry_on_exc and retries is None:
-            raise ValueError("Retries must be set to a valid integer if retry_on_exc is True")
+            raise ValueError(
+                "Retries must be set to a valid integer if retry_on_exc is True"
+            )
 
         if self._session is None or self._session.closed:
             raise ValueError("Session is not open")
@@ -91,7 +91,9 @@ class HttpRequest:
             if retry_on_exc and retries is not None:
                 if retries <= 0:
                     raise TooManyRetries(url_param + f" ({e})")
-                return await self.get(url_param, retries=retries - 1, retry_on_exc=retry_on_exc)
+                return await self.get(
+                    url_param, retries=retries - 1, retry_on_exc=retry_on_exc
+                )
             raise
 
     def is_open(self) -> bool:

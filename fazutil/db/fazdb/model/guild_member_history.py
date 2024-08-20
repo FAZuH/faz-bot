@@ -17,6 +17,6 @@ class GuildMemberHistory(UniqueIdModel):
     unique_id: Mapped[bytes] = mapped_column(BINARY(16), nullable=False)
 
     __table_args__ = (
-        Index('datetime_idx', datetime.desc()),
-        UniqueConstraint('unique_id', name='unique_id_idx')
+        Index("datetime_idx", datetime.desc()),
+        UniqueConstraint("unique_id", name="unique_id_idx"),
     )

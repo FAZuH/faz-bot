@@ -12,6 +12,7 @@ from fazutil.util import LoggerSetup
 
 from .properties import Properties
 
+
 class App:
 
     def __init__(self) -> None:
@@ -53,7 +54,7 @@ class App:
             p.MYSQL_PASSWORD,
             p.MYSQL_HOST,
             p.MYSQL_PORT,
-            p.FAZBOT_DB_NAME
+            p.FAZBOT_DB_NAME,
         )
 
     def create_fazdb_db(self) -> FazdbDatabase:
@@ -63,7 +64,7 @@ class App:
             p.MYSQL_PASSWORD,
             p.MYSQL_HOST,
             p.MYSQL_PORT,
-            p.FAZDB_DB_NAME
+            p.FAZDB_DB_NAME,
         )
 
     def _get_lock(self, key: str) -> Lock:

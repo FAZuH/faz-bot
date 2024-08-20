@@ -17,12 +17,15 @@ class Main:
         while True:  # keep-alive
             sleep(5)
 
+
 if __name__ == "__main__":
     try:
         with logger.catch(level="CRITICAL", reraise=True):
             Main.main()
     finally:
         Main.app.stop()
+
         async def _cleanup_logger_queue():
             await logger.complete()
+
         asyncio.run(_cleanup_logger_queue())

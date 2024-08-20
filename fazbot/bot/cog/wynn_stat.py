@@ -13,7 +13,7 @@ class WynnStat(CogBase):
     async def worldlist(
         self,
         interaction: Interaction[Any],
-        sort_by: Literal["Player Count", "Time Created"] = "Time Created"
+        sort_by: Literal["Player Count", "Time Created"] = "Time Created",
     ) -> None:
         await InvokeWorldlist(self._bot, interaction, sort_by).run()
 

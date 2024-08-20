@@ -5,7 +5,9 @@ import re
 
 class Emeralds:
 
-    def __init__(self, emeralds: int = 0, blocks: int = 0, liquids: int = 0, stacks: int = 0) -> None:
+    def __init__(
+        self, emeralds: int = 0, blocks: int = 0, liquids: int = 0, stacks: int = 0
+    ) -> None:
         self._emeralds = emeralds
         self._blocks = blocks
         self._liquids = liquids
@@ -34,22 +36,22 @@ class Emeralds:
         e = eb = le = stx = 0
         multiplier = 1
         for str_ in strings:
-            input_split = re.match(r'^(.*?)([A-Za-z]+)$', str_)
+            input_split = re.match(r"^(.*?)([A-Za-z]+)$", str_)
             if not input_split:
                 raise ValueError("Invalid emerald string.")
             amount = input_split.group(1)
             unit = input_split.group(2)
 
             parsed_amount = cls._parse_number_string(amount)
-            if unit == 'e':
+            if unit == "e":
                 e += int(parsed_amount)
-            elif unit == 'eb':
+            elif unit == "eb":
                 eb += int(parsed_amount)
-            elif unit == 'le':
-                le  += int(parsed_amount)
-            elif unit == 'stx':
+            elif unit == "le":
+                le += int(parsed_amount)
+            elif unit == "stx":
                 stx += int(parsed_amount)
-            elif unit == 'x':
+            elif unit == "x":
                 multiplier = parsed_amount
             else:
                 raise ValueError(f"Invalid unit {unit} in emerald string.")
@@ -77,18 +79,17 @@ class Emeralds:
     def stacks(self) -> int:
         return self._stacks
 
-
     @staticmethod
     def _get_total(emeralds: int, blocks: int, liquids: int, stacks: int) -> int:
         return emeralds + blocks * 64 + liquids * 64 * 64 + stacks * 64 * 64 * 64
 
     @staticmethod
     def _parse_number_string(number_string: str) -> float:
-        if '/' in number_string:
-            num, den = number_string.split('/')
+        if "/" in number_string:
+            num, den = number_string.split("/")
             return int(num) / int(den)
-        if '%' in number_string:
-            return float(number_string.strip('%')) / 100
+        if "%" in number_string:
+            return float(number_string.strip("%")) / 100
         return float(number_string)
 
     def __repr__(self) -> str:

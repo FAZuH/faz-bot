@@ -25,7 +25,7 @@ class TestWorldsRepository(CommonFazdbRepositoryTest.Test[WorldsRepository]):
         wc3 = wc2.clone()
         wc3.name = "WC3"
         await self.repo.insert([wc1, wc3])
-        
+
         wc3_future = wc3.clone()
         wc3_future.player_count = 40
         await self.repo.update_worlds([wc2, wc3_future])
@@ -44,7 +44,11 @@ class TestWorldsRepository(CommonFazdbRepositoryTest.Test[WorldsRepository]):
     def _get_mock_data(self):
         model = self.repo.model
 
-        mock_data1 = model(name="WC1", player_count=50, time_created=self._get_mock_datetime().replace(day=1))
+        mock_data1 = model(
+            name="WC1",
+            player_count=50,
+            time_created=self._get_mock_datetime().replace(day=1),
+        )
         mock_data2 = mock_data1.clone()
         mock_data3 = mock_data1.clone()
         mock_data3.name = "WC2"

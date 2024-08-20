@@ -3,15 +3,22 @@ from fazutil.db.fazdb.repository.guild_history_repository import GuildHistoryRep
 from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
 
 
-class TestGuildHistoryRepository(CommonFazdbRepositoryTest.Test[GuildHistoryRepository]):
+class TestGuildHistoryRepository(
+    CommonFazdbRepositoryTest.Test[GuildHistoryRepository]
+):
 
     # override
     def _get_mock_data(self):
         model = self.repo.model
 
         mock_data1 = model(
-            name="a", level=1.0, territories=1, wars=1, member_total=1,
-            online_members=1, datetime=self._get_mock_datetime()
+            name="a",
+            level=1.0,
+            territories=1,
+            wars=1,
+            member_total=1,
+            online_members=1,
+            datetime=self._get_mock_datetime(),
         )
         mock_data2 = mock_data1.clone()
         mock_data3 = mock_data1.clone()

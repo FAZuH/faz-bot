@@ -22,15 +22,17 @@ class CogCore:
         self.wynn_track = WynnTrack(bot)
         self.wynn_utils = WynnUtils(bot)
 
-        self._cogs.extend([
-            self.admin,
-            self.help,
-            self.info,
-            self.wynn_analyze,
-            self.wynn_stat,
-            self.wynn_track,
-            self.wynn_utils
-        ])
+        self._cogs.extend(
+            [
+                self.admin,
+                self.help,
+                self.info,
+                self.wynn_analyze,
+                self.wynn_stat,
+                self.wynn_track,
+                self.wynn_utils,
+            ]
+        )
 
     async def setup(self, whitelisted_guild_ids: Iterable[int]) -> None:
         """Intansiates all cogs and adds all application commands to the client.

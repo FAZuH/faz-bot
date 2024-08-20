@@ -21,7 +21,7 @@ if TYPE_CHECKING:
 
 
 class TaskDbInsert(ITask):
-    """ Inserts API responses to database. """
+    """Inserts API responses to database."""
 
     def __init__(
         self,
@@ -55,7 +55,7 @@ class TaskDbInsert(ITask):
         model = self._db.fazdb_uptime_repository.model
         await self._db.fazdb_uptime_repository.insert(
             model(start_time=self._start_time, stop_time=datetime.now()),
-            replace_on_duplicate=True
+            replace_on_duplicate=True,
         )
 
         online_players_resp: None | OnlinePlayersResponse = None
@@ -79,18 +79,24 @@ class TaskDbInsert(ITask):
         await self._insert_player_responses(player_resps)
         await self._insert_guild_response(guild_resps)
 
-    async def _insert_online_players_response(self, resp: OnlinePlayersResponse | None) -> None:
+    async def _insert_online_players_response(
+        self, resp: OnlinePlayersResponse | None
+    ) -> None:
         if not resp or not resp.body.raw:
             return
         adapter = self._response_adapter.OnlinePlayers
 
         online_players = adapter.to_online_players(resp)
-        player_activity_history = adapter.to_player_activity_history(resp, self._response_handler.online_players)
+        player_activity_history = adapter.to_player_activity_history(
+            resp, self._response_handler.online_players
+        )
         worlds = list(adapter.to_worlds(resp))
 
         db = self._db
         await db.online_players_repository.update(online_players)
-        await db.player_activity_history_repository.insert(player_activity_history, replace_on_duplicate=True)
+        await db.player_activity_history_repository.insert(
+            player_activity_history, replace_on_duplicate=True
+        )
         await db.worlds_repository.update_worlds(worlds)
 
     async def _insert_player_responses(self, resps: list[PlayerResponse]) -> None:
@@ -110,9 +116,15 @@ class TaskDbInsert(ITask):
 
         db = self._db
         await db.player_info_repository.insert(player_info, replace_on_duplicate=True)
-        await db.character_info_repository.insert(character_info, ignore_on_duplicate=True)
-        await db.player_history_repository.insert(player_history, ignore_on_duplicate=True)
-        await db.character_history_repository.insert(character_history, ignore_on_duplicate=True)
+        await db.character_info_repository.insert(
+            character_info, ignore_on_duplicate=True
+        )
+        await db.player_history_repository.insert(
+            player_history, ignore_on_duplicate=True
+        )
+        await db.character_history_repository.insert(
+            character_history, ignore_on_duplicate=True
+        )
 
     async def _insert_guild_response(self, resps: list[GuildResponse]) -> None:
         if not resps:
@@ -129,8 +141,12 @@ class TaskDbInsert(ITask):
 
         db = self._db
         await db.guild_info_repository.insert(guild_info, ignore_on_duplicate=True)
-        await db.guild_history_repository.insert(guild_history, ignore_on_duplicate=True)
-        await db.guild_member_history_repository.insert(guild_member_history, ignore_on_duplicate=True)
+        await db.guild_history_repository.insert(
+            guild_history, ignore_on_duplicate=True
+        )
+        await db.guild_member_history_repository.insert(
+            guild_member_history, ignore_on_duplicate=True
+        )
 
     @property
     def response_handler(self) -> TaskDbInsert._ResponseHandler:
@@ -152,9 +168,8 @@ class TaskDbInsert(ITask):
     def name(self) -> str:
         return self.__class__.__name__
 
-
     class _ResponseHandler:
-        """ Handles Wynncraft response processing, queueing, and requeuing. """
+        """Handles Wynncraft response processing, queueing, and requeuing."""
 
         def __init__(self, api: WynnApi, request_list: RequestQueue) -> None:
             self._api = api
@@ -165,7 +180,9 @@ class TaskDbInsert(ITask):
             self._logged_on_guilds: set[str] = set()
             self._logged_on_players: set[str] = set()
 
-        def handle_onlineplayers_response(self, resp: None | OnlinePlayersResponse) -> None:
+        def handle_onlineplayers_response(
+            self, resp: None | OnlinePlayersResponse
+        ) -> None:
             if not resp or not resp.body.raw:
                 return
             self._process_onlineplayers_response(resp)
@@ -206,7 +223,7 @@ class TaskDbInsert(ITask):
             self._request_list.enqueue(
                 resp.headers.expires.to_datetime().timestamp(),
                 self._api.player.get_online_uuids(),
-                priority=999
+                priority=999,
             )
 
         # PlayerResponse
@@ -224,7 +241,9 @@ class TaskDbInsert(ITask):
                 # This also means that the guild is LOGGED ON
                 if is_online is True:
                     if guild_name not in self.online_guilds:
-                        self.online_guilds[guild_name] = {uuid,}
+                        self.online_guilds[guild_name] = {
+                            uuid,
+                        }
                         logged_on_guilds.add(guild_name)
                     else:
                         # If guild is not LOGGED ON, add the uuid to the online uuids of that guild
@@ -256,7 +275,7 @@ class TaskDbInsert(ITask):
 
                 self._request_list.enqueue(
                     resp.headers.expires.to_datetime().timestamp(),
-                    self._api.player.get_full_stats(resp.body.uuid.uuid)
+                    self._api.player.get_full_stats(resp.body.uuid.uuid),
                 )
 
         # GuildResponse
@@ -267,25 +286,25 @@ class TaskDbInsert(ITask):
 
                 self._request_list.enqueue(
                     resp.headers.expires.to_datetime().timestamp(),
-                    self._api.guild.get(resp.body.name)
+                    self._api.guild.get(resp.body.name),
                 )
 
         @property
         def logged_on_guilds(self) -> set[str]:
-            """ Set of latest logged on guilds' names. """
+            """Set of latest logged on guilds' names."""
             return self._logged_on_guilds
 
         @property
         def logged_on_players(self) -> set[str]:
-            """ Set of latest logged on players' uuids. Needed by PlayerActivityHistory. """
+            """Set of latest logged on players' uuids. Needed by PlayerActivityHistory."""
             return self._logged_on_players
 
         @property
         def online_players(self) -> dict[str, datetime]:
-            """ Dict of online players' uuids, paired with their logged on timestamp. """
+            """Dict of online players' uuids, paired with their logged on timestamp."""
             return self._online_players
 
         @property
         def online_guilds(self) -> dict[str, set[str]]:
-            """ guild_name: set(online_uuids) """
+            """guild_name: set(online_uuids)"""
             return self._online_guilds

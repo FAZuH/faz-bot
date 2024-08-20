@@ -40,17 +40,16 @@ class CraftedUtil:
     def ingredients(self) -> list[IngredientField]:
         return self._ingredients
 
-
     def _calculate_ingredient_probabilities(self):
-        """ Gets ingredient_rolls_list and ingredient_probDist_list from command arguments """
+        """Gets ingredient_rolls_list and ingredient_probDist_list from command arguments"""
         for ing in self._ingredients:
             ing_stat_eff = (ing.boost + 100) * 0.01
 
             # Calculate ingredient probability distribution
             ing_base_values = np.linspace(ing.min_value, ing.max_value, 101)
-            ing_rolls_boosted = \
-                np.floor(np.round(ing_base_values) * ing_stat_eff).astype(int) - \
-                np.floor(ing.min_value * ing_stat_eff).astype(int)
+            ing_rolls_boosted = np.floor(
+                np.round(ing_base_values) * ing_stat_eff
+            ).astype(int) - np.floor(ing.min_value * ing_stat_eff).astype(int)
             ingredient_rolls_occurrences = np.bincount(ing_rolls_boosted)
             ingredient_prob_dist = ingredient_rolls_occurrences / 101
 
@@ -66,7 +65,9 @@ class CraftedUtil:
             convolution = np.convolve(convolution, prob_dist)
 
         # Build ingredients_probabilities dictionary
-        crafted_rolls = np.linspace(self.crafted_roll_min, self.crafted_roll_max, len(convolution))
+        crafted_rolls = np.linspace(
+            self.crafted_roll_min, self.crafted_roll_max, len(convolution)
+        )
         for roll, crafted_roll_chance in zip(crafted_rolls, convolution):
             if crafted_roll_chance == 0:
                 continue

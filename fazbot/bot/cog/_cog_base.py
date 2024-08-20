@@ -28,12 +28,16 @@ class CogBase(commands.Cog):
             f"with {len(self.application_commands)} application commands"
         )
 
-    async def _respond_successful(self, interaction: Interaction[Any], message: str) -> None:
+    async def _respond_successful(
+        self, interaction: Interaction[Any], message: str
+    ) -> None:
         embed = Embed(title="Success", description=message, color=Colour.dark_green())
         await interaction.send(embed=embed)
 
     @asynccontextmanager
-    async def _enter_botdb_session(self) -> AsyncGenerator[tuple[FazbotDatabase, AsyncSession], None]:
+    async def _enter_botdb_session(
+        self,
+    ) -> AsyncGenerator[tuple[FazbotDatabase, AsyncSession], None]:
         db = self._bot.fazbot_db
         async with db.enter_async_session() as session:
             yield db, session
@@ -52,4 +56,6 @@ class CogBase(commands.Cog):
             for guild_id in whitelisted_guild_ids:
                 app_cmd.add_guild_rollout(guild_id)
                 # app_cmd.guild_ids.add(guild_id)
-            self._bot.client.add_application_command(app_cmd, overwrite=True, use_rollout=True)
+            self._bot.client.add_application_command(
+                app_cmd, overwrite=True, use_rollout=True
+            )

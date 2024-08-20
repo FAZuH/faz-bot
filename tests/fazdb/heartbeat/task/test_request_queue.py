@@ -15,7 +15,7 @@ class TestRequestList(unittest.TestCase):
     def test_enqueue_and_dequeue(self) -> None:
         # sourcery skip: class-extract-method
         # PREPARE
-        testCoro1 = self.mock_coro('foo')
+        testCoro1 = self.mock_coro("foo")
         testRequestTs1 = dt.now().timestamp() - 100
 
         # ACT
@@ -37,8 +37,8 @@ class TestRequestList(unittest.TestCase):
 
     def test_dequeue_with_request_ts(self) -> None:
         # PREPARE
-        testCoro1 = self.mock_coro('foo')
-        testCoro2 = self.mock_coro('bar')
+        testCoro1 = self.mock_coro("foo")
+        testCoro2 = self.mock_coro("bar")
         testRequestTs1 = dt.now().timestamp() - 100
         testRequestTs2 = dt.now().timestamp() - 200  # earlier timestamp
 
@@ -59,12 +59,16 @@ class TestRequestList(unittest.TestCase):
 
     def test_dequeue_with_priority(self) -> None:
         # PREPARE
-        testCoro1 = self.mock_coro('foo')
-        testCoro2 = self.mock_coro('bar')
+        testCoro1 = self.mock_coro("foo")
+        testCoro2 = self.mock_coro("bar")
         testRequestTs1 = dt.now().timestamp() - 100
-        testRequestTs2 = dt.now().timestamp() - 50  # should still return higher priority
+        testRequestTs2 = (
+            dt.now().timestamp() - 50
+        )  # should still return higher priority
         self.request_list.enqueue(testRequestTs1, testCoro1, priority=100)
-        self.request_list.enqueue(testRequestTs2, testCoro2, priority=200)  # higher priority
+        self.request_list.enqueue(
+            testRequestTs2, testCoro2, priority=200
+        )  # higher priority
 
         # ACT
         result = self.request_list.dequeue(1)
@@ -107,7 +111,7 @@ class TestRequestList(unittest.TestCase):
     def test_request_item_is_eligible(self) -> None:
         # PREPARE
         testCoro1 = self.mock_coro("foo")
-        testRequestTs1 = dt.now().timestamp() - 1 # Past timestamp
+        testRequestTs1 = dt.now().timestamp() - 1  # Past timestamp
         request_item = RequestQueue.RequestItem(testCoro1, 100, testRequestTs1)
 
         # ASSERT

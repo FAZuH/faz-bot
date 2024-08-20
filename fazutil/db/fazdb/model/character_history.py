@@ -18,7 +18,9 @@ from ._unique_id_model import UniqueIdModel
 class CharacterHistory(UniqueIdModel):
     __tablename__ = "character_history"
 
-    character_uuid: Mapped[bytes] = mapped_column(BINARY(16), nullable=False, primary_key=True)
+    character_uuid: Mapped[bytes] = mapped_column(
+        BINARY(16), nullable=False, primary_key=True
+    )
     level: Mapped[int] = mapped_column(TINYINT, nullable=False)
     xp: Mapped[int] = mapped_column(BIGINT, nullable=False)
     wars: Mapped[int] = mapped_column(INTEGER, nullable=False)
@@ -52,6 +54,6 @@ class CharacterHistory(UniqueIdModel):
     unique_id: Mapped[bytes] = mapped_column(BINARY(16), nullable=False)
 
     __table_args__ = (
-        Index('datetime_idx', datetime.desc()),
-        UniqueConstraint(unique_id, name='unique_id_idx')
+        Index("datetime_idx", datetime.desc()),
+        UniqueConstraint(unique_id, name="unique_id_idx"),
     )

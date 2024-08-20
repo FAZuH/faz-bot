@@ -5,4 +5,5 @@ mysql/data
 logs
 __pycache__
 .sandbox.py
+.pytest_cache
 
