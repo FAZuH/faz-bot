@@ -10,7 +10,7 @@ class DiscordGuild(BaseFazbotModel):
     __tablename__ = "discord_guild"
 
     guild_id: Mapped[int] = mapped_column(BIGINT, primary_key=True)
-    guid_name: Mapped[str] = mapped_column(VARCHAR(36), nullable=False)
+    guild_name: Mapped[str] = mapped_column(VARCHAR(36), nullable=False)
 
     def __init__(self, *, guild_id: int, guild_name: str, **kw: Any) -> None:
         self.guild_id = guild_id
