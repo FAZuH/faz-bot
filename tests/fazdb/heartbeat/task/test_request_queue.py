@@ -62,9 +62,7 @@ class TestRequestList(unittest.TestCase):
         test_coro1 = self.mock_coro("foo")
         test_coro2 = self.mock_coro("bar")
         test_req_ts1 = dt.now().timestamp() - 100
-        test_req_ts2 = (
-            dt.now().timestamp() - 50
-        )  # should still return higher priority
+        test_req_ts2 = dt.now().timestamp() - 50  # should still return higher priority
         self.request_list.enqueue(test_req_ts1, test_coro1, priority=100)
         self.request_list.enqueue(
             test_req_ts2, test_coro2, priority=200

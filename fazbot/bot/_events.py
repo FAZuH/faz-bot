@@ -93,7 +93,8 @@ class Events:
         author = intr.user.display_name if intr.user else None
         guildname = intr.guild.name if intr.guild else None
         channelname = (
-            intr.channel.name if intr.channel and hasattr(intr.channel, "name")  # type: ignore
+            intr.channel.name
+            if intr.channel and hasattr(intr.channel, "name")  # type: ignore
             else None
         )
         data = intr.data
