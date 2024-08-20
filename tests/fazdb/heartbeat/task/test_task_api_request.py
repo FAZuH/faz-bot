@@ -16,6 +16,9 @@ class TestTaskApiRequest(unittest.IsolatedAsyncioTestCase):
     async def test_setup(self):
         self.task.setup()
         self.api.start.assert_called_once()
+        self.request_list.enqueue.assert_called_once_with(
+            0, self.api.player.get_online_uuids(), priority=999
+        )
 
     def test_teardown(self):
         self.api.close = AsyncMock()

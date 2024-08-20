@@ -1,17 +1,22 @@
-# pyright: basic
 from decimal import Decimal
+from typing import override
 from unittest import TestCase
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
 
 from fazbot.bot.invoke import InvokeIngredientProbability
 
 
 class TestIngredientProbability(TestCase):
 
+    @override
     def setUp(self) -> None:
         self.interaction = AsyncMock()
         self.asset = MagicMock()
-        self.obj = InvokeIngredientProbability(self.interaction, "1/1000", 500, 100)
+        with patch("fazbot.bot.bot.Bot", autospec=True) as mock_bot:
+            self.mock_bot = mock_bot
+        self.obj = InvokeIngredientProbability(
+            self.mock_bot, self.interaction, "1/1000", 500, 100
+        )
         self.obj.set_assets(self.asset)
         return super().setUp()
 

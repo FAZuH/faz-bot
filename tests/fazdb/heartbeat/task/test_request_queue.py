@@ -92,22 +92,6 @@ class TestRequestList(unittest.TestCase):
         for coro in result:
             self.assertTrue(coro in testCoros)
 
-    def test_iter(self) -> None:
-        # PREPARE
-        coro1 = self.mock_coro("foo")
-        coro2 = self.mock_coro("bar")
-        request_ts = dt.now().timestamp()
-        self.request_list.enqueue(request_ts, coro1)
-        self.request_list.enqueue(request_ts, coro2)
-
-        # ACT
-        result = list(self.request_list.iter())
-
-        # ASSERT
-        self.assertEqual(len(result), 2)
-        self.assertEqual(result[0].coro, coro1)
-        self.assertEqual(result[1].coro, coro2)
-
     def test_request_item_is_eligible(self) -> None:
         # PREPARE
         testCoro1 = self.mock_coro("foo")

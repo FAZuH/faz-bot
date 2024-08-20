@@ -114,13 +114,17 @@ class TestAdmin(unittest.IsolatedAsyncioTestCase):
             await self.admin.send(mock_intr, 1, "test")
 
     @patch("fazbot.bot._utils.Utils.must_get_guild")
-    async def test_sync_guild(self, mock_must_get_guild: MagicMock, mock_intr: MagicMock) -> None:
+    async def test_sync_guild(
+        self, mock_must_get_guild: MagicMock, mock_intr: MagicMock
+    ) -> None:
         mock_intr.response.defer = AsyncMock()
         mock_guild = self._get_mock_guild()
         mock_must_get_guild.return_value = mock_guild
         self.mock_bot.client.sync_application_commands = AsyncMock()
         await self.admin.sync_guild(mock_intr, "1")
-        self.mock_bot.client.sync_application_commands.assert_awaited_once_with(guild_id=1)
+        self.mock_bot.client.sync_application_commands.assert_awaited_once_with(
+            guild_id=1
+        )
 
     async def test_sync(self, mock_intr: MagicMock) -> None:
         self.mock_bot.client.sync_all_application_commands = AsyncMock()
@@ -150,7 +154,9 @@ class TestAdmin(unittest.IsolatedAsyncioTestCase):
         """Test if whitelist method successfully whitelists guild that's not already whitelisted."""
         mock_must_get_guild.return_value = self._get_mock_guild()
         await self.admin.whitelist(mock_intr, guild_id="1")
-        self.assertTrue(await self.db.whitelist_group_repository.is_whitelisted_guild(1))
+        self.assertTrue(
+            await self.db.whitelist_group_repository.is_whitelisted_guild(1)
+        )
 
     @patch("fazbot.bot._utils.Utils.must_get_guild")
     async def test_whitelist_guild_already_whitelisted(

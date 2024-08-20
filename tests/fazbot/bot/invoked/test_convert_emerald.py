@@ -1,5 +1,5 @@
 from unittest import IsolatedAsyncioTestCase
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
 
 from fazbot.bot.invoke import InvokeConvertEmerald
 
@@ -9,8 +9,9 @@ class TestConvertEmerald(IsolatedAsyncioTestCase):
     def setUp(self) -> None:
         self.interaction = AsyncMock()
         self.asset = MagicMock()
-
-        self.obj = InvokeConvertEmerald(self.interaction, "100le")
+        with patch("fazbot.bot.bot.Bot", autospec=True) as mock_bot:
+            self.mock_bot = mock_bot
+        self.obj = InvokeConvertEmerald(self.mock_bot, self.interaction, "100le")
         self.obj.set_assets(self.asset)
 
     def test_set_assets(self) -> None:
