@@ -86,14 +86,17 @@ class Events:
         if retry_after:
             raise commands.CommandOnCooldown(bucket, retry_after, self._cooldown.type)  # type: ignore
 
-    async def _log_event(self, interaction: Interaction[Any], event: str = "") -> None:
-        if not interaction.application_command:
+    async def _log_event(self, intr: Interaction[Any], event: str = "") -> None:
+        if not intr.application_command:
             return
-        cmdname = interaction.application_command.name
-        author = interaction.user.display_name if interaction.user else None
-        guildname = interaction.guild.name if interaction.guild else None
-        channelname = interaction.channel.name if interaction.channel and hasattr(interaction.channel, "name") else None  # type: ignore
-        data = interaction.data
+        cmdname = intr.application_command.name
+        author = intr.user.display_name if intr.user else None
+        guildname = intr.guild.name if intr.guild else None
+        channelname = (
+            intr.channel.name if intr.channel and hasattr(intr.channel, "name")  # type: ignore
+            else None
+        )
+        data = intr.data
         args = []
         if data and "options" in data:
             for opt in data["options"]:

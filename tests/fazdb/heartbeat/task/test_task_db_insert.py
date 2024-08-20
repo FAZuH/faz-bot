@@ -270,19 +270,19 @@ class TestResponseHandler(unittest.TestCase):
     # GuildResponse
     def test_requeue_guild(self) -> None:
         # PREPARE
-        testName1 = "guild0"
-        testResp1 = MagicMock()
-        testResp2 = MagicMock()  # continued
-        testResp1.body.name = testName1
-        testResp1.body.members.get_online_members.return_value = 1
-        testResp1.headers.expires.to_datetime().timestamp.return_value = 69
-        testResp2.body.members.get_online_members.return_value = 0
+        test_name1 = "guild0"
+        test_resp1 = MagicMock()
+        test_resp2 = MagicMock()  # continued
+        test_resp1.body.name = test_name1
+        test_resp1.body.members.get_online_members.return_value = 1
+        test_resp1.headers.expires.to_datetime().timestamp.return_value = 69
+        test_resp2.body.members.get_online_members.return_value = 0
 
         # ACT
-        self._manager._requeue_guild([testResp1, testResp2])
+        self._manager._requeue_guild([test_resp1, test_resp2])
 
         # ASSERT
         # NOTE: Assert that self._api.guild.get() is called with the correct arguments
-        self._api.guild.get.assert_called_once_with(testName1)
+        self._api.guild.get.assert_called_once_with(test_name1)
         # NOTE: Assert that enqueue is called with the correct arguments.
         self.__request_list.enqueue.assert_called_once_with(69, self._api.guild.get())

@@ -3,7 +3,7 @@ DOCKER_COMPOSE := $(DOCKER_DIR)/docker-compose.yml
 SCRIPT := ./makefile.sh
 .DEFAULT_GOAL := help
 
-.PHONY: wait-for-mysql build-all up-all down-all db bot mysql pma test-sql lint test-sql-up test-sql-down lint
+.PHONY: wait-for-mysql build-all up-all down-all db bot mysql pma test-sql lint test-sql-up test-sql-down lint rmpycache
 
 help:
 	@echo "Usage:"
@@ -72,5 +72,8 @@ test-sql-down:
 	docker stop fazbot-test-db
 
 lint:
-	pylint fazbot fazdb fazutil \
-		--disable=R0801,R0901,R0913,R0916,R0912,R0902,R0914,R01702,R0917,R0904,R0911,R0915,R0903,C0301,C0114,C0115,C0116,W
+	pylint $$(git ls-files '*.py') \
+		--disable=R0801,R0901,R0913,R0916,R0912,R0902,R0914,R01702,R0917,R0904,R0911,R0915,R0903,C0301,C0114,C0115,C0116,C3001,W
+
+rmpycache:
+	find . -type d -name "__pycache__" 2> /dev/null | xargs -I {} rm -r {}

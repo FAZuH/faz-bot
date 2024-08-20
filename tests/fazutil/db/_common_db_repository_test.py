@@ -172,9 +172,8 @@ class CommonDbRepositoryTest:
                 col_ = pk_columns[0]
                 value = getattr(entity, col_.name)
                 return value
-            else:
-                values = [getattr(entity, col.name) for col in pk_columns]
-                return values  # type: ignore
+            values = [getattr(entity, col.name) for col in pk_columns]
+            return values  # type: ignore
 
         @staticmethod
         def _get_table_names(connection: Connection) -> list[str]:

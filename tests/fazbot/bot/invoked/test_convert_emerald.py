@@ -36,7 +36,9 @@ class TestConvertEmerald(IsolatedAsyncioTestCase):
     #     await self.obj.run()
     #
     #     # ASSERT
-    #     self.obj._interaction.send.assert_called_once_with(embed=embed, file=self.obj.ASSET_LIQUIDEMERALD._file)  # type: ignore
+    #     self.obj._interaction.send.assert_called_once_with(  # type: ignore
+    #         embed=embed, file=self.obj.ASSET_LIQUIDEMERALD._file  # type: ignore
+    #     )
     #
     # def test_get_embed(self) -> None:
     #     # PREPARE

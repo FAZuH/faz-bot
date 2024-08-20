@@ -5,7 +5,16 @@ from typing import Any, TYPE_CHECKING
 from aiohttp import ClientSession, ClientTimeout
 
 from .base_response import BaseResponse
-from .errors import *
+from .errors import (
+    BadRequest,
+    Forbidden,
+    HTTPError,
+    NotFound,
+    Ratelimited,
+    ServerError,
+    TooManyRetries,
+    Unauthorized,
+)
 
 if TYPE_CHECKING:
     from aiohttp import ClientResponse

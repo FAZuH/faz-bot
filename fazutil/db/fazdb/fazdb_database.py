@@ -1,6 +1,18 @@
 from ..base_mysql_database import BaseMySQLDatabase
 from .model.base_fazdb_model import BaseFazdbModel
-from .repository import *
+from .repository import (
+    CharacterHistoryRepository,
+    CharacterInfoRepository,
+    FazdbUptimeRepository,
+    GuildHistoryRepository,
+    GuildInfoRepository,
+    GuildMemberHistoryRepository,
+    OnlinePlayersRepository,
+    PlayerActivityHistoryRepository,
+    PlayerHistoryRepository,
+    PlayerInfoRepository,
+    WorldsRepository,
+)
 
 
 class FazdbDatabase(BaseMySQLDatabase):
