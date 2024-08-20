@@ -23,16 +23,16 @@ class Admin(CogBase):
             )
 
     @override
-    def cog_application_command_check(self, interaction: Intr):  # type: ignore
-        return self._bot.checks.is_admin(interaction)
+    def cog_application_command_check(self, intr: Intr):  # type: ignore
+        return self._bot.checks.is_admin(intr)
 
     @nextcord.slash_command(name="admin", description="Admin commands.")
-    async def admin(self, interaction: Intr) -> None: ...
+    async def admin(self, intr: Intr) -> None: ...
 
     @admin.subcommand(name="ban")
     async def ban(
         self,
-        interaction: Intr,
+        intr: Intr,
         user_id: str,
         reason: str | None = None,
         until: str | None = None,
@@ -50,10 +50,10 @@ class Admin(CogBase):
         """
         user = await Utils.must_get_user(self._bot.client, user_id)
 
-        async with self._enter_botdb_session() as (db, session):
+        async with self._enter_botdb_session() as (db, s):
             repo = db.whitelist_group_repository
 
-            if await repo.is_banned_user(user.id, session=session):
+            if await repo.is_banned_user(user.id, session=s):
                 raise ApplicationException(
                     f"User `{user.name}` (`{user.id}`) is already banned."
                 )
@@ -62,15 +62,15 @@ class Admin(CogBase):
                 user.id,
                 reason,
                 Utils.must_parse_date_string(until) if until else None,
-                session=session,
+                session=s,
             )
 
         await self._respond_successful(
-            interaction, f"Banned user `{user.name}` (`{user.id}`)."
+            intr, f"Banned user `{user.name}` (`{user.id}`)."
         )
 
     @admin.subcommand(name="unban")
-    async def unban(self, interaction: Intr, user_id: str) -> None:
+    async def unban(self, intr: Intr, user_id: str) -> None:
         """(dev only) Unbans an user from using the bot.
 
         Parameters
@@ -80,22 +80,22 @@ class Admin(CogBase):
         """
         user = await Utils.must_get_user(self._bot.client, user_id)
 
-        async with self._enter_botdb_session() as (db, session):
+        async with self._enter_botdb_session() as (db, s):
             repo = db.whitelist_group_repository
 
-            if not await repo.is_banned_user(user.id, session=session):
+            if not await repo.is_banned_user(user.id, session=s):
                 raise ApplicationException(
                     f"User `{user.name}` (`{user.id}`) is not banned."
                 )
 
-            await repo.unban_user(user.id, session=session)
+            await repo.unban_user(user.id, session=s)
 
         await self._respond_successful(
-            interaction, f"Unbanned user `{user.name}` (`{user.id}`)."
+            intr, f"Unbanned user `{user.name}` (`{user.id}`)."
         )
 
     @admin.subcommand(name="echo")
-    async def echo(self, interaction: Intr, message: str) -> None:
+    async def echo(self, intr: Intr, message: str) -> None:
         """(dev only) Echoes a message.
 
         Parameters
@@ -103,17 +103,17 @@ class Admin(CogBase):
         message : str
             The message to echo.
         """
-        await interaction.send(message)
+        await intr.send(message)
 
     @admin.subcommand(name="reload_asset")
-    async def reload_asset(self, interaction: Intr) -> None:
+    async def reload_asset(self, intr: Intr) -> None:
         """(dev only) Reloads asset."""
         self._bot.app.properties.ASSET.read_all()
         self._bot.asset_manager.setup()
-        await self._respond_successful(interaction, "Reloaded asset successfully.")
+        await self._respond_successful(intr, "Reloaded asset successfully.")
 
     @admin.subcommand(name="send")
-    async def send(self, interaction: Intr, channel_id: str, message: str) -> None:
+    async def send(self, intr: Intr, channel_id: str, message: str) -> None:
         """(dev only) Unbans an user from using the bot.
 
         Parameters
@@ -135,10 +135,10 @@ class Admin(CogBase):
         except nextcord.DiscordException as exc:
             raise ApplicationException(f"Failed sending message: {exc}") from exc
 
-        await self._respond_successful(interaction, f"Sent message on channel `{channel.name}` (`{channel.id}`).")  # type: ignore
+        await self._respond_successful(intr, f"Sent message on channel `{channel.name}` (`{channel.id}`).")  # type: ignore
 
     @admin.subcommand(name="sync_guild")
-    async def sync_guild(self, interaction: Intr, guild_id: str) -> None:
+    async def sync_guild(self, intr: Intr, guild_id: str) -> None:
         """(dev only) Syncs app commands for a specific guild.
 
         Parameters
@@ -146,7 +146,7 @@ class Admin(CogBase):
         guild_id : str
             The guild ID to sync app commands to.
         """
-        await interaction.response.defer()
+        await intr.response.defer()
         guild = await Utils.must_get_guild(self._bot.client, guild_id)
 
         await self._bot.client.sync_application_commands(guild_id=guild.id)
@@ -157,25 +157,25 @@ class Admin(CogBase):
                 synced_app_cmds += 1
 
         await self._respond_successful(
-            interaction,
+            intr,
             f"Synchronized {synced_app_cmds} app commands for guild `{guild.name}` `({guild.id})`.",
         )
 
     @admin.subcommand(name="sync")
-    async def sync(self, interaction: Intr) -> None:
+    async def sync(self, intr: Intr) -> None:
         """(dev only) Synchronizes all app commands with Discord."""
-        await interaction.response.defer()
+        await intr.response.defer()
         await self._bot.client.sync_all_application_commands()
-        await self._respond_successful(interaction, "Synchronized app commands.")
+        await self._respond_successful(intr, "Synchronized app commands.")
 
     @admin.subcommand(name="shutdown", description="Shuts down the bot.")
-    async def shutdown(self, interaction: Intr) -> None:
+    async def shutdown(self, intr: Intr) -> None:
         """(dev only) Shutdowns the bot enitirely."""
-        await self._respond_successful(interaction, "Shutting down...")
+        await self._respond_successful(intr, "Shutting down...")
         self._bot.app.stop()
 
     @admin.subcommand(name="whisper")
-    async def whisper(self, interaction: Intr, user_id: str, message: str) -> None:
+    async def whisper(self, intr: Intr, user_id: str, message: str) -> None:
         """(dev only) Whispers a message to a user.
 
         Parameters
@@ -195,12 +195,12 @@ class Admin(CogBase):
             ) from exc
 
         await self._respond_successful(
-            interaction, f"Whispered message to `{user.name}` (`{user.id}`)."
+            intr, f"Whispered message to `{user.name}` (`{user.id}`)."
         )
 
     @admin.subcommand(name="whitelist")
     async def whitelist(
-        self, interaction: Intr, guild_id: str, until: str | None = None
+        self, intr: Intr, guild_id: str, until: str | None = None
     ) -> None:
         """(dev only) Whitelists or unwhitelists a guild from using the bot.
 
@@ -213,10 +213,10 @@ class Admin(CogBase):
         """
         guild = await Utils.must_get_guild(self._bot.client, guild_id)
 
-        async with self._enter_botdb_session() as (db, session):
+        async with self._enter_botdb_session() as (db, s):
             repo = db.whitelist_group_repository
 
-            if await repo.is_whitelisted_guild(guild.id, session=session):
+            if await repo.is_whitelisted_guild(guild.id, session=s):
                 raise ApplicationException(
                     f"Guild `{guild.name}` (`{guild.id}`) is already whitelisted."
                 )
@@ -224,15 +224,15 @@ class Admin(CogBase):
             await repo.whitelist_guild(
                 guild.id,
                 until=Utils.must_parse_date_string(until) if until else None,
-                session=session,
+                session=s,
             )
 
         await self._respond_successful(
-            interaction, f"Whitelisted guild `{guild.name}` (`{guild.id}`)."
+            intr, f"Whitelisted guild `{guild.name}` (`{guild.id}`)."
         )
 
     @admin.subcommand(name="unwhitelist")
-    async def unwhitelist(self, interaction: Intr, guild_id: str) -> None:
+    async def unwhitelist(self, intr: Intr, guild_id: str) -> None:
         """(dev only) Unwhitelists a guild from using the bot.
 
         Parameters
@@ -242,22 +242,22 @@ class Admin(CogBase):
         """
         guild = await Utils.must_get_guild(self._bot.client, guild_id)
 
-        async with self._enter_botdb_session() as (db, session):
+        async with self._enter_botdb_session() as (db, s):
             repo = db.whitelist_group_repository
 
-            if not await repo.is_whitelisted_guild(guild.id, session=session):
+            if not await repo.is_whitelisted_guild(guild.id, session=s):
                 raise ApplicationException(
                     f"Guild `{guild.name}` (`{guild.id}`) is not whitelisted."
                 )
 
-            await repo.unwhitelist_guild(guild.id, session=session)
+            await repo.unwhitelist_guild(guild.id, session=s)
 
         await self._respond_successful(
-            interaction, f"Unwhitelisted guild `{guild.name}` (`{guild.id}`)."
+            intr, f"Unwhitelisted guild `{guild.name}` (`{guild.id}`)."
         )
 
     @admin.subcommand(name="execute")
-    async def execute(self, interaction: Intr, command: str) -> None:
+    async def execute(self, intr: Intr, command: str) -> None:
         """(dev only) Execute `command` directly to the host device.
 
         Parameters
@@ -272,7 +272,7 @@ class Admin(CogBase):
             success_msg = (
                 "Command executed successfully!\n" "Output:\n" f"{result.stdout}"
             )
-            await self._respond_successful(interaction, success_msg)
+            await self._respond_successful(intr, success_msg)
         else:
             err_msg = "Error executing command.\n" "Error message:\n" f"{result.stderr}"
             raise ApplicationException(err_msg)
