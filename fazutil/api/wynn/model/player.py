@@ -180,12 +180,12 @@ class Player:
             self._total_level = node["totalLevel"]
             self._wars = node["wars"]
             self._playtime = Decimal(node["playtime"])
-            self._mobs_killed = node["mobsKilled"]
-            self._chests_found = node["chestsFound"]
+            self._mobs_killed = node["mobsKilled"] or 0
+            self._chests_found = node["chestsFound"] or 0
             self._items_identified = node["itemsIdentified"] or 0
-            self._blocks_walked = node["blocksWalked"]
+            self._blocks_walked = node["blocksWalked"] or 0
             self._logins = node["logins"]
-            self._deaths = node["deaths"]
+            self._deaths = node["deaths"] or 0
             self._discoveries = node["discoveries"]
             self._pre_economy = node["preEconomy"] or False
             self._pvp = Player.Pvp(node["pvp"])
