@@ -55,6 +55,9 @@ pma:
 	$(SCRIPT) pma $(ACT)
 
 
+pytest:
+	python -m pytest --disable-warnings tests
+
 test-sql-up:
 	docker run \
 		--rm --name fazbot-test-db \

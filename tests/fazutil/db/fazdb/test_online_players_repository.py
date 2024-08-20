@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from fazbot.db.fazdb.repository.online_players_repository import OnlinePlayersRepository
+from fazutil.db.fazdb.repository.online_players_repository import OnlinePlayersRepository
 
 from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
 

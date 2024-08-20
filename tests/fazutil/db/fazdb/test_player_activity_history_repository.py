@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from fazbot.db.fazdb.repository.player_activity_history_repository import (
+from fazutil.db.fazdb.repository.player_activity_history_repository import (
     PlayerActivityHistoryRepository,
 )
 

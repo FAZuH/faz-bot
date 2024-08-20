@@ -1,4 +1,4 @@
-from fazdb.db.fazdb.repository.worlds_repository import WorldsRepository
+from fazutil.db.fazdb.repository.worlds_repository import WorldsRepository
 
 from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
 
@@ -30,7 +30,7 @@ class TestWorldsRepository(CommonFazdbRepositoryTest.Test[WorldsRepository]):
         wc3_future.player_count = 40
         await self.repo.update_worlds([wc2, wc3_future])
 
-        rows = await self._get_all_inserted_rows()
+        rows = await self.repo.select_all()
 
         self.assertEqual(len(rows), 2)
         self.assertNotIn(wc1, rows)
@@ -42,7 +42,7 @@ class TestWorldsRepository(CommonFazdbRepositoryTest.Test[WorldsRepository]):
 
     # override
     def _get_mock_data(self):
-        model = self.repo.get_model_cls()
+        model = self.repo.model
 
         mock_data1 = model(name="WC1", player_count=50, time_created=self._get_mock_datetime().replace(day=1))
         mock_data2 = mock_data1.clone()

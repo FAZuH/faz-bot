@@ -1,7 +1,7 @@
 from datetime import datetime
 import unittest
 
-from fazdb.api import WynnApi
+from fazutil.api import WynnApi
 
 
 class TestApiEndpointFromfixture(unittest.IsolatedAsyncioTestCase):

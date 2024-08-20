@@ -1,45 +1,43 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Any, Sequence, TYPE_CHECKING
+from typing import Any, TYPE_CHECKING
 import unittest
 
-from sqlalchemy import inspect, select
+from sqlalchemy import inspect
 
-from fazdb.app.properties import Properties
-from fazdb.db.base_model import BaseModel
+from fazbot.app.properties import Properties
+from fazutil.db.base_model import BaseModel
 
 if TYPE_CHECKING:
     from sqlalchemy import Connection
-    from fazdb.db import BaseAsyncDatabase, BaseRepository
+    from fazutil.db.base_mysql_database import BaseMySQLDatabase
+    from fazutil.db.base_repository import BaseRepository
 
 
 class CommonDbRepositoryTest:
 
     # Nesting test classes like this prevents CommonDbRepositoryTest.Test from being run by unittest.
-    class Test[DB: BaseAsyncDatabase, R: BaseRepository](unittest.IsolatedAsyncioTestCase, ABC):
+    class Test[DB: BaseMySQLDatabase, R: BaseRepository[BaseModel, Any]](unittest.IsolatedAsyncioTestCase, ABC):
 
         # override
         async def asyncSetUp(self) -> None:
             Properties.setup()
             self._database = self.database_type(
-                "mysql+aiomysql",
                 Properties.MYSQL_USERNAME,
                 Properties.MYSQL_PASSWORD,
                 Properties.MYSQL_HOST,
                 Properties.MYSQL_PORT,
-                f"{Properties.FAZDB_DB_NAME}_test"
+                self.db_name
             )
-            async with self.database.enter_session() as session:
-                await self.repo.create_table(session=session)
-                await self.repo.truncate(session=session)
-            return await super().asyncSetUp()
+            self._database.drop_all()
+            self._database.create_all()
 
         async def test_create_table_successful(self) -> None:
-            """Test if create_table() method successfully creates table."""
+            """Test if create_table method successfully creates table."""
             await self.repo.create_table()
 
-            async with self.database.enter_connection() as connection:
+            async with self.database.enter_async_connection() as connection:
                 result = await connection.run_sync(self._get_table_names)
 
             self.assertTrue(self.repo.table_name in result)
@@ -50,7 +48,7 @@ class CommonDbRepositoryTest:
 
             await self.repo.insert(mock_data0)
 
-            rows = await self._get_all_inserted_rows()
+            rows = await self.repo.select_all()
             self.assertEqual(len(rows), 1)
             self.assertEqual(rows[0], mock_data0)
 
@@ -60,7 +58,7 @@ class CommonDbRepositoryTest:
             to_insert = (mock_data[0], mock_data[2])
             await self.repo.insert(to_insert)
 
-            rows = await self._get_all_inserted_rows()
+            rows = await self.repo.select_all()
             self.assertEqual(len(rows), 2)
             self.assertSetEqual(set(rows), set(to_insert))
 
@@ -70,15 +68,10 @@ class CommonDbRepositoryTest:
             mock_data = self._get_mock_data()
             await self.repo.insert(mock_data[0])
 
-            rows = await self._get_all_inserted_rows()
-            self.assertEqual(len(rows), 1)
-            self.assertSetEqual(
-                set(rows),
-                set((mock_data[0],))
-            )
-
             # Insert the same data again. This shouldn't insert.
-            await self.repo.insert(mock_data[1], ignore_on_duplicate=True)
+            await self.repo.insert(mock_data[0], ignore_on_duplicate=True)
+
+            rows = await self.repo.select_all()
             self.assertEqual(len(rows), 1)
             self.assertSetEqual(
                 set(rows),
@@ -93,7 +86,7 @@ class CommonDbRepositoryTest:
 
             # Insert the same data again. This should replace previous insert
             await self.repo.insert(mock_data[3], replace_on_duplicate=True)
-            rows = await self._get_all_inserted_rows()
+            rows = await self.repo.select_all()
             self.assertEqual(len(rows), 1)
             row = rows[0]
             self.assertEqual(row, mock_data[3])
@@ -107,27 +100,34 @@ class CommonDbRepositoryTest:
             await self.repo.insert(mock_data[3], replace_on_duplicate=True, columns_to_replace=[modified_column_name])
 
             # Assert that only 'columns_to_replace' was changed
-            rows = await self._get_all_inserted_rows()
+            rows = await self.repo.select_all()
             self.assertEqual(len(rows), 1)
             row = rows[0]
-            non_modified_values_lambda = lambda x: {k: v for k, v in x.items() if k != modified_column_name}
-            modified_values_lambda = lambda x: {k: v for k, v in x.items() if k == modified_column_name}
+            non_modified_values_lambda = lambda x: {k: v for k, v in x.to_dict().items() if k != modified_column_name}
+            modified_values_lambda = lambda x: {k: v for k, v in x.to_dict().items() if k == modified_column_name}
             self.assertEqual(non_modified_values_lambda(row), non_modified_values_lambda(mock_data[3]))
             self.assertNotEqual(modified_values_lambda(row), modified_values_lambda(mock_data[0]))
 
         async def test_delete_successful(self) -> None:
             """Test if delete() method deletes 1 target entry properly."""
-            mock_data0 = self._get_mock_data()[0]
-            await self.repo.insert(mock_data0)
-            id_ = self._get_value_of_primary_key(mock_data0)
+            mock_data = self._get_mock_data()
+            await self.repo.insert(mock_data[0])
+            id_ = self._get_value_of_primary_key(mock_data[0])
 
             await self.repo.delete(id_)
 
-            rows = await self._get_all_inserted_rows()
+            rows = await self.repo.select_all()
             self.assertEqual(len(rows), 0)
+            #
+            # await self.repo.insert([mock_data[0], mock_data[2]])
+            # id2 = self._get_value_of_primary_key(mock_data[2])
+            # await self.repo.delete([id_, id2])
+            #
+            # rows = await self.repo.select_all()
+            # self.assertEqual(len(rows), 0)
 
         async def test_is_exists_return_correct_value(self) -> None:
-            """Test if is_exist() method correctly finds if value exists."""
+            """Test if is_exist method correctly finds if value exists."""
             mock_data = self._get_mock_data()
 
             mock_data0 = mock_data[0]
@@ -141,20 +141,21 @@ class CommonDbRepositoryTest:
             is_exist2 = await self.repo.is_exists(id2)  # type: ignore
             self.assertFalse(is_exist2)
 
+        async def test_select_all_successful(self) -> None:
+            """Test if select_all method properly selects all rows in table"""
+            mock_data = self._get_mock_data()
+            await self.repo.insert([mock_data[0], mock_data[2]])
+            res = await self.repo.select_all()
+            self.assertEqual(len(res), 2)
+            self.assertSetEqual(set(res), {mock_data[0], mock_data[2]})
+        
         # override
         async def asyncTearDown(self) -> None:
-            await self.repo.truncate()
-            await self.database.engine.dispose()
-            return await super().asyncTearDown()
-
-        async def _get_all_inserted_rows(self) -> Sequence[BaseModel]:
-            async with self.database.enter_session() as session:
-                result = await session.execute(select(self.repo.get_model_cls()))
-                rows = result.scalars().all()
-            return rows
+            self.database.drop_all()
+            await self.database.async_engine.dispose()
 
         def _get_value_of_primary_key(self, entity: BaseModel) -> Any:
-            pk_columns = inspect(self.repo.get_model_cls()).primary_key
+            pk_columns = inspect(self.repo.model).primary_key
             if len(pk_columns) == 1:
                 col_ = pk_columns[0]
                 value = getattr(entity, col_.name)
@@ -200,4 +201,10 @@ class CommonDbRepositoryTest:
         @abstractmethod
         def repo(self) -> R:
             """Database repository corresponding to the repository being tested."""
+            ...
+
+        @property
+        @abstractmethod
+        def db_name(self) -> str:
+            """Database name to be tested."""
             ...

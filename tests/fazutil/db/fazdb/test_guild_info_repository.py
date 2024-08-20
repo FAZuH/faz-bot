@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from fazbot.db.fazdb.repository.guild_info_repository import GuildInfoRepository
+from fazutil.db.fazdb.repository.guild_info_repository import GuildInfoRepository
 
 from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
 

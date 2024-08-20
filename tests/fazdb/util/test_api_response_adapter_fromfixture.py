@@ -3,8 +3,8 @@
 # import unittest
 #
 # from tests.fixtures_api import FixturesApi
-# from fazdb.db.fazdb.model import CharacterHistory
-# from fazdb.db.fazdb.model.column import DateColumn, GamemodeColumn, UuidColumn
+# from fazutil.db.fazdb.model import CharacterHistory
+# from fazutil.db.fazdb.model.column import DateColumn, GamemodeColumn, UuidColumn
 # from fazdb.util import ApiResponseAdapter
 #
 #

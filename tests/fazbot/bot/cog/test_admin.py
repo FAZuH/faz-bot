@@ -8,9 +8,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 from fazbot.app.properties import Properties
 from fazbot.bot.cog import Admin
 from fazbot.bot.errors import ApplicationError
-from fazbot.db.fazbot import FazbotDatabase
-from fazbot.db.fazbot.model import BannedUser, WhitelistedGuild
-from fazbot.db.fazbot.model.whitelist_group import WhitelistGroup
+from fazutil.db.fazbot import FazbotDatabase
+from fazutil.db.fazbot.model import *
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession

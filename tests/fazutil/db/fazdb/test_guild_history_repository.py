@@ -1,4 +1,4 @@
-from fazbot.db.fazdb.repository.guild_history_repository import GuildHistoryRepository
+from fazutil.db.fazdb.repository.guild_history_repository import GuildHistoryRepository
 
 from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
 

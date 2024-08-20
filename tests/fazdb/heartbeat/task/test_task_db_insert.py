@@ -2,9 +2,9 @@ from datetime import datetime
 import unittest
 from unittest.mock import AsyncMock, MagicMock, Mock
 
-from fazdb.api import WynnApi
-from fazdb.api.wynn.response import GuildResponse, OnlinePlayersResponse, PlayerResponse
-from fazdb.db.fazdb import FazdbDatabase
+from fazutil.api import WynnApi
+from fazutil.api.wynn.response import GuildResponse, OnlinePlayersResponse, PlayerResponse
+from fazutil.db.fazdb import FazdbDatabase
 from fazdb.heartbeat.task import RequestQueue, ResponseQueue, TaskDbInsert
 
 

@@ -2,15 +2,15 @@ from datetime import datetime as dt
 from types import NoneType
 import unittest
 
-from fazdb.api.wynn.model import Guild, Player
-from fazdb.api.wynn.model.field import (
+from fazutil.api.wynn.model import Guild, Player
+from fazutil.api.wynn.model.field import (
     BodyDateField,
     CharacterTypeField,
     GamemodeField,
     UsernameOrUuidField,
     UuidField,
 )
-from tests._fixtures_api import FixturesLoader
+from tests.fazutil._fixtures_api import FixturesLoader
 
 
 class TestApiModelFromfixture(unittest.TestCase):

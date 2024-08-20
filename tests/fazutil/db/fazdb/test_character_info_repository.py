@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from fazbot.db.fazdb.repository import CharacterInfoRepository
+from fazutil.db.fazdb.repository import CharacterInfoRepository
 
 from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
 

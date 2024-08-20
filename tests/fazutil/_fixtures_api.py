@@ -1,7 +1,7 @@
 import json
 import os
 
-from fazdb.api.wynn.response import GuildResponse, OnlinePlayersResponse, PlayerResponse
+from fazutil.api.wynn.response import GuildResponse, OnlinePlayersResponse, PlayerResponse
 
 
 class FixturesLoader:

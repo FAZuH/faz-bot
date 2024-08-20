@@ -1,4 +1,4 @@
-from fazbot.db.fazdb.repository.fazdb_uptime_repository import FazdbUptimeRepository
+from fazutil.db.fazdb.repository.fazdb_uptime_repository import FazdbUptimeRepository
 
 from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
 
