@@ -52,7 +52,7 @@ test-sql:
 	$(SCRIPT) test-sql $(ACT)
 
 pma:
-	$(SCRIPT) pma $(ACT)
+	$(SCRIPT) phpmyadmin $(ACT)
 
 
 pytest:
