@@ -8,6 +8,30 @@ from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
 
 class TestPlayerInfoRepository(CommonFazdbRepositoryTest.Test[PlayerInfoRepository]):
 
+    async def test_get_player_no_match(self) -> None:
+        # Act
+        ret = await self.repo.get_player("abc")
+        # Assert
+        self.assertIsNone(ret)
+
+    async def test_get_player_match_username(self) -> None:
+        # Prepare
+        entity = self._get_mock_data()[0]
+        await self.repo.insert(entity)
+        # Act
+        res = await self.repo.get_player(entity.latest_username)
+        # Assert
+        self.assertEqual(res, entity)
+
+    async def test_get_player_match_uuid(self) -> None:
+        # Prepare
+        entity = self._get_mock_data()[0]
+        await self.repo.insert(entity)
+        # Act
+        res = await self.repo.get_player(entity.uuid)
+        # Assert
+        self.assertEqual(res, entity)
+
     @override
     def _get_mock_data(self):
         model = self.repo.model
@@ -21,7 +45,7 @@ class TestPlayerInfoRepository(CommonFazdbRepositoryTest.Test[PlayerInfoReposito
         mock_data3.uuid = uuid2
         mock_data4 = mock_data1.clone()
         mock_data4.latest_username = "b"
-        return (mock_data1, mock_data2, mock_data3, mock_data4, "latest_username")
+        return mock_data1, mock_data2, mock_data3, mock_data4, "latest_username"
 
     @property
     @override
