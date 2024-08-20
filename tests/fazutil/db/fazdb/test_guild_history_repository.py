@@ -1,3 +1,5 @@
+from typing import override
+
 from fazutil.db.fazdb.repository.guild_history_repository import GuildHistoryRepository
 
 from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
@@ -7,7 +9,7 @@ class TestGuildHistoryRepository(
     CommonFazdbRepositoryTest.Test[GuildHistoryRepository]
 ):
 
-    # override
+    @override
     def _get_mock_data(self):
         model = self.repo.model
 
@@ -29,7 +31,7 @@ class TestGuildHistoryRepository(
         mock_data4.level = 2.0
         return (mock_data1, mock_data2, mock_data3, mock_data4, "level")
 
-    # override
     @property
+    @override
     def repo(self):
         return self.database.guild_history_repository

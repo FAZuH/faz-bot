@@ -1,3 +1,5 @@
+from typing import override
+
 from fazutil.db.fazdb.repository.worlds_repository import WorldsRepository
 
 from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
@@ -40,7 +42,7 @@ class TestWorldsRepository(CommonFazdbRepositoryTest.Test[WorldsRepository]):
                 continue
             self.assertEqual(wc3_future.player_count, row.player_count)  # type: ignore
 
-    # override
+    @override
     def _get_mock_data(self):
         model = self.repo.model
 
@@ -57,7 +59,7 @@ class TestWorldsRepository(CommonFazdbRepositoryTest.Test[WorldsRepository]):
         # mock_data4.time_created = datetime.now().replace(microsecond=0)
         return (mock_data1, mock_data2, mock_data3, mock_data4, "player_count")
 
-    # override
     @property
+    @override
     def repo(self):
         return self.database.worlds_repository

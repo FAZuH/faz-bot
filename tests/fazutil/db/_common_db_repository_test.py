@@ -1,7 +1,7 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Any, TYPE_CHECKING
+from typing import Any, TYPE_CHECKING, override
 import unittest
 
 from sqlalchemy import inspect
@@ -17,12 +17,12 @@ if TYPE_CHECKING:
 
 class CommonDbRepositoryTest:
 
-    # Nesting test classes like this prevents CommonDbRepositoryTest.Test from being run by unittest.
+    # HACK: Nesting test classes like this prevents CommonDbRepositoryTest.Test from being discovered by unittest.
     class Test[DB: BaseMySQLDatabase, R: BaseRepository[BaseModel, Any]](
         unittest.IsolatedAsyncioTestCase, ABC
     ):
 
-        # override
+        @override
         async def asyncSetUp(self) -> None:
             Properties.setup()
             self._database = self.database_type(
@@ -161,7 +161,7 @@ class CommonDbRepositoryTest:
             self.assertEqual(len(res), 2)
             self.assertSetEqual(set(res), {mock_data[0], mock_data[2]})
 
-        # override
+        @override
         async def asyncTearDown(self) -> None:
             self.database.drop_all()
             await self.database.async_engine.dispose()

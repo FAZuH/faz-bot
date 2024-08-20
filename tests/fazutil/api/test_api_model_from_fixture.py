@@ -1,5 +1,6 @@
 from datetime import datetime as dt
 from types import NoneType
+from typing import override
 import unittest
 
 from fazutil.api.wynn.model import Guild, Player
@@ -10,19 +11,20 @@ from fazutil.api.wynn.model.field import (
     UsernameOrUuidField,
     UuidField,
 )
-from tests.fazutil._fixtures_api import FixturesLoader
+from tests.fixtures_api import FixturesApi
 
 
-class TestApiModelFromfixture(unittest.TestCase):
+class TestApiModelFromFixture(unittest.TestCase):
+    """Test if API model properly stores Wynncraft responses properly."""
 
+    @override
     def setUp(self) -> None:
-        fixtures_api = FixturesLoader()
-        self.guilds = fixtures_api.get_guilds()
-        self.online_uuids = fixtures_api.get_online_uuids()
-        self.players = fixtures_api.get_players()
+        self._fixtures = FixturesApi()
+        self._fixtures.load_fixtures()
 
     def test_guild_response(self) -> None:
-        for guildstat in self.guilds:
+        """Test if guild API model stores guild response properly."""
+        for guildstat in self._fixtures.guild_stats:
             body = guildstat.body
             self.assertIsInstance(body, Guild)
             self.assertIsInstance(body.uuid, UuidField)
@@ -56,7 +58,7 @@ class TestApiModelFromfixture(unittest.TestCase):
                     self.assertIsInstance(member_info.username, str)
                 self.assertIsInstance(member_info.online, bool)
                 self.assertIsInstance(member_info.server, (NoneType, str))
-                self.assertGreaterEqual(member_info.contributed, 0)
+                self.assertIsInstance(member_info.contributed, int)
                 self.assertGreaterEqual(member_info.contribution_rank, 0)
                 self.assertIsInstance(member_info.joined, BodyDateField)
                 self.assertIsInstance(member_info.joined.to_datetime(), dt)
@@ -83,7 +85,8 @@ class TestApiModelFromfixture(unittest.TestCase):
                 self.assertGreaterEqual(season_rank_info.rating, 0)
 
     def test_player_response(self) -> None:
-        for playerstat in self.players:
+        """Test if player API model stores player response properly"""
+        for playerstat in self._fixtures.player_stats:
             body = playerstat.body
             self.assertIsInstance(body, Player)
             self.assertIsInstance(body.username, str)
@@ -96,7 +99,9 @@ class TestApiModelFromfixture(unittest.TestCase):
             self.assertIsInstance(body.rank, str)
             self.assertIsInstance(body.rank_badge, (NoneType, str))
             # legacy_rank_colour
-            self.assertIsInstance(body.legacy_rank_colour, (Player.LegacyRankColour, NoneType))
+            self.assertIsInstance(
+                body.legacy_rank_colour, (Player.LegacyRankColour, NoneType)
+            )
             if body.legacy_rank_colour is not None:
                 self.assertIsInstance(body.legacy_rank_colour.main, str)
                 self.assertIsInstance(body.legacy_rank_colour.sub, str)
@@ -121,7 +126,7 @@ class TestApiModelFromfixture(unittest.TestCase):
                 self.assertIsInstance(body.guild.rank, str)
                 self.assertIsInstance(body.guild.rank_stars, (NoneType, str))
                 if body.guild.rank_stars:
-                    self.assertIn('★', body.guild.rank_stars)
+                    self.assertIn("★", body.guild.rank_stars)
 
             # global_data
             self.assertIsInstance(body.global_data, Player.GlobalData)
@@ -154,7 +159,10 @@ class TestApiModelFromfixture(unittest.TestCase):
                 self.assertIsInstance(ch_uuid.to_bytes(), bytes)
                 self.assertIsInstance(ch, Player.Character)
                 self.assertIsInstance(ch.type, CharacterTypeField)
-                self.assertIn(ch.type.get_kind_str(), ("MAGE", "ARCHER", "WARRIOR", "ASSASSIN", "SHAMAN"))
+                self.assertIn(
+                    ch.type.get_kind_str(),
+                    ("MAGE", "ARCHER", "WARRIOR", "ASSASSIN", "SHAMAN"),
+                )
                 self.assertIsInstance(ch.nickname, (NoneType, str))
                 self.assertTrue(ch.level >= 0 and ch.level <= 106)
                 self.assertGreaterEqual(ch.xp, 0)
@@ -192,51 +200,81 @@ class TestApiModelFromfixture(unittest.TestCase):
                 # character.professions
                 self.assertIsInstance(ch.professions, Player.Character.Professions)
 
-                self.assertIsInstance(ch.professions.alchemism, Player.Character.Professions.ProfessionInfo)
+                self.assertIsInstance(
+                    ch.professions.alchemism,
+                    Player.Character.Professions.ProfessionInfo,
+                )
                 self.assertGreaterEqual(ch.professions.alchemism.level, 0)
                 self.assertGreaterEqual(ch.professions.alchemism.xp_percent, 0)
                 self.assertGreaterEqual(ch.professions.alchemism.to_decimal(), 0)
-                self.assertIsInstance(ch.professions.armouring, Player.Character.Professions.ProfessionInfo)
+                self.assertIsInstance(
+                    ch.professions.armouring,
+                    Player.Character.Professions.ProfessionInfo,
+                )
                 self.assertGreaterEqual(ch.professions.armouring.level, 0)
                 self.assertGreaterEqual(ch.professions.armouring.xp_percent, 0)
                 self.assertGreaterEqual(ch.professions.armouring.to_decimal(), 0)
-                self.assertIsInstance(ch.professions.cooking, Player.Character.Professions.ProfessionInfo)
+                self.assertIsInstance(
+                    ch.professions.cooking, Player.Character.Professions.ProfessionInfo
+                )
                 self.assertGreaterEqual(ch.professions.cooking.level, 0)
                 self.assertGreaterEqual(ch.professions.cooking.xp_percent, 0)
                 self.assertGreaterEqual(ch.professions.cooking.to_decimal(), 0)
-                self.assertIsInstance(ch.professions.farming, Player.Character.Professions.ProfessionInfo)
+                self.assertIsInstance(
+                    ch.professions.farming, Player.Character.Professions.ProfessionInfo
+                )
                 self.assertGreaterEqual(ch.professions.farming.level, 0)
                 self.assertGreaterEqual(ch.professions.farming.xp_percent, 0)
                 self.assertGreaterEqual(ch.professions.farming.to_decimal(), 0)
-                self.assertIsInstance(ch.professions.fishing, Player.Character.Professions.ProfessionInfo)
+                self.assertIsInstance(
+                    ch.professions.fishing, Player.Character.Professions.ProfessionInfo
+                )
                 self.assertGreaterEqual(ch.professions.fishing.level, 0)
                 self.assertGreaterEqual(ch.professions.fishing.xp_percent, 0)
                 self.assertGreaterEqual(ch.professions.fishing.to_decimal(), 0)
-                self.assertIsInstance(ch.professions.jeweling, Player.Character.Professions.ProfessionInfo)
+                self.assertIsInstance(
+                    ch.professions.jeweling, Player.Character.Professions.ProfessionInfo
+                )
                 self.assertGreaterEqual(ch.professions.jeweling.level, 0)
                 self.assertGreaterEqual(ch.professions.jeweling.xp_percent, 0)
                 self.assertGreaterEqual(ch.professions.jeweling.to_decimal(), 0)
-                self.assertIsInstance(ch.professions.mining, Player.Character.Professions.ProfessionInfo)
+                self.assertIsInstance(
+                    ch.professions.mining, Player.Character.Professions.ProfessionInfo
+                )
                 self.assertGreaterEqual(ch.professions.mining.level, 0)
                 self.assertGreaterEqual(ch.professions.mining.xp_percent, 0)
                 self.assertGreaterEqual(ch.professions.mining.to_decimal(), 0)
-                self.assertIsInstance(ch.professions.scribing, Player.Character.Professions.ProfessionInfo)
+                self.assertIsInstance(
+                    ch.professions.scribing, Player.Character.Professions.ProfessionInfo
+                )
                 self.assertGreaterEqual(ch.professions.scribing.level, 0)
                 self.assertGreaterEqual(ch.professions.scribing.xp_percent, 0)
                 self.assertGreaterEqual(ch.professions.scribing.to_decimal(), 0)
-                self.assertIsInstance(ch.professions.tailoring, Player.Character.Professions.ProfessionInfo)
+                self.assertIsInstance(
+                    ch.professions.tailoring,
+                    Player.Character.Professions.ProfessionInfo,
+                )
                 self.assertGreaterEqual(ch.professions.tailoring.level, 0)
                 self.assertGreaterEqual(ch.professions.tailoring.xp_percent, 0)
                 self.assertGreaterEqual(ch.professions.tailoring.to_decimal(), 0)
-                self.assertIsInstance(ch.professions.weaponsmithing, Player.Character.Professions.ProfessionInfo)
+                self.assertIsInstance(
+                    ch.professions.weaponsmithing,
+                    Player.Character.Professions.ProfessionInfo,
+                )
                 self.assertGreaterEqual(ch.professions.weaponsmithing.level, 0)
                 self.assertGreaterEqual(ch.professions.weaponsmithing.xp_percent, 0)
                 self.assertGreaterEqual(ch.professions.weaponsmithing.to_decimal(), 0)
-                self.assertIsInstance(ch.professions.woodcutting, Player.Character.Professions.ProfessionInfo)
+                self.assertIsInstance(
+                    ch.professions.woodcutting,
+                    Player.Character.Professions.ProfessionInfo,
+                )
                 self.assertGreaterEqual(ch.professions.woodcutting.level, 0)
                 self.assertGreaterEqual(ch.professions.woodcutting.xp_percent, 0)
                 self.assertGreaterEqual(ch.professions.woodcutting.to_decimal(), 0)
-                self.assertIsInstance(ch.professions.woodworking, Player.Character.Professions.ProfessionInfo)
+                self.assertIsInstance(
+                    ch.professions.woodworking,
+                    Player.Character.Professions.ProfessionInfo,
+                )
                 self.assertGreaterEqual(ch.professions.woodworking.level, 0)
                 self.assertGreaterEqual(ch.professions.woodworking.xp_percent, 0)
                 self.assertGreaterEqual(ch.professions.woodworking.to_decimal(), 0)
@@ -254,7 +292,9 @@ class TestApiModelFromfixture(unittest.TestCase):
                 self.assertIsInstance(ch.quests, list)
 
     def test_online_players_response(self) -> None:
-        players = self.online_uuids
+        """Test if online player API model stores online player response properly."""
+        players = self._fixtures.online_uuids
+        assert players
         self.assertGreaterEqual(players.body.total, 0)
         self.assertIsInstance(players.body.players, dict)
         for usernameoruuid, server in players.body.iter_players():

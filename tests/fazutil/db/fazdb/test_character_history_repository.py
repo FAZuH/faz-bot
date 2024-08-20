@@ -1,3 +1,4 @@
+from typing import override
 from uuid import UUID
 
 from fazutil.db.fazdb.repository import CharacterHistoryRepository
@@ -9,7 +10,7 @@ class TestCharacterHistoryRepository(
     CommonFazdbRepositoryTest.Test[CharacterHistoryRepository]
 ):
 
-    # override
+    @override
     def _get_mock_data(self):
         uuid1 = UUID("b30f5e97-957d-47f6-bf1e-9e48d9fea200").bytes
         uuid2 = UUID("33c3ad56-5e9b-4bfe-9685-9fc4df2a67fa").bytes
@@ -57,7 +58,7 @@ class TestCharacterHistoryRepository(
         mock_data4.level = 2
         return (mock_data1, mock_data2, mock_data3, mock_data4, "level")
 
-    # override
     @property
+    @override
     def repo(self):
         return self.database.character_history_repository

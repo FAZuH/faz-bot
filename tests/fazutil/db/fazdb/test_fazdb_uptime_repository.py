@@ -1,3 +1,5 @@
+from typing import override
+
 from fazutil.db.fazdb.repository.fazdb_uptime_repository import FazdbUptimeRepository
 
 from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
@@ -5,7 +7,7 @@ from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
 
 class TestFazdbUptimeRepository(CommonFazdbRepositoryTest.Test[FazdbUptimeRepository]):
 
-    # override
+    @override
     def _get_mock_data(self):
         model = self.repo.model
 
@@ -20,7 +22,7 @@ class TestFazdbUptimeRepository(CommonFazdbRepositoryTest.Test[FazdbUptimeReposi
         mock_data4.stop_time = self._get_mock_datetime().replace(day=3, microsecond=0)
         return (mock_data1, mock_data2, mock_data3, mock_data4, "stop_time")
 
-    # override
     @property
+    @override
     def repo(self):
         return self.database.fazdb_uptime_repository

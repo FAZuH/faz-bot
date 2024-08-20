@@ -1,3 +1,4 @@
+from typing import override
 from uuid import UUID
 
 from fazutil.db.fazdb.repository.player_history_repository import (
@@ -11,7 +12,7 @@ class TestPlayerHistoryRepository(
     CommonFazdbRepositoryTest.Test[PlayerHistoryRepository]
 ):
 
-    # override
+    @override
     def _get_mock_data(self):
         model = self.repo.model
 
@@ -36,7 +37,7 @@ class TestPlayerHistoryRepository(
         mock_data4.username = "b"
         return (mock_data1, mock_data2, mock_data3, mock_data4, "username")
 
-    # override
     @property
+    @override
     def repo(self):
         return self.database.player_history_repository

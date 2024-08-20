@@ -1,3 +1,4 @@
+from typing import override
 from uuid import UUID
 
 from fazutil.db.fazdb.repository import CharacterInfoRepository
@@ -9,7 +10,7 @@ class TestCharacterInfoRepository(
     CommonFazdbRepositoryTest.Test[CharacterInfoRepository]
 ):
 
-    # override
+    @override
     def _get_mock_data(self):
         model = self.repo.model
 
@@ -24,7 +25,7 @@ class TestCharacterInfoRepository(
         mock_data4.type = "ASSASSIN"
         return (mock_data1, mock_data2, mock_data3, mock_data4, "type")
 
-    # override
     @property
+    @override
     def repo(self):
         return self.database.character_info_repository

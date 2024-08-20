@@ -1,3 +1,4 @@
+from typing import override
 from uuid import UUID
 
 from fazutil.db.fazdb.repository.guild_info_repository import GuildInfoRepository
@@ -7,7 +8,7 @@ from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
 
 class TestGuildInfoRepository(CommonFazdbRepositoryTest.Test[GuildInfoRepository]):
 
-    # override
+    @override
     def _get_mock_data(self):
         model = self.repo.model
 
@@ -23,7 +24,7 @@ class TestGuildInfoRepository(CommonFazdbRepositoryTest.Test[GuildInfoRepository
         mock_data4.prefix = "c"
         return (mock_data1, mock_data2, mock_data3, mock_data4, "prefix")
 
-    # override
     @property
+    @override
     def repo(self):
         return self.database.guild_info_repository

@@ -1,6 +1,6 @@
 from __future__ import annotations
 from abc import ABC
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, override
 
 from fazutil.db.fazdb import FazdbDatabase
 
@@ -14,8 +14,8 @@ class CommonFazdbRepositoryTest:
 
     class Test[R: BaseRepository](CommonDbRepositoryTest.Test[FazdbDatabase, R], ABC):
 
-        # override
         @property
+        @override
         def database_type(self) -> type[FazdbDatabase]:
             return FazdbDatabase
 
