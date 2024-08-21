@@ -1,4 +1,4 @@
-# This workflow will install Python dependencies, run tests and lint(todo) with a single version of Python
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 
 name: Python application
@@ -11,7 +11,18 @@ permissions:
   contents: read
 
 jobs:
-  lint-test:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lint with flake8
+        run: |
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -42,10 +53,15 @@ jobs:
           pip install pytest flake8
           pip install -r requirements_dev.txt
 
-      - name: Lint with flake8
+      - name: Wait for MariaDB to be ready
         run: |
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+          for i in {30..0}; do
+            if docker exec $(docker ps -q) mysqladmin ping -h "localhost" --silent; then
+              break
+            fi
+            echo 'MariaDB still not ready, waiting...'
+            sleep 1
+          done
 
       - name: Test with pytest
         env:
