@@ -1,3 +1,4 @@
+from .invoke_activity import InvokeActivity
 from .invoke_convert_emerald import InvokeConvertEmerald
 from .invoke_crafted_probability import InvokeCraftedProbability
 from .invoke_help import InvokeHelp

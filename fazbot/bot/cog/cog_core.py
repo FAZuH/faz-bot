@@ -1,5 +1,8 @@
 from __future__ import annotations
-from typing import Iterable, TYPE_CHECKING
+
+from typing import TYPE_CHECKING, Iterable
+
+from fazbot.bot.cog.wynn_history import WynnHistory
 
 from . import Admin, Help, Info, WynnAnalyze, WynnStat, WynnTrack, WynnUtils
 from ._cog_base import CogBase
@@ -18,6 +21,7 @@ class CogCore:
         self.help = Help(bot)
         self.info = Info(bot)
         self.wynn_analyze = WynnAnalyze(bot)
+        self.wynn_history = WynnHistory(bot)
         self.wynn_stat = WynnStat(bot)
         self.wynn_track = WynnTrack(bot)
         self.wynn_utils = WynnUtils(bot)
@@ -28,6 +32,7 @@ class CogCore:
                 self.help,
                 self.info,
                 self.wynn_analyze,
+                self.wynn_history,
                 self.wynn_stat,
                 self.wynn_track,
                 self.wynn_utils,
