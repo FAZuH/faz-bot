@@ -10,15 +10,13 @@ from ..invoke import (
 )
 from ._cog_base import CogBase
 
-type Intr = Interaction[Any]
-
 
 class WynnUtils(CogBase):
 
     @nextcord.slash_command(name="crafted_probability")
     async def crafted_probability(
         self,
-        interaction: Intr,
+        interaction: Interaction[Any],
         ingredient1: str = InvokeCraftedProbability.INGSTR_DEFAULT,
         ingredient2: str = InvokeCraftedProbability.INGSTR_DEFAULT,
         ingredient3: str = InvokeCraftedProbability.INGSTR_DEFAULT,
@@ -59,7 +57,7 @@ class WynnUtils(CogBase):
 
     @nextcord.slash_command(name="convert_emerald")
     async def convert_emerald(
-        self, interaction: Intr, emerald_string: str = ""
+        self, interaction: Interaction[Any], emerald_string: str = ""
     ) -> None:
         """Converts input emeralds into common emerald units.
 
@@ -73,7 +71,7 @@ class WynnUtils(CogBase):
     @nextcord.slash_command(name="ingredient_probability")
     async def ingredient_probability(
         self,
-        interaction: Intr,
+        interaction: Interaction[Any],
         base_chance: str,
         loot_bonus: int = 0,
         loot_quality: int = 0,
