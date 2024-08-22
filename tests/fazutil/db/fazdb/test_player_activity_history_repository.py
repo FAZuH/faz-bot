@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Sequence, override
+from typing import override
 
 from fazutil.db.fazdb.repository.player_activity_history_repository import (
     PlayerActivityHistoryRepository,
@@ -10,15 +10,12 @@ from tests.fazutil.db.fazdb._common_fazdb_repository_test import (
     CommonFazdbRepositoryTest,
 )
 
-if TYPE_CHECKING:
-    from fazutil.db.fazdb.model import PlayerActivityHistory
-
 
 class TestPlayerActivityHistoryRepository(
     CommonFazdbRepositoryTest.Test[PlayerActivityHistoryRepository]
 ):
 
-    async def test_select_between_period(self) -> Sequence[PlayerActivityHistory]:
+    async def test_select_between_period(self) -> None:
         # Prepare
         e1, e2, e3, e4, _ = self._get_mock_data()
         e1.logon_datetime = datetime.fromtimestamp(100)
@@ -41,12 +38,12 @@ class TestPlayerActivityHistoryRepository(
         #     )
         await self.repo.insert([e1, e2, e3, e4, e5])
         # Act
-        entities1 = await self.repo.select_between_period(
+        playtime1 = await self.repo.get_playtime_between_period(
             e1.uuid,
             datetime.fromtimestamp(0),
             datetime.fromtimestamp(1000),
         )
-        entities2 = await self.repo.select_between_period(
+        playtime2 = await self.repo.get_playtime_between_period(
             e1.uuid,
             datetime.fromtimestamp(350),
             datetime.fromtimestamp(750),
@@ -56,25 +53,8 @@ class TestPlayerActivityHistoryRepository(
         #         f"{e.logon_datetime.timestamp()} - {e.logoff_datetime.timestamp()}"
         #     )
         # Assert
-        self.assertEqual(len(entities1), 5)
-        self.assertEqual(len(entities2), 3)
-        return entities2
-
-    async def test_get_activity_time(self) -> None:
-        # Prepare
-        entities = await self.test_select_between_period()
-        # for e in entities:
-        #     logger.debug(
-        #         f"{e.logon_datetime.timestamp()} - {e.logoff_datetime.timestamp()}"
-        #     )
-        # Act
-        res = self.repo.get_activity_time(
-            entities,
-            datetime.fromtimestamp(350),
-            datetime.fromtimestamp(750),
-        )
-        # Assert
-        self.assertAlmostEqual(res.total_seconds(), 200)
+        self.assertAlmostEqual(playtime1.total_seconds(), 500)
+        self.assertAlmostEqual(playtime2.total_seconds(), 200)
 
     @override
     def _get_mock_data(self):

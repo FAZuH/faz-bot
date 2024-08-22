@@ -27,7 +27,7 @@ class WynnHistory(CogBase):
                 f"Player not found (reason: Can't find player with username or uuid {player})"
             )
         # `period` check and parse
-        period_begin = self.__parse_period(intr, period)
+        period_begin, period_end = self.__parse_period(intr, period)
         invoke = InvokeActivity(self._bot, intr, player_info, period_begin, period_end)  # type: ignore
         await invoke.run()
 
@@ -41,13 +41,13 @@ class WynnHistory(CogBase):
             raise BadArgument(
                 f"Player not found (reason: Can't find guild with name or uuid {guild})"
             )
-        period_begin = self.__parse_period(intr, period)
+        period_begin, period_end = self.__parse_period(intr, period)
         await InvokeGuildActivity(
             self._bot,
             intr,
             guild_info,
-            period_begin,  # type: ignore
-            period_end,  # type: ignore
+            period_begin,
+            period_end,
         ).run()
 
     @staticmethod

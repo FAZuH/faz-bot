@@ -1,13 +1,11 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
 from datetime import datetime
 from typing import TYPE_CHECKING, Any, override
 
 from nextcord import Color, Embed
 
 from fazbot.bot.invoke._invoke import Invoke
-from fazutil.db.fazdb.model.player_activity_history import PlayerActivityHistory
 
 if TYPE_CHECKING:
     from datetime import timedelta
@@ -36,15 +34,10 @@ class InvokeActivity(Invoke):
 
     @override
     async def run(self) -> None:
-        player_activities = await self._repo.select_between_period(
-            self._player.uuid, self._period_begin, self._period_end
-        )
-        embed = await self._get_embed(player_activities)
+        embed = await self._get_embed()
         await self._interaction.send(embed=embed)
 
-    async def _get_embed(
-        self, player_activities: Sequence[PlayerActivityHistory]
-    ) -> Embed:
+    async def _get_embed(self) -> Embed:
         begin_ts = int(self._period_begin.timestamp())
         end_ts = int(self._period_end.timestamp())
         assert self._interaction.user
@@ -56,8 +49,8 @@ class InvokeActivity(Invoke):
             name=self._interaction.user.display_name,
             icon_url=self._interaction.user.display_avatar.url,
         )
-        time_period = self._repo.get_activity_time(
-            player_activities, self._period_begin, self._period_end
+        time_period = await self._repo.get_playtime_between_period(
+            self._player.uuid, self._period_begin, self._period_end
         )
         embed.description = f"Playtime (<t:{begin_ts}:R>, <t:{end_ts}:R>): `{self._format_time_delta(time_period)}`"
         return embed

@@ -32,24 +32,23 @@ class InvokeGuildActivity(Invoke):
         self._guild = guild
         self._period_begin = period_begin
         self._period_end = period_end
-        self._repo = self._bot.fazdb_db.player_activity_history_repository
         self._items_per_page = 20
         self._page_count: int
 
     @override
     async def run(self) -> None:
+        await self._guild.awaitable_attrs.members
         members = self._guild.members
-        self._activity_res: list[tuple[str, str]] = []
-        for member in members:
-            activities = await self._repo.select_between_period(
-                member.uuid, self._period_begin, self._period_end
+        repo = self._bot.fazdb_db.player_activity_history_repository
+        self._activity_res: list[InvokeGuildActivity.ActivityResult] = [
+            self.ActivityResult(
+                member.latest_username,
+                await repo.get_playtime_between_period(
+                    member.uuid, self._period_begin, self._period_end
+                ),
             )
-            time_period = self._repo.get_activity_time(
-                activities, self._period_begin, self._period_end
-            )
-            self._activity_res.append(
-                (member.latest_username, self._format_time_delta(time_period))
-            )
+            for member in members
+        ]
         self._page_count = len(self._activity_res) // self._items_per_page
         embed = self._get_embed_page(1)
         await self._interaction.send(embed=embed)
@@ -73,7 +72,11 @@ class InvokeGuildActivity(Invoke):
         results = self._activity_res[left_index:right_index]
         embed.description = (
             "```ml\n"
-            + tabulate(results, headers=["Username", "Activity"], tablefmt="github")
+            + tabulate(
+                [[res.username, res.playtime] for res in results],
+                headers=["Username", "Activity"],
+                tablefmt="github",
+            )
             + "\n```"
         )
         embed.set_author(
@@ -148,3 +151,24 @@ class InvokeGuildActivity(Invoke):
             self._current_page = self._page_count
             embed = self._cmd._get_embed_page(self._current_page)
             await interaction.edit_original_message(embed=embed)
+
+    class ActivityResult:
+
+        def __init__(self, username: str, playtime: timedelta) -> None:
+            self._username: str = username
+            self._playtime: str = self.__format_time_delta(playtime)
+
+        @property
+        def username(self) -> str:
+            return self._username
+
+        @property
+        def playtime(self) -> str:
+            return self._playtime
+
+        def __format_time_delta(self, timedelta: timedelta) -> str:
+            total_seconds = int(timedelta.total_seconds())
+            hours = total_seconds // 3600
+            minutes = (total_seconds % 3600) // 60
+            formatted_time = f"{hours}h {minutes}m"
+            return formatted_time
