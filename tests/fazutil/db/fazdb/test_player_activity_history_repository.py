@@ -2,9 +2,6 @@ from __future__ import annotations
 
 from datetime import datetime
 from typing import TYPE_CHECKING, Sequence, override
-from uuid import UUID
-
-from loguru import logger
 
 from fazutil.db.fazdb.repository import PlayerActivityHistoryRepository
 
@@ -78,20 +75,7 @@ class TestPlayerActivityHistoryRepository(
 
     @override
     def _get_mock_data(self):
-        model = self.repo.model
-        uuid1 = UUID("b30f5e97-957d-47f6-bf1e-9e48d9fea200").bytes
-        uuid2 = UUID("33c3ad56-5e9b-4bfe-9685-9fc4df2a67fa").bytes
-        data1 = model(
-            uuid=uuid1,
-            logon_datetime=self._get_mock_datetime(),
-            logoff_datetime=self._get_mock_datetime().replace(day=1),
-        )
-        data2 = data1.clone()
-        data3 = data1.clone()
-        data3.uuid = uuid2
-        data4 = data1.clone()
-        data4.logoff_datetime = self._get_mock_datetime().replace(day=2)
-        return (data1, data2, data3, data4, "logoff_datetime")
+        return self._get_player_activity_history_mock_data()
 
     @property
     @override

@@ -1,28 +1,39 @@
 from typing import override
 from uuid import UUID
 
-from fazutil.db.fazdb.repository.guild_info_repository import GuildInfoRepository
+from fazutil.db.fazdb.repository import GuildInfoRepository
 
 from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
 
 
 class TestGuildInfoRepository(CommonFazdbRepositoryTest.Test[GuildInfoRepository]):
 
+    async def test_members_relationship(self) -> None:
+        # Prepare
+        mock_bytes = UUID(int=0).bytes
+        entity = self._get_mock_data()[0]
+        entity.uuid = mock_bytes
+        await self.repo.insert(entity)
+        mock_players = self._get_player_info_mock_data()
+        player1 = mock_players[0]
+        player2 = mock_players[2]
+        player1.guild_uuid = mock_bytes
+        player2.guild_uuid = mock_bytes
+        await self.database.player_info_repository.insert([player1, player2])
+        # Act, Assert
+        res = await self.repo.select(entity.uuid)
+        assert res
+        self.assertIn(player1, res.members)
+        self.assertIn(player2, res.members)
+
+    @override
+    async def _create_table(self) -> None:
+        await self.repo.create_table()
+        await self.database.player_info_repository.create_table()
+
     @override
     def _get_mock_data(self):
-        model = self.repo.model
-
-        uuid1 = UUID("b30f5e97-957d-47f6-bf1e-9e48d9fea200").bytes
-        uuid2 = UUID("33c3ad56-5e9b-4bfe-9685-9fc4df2a67fa").bytes
-        mock_data1 = model(
-            name="a", prefix="b", created=self._get_mock_datetime(), uuid=uuid1
-        )
-        mock_data2 = mock_data1.clone()
-        mock_data3 = mock_data1.clone()
-        mock_data3.uuid = uuid2
-        mock_data4 = mock_data1.clone()
-        mock_data4.prefix = "c"
-        return (mock_data1, mock_data2, mock_data3, mock_data4, "prefix")
+        return self._get_guild_info_mock_data()
 
     @property
     @override

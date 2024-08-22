@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import override
 
-from fazutil.db.fazdb.repository.worlds_repository import WorldsRepository
+from fazutil.db.fazdb.repository import WorldsRepository
 
 from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
 
@@ -23,9 +23,9 @@ class TestWorldsRepository(CommonFazdbRepositoryTest.Test[WorldsRepository]):
           - WC3 player_count is updated
         """
         # Prepare
-        mock_data = self._get_mock_data()
-        w1 = mock_data[0]
-        w2 = mock_data[2]
+        mock = self._get_mock_data()
+        w1 = mock[0]
+        w2 = mock[2]
         w3 = w2.clone()
         w3.name = "WC3"
         await self.repo.insert([w1, w3])
@@ -85,20 +85,7 @@ class TestWorldsRepository(CommonFazdbRepositoryTest.Test[WorldsRepository]):
 
     @override
     def _get_mock_data(self):
-        model = self.repo.model
-
-        mock_data1 = model(
-            name="WC1",
-            player_count=1,
-            time_created=self._get_mock_datetime().replace(day=1),
-        )
-        mock_data2 = mock_data1.clone()
-        mock_data3 = mock_data1.clone()
-        mock_data3.name = "WC2"
-        mock_data4 = mock_data1.clone()
-        mock_data4.player_count = 2
-        # mock_data4.time_created = datetime.now().replace(microsecond=0)
-        return (mock_data1, mock_data2, mock_data3, mock_data4, "player_count")
+        return self._get_worlds_mock_data()
 
     @property
     @override
