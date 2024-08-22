@@ -17,6 +17,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.12"
+
+      - name: Install flake8
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8
+
       - name: Lint with flake8
         run: |
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
@@ -50,18 +60,18 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest flake8
+          pip install pytest
           pip install -r requirements_dev.txt
 
-      - name: Wait for MariaDB to be ready
-        run: |
-          for i in {30..0}; do
-            if docker exec $(docker ps -q) mysqladmin ping -h "localhost" --silent; then
-              break
-            fi
-            echo 'MariaDB still not ready, waiting...'
-            sleep 1
-          done
+      # - name: Wait for MariaDB to be ready
+      #   run: |
+      #     for i in {30..0}; do
+      #       if docker exec $(docker ps -q) mysqladmin ping -h "localhost" --silent; then
+      #         break
+      #       fi
+      #       echo 'MariaDB still not ready, waiting...'
+      #       sleep 1
+      #     done
 
       - name: Test with pytest
         env:
