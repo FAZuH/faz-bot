@@ -9,8 +9,8 @@ from nextcord import Interaction
 
 from fazbot.bot.cog._cog_base import CogBase
 from fazbot.bot.errors import BadArgument
-from fazbot.bot.invoke.invoke_activity import InvokeActivity
-from fazbot.bot.invoke.invoke_guild_activity import InvokeGuildActivity
+from fazbot.bot.view.activity_view import ActivityView
+from fazbot.bot.view.guild_activity_view import GuildActivityView
 
 
 class WynnHistory(CogBase):
@@ -28,7 +28,7 @@ class WynnHistory(CogBase):
             )
         # `period` check and parse
         period_begin, period_end = self.__parse_period(intr, period)
-        invoke = InvokeActivity(self._bot, intr, player_info, period_begin, period_end)  # type: ignore
+        invoke = ActivityView(self._bot, intr, player_info, period_begin, period_end)  # type: ignore
         await invoke.run()
 
     @nextcord.slash_command()
@@ -42,7 +42,7 @@ class WynnHistory(CogBase):
                 f"Player not found (reason: Can't find guild with name or uuid {guild})"
             )
         period_begin, period_end = self.__parse_period(intr, period)
-        await InvokeGuildActivity(
+        await GuildActivityView(
             self._bot,
             intr,
             guild_info,

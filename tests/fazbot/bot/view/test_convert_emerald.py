@@ -1,17 +1,17 @@
 from unittest import IsolatedAsyncioTestCase
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from fazbot.bot.invoke.invoke_convert_emerald import InvokeConvertEmerald
+from fazbot.bot.view.convert_emerald_view import ConvertEmeraldView
 
 
-class TestConvertEmerald(IsolatedAsyncioTestCase):
+class TestConvertEmeraldView(IsolatedAsyncioTestCase):
 
-    def setUp(self) -> None:
+    async def asyncSetUp(self) -> None:
         self.interaction = AsyncMock()
         self.asset = MagicMock()
         with patch("fazbot.bot.bot.Bot", autospec=True) as mock_bot:
             self.mock_bot = mock_bot
-        self.obj = InvokeConvertEmerald(self.mock_bot, self.interaction, "100le")
+        self.obj = ConvertEmeraldView(self.mock_bot, self.interaction, "100le")
         self.obj.set_assets(self.asset)
 
     def test_set_assets(self) -> None:

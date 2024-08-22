@@ -7,17 +7,17 @@ from typing import TYPE_CHECKING, Any, override
 from nextcord import Embed, Interaction
 
 from fazbot.bot.errors import BadArgument
-from fazbot.bot.invoke._invoke import Invoke
+from fazbot.bot.view._base_view import BaseView
 from fazbot.wynn.ingredient_util import IngredientUtil
 
 if TYPE_CHECKING:
     from nextcord import File
 
     from fazbot.bot.bot import Bot
-    from fazbot.bot.invoke._asset import Asset
+    from fazbot.bot.view._asset import Asset
 
 
-class InvokeIngredientProbability(Invoke):
+class IngredientProbabilityView(BaseView):
 
     ASSET_DECAYINGHEART: Asset
 
@@ -33,6 +33,7 @@ class InvokeIngredientProbability(Invoke):
         self._base_chance = self._parse_base_chance(base_chance)
         self._loot_bonus = loot_bonus
         self._loot_quality = loot_quality
+
         self._ing_util = IngredientUtil(
             self._base_chance, self._loot_quality, self._loot_bonus
         )
@@ -42,6 +43,7 @@ class InvokeIngredientProbability(Invoke):
     def set_assets(cls, assets: dict[str, File]) -> None:
         cls.ASSET_DECAYINGHEART = cls._get_from_assets(assets, "decayingheart.png")
 
+    @override
     async def run(self) -> None:
         embed_resp = self._get_embed(self._ing_util, self._interaction)
         await self._interaction.send(

@@ -4,7 +4,7 @@ import nextcord
 from nextcord import Interaction
 
 from fazbot.bot.cog._cog_base import CogBase
-from fazbot.bot.invoke.invoke_worldlist import InvokeWorldlist
+from fazbot.bot.view.worldlist_view import WorldlistView
 
 
 class WynnStat(CogBase):
@@ -15,7 +15,7 @@ class WynnStat(CogBase):
         interaction: Interaction[Any],
         sort_by: Literal["Player Count", "Time Created"] = "Time Created",
     ) -> None:
-        await InvokeWorldlist(self._bot, interaction, sort_by).run()
+        await WorldlistView(self._bot, interaction, sort_by).run()
 
     # @nextcord.slash_command(name="activity")
     # async def activity(self, interaction: Interaction[Any], player: str | None = None, guild: str | None = None) -> None:

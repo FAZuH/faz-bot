@@ -4,9 +4,9 @@ import nextcord
 from nextcord import Interaction
 
 from fazbot.bot.cog._cog_base import CogBase
-from fazbot.bot.invoke.invoke_convert_emerald import InvokeConvertEmerald
-from fazbot.bot.invoke.invoke_crafted_probability import InvokeCraftedProbability
-from fazbot.bot.invoke.invoke_ingredient_probability import InvokeIngredientProbability
+from fazbot.bot.view.convert_emerald_view import ConvertEmeraldView
+from fazbot.bot.view.crafted_probability_view import CraftedProbabilityView
+from fazbot.bot.view.ingredient_probability_view import IngredientProbabilityView
 
 
 class WynnUtils(CogBase):
@@ -15,12 +15,12 @@ class WynnUtils(CogBase):
     async def crafted_probability(
         self,
         interaction: Interaction[Any],
-        ingredient1: str = InvokeCraftedProbability.INGSTR_DEFAULT,
-        ingredient2: str = InvokeCraftedProbability.INGSTR_DEFAULT,
-        ingredient3: str = InvokeCraftedProbability.INGSTR_DEFAULT,
-        ingredient4: str = InvokeCraftedProbability.INGSTR_DEFAULT,
-        ingredient5: str = InvokeCraftedProbability.INGSTR_DEFAULT,
-        ingredient6: str = InvokeCraftedProbability.INGSTR_DEFAULT,
+        ingredient1: str = CraftedProbabilityView.INGSTR_DEFAULT,
+        ingredient2: str = CraftedProbabilityView.INGSTR_DEFAULT,
+        ingredient3: str = CraftedProbabilityView.INGSTR_DEFAULT,
+        ingredient4: str = CraftedProbabilityView.INGSTR_DEFAULT,
+        ingredient5: str = CraftedProbabilityView.INGSTR_DEFAULT,
+        ingredient6: str = CraftedProbabilityView.INGSTR_DEFAULT,
     ) -> None:
         """Computes crafted roll probabilities.
         Improved with help from afterfive.
@@ -40,7 +40,7 @@ class WynnUtils(CogBase):
         ingredient4: str
             min,max[,efficiency]
         """
-        await InvokeCraftedProbability(
+        await CraftedProbabilityView(
             self._bot,
             interaction,
             [
@@ -64,7 +64,7 @@ class WynnUtils(CogBase):
         emerald_string: str
             Examples: "2x 1stx 1le 1eb 1e", "2.5stx 100.5le 100.2eb", "1/3x 1000eb"
         """
-        await InvokeConvertEmerald(self._bot, interaction, emerald_string).run()
+        await ConvertEmeraldView(self._bot, interaction, emerald_string).run()
 
     @nextcord.slash_command(name="ingredient_probability")
     async def ingredient_probability(
@@ -85,6 +85,6 @@ class WynnUtils(CogBase):
         loot_quality: int
             Loot quality value.
         """
-        await InvokeIngredientProbability(
+        await IngredientProbabilityView(
             self._bot, interaction, base_chance, loot_bonus, loot_quality
         ).run()

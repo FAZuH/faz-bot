@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Any, override
 
 from nextcord import Color, Embed
 
-from fazbot.bot.invoke._invoke import Invoke
+from fazbot.bot.view._base_view import BaseView
 
 if TYPE_CHECKING:
     from datetime import timedelta
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from fazutil.db.fazdb.model.player_info import PlayerInfo
 
 
-class InvokeActivity(Invoke):
+class ActivityView(BaseView):
 
     def __init__(
         self,
@@ -30,6 +30,7 @@ class InvokeActivity(Invoke):
         self._player = player
         self._period_begin = period_begin
         self._period_end = period_end
+
         self._repo = self._bot.fazdb_db.player_activity_history_repository
 
     @override

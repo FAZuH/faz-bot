@@ -6,9 +6,9 @@ from typing import TYPE_CHECKING
 
 from nextcord import File
 
-from fazbot.bot.invoke.invoke_convert_emerald import InvokeConvertEmerald
-from fazbot.bot.invoke.invoke_crafted_probability import InvokeCraftedProbability
-from fazbot.bot.invoke.invoke_ingredient_probability import InvokeIngredientProbability
+from fazbot.bot.view.convert_emerald_view import ConvertEmeraldView
+from fazbot.bot.view.crafted_probability_view import CraftedProbabilityView
+from fazbot.bot.view.ingredient_probability_view import IngredientProbabilityView
 
 if TYPE_CHECKING:
     from fazbot.bot.bot import Bot
@@ -27,9 +27,9 @@ class AssetManager:
         self._assets = self._convert_asset_file_type(
             self._bot.app.properties.ASSET.files
         )
-        InvokeConvertEmerald.set_assets(self._assets)
-        InvokeCraftedProbability.set_assets(self._assets)
-        InvokeIngredientProbability.set_assets(self._assets)
+        ConvertEmeraldView.set_assets(self._assets)
+        CraftedProbabilityView.set_assets(self._assets)
+        IngredientProbabilityView.set_assets(self._assets)
 
     def _convert_asset_file_type(self, assets: dict[Path, bytes]) -> dict[str, File]:
         assets_: dict[str, File] = {}

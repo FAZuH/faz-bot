@@ -4,10 +4,10 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any, override
 
 from nextcord import Button, ButtonStyle, Color, Embed
-from nextcord.ui import Button, View, button
+from nextcord.ui import Button, button
 from tabulate import tabulate
 
-from fazbot.bot.invoke._invoke import Invoke
+from fazbot.bot.view._base_view import BaseView
 
 if TYPE_CHECKING:
     from datetime import timedelta
@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from fazutil.db.fazdb.model.guild_info import GuildInfo
 
 
-class InvokeGuildActivity(Invoke):
+class GuildActivityView(BaseView):
 
     def __init__(
         self,
@@ -28,10 +28,12 @@ class InvokeGuildActivity(Invoke):
         period_begin: datetime,
         period_end: datetime,
     ) -> None:
-        super().__init__(bot, interaction)
+        super().__init__(bot, interaction, timeout=120)
         self._guild = guild
         self._period_begin = period_begin
         self._period_end = period_end
+
+        self._current_page = 1
         self._items_per_page = 20
         self._page_count: int
 
@@ -40,7 +42,7 @@ class InvokeGuildActivity(Invoke):
         await self._guild.awaitable_attrs.members
         members = self._guild.members
         repo = self._bot.fazdb_db.player_activity_history_repository
-        self._activity_res: list[InvokeGuildActivity.ActivityResult] = [
+        self._activity_res: list[GuildActivityView.ActivityResult] = [
             self.ActivityResult(
                 member.latest_username,
                 await repo.get_playtime_between_period(
@@ -97,60 +99,45 @@ class InvokeGuildActivity(Invoke):
         formatted_time = f"{hours}h {minutes}m"
         return formatted_time
 
-    class View(View):
-        def __init__(self, cmd: InvokeGuildActivity, page_count: int):
-            super().__init__(timeout=120)
-            self._cmd = cmd
-            self._page_count = page_count
-            self._current_page = 1
+    @button(style=ButtonStyle.blurple, emoji="⏮️")
+    async def first_page_callback(
+        self, button: Button, interaction: Interaction[Any]
+    ) -> None:
+        await interaction.response.defer()
+        self._current_page = 1
+        embed = self._get_embed_page(self._current_page)
+        await interaction.edit_original_message(embed=embed)
 
-        @override
-        async def on_timeout(self) -> None:
-            await self._cmd._interaction.edit_original_message(view=View(timeout=1))
-
-        @button(style=ButtonStyle.blurple, emoji="⏮️")
-        async def first_page_callback(
-            self, button: Button, interaction: Interaction[Any]
-        ) -> None:
-            await interaction.response.defer()
-            self._current_page = 1
-            embed = self._cmd._get_embed_page(self._current_page)
-            await interaction.edit_original_message(embed=embed)
-
-        @button(style=ButtonStyle.blurple, emoji="◀️")
-        async def previous_page_callback(
-            self, button: Button, interaction: Interaction[Any]
-        ) -> None:
-            await interaction.response.defer()
-            self._current_page -= 1
-            if self._current_page == 0:
-                self._current_page = self._page_count
-            embed = self._cmd._get_embed_page(self._current_page)
-            await interaction.edit_original_message(embed=embed)
-
-        @button(style=ButtonStyle.red, emoji="⏹️")
-        async def stop_(self, button: Button, interaction: Interaction[Any]) -> None:
-            await self.on_timeout()
-
-        @button(style=ButtonStyle.blurple, emoji="▶️")
-        async def next_page(
-            self, button: Button, interaction: Interaction[Any]
-        ) -> None:
-            await interaction.response.defer()
-            self._current_page += 1
-            if self._current_page == (self._page_count + 1):
-                self._current_page = 1
-            embed = self._cmd._get_embed_page(self._current_page)
-            await interaction.edit_original_message(embed=embed)
-
-        @button(style=ButtonStyle.blurple, emoji="⏭️")
-        async def last_page(
-            self, button: Button, interaction: Interaction[Any]
-        ) -> None:
-            await interaction.response.defer()
+    @button(style=ButtonStyle.blurple, emoji="◀️")
+    async def previous_page_callback(
+        self, button: Button, interaction: Interaction[Any]
+    ) -> None:
+        await interaction.response.defer()
+        self._current_page -= 1
+        if self._current_page == 0:
             self._current_page = self._page_count
-            embed = self._cmd._get_embed_page(self._current_page)
-            await interaction.edit_original_message(embed=embed)
+        embed = self._get_embed_page(self._current_page)
+        await interaction.edit_original_message(embed=embed)
+
+    @button(style=ButtonStyle.red, emoji="⏹️")
+    async def stop_(self, button: Button, interaction: Interaction[Any]) -> None:
+        await self.on_timeout()
+
+    @button(style=ButtonStyle.blurple, emoji="▶️")
+    async def next_page(self, button: Button, interaction: Interaction[Any]) -> None:
+        await interaction.response.defer()
+        self._current_page += 1
+        if self._current_page == (self._page_count + 1):
+            self._current_page = 1
+        embed = self._get_embed_page(self._current_page)
+        await interaction.edit_original_message(embed=embed)
+
+    @button(style=ButtonStyle.blurple, emoji="⏭️")
+    async def last_page(self, button: Button, interaction: Interaction[Any]) -> None:
+        await interaction.response.defer()
+        self._current_page = self._page_count
+        embed = self._get_embed_page(self._current_page)
+        await interaction.edit_original_message(embed=embed)
 
     class ActivityResult:
 
