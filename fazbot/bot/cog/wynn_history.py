@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 from typing import Any
 
 import nextcord
@@ -27,18 +27,8 @@ class WynnHistory(CogBase):
                 f"Player not found (reason: Can't find player with username or uuid {player})"
             )
         # `period` check and parse
-        try:
-            if "-" in period:
-                left, right = period.split("-")
-                period_begin = parse(left)
-                period_end = parse(right)
-                assert period_begin and period_end
-            else:
-                period_begin = intr.created_at - timedelta(hours=float(period))
-                period_end = intr.created_at
-        except ValueError as exc:
-            raise BadArgument(f"Can't parse period (reason: {exc})") from exc
-        invoke = InvokeActivity(self._bot, intr, player_info, period_begin, period_end)
+        period_begin = self.__parse_period(intr, period)
+        invoke = InvokeActivity(self._bot, intr, player_info, period_begin, period_end)  # type: ignore
         await invoke.run()
 
     @nextcord.slash_command()
@@ -51,18 +41,37 @@ class WynnHistory(CogBase):
             raise BadArgument(
                 f"Player not found (reason: Can't find guild with name or uuid {guild})"
             )
-        # `period` check and parse
+        period_begin = self.__parse_period(intr, period)
+        await InvokeGuildActivity(
+            self._bot,
+            intr,
+            guild_info,
+            period_begin,  # type: ignore
+            period_end,  # type: ignore
+        ).run()
+
+    @staticmethod
+    def __parse_period(
+        intr: Interaction[Any], period: str
+    ) -> tuple[datetime, datetime]:
         try:
             if "-" in period:
                 left, right = period.split("-")
                 period_begin = parse(left)
                 period_end = parse(right)
-                assert period_begin and period_end
+                WynnHistory.__check_period(period_begin)
+                WynnHistory.__check_period(period_end)
             else:
                 period_begin = intr.created_at - timedelta(hours=float(period))
                 period_end = intr.created_at
         except ValueError as exc:
             raise BadArgument(f"Can't parse period (reason: {exc})") from exc
-        await InvokeGuildActivity(
-            self._bot, intr, guild_info, period_begin, period_end
-        ).run()
+        assert period_begin and period_end
+        return period_begin, period_end
+
+    @staticmethod
+    def __check_period(period: Any | None) -> None:
+        if period is None:
+            raise BadArgument(
+                f"Can't parse period (reason: Failed interpreting {period} as a datetime)"
+            )
