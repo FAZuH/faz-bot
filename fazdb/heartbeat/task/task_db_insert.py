@@ -1,7 +1,8 @@
 from __future__ import annotations
+
 import asyncio
 from datetime import datetime
-from typing import Iterable, TYPE_CHECKING
+from typing import TYPE_CHECKING, Iterable
 
 from loguru import logger
 
@@ -16,6 +17,7 @@ from fazutil.heartbeat.task.itask import ITask
 if TYPE_CHECKING:
     from fazutil.api import WynnApi
     from fazutil.db import FazdbDatabase
+
     from .request_queue import RequestQueue
     from .response_queue import ResponseQueue
 
@@ -76,8 +78,8 @@ class TaskDbInsert(ITask):
         self._response_handler.handle_guild_response(guild_resps)
 
         await self._insert_online_players_response(online_players_resp)
-        await self._insert_player_responses(player_resps)
         await self._insert_guild_response(guild_resps)
+        await self._insert_player_responses(player_resps)
 
     async def _insert_online_players_response(
         self, resp: OnlinePlayersResponse | None

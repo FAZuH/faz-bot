@@ -1,6 +1,7 @@
 from __future__ import annotations
+
 from datetime import datetime
-from typing import Generator, TYPE_CHECKING
+from typing import TYPE_CHECKING, Generator
 
 from fazutil.db.fazdb.model import (
     CharacterHistory,
@@ -97,6 +98,7 @@ class ApiResponseAdapter:
                 uuid=resp.body.uuid.to_bytes(),
                 latest_username=resp.body.username,
                 first_join=resp.body.first_join.to_datetime(),
+                guild_uuid=resp.body.guild.uuid.to_bytes() if resp.body.guild else None,
             )
 
     class Guild:
