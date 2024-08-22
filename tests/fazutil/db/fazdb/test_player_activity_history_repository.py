@@ -3,9 +3,12 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Sequence, override
 
-from fazutil.db.fazdb.repository import PlayerActivityHistoryRepository
-
-from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
+from fazutil.db.fazdb.repository.player_activity_history_repository import (
+    PlayerActivityHistoryRepository,
+)
+from tests.fazutil.db.fazdb._common_fazdb_repository_test import (
+    CommonFazdbRepositoryTest,
+)
 
 if TYPE_CHECKING:
     from fazutil.db.fazdb.model import PlayerActivityHistory

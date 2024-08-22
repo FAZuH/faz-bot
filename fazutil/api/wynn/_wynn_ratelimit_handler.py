@@ -1,8 +1,9 @@
 from __future__ import annotations
+
 from typing import Any, override
 
-from ..base_ratelimit_handler import BaseRatelimitHandler
-from .model.headers import Headers
+from fazutil.api.base_ratelimit_handler import BaseRatelimitHandler
+from fazutil.api.wynn.model.headers import Headers
 
 
 class WynnRatelimitHandler(BaseRatelimitHandler):

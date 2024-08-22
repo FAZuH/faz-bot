@@ -1,11 +1,12 @@
 from __future__ import annotations
+
 from decimal import Decimal
 from typing import TYPE_CHECKING
 
 import numpy as np
 
 if TYPE_CHECKING:
-    from fazbot.wynn import IngredientField
+    from fazbot.wynn.ingredient_field import IngredientField
 
 
 class CraftedUtil:

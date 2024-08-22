@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import unittest
 from abc import ABC, abstractmethod
-from collections.abc import Sequence
 from datetime import datetime
 from typing import TYPE_CHECKING, Any, override
 

@@ -7,9 +7,10 @@ import nextcord
 from dateparser import parse
 from nextcord import Interaction
 
-from ..cog._cog_base import CogBase
-from ..errors import BadArgument
-from ..invoke import InvokeActivity, InvokeGuildActivity
+from fazbot.bot.cog._cog_base import CogBase
+from fazbot.bot.errors import BadArgument
+from fazbot.bot.invoke.invoke_activity import InvokeActivity
+from fazbot.bot.invoke.invoke_guild_activity import InvokeGuildActivity
 
 
 class WynnHistory(CogBase):

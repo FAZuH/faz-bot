@@ -1,9 +1,10 @@
 from typing import override
 from uuid import UUID
 
-from fazutil.db.fazdb.repository import PlayerInfoRepository
-
-from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
+from fazutil.db.fazdb.repository.player_info_repository import PlayerInfoRepository
+from tests.fazutil.db.fazdb._common_fazdb_repository_test import (
+    CommonFazdbRepositoryTest,
+)
 
 
 class TestPlayerInfoRepository(CommonFazdbRepositoryTest.Test[PlayerInfoRepository]):

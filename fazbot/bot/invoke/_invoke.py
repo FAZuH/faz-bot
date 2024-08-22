@@ -1,12 +1,14 @@
 from __future__ import annotations
-from abc import ABC, abstractmethod
-from typing import Any, TYPE_CHECKING
 
-from ._asset import Asset
+from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING, Any
+
+from fazbot.bot.invoke._asset import Asset
 
 if TYPE_CHECKING:
     from nextcord import Embed, File, Interaction
-    from .. import Bot
+
+    from fazbot.bot.bot import Bot
 
 
 class Invoke(ABC):

@@ -1,16 +1,19 @@
 from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from contextlib import asynccontextmanager, contextmanager
-from typing import Any, AsyncGenerator, Generator, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, AsyncGenerator, Generator
 
-from sqlalchemy import Connection, URL, create_engine
+from sqlalchemy import URL, Connection, create_engine
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 if TYPE_CHECKING:
     from sqlalchemy import Engine
     from sqlalchemy.ext.asyncio import AsyncConnection, AsyncEngine, AsyncSession
-    from . import BaseRepository, BaseModel
+
+    from fazutil.db.base_model import BaseModel
+    from fazutil.db.base_repository import BaseRepository
 
 
 class BaseDatabase(ABC):

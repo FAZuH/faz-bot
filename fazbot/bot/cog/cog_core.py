@@ -2,13 +2,18 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Iterable
 
+from fazbot.bot.cog._cog_base import CogBase
+from fazbot.bot.cog.admin import Admin
+from fazbot.bot.cog.help import Help
+from fazbot.bot.cog.info import Info
+from fazbot.bot.cog.wynn_analyze import WynnAnalyze
 from fazbot.bot.cog.wynn_history import WynnHistory
-
-from . import Admin, Help, Info, WynnAnalyze, WynnStat, WynnTrack, WynnUtils
-from ._cog_base import CogBase
+from fazbot.bot.cog.wynn_stat import WynnStat
+from fazbot.bot.cog.wynn_track import WynnTrack
+from fazbot.bot.cog.wynn_utils import WynnUtils
 
 if TYPE_CHECKING:
-    from .. import Bot
+    from fazbot.bot.bot import Bot
 
 
 class CogCore:

@@ -1,8 +1,7 @@
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 from typing import Any
 
-from .field import HeaderDateField
+from fazutil.api.wynn.model.field.header_date_field import HeaderDateField
 
 
 class Headers:

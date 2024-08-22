@@ -3,7 +3,7 @@ from typing import override
 from unittest import TestCase
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from fazbot.bot.invoke import InvokeIngredientProbability
+from fazbot.bot.invoke.invoke_ingredient_probability import InvokeIngredientProbability
 
 
 class TestIngredientProbability(TestCase):

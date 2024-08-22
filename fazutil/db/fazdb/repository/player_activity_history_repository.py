@@ -3,16 +3,15 @@ from __future__ import annotations
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, Sequence
 
-from loguru import logger
 from sqlalchemy import and_, select
 
-from ...base_repository import BaseRepository
-from ..model import PlayerActivityHistory
+from fazutil.db.base_repository import BaseRepository
+from fazutil.db.fazdb.model.player_activity_history import PlayerActivityHistory
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
 
-    from ...base_mysql_database import BaseMySQLDatabase
+    from fazutil.db.base_mysql_database import BaseMySQLDatabase
 
 
 class PlayerActivityHistoryRepository(

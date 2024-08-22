@@ -4,13 +4,13 @@ from typing import TYPE_CHECKING, Any, Iterable, Literal, Sequence
 
 from sqlalchemy import desc, select
 
-from ...base_repository import BaseRepository
-from ..model import Worlds
+from fazutil.db.base_repository import BaseRepository
+from fazutil.db.fazdb.model.worlds import Worlds
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
 
-    from ...base_mysql_database import BaseMySQLDatabase
+    from fazutil.db.base_mysql_database import BaseMySQLDatabase
 
 
 class WorldsRepository(BaseRepository[Worlds, Any]):

@@ -1,10 +1,11 @@
 from __future__ import annotations
+
 from datetime import datetime
 from threading import Lock
-from typing import Any, Coroutine, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Coroutine
 
 if TYPE_CHECKING:
-    from fazutil.api import BaseResponse
+    from fazutil.api.base_response import BaseResponse
 
     type Resp = BaseResponse[Any, Any]
     type RespCoro = Coroutine[Resp, Any, Any]
@@ -56,7 +57,7 @@ class RequestQueue:
             if isinstance(other, RequestQueue.RequestItem):
                 return (
                     # HACK
-                    (self.coro.cr_frame.f_locals == other.coro.cr_frame.f_locals)
+                    (self.coro.cr_frame.f_locals == other.coro.cr_frame.f_locals)  # type: ignore
                     and (self.coro.__class__ == other.coro.__class__)
                 )
             return False

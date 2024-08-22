@@ -7,16 +7,15 @@ from nextcord import Button, ButtonStyle, Color, Embed
 from nextcord.ui import Button, View, button
 from tabulate import tabulate
 
-from ._invoke import Invoke
+from fazbot.bot.invoke._invoke import Invoke
 
 if TYPE_CHECKING:
     from datetime import timedelta
 
     from nextcord import Interaction
 
-    from fazutil.db.fazdb.model import GuildInfo
-
-    from ..bot import Bot
+    from fazbot.bot.bot import Bot
+    from fazutil.db.fazdb.model.guild_info import GuildInfo
 
 
 class InvokeGuildActivity(Invoke):

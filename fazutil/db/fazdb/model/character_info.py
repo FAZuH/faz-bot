@@ -1,7 +1,7 @@
 from sqlalchemy.dialects.mysql import BINARY, ENUM
 from sqlalchemy.orm import Mapped, mapped_column
 
-from .base_fazdb_model import BaseFazdbModel
+from fazutil.db.fazdb.model.base_fazdb_model import BaseFazdbModel
 
 
 class CharacterInfo(BaseFazdbModel):

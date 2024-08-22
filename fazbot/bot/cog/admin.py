@@ -6,9 +6,9 @@ from typing import Any, Iterable, override
 import nextcord
 from nextcord import Interaction
 
-from .._utils import Utils
-from ..errors import ApplicationException
-from ._cog_base import CogBase
+from fazbot.bot._utils import Utils
+from fazbot.bot.cog._cog_base import CogBase
+from fazbot.bot.errors import ApplicationException
 
 
 class Admin(CogBase):

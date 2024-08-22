@@ -1,8 +1,12 @@
 from __future__ import annotations
+
 from decimal import Decimal
 from typing import Any, Generator
 
-from .field import BodyDateField, Nullable, UsernameOrUuidField, UuidField
+from fazutil.api.wynn.model.field.body_date_field import BodyDateField
+from fazutil.api.wynn.model.field.nullable import Nullable
+from fazutil.api.wynn.model.field.username_or_uuid_field import UsernameOrUuidField
+from fazutil.api.wynn.model.field.uuid_field import UuidField
 
 
 class Guild:

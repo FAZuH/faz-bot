@@ -1,6 +1,7 @@
 from __future__ import annotations
-from math import floor
+
 import re
+from math import floor
 
 
 class Emeralds:

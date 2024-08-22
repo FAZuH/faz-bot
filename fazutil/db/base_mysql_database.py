@@ -1,6 +1,6 @@
 from abc import ABC
 
-from .base_database import BaseDatabase
+from fazutil.db.base_database import BaseDatabase
 
 
 class BaseMySQLDatabase(BaseDatabase, ABC):

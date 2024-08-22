@@ -1,13 +1,16 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
-from fazutil.heartbeat import BaseHeartbeat
-
-from .task import RequestQueue, ResponseQueue, TaskApiRequest, TaskDbInsert
+from fazdb.heartbeat.task.request_queue import RequestQueue
+from fazdb.heartbeat.task.response_queue import ResponseQueue
+from fazdb.heartbeat.task.task_api_request import TaskApiRequest
+from fazdb.heartbeat.task.task_db_insert import TaskDbInsert
+from fazutil.heartbeat.base_heartbeat import BaseHeartbeat
 
 if TYPE_CHECKING:
-    from fazutil.api import WynnApi
-    from fazutil.db import FazdbDatabase
+    from fazutil.api.wynn.wynn_api import WynnApi
+    from fazutil.db.fazdb.fazdb_database import FazdbDatabase
 
 
 class Heartbeat(BaseHeartbeat):

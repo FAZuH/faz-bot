@@ -1,7 +1,7 @@
-from datetime import datetime as dt
 import unittest
+from datetime import datetime as dt
 
-from fazdb.heartbeat.task import RequestQueue
+from fazdb.heartbeat.task.request_queue import RequestQueue
 
 
 class TestRequestList(unittest.TestCase):

@@ -1,8 +1,11 @@
 from typing import override
 
-from fazutil.db.fazdb.repository import OnlinePlayersRepository
-
-from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
+from fazutil.db.fazdb.repository.online_players_repository import (
+    OnlinePlayersRepository,
+)
+from tests.fazutil.db.fazdb._common_fazdb_repository_test import (
+    CommonFazdbRepositoryTest,
+)
 
 
 class TestOnlinePlayersRepository(

@@ -1,16 +1,17 @@
 from __future__ import annotations
+
 from contextlib import contextmanager
 from threading import Lock
 from typing import Generator
 
 from loguru import logger
 
-from fazbot.bot import Bot
-from fazbot.heartbeat import Heartbeat
-from fazutil.db import FazbotDatabase, FazdbDatabase
-from fazutil.util import LoggerSetup
-
-from .properties import Properties
+from fazbot.app.properties import Properties
+from fazbot.bot.bot import Bot
+from fazbot.heartbeat.heartbeat import Heartbeat
+from fazutil.db.fazbot.fazbot_database import FazbotDatabase
+from fazutil.db.fazdb.fazdb_database import FazdbDatabase
+from fazutil.util.logger_setup import LoggerSetup
 
 
 class App:

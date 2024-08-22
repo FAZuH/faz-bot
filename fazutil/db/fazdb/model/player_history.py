@@ -4,7 +4,7 @@ from sqlalchemy import Index, UniqueConstraint
 from sqlalchemy.dialects.mysql import BINARY, DATETIME, DECIMAL, ENUM, VARCHAR
 from sqlalchemy.orm import Mapped, mapped_column
 
-from ._unique_id_model import UniqueIdModel
+from fazutil.db.fazdb.model._unique_id_model import UniqueIdModel
 
 
 class PlayerHistory(UniqueIdModel):

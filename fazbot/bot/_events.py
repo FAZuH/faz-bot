@@ -1,17 +1,18 @@
 from __future__ import annotations
-from datetime import datetime
+
 import traceback
-from typing import Any, TYPE_CHECKING
+from datetime import datetime
+from typing import TYPE_CHECKING, Any
 
 from loguru import logger
 from nextcord import Activity, ActivityType, Colour, Embed, Interaction, errors
 from nextcord.ext import commands
 from nextcord.ext.commands import BucketType, Cooldown, CooldownMapping
 
-from .errors import ApplicationException
+from fazbot.bot.errors import ApplicationException
 
 if TYPE_CHECKING:
-    from . import Bot
+    from fazbot.bot.bot import Bot
 
 
 class Events:
@@ -93,8 +94,8 @@ class Events:
         author = intr.user.display_name if intr.user else None
         guildname = intr.guild.name if intr.guild else None
         channelname = (
-            intr.channel.name
-            if intr.channel and hasattr(intr.channel, "name")  # type: ignore
+            intr.channel.name  # type: ignore
+            if intr.channel and hasattr(intr.channel, "name")
             else None
         )
         data = intr.data

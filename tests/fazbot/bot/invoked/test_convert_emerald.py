@@ -1,7 +1,7 @@
 from unittest import IsolatedAsyncioTestCase
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from fazbot.bot.invoke import InvokeConvertEmerald
+from fazbot.bot.invoke.invoke_convert_emerald import InvokeConvertEmerald
 
 
 class TestConvertEmerald(IsolatedAsyncioTestCase):

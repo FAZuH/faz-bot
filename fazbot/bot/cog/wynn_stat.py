@@ -3,8 +3,8 @@ from typing import Any, Literal
 import nextcord
 from nextcord import Interaction
 
-from ..invoke import InvokeWorldlist
-from ._cog_base import CogBase
+from fazbot.bot.cog._cog_base import CogBase
+from fazbot.bot.invoke.invoke_worldlist import InvokeWorldlist
 
 
 class WynnStat(CogBase):

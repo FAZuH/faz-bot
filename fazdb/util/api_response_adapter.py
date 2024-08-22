@@ -3,25 +3,21 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Generator
 
-from fazutil.db.fazdb.model import (
-    CharacterHistory,
-    CharacterInfo,
-    GuildHistory,
-    GuildInfo,
-    GuildMemberHistory,
-    OnlinePlayers,
-    PlayerActivityHistory,
-    PlayerHistory,
-    PlayerInfo,
-    Worlds,
-)
+from fazutil.db.fazdb.model.character_history import CharacterHistory
+from fazutil.db.fazdb.model.character_info import CharacterInfo
+from fazutil.db.fazdb.model.guild_history import GuildHistory
+from fazutil.db.fazdb.model.guild_info import GuildInfo
+from fazutil.db.fazdb.model.guild_member_history import GuildMemberHistory
+from fazutil.db.fazdb.model.online_players import OnlinePlayers
+from fazutil.db.fazdb.model.player_activity_history import PlayerActivityHistory
+from fazutil.db.fazdb.model.player_history import PlayerHistory
+from fazutil.db.fazdb.model.player_info import PlayerInfo
+from fazutil.db.fazdb.model.worlds import Worlds
 
 if TYPE_CHECKING:
-    from fazutil.api.wynn.response import (
-        GuildResponse,
-        OnlinePlayersResponse,
-        PlayerResponse,
-    )
+    from fazutil.api.wynn.response.guild_response import GuildResponse
+    from fazutil.api.wynn.response.online_players_response import OnlinePlayersResponse
+    from fazutil.api.wynn.response.player_response import PlayerResponse
 
 
 class ApiResponseAdapter:

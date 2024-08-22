@@ -6,10 +6,10 @@ from typing import TYPE_CHECKING
 from sqlalchemy.dialects.mysql import BINARY, DATETIME, VARCHAR
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .base_fazdb_model import BaseFazdbModel
+from fazutil.db.fazdb.model.base_fazdb_model import BaseFazdbModel
 
 if TYPE_CHECKING:
-    from . import PlayerInfo
+    from fazutil.db.fazdb.model.player_info import PlayerInfo
 
 
 class GuildInfo(BaseFazdbModel):

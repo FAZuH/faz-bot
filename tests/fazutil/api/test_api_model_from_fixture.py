@@ -1,16 +1,15 @@
+import unittest
 from datetime import datetime as dt
 from types import NoneType
 from typing import override
-import unittest
 
-from fazutil.api.wynn.model import Guild, Player
-from fazutil.api.wynn.model.field import (
-    BodyDateField,
-    CharacterTypeField,
-    GamemodeField,
-    UsernameOrUuidField,
-    UuidField,
-)
+from fazutil.api.wynn.model.field.body_date_field import BodyDateField
+from fazutil.api.wynn.model.field.character_type_field import CharacterTypeField
+from fazutil.api.wynn.model.field.gamemode_field import GamemodeField
+from fazutil.api.wynn.model.field.username_or_uuid_field import UsernameOrUuidField
+from fazutil.api.wynn.model.field.uuid_field import UuidField
+from fazutil.api.wynn.model.guild import Guild
+from fazutil.api.wynn.model.player import Player
 from tests.fixtures_api import FixturesApi
 
 

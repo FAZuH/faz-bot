@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-from fazbot.bot.invoke import InvokeCraftedProbability
+from fazbot.bot.invoke.invoke_crafted_probability import InvokeCraftedProbability
 
 
 class TestCraftedProbability(unittest.IsolatedAsyncioTestCase):

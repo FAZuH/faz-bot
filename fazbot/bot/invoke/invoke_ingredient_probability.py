@@ -1,19 +1,20 @@
 from __future__ import annotations
-from decimal import Decimal
+
 import re
-from typing import Any, TYPE_CHECKING, override
+from decimal import Decimal
+from typing import TYPE_CHECKING, Any, override
 
 from nextcord import Embed, Interaction
 
-from fazbot.wynn import IngredientUtil
-
-from ..errors import BadArgument
-from ._invoke import Invoke
+from fazbot.bot.errors import BadArgument
+from fazbot.bot.invoke._invoke import Invoke
+from fazbot.wynn.ingredient_util import IngredientUtil
 
 if TYPE_CHECKING:
     from nextcord import File
-    from ._asset import Asset
-    from .. import Bot
+
+    from fazbot.bot.bot import Bot
+    from fazbot.bot.invoke._asset import Asset
 
 
 class InvokeIngredientProbability(Invoke):

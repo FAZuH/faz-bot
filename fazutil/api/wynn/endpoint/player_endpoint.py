@@ -1,8 +1,10 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
-from ..response import OnlinePlayersResponse, PlayerResponse
-from .base_endpoint import BaseEndpoint
+from fazutil.api.wynn.endpoint.base_endpoint import BaseEndpoint
+from fazutil.api.wynn.response.online_players_response import OnlinePlayersResponse
+from fazutil.api.wynn.response.player_response import PlayerResponse
 
 if TYPE_CHECKING:
     from uuid import UUID

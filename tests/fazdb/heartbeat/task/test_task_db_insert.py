@@ -1,15 +1,15 @@
-from datetime import datetime
 import unittest
+from datetime import datetime
 from unittest.mock import AsyncMock, MagicMock, Mock
 
-from fazutil.api import WynnApi
-from fazutil.api.wynn.response import (
-    GuildResponse,
-    OnlinePlayersResponse,
-    PlayerResponse,
-)
-from fazutil.db.fazdb import FazdbDatabase
-from fazdb.heartbeat.task import RequestQueue, ResponseQueue, TaskDbInsert
+from fazdb.heartbeat.task.request_queue import RequestQueue
+from fazdb.heartbeat.task.response_queue import ResponseQueue
+from fazdb.heartbeat.task.task_db_insert import TaskDbInsert
+from fazutil.api.wynn.response.guild_response import GuildResponse
+from fazutil.api.wynn.response.online_players_response import OnlinePlayersResponse
+from fazutil.api.wynn.response.player_response import PlayerResponse
+from fazutil.api.wynn.wynn_api import WynnApi
+from fazutil.db.fazdb.fazdb_database import FazdbDatabase
 
 
 class TestTaskDbInsert(unittest.TestCase):

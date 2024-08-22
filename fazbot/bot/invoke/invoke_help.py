@@ -1,6 +1,7 @@
 from __future__ import annotations
+
 from datetime import datetime
-from typing import Any, Sized, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Sized
 
 from nextcord import (
     ApplicationCommandOption,
@@ -13,10 +14,10 @@ from nextcord import (
 )
 from nextcord.ui import Button, View, button
 
-from ._invoke import Invoke
+from fazbot.bot.invoke._invoke import Invoke
 
 if TYPE_CHECKING:
-    from .. import Bot
+    from fazbot.bot.bot import Bot
 
 
 class InvokeHelp(Invoke):

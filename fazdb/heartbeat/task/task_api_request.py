@@ -1,16 +1,18 @@
 from __future__ import annotations
+
 import asyncio
 from datetime import datetime
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from loguru import logger
 
-from fazutil.heartbeat.task import ITask
+from fazutil.heartbeat.task.itask import ITask
 
 if TYPE_CHECKING:
-    from .request_queue import RequestQueue
-    from .response_queue import ResponseQueue
-    from fazutil.api import WynnApi, BaseResponse
+    from fazdb.heartbeat.task.request_queue import RequestQueue
+    from fazdb.heartbeat.task.response_queue import ResponseQueue
+    from fazutil.api.base_response import BaseResponse
+    from fazutil.api.wynn.wynn_api import WynnApi
 
     type Resp = BaseResponse[Any, Any]
 

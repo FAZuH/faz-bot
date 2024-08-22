@@ -1,18 +1,17 @@
 from __future__ import annotations
+
 from io import BytesIO
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 from nextcord import File
 
-from .invoke import (
-    InvokeConvertEmerald,
-    InvokeCraftedProbability,
-    InvokeIngredientProbability,
-)
+from fazbot.bot.invoke.invoke_convert_emerald import InvokeConvertEmerald
+from fazbot.bot.invoke.invoke_crafted_probability import InvokeCraftedProbability
+from fazbot.bot.invoke.invoke_ingredient_probability import InvokeIngredientProbability
 
 if TYPE_CHECKING:
-    from . import Bot
+    from fazbot.bot.bot import Bot
 
 
 class AssetManager:

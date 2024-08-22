@@ -5,13 +5,13 @@ from uuid import UUID
 
 from sqlalchemy import select
 
-from ...base_repository import BaseRepository
-from ..model import PlayerInfo
+from fazutil.db.base_repository import BaseRepository
+from fazutil.db.fazdb.model.player_info import PlayerInfo
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
 
-    from ...base_mysql_database import BaseMySQLDatabase
+    from fazutil.db.base_mysql_database import BaseMySQLDatabase
 
 
 class PlayerInfoRepository(BaseRepository[PlayerInfo, Any]):

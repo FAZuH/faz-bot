@@ -1,7 +1,8 @@
 from decimal import Decimal
 from unittest import TestCase
 
-from fazbot.wynn import CraftedUtil, IngredientField
+from fazbot.wynn.crafted_util import CraftedUtil
+from fazbot.wynn.ingredient_field import IngredientField
 
 
 class TestCraftedUtil(TestCase):

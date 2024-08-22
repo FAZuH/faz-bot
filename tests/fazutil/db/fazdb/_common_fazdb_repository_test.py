@@ -4,9 +4,8 @@ from abc import ABC
 from typing import TYPE_CHECKING, override
 from uuid import UUID
 
-from fazutil.db.fazdb import FazdbDatabase
-
-from .._common_db_repository_test import CommonDbRepositoryTest
+from fazutil.db.fazdb.fazdb_database import FazdbDatabase
+from tests.fazutil.db._common_db_repository_test import CommonDbRepositoryTest
 
 if TYPE_CHECKING:
     from fazutil.db.base_repository import BaseRepository

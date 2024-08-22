@@ -1,16 +1,18 @@
 from __future__ import annotations
-from typing import Any, TYPE_CHECKING, override
+
+from typing import TYPE_CHECKING, Any, override
 
 from nextcord import Embed, Interaction
 
-from fazbot.wynn import EmeraldUtil, Emeralds
-
-from ._invoke import Invoke
+from fazbot.bot.invoke._invoke import Invoke
+from fazbot.wynn.emerald_util import EmeraldUtil
+from fazbot.wynn.emeralds import Emeralds
 
 if TYPE_CHECKING:
     from nextcord import File
-    from ._asset import Asset
-    from .. import Bot
+
+    from fazbot.bot.bot import Bot
+    from fazbot.bot.invoke._asset import Asset
 
 
 class InvokeConvertEmerald(Invoke):

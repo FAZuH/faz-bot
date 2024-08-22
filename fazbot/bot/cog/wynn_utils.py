@@ -3,12 +3,10 @@ from typing import Any
 import nextcord
 from nextcord import Interaction
 
-from ..invoke import (
-    InvokeConvertEmerald,
-    InvokeCraftedProbability,
-    InvokeIngredientProbability,
-)
-from ._cog_base import CogBase
+from fazbot.bot.cog._cog_base import CogBase
+from fazbot.bot.invoke.invoke_convert_emerald import InvokeConvertEmerald
+from fazbot.bot.invoke.invoke_crafted_probability import InvokeCraftedProbability
+from fazbot.bot.invoke.invoke_ingredient_probability import InvokeIngredientProbability
 
 
 class WynnUtils(CogBase):

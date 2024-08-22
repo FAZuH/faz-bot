@@ -1,6 +1,7 @@
 from __future__ import annotations
+
 from contextlib import asynccontextmanager
-from typing import Any, AsyncGenerator, Iterable, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, AsyncGenerator, Iterable
 
 from loguru import logger
 from nextcord import Colour, Embed, Interaction
@@ -8,8 +9,9 @@ from nextcord.ext import commands
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
-    from .. import Bot
-    from fazutil.db import FazbotDatabase
+
+    from fazbot.bot.bot import Bot
+    from fazutil.db.fazbot.fazbot_database import FazbotDatabase
 
 
 class CogBase(commands.Cog):

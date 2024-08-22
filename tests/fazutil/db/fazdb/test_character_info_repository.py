@@ -1,8 +1,11 @@
 from typing import override
 
-from fazutil.db.fazdb.repository import CharacterInfoRepository
-
-from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
+from fazutil.db.fazdb.repository.character_info_repository import (
+    CharacterInfoRepository,
+)
+from tests.fazutil.db.fazdb._common_fazdb_repository_test import (
+    CommonFazdbRepositoryTest,
+)
 
 
 class TestCharacterInfoRepository(

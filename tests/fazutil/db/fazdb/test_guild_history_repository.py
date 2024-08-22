@@ -1,8 +1,9 @@
 from typing import override
 
 from fazutil.db.fazdb.repository.guild_history_repository import GuildHistoryRepository
-
-from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
+from tests.fazutil.db.fazdb._common_fazdb_repository_test import (
+    CommonFazdbRepositoryTest,
+)
 
 
 class TestGuildHistoryRepository(

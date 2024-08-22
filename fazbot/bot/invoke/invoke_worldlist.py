@@ -1,16 +1,18 @@
 from __future__ import annotations
+
 from datetime import datetime, timedelta
-from typing import Any, Literal, TYPE_CHECKING, override
+from typing import TYPE_CHECKING, Any, Literal, override
 
 from nextcord import ButtonStyle, Color, Embed
 from nextcord.ui import Button, View, button
 from tabulate import tabulate
 
-from ._invoke import Invoke
+from fazbot.bot.invoke._invoke import Invoke
 
 if TYPE_CHECKING:
     from nextcord import Interaction
-    from .. import Bot
+
+    from fazbot.bot.bot import Bot
 
 
 class InvokeWorldlist(Invoke):

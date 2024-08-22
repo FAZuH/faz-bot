@@ -6,18 +6,16 @@ from typing import TYPE_CHECKING, Any, override
 
 from nextcord import Color, Embed
 
+from fazbot.bot.invoke._invoke import Invoke
 from fazutil.db.fazdb.model.player_activity_history import PlayerActivityHistory
-
-from ..invoke._invoke import Invoke
 
 if TYPE_CHECKING:
     from datetime import timedelta
 
     from nextcord import Interaction
 
-    from fazutil.db.fazdb.model import PlayerInfo
-
-    from ..bot import Bot
+    from fazbot.bot.bot import Bot
+    from fazutil.db.fazdb.model.player_info import PlayerInfo
 
 
 class InvokeActivity(Invoke):

@@ -1,9 +1,10 @@
 from datetime import datetime
 from typing import override
 
-from fazutil.db.fazdb.repository import WorldsRepository
-
-from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
+from fazutil.db.fazdb.repository.worlds_repository import WorldsRepository
+from tests.fazutil.db.fazdb._common_fazdb_repository_test import (
+    CommonFazdbRepositoryTest,
+)
 
 
 class TestWorldsRepository(CommonFazdbRepositoryTest.Test[WorldsRepository]):

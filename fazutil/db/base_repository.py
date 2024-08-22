@@ -1,7 +1,8 @@
 from __future__ import annotations
+
 from abc import ABC
 from decimal import Decimal
-from typing import Any, Iterable, Sequence, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Iterable, Sequence
 
 from sqlalchemy import Column, Tuple, select, text, tuple_
 from sqlalchemy.dialects.mysql import insert
@@ -9,8 +10,9 @@ from sqlalchemy.dialects.mysql import insert
 if TYPE_CHECKING:
     from sqlalchemy import Table
     from sqlalchemy.ext.asyncio import AsyncSession
-    from .base_mysql_database import BaseMySQLDatabase
-    from .base_model import BaseModel
+
+    from fazutil.db.base_model import BaseModel
+    from fazutil.db.base_mysql_database import BaseMySQLDatabase
 
 
 class BaseRepository[T: BaseModel, ID](ABC):

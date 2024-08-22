@@ -1,9 +1,10 @@
 from __future__ import annotations
+
 from threading import Lock
-from typing import Any, Iterable, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Iterable
 
 if TYPE_CHECKING:
-    from fazutil.api import BaseResponse
+    from fazutil.api.base_response import BaseResponse
 
     type Resp = BaseResponse[Any, Any]
 
