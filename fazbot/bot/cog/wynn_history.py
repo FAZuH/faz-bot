@@ -9,7 +9,7 @@ from nextcord import Interaction
 
 from ..cog._cog_base import CogBase
 from ..errors import BadArgument
-from ..invoke import InvokeActivity
+from ..invoke import InvokeActivity, InvokeGuildActivity
 
 
 class WynnHistory(CogBase):
@@ -37,15 +37,31 @@ class WynnHistory(CogBase):
                 period_end = intr.created_at
         except ValueError as exc:
             raise BadArgument(f"Can't parse period (reason: {exc})") from exc
+        invoke = InvokeActivity(self._bot, intr, player_info, period_begin, period_end)
+        await invoke.run()
 
-        await InvokeActivity(
-            self._bot, intr, player_info, period_begin, period_end
+    @nextcord.slash_command()
+    async def guild_activity(
+        self, intr: Interaction[Any], guild: str, period: str
+    ) -> None:
+        # `guild` check
+        guild_info = await self._bot.fazdb_db.guild_info_repository.get_guild(guild)
+        if not guild_info:
+            raise BadArgument(
+                f"Player not found (reason: Can't find guild with name or uuid {guild})"
+            )
+        # `period` check and parse
+        try:
+            if "-" in period:
+                left, right = period.split("-")
+                period_begin = parse(left)
+                period_end = parse(right)
+                assert period_begin and period_end
+            else:
+                period_begin = intr.created_at - timedelta(hours=float(period))
+                period_end = intr.created_at
+        except ValueError as exc:
+            raise BadArgument(f"Can't parse period (reason: {exc})") from exc
+        await InvokeGuildActivity(
+            self._bot, intr, guild_info, period_begin, period_end
         ).run()
-
-    # @nextcord.slash_command(name="worldlist")
-    # async def worldlist(
-    #     self,
-    #     interaction: Interaction[Any],
-    #     sort_by: Literal["Player Count", "Time Created"] = "Time Created"
-    # ) -> None:
-    #     await InvokeWorldlist(self._bot, interaction, sort_by).run()
