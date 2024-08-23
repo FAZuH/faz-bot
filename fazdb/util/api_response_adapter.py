@@ -122,7 +122,7 @@ class ApiResponseAdapter:
 
         @staticmethod
         def to_guild_member_history(resp: GuildResponse) -> list[GuildMemberHistory]:
-            return (
+            return [
                 GuildMemberHistory(
                     uuid=uuid.to_bytes() if uuid.is_uuid() else memberinfo.uuid.to_bytes(),  # type: ignore
                     contributed=memberinfo.contributed,
@@ -130,7 +130,7 @@ class ApiResponseAdapter:
                     datetime=resp.headers.to_datetime(),
                 )
                 for rank, uuid, memberinfo in resp.body.members.iter_online_members()
-            )  # type: ignore
+            ]  # type: ignore
 
     class OnlinePlayers:
 
@@ -144,8 +144,8 @@ class ApiResponseAdapter:
         @staticmethod
         def to_player_activity_history(
             resp: OnlinePlayersResponse, logon_timestamps: dict[str, datetime]
-        ) -> Generator[PlayerActivityHistory, None, None]:
-            return (
+        ) -> list[PlayerActivityHistory]:
+            return [
                 PlayerActivityHistory(
                     uuid=uuid.to_bytes(),  # the user's uuid
                     logon_datetime=logon_timestamps[
@@ -155,7 +155,7 @@ class ApiResponseAdapter:
                 )
                 for uuid in resp.body.players
                 if uuid.is_uuid() is True
-            )
+            ]
 
         @staticmethod
         def to_worlds(resp: OnlinePlayersResponse) -> list[Worlds]:
