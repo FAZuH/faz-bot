@@ -10,7 +10,7 @@ permissions:
   packages: write
 
 jobs:
-  image:
+  build:
     name: Build Docker Image
     runs-on: ubuntu-latest
     steps:
@@ -60,5 +60,5 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
-      - name: Deploy
+      - name: Deploy to Server
         run: ssh -o LogLevel=QUIET -t ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "/srv/faz-bot/docker/deploy.sh"
