@@ -50,8 +50,10 @@ class BaseDatabase(ABC):
 
         async_url = URL.create(async_driver, user, password, host, port, database)
         url = URL.create(sync_driver, user, password, host, port, database)
-        self._async_engine = create_async_engine(async_url)
-        self._engine = create_engine(url)
+        self._async_engine = create_async_engine(
+            async_url, pool_recycle=60 * 5, pool_pre_ping=True
+        )
+        self._engine = create_engine(url, pool_recycle=60 * 5, pool_pre_ping=True)
 
         self._repositories: list[BaseRepository[Any, Any]] = []
 
