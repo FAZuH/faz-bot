@@ -12,8 +12,51 @@ permissions:
   packages: write
 
 jobs:
+  changelog:
+    name: Generate Changelog
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.changelog.outputs.tag }}
+      skipped: ${{ steps.changelog.outputs.skipped }}
+      clean_changelog: ${{ steps.changelog.outputs.clean_changelog }}
+      changelog: ${{ steps.changelog.outputs.changelog }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 16
+
+      - run: |
+          npm install conventional-changelog-conventionalcommits@7.0.2
+          npm install conventional-recommended-bump@9.0.0
+
+      - name: Set up version.json
+        run: echo "{"version":$(git describe --tags --abbrev=0)}" > version.json
+
+      - name: Create changelog
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v5.2.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          git-user-email: "fazuhhh@proton.me"
+          version-file: ./version.json
+          skip-version-file: true
+          skip-git-pull: true
+          pre-release: false
+          release-count: 5
+
+      - name: Upload version information
+        uses: actions/upload-artifact@v4
+        with:
+          name: version
+          path: version.json
+
   build:
     name: Build Docker Images
+    needs: [changelog] # Build needs the new version number
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,8 +76,7 @@ jobs:
           username: FAZuH
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Get Build Date
-        id: build_date
+      - name: Set up build date
         run: echo "date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
 
       - name: Build and Push fazbot
@@ -46,9 +88,9 @@ jobs:
           push: true
           tags: |
             ghcr.io/fazuh/fazbot:latest
-            ghcr.io/fazuh/fazbot:${{ github.ref_name }}
+            ghcr.io/fazuh/fazbot:${{ needs.changelog.outputs.tag }}
           labels: |
-            version=${{ github.ref_name }}
+            version=${{ needs.changelog.outputs.tag }}
             commit=${{ github.sha }}
             build_date=${{ env.date }}
 
@@ -61,23 +103,60 @@ jobs:
           push: true
           tags: |
             ghcr.io/fazuh/fazdb:latest
-            ghcr.io/fazuh/fazdb:${{ github.ref_name }}
+            ghcr.io/fazuh/fazdb:${{ needs.changelog.outputs.tag }}
           labels: |
-            version=${{ github.ref_name }}
+            version=${{ needs.changelog.outputs.tag }}
             commit=${{ github.sha }}
             build_date=${{ env.date }}
 
-  deploy:
-    name: Deploy to Server
+  release-github:
+    name: Release to GitHub
+    if: ${{ needs.changelog.outputs.skipped != 'true' }}
     runs-on: ubuntu-latest
-    needs: build
-    if: github.ref == 'refs/heads/main'
+    needs: [build, changelog]
     steps:
-      - name: Install SSH key
-        uses: shimataro/ssh-key-action@v2
+      - name: Download Build
+        uses: actions/download-artifact@v4
         with:
-          key: ${{ secrets.SSH_KEY }}
-          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+          name: build
 
-      - name: Deploy
-        run: ssh -o LogLevel=QUIET -t ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "/srv/faz-bot/docker/deploy.sh"
+      - name: Create Release and Upload Files
+        if: ${{ needs.changelog.outputs.skipped != 'true' }}
+        id: release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.changelog.outputs.tag }}
+          body: ${{ needs.changelog.outputs.changelog }}
+          draft: false
+          prerelease: false
+
+      - name: Set current date
+        id: date
+        run: |
+          echo "::set-output name=short::$(date +'%Y-%m-%d')"
+          echo "::set-output name=long::$(date +'%Y-%m-%d %H:%M')"
+
+      - name: Post Release on Discord
+        uses: tsickert/discord-webhook@v6.0.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_RELEASE_WEBHOOK_URL }}
+          embed-color: "9498256"
+          embed-title: ${{format('faz-bot {0}', needs.changelog.outputs.tag)}}
+          embed-description: ${{ needs.changelog.outputs.changelog }}
+          embed-url: ${{ steps.release.outputs.url }}
+          embed-timestamp: ${{ steps.date.outputs.long }}
+
+  # deploy:
+  #   name: Deploy to Server
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   if: github.ref == 'refs/heads/main'
+  #   steps:
+  #     - name: Install SSH key
+  #       uses: shimataro/ssh-key-action@v2
+  #       with:
+  #         key: ${{ secrets.SSH_KEY }}
+  #         known_hosts: ${{ secrets.KNOWN_HOSTS }}
+  #
+  #     - name: Deploy
+  #       run: ssh -o LogLevel=QUIET -t ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "/srv/faz-bot/docker/deploy.sh"
