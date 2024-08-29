@@ -10,10 +10,10 @@ help:
 	@echo "  make build-all							# Build all docker services"
 	@echo "  make up-all 							# Up all docker services"
 	@echo "  make down-all 							# Down all docker services"
-	@echo "  make db ACT=[build|up|down|bash]		# Manage db service"
-	@echo "  make bot ACT=[build|up|down|bash]  	# Manage bot service"
-	@echo "  make mysql ACT=[build|up|down|bash]  	# Manage sql service"
-	@echo "  make pma ACT=[build|up|down|bash]  	# Manage phpmyadmin service"
+	@echo "  make db act=[build|up|down|bash]		# Manage db service"
+	@echo "  make bot act=[build|up|down|bash]  	# Manage bot service"
+	@echo "  make mysql act=[build|up|down|bash]  	# Manage sql service"
+	@echo "  make pma act=[build|up|down|bash]  	# Manage phpmyadmin service"
 	@echo "  test-sql-up                    		# Up test sql container"
 	@echo "  test-sql-down                  		# Down test sql container"
 	@echo "  make lint					    		# Run linting"
@@ -24,35 +24,35 @@ wait-for-mysql:
 	@./$(DOCKER_DIR)/wait-for-it.sh -t 5 mysql:3306 -- echo "MySQL is ready!"
 
 build-all:
-	make sql ACT=build
+	make sql act=build
 	make wait-for-mysql
-	make db ACT=build
-	make bot ACT=build
+	make db act=build
+	make bot act=build
 
 up-all:
-	make sql ACT=up
+	make sql act=up
 	make wait-for-mysql
-	make db ACT=up
-	make bot ACT=up
+	make db act=up
+	make bot act=up
 
 down-all:
 	docker-compose --file $(DOCKER_COMPOSE) down
 
 
 db:
-	$(SCRIPT) fazdb $(ACT)
+	$(SCRIPT) fazdb $(act)
 
 bot:
-	$(SCRIPT) fazbot $(ACT)
+	$(SCRIPT) fazbot $(act)
 
 sql:
-	$(SCRIPT) mysql $(ACT)
+	$(SCRIPT) mysql $(act)
 
 test-sql:
-	$(SCRIPT) test-sql $(ACT)
+	$(SCRIPT) test-sql $(act)
 
 pma:
-	$(SCRIPT) pma $(ACT)
+	$(SCRIPT) phpmyadmin $(act)
 
 
 pytest:

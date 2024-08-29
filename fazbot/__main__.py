@@ -1,10 +1,11 @@
 from __future__ import annotations
+
 import asyncio
 from time import sleep
 
 from loguru import logger
 
-from fazbot.app import App
+from fazbot.app.app import App
 
 
 class Main:

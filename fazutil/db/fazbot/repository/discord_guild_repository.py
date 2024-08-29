@@ -1,11 +1,12 @@
 from __future__ import annotations
-from typing import Any, TYPE_CHECKING
 
-from ...base_repository import BaseRepository
-from ..model import DiscordGuild
+from typing import TYPE_CHECKING, Any
+
+from fazutil.db.base_repository import BaseRepository
+from fazutil.db.fazbot.model.discord_guild import DiscordGuild
 
 if TYPE_CHECKING:
-    from ...base_mysql_database import BaseMySQLDatabase
+    from fazutil.db.base_mysql_database import BaseMySQLDatabase
 
 
 class DiscordGuildRepository(BaseRepository[DiscordGuild, Any]):

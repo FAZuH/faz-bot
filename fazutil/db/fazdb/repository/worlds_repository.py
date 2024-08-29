@@ -1,14 +1,16 @@
 from __future__ import annotations
-from typing import Any, Iterable, Literal, Sequence, TYPE_CHECKING
+
+from typing import TYPE_CHECKING, Any, Iterable, Literal, Sequence
 
 from sqlalchemy import desc, select
 
-from ...base_repository import BaseRepository
-from ..model import Worlds
+from fazutil.db.base_repository import BaseRepository
+from fazutil.db.fazdb.model.worlds import Worlds
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
-    from ...base_mysql_database import BaseMySQLDatabase
+
+    from fazutil.db.base_mysql_database import BaseMySQLDatabase
 
 
 class WorldsRepository(BaseRepository[Worlds, Any]):
@@ -23,23 +25,27 @@ class WorldsRepository(BaseRepository[Worlds, Any]):
         stmt = self.table.delete().where(
             self.model.name.not_in([e.name for e in entity])
         )
-        async with self.database.enter_async_session() as session:
-            await session.execute(stmt)
+        async with self.database.must_enter_async_session(session) as ses:
+            await ses.execute(stmt)
             await self.insert(
                 entity,
-                session=session,
+                session=ses,
                 replace_on_duplicate=True,
                 columns_to_replace=["player_count"],
             )
 
-    async def get_worlds(self, sortby: Literal["player", "time"]) -> Sequence[Worlds]:
+    async def get_worlds(
+        self,
+        sortby: Literal["player", "time"] = "time",
+        *,
+        session: AsyncSession | None = None,
+    ) -> Sequence[Worlds]:
         orderby_ = (
             self.model.player_count
             if sortby == "player"
             else desc(self.model.time_created)
         )
         stmt = select(self.model).order_by(orderby_)
-        async with self.database.enter_async_session() as session:
-            result = await session.execute(stmt)
-            ret = result.scalars().all()
-            return ret
+        async with self.database.must_enter_async_session(session) as ses:
+            res = await ses.execute(stmt)
+            return res.scalars().all()

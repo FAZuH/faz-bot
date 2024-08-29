@@ -1,12 +1,14 @@
 from __future__ import annotations
-from typing import Any, TYPE_CHECKING
 
-from ..http_request import HttpRequest
-from ._wynn_ratelimit_handler import WynnRatelimitHandler
-from .endpoint import GuildEndpoint, PlayerEndpoint
+from typing import TYPE_CHECKING, Any
+
+from fazutil.api.http_request import HttpRequest
+from fazutil.api.wynn._wynn_ratelimit_handler import WynnRatelimitHandler
+from fazutil.api.wynn.endpoint.guild_endpoint import GuildEndpoint
+from fazutil.api.wynn.endpoint.player_endpoint import PlayerEndpoint
 
 if TYPE_CHECKING:
-    from .. import BaseRatelimitHandler
+    from fazutil.api.base_ratelimit_handler import BaseRatelimitHandler
 
 
 class WynnApi:

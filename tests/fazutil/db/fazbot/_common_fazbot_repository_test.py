@@ -1,10 +1,10 @@
 from __future__ import annotations
+
 from abc import ABC
 from typing import TYPE_CHECKING, override
 
-from fazutil.db.fazbot import FazbotDatabase
-
-from .._common_db_repository_test import CommonDbRepositoryTest
+from fazutil.db.fazbot.fazbot_database import FazbotDatabase
+from tests.fazutil.db._common_db_repository_test import CommonDbRepositoryTest
 
 if TYPE_CHECKING:
     from fazutil.db.base_repository import BaseRepository

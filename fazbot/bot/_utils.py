@@ -1,10 +1,11 @@
 from __future__ import annotations
+
 from datetime import datetime
-from typing import Any, Callable, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Callable
 
 import dateparser
 
-from .errors import ParseFailure
+from fazbot.bot.errors import ParseFailure
 
 if TYPE_CHECKING:
     from nextcord import Guild, PartialMessageable, Thread, User

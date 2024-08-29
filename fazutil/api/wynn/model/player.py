@@ -1,8 +1,13 @@
 from __future__ import annotations
+
 from decimal import Decimal
 from typing import Any, Generator
 
-from .field import BodyDateField, CharacterTypeField, GamemodeField, Nullable, UuidField
+from fazutil.api.wynn.model.field.body_date_field import BodyDateField
+from fazutil.api.wynn.model.field.character_type_field import CharacterTypeField
+from fazutil.api.wynn.model.field.gamemode_field import GamemodeField
+from fazutil.api.wynn.model.field.nullable import Nullable
+from fazutil.api.wynn.model.field.uuid_field import UuidField
 
 
 class Player:

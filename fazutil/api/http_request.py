@@ -1,11 +1,12 @@
 from __future__ import annotations
+
 import asyncio
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from aiohttp import ClientSession, ClientTimeout
 
-from .base_response import BaseResponse
-from .errors import (
+from fazutil.api.base_response import BaseResponse
+from fazutil.api.errors import (
     BadRequest,
     Forbidden,
     HTTPError,
@@ -18,7 +19,8 @@ from .errors import (
 
 if TYPE_CHECKING:
     from aiohttp import ClientResponse
-    from . import BaseRatelimitHandler
+
+    from fazutil.api.base_ratelimit_handler import BaseRatelimitHandler
 
 
 class HttpRequest:

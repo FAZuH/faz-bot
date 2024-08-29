@@ -1,18 +1,28 @@
-from ..base_mysql_database import BaseMySQLDatabase
-from .model.base_fazdb_model import BaseFazdbModel
-from .repository import (
+from fazutil.db.base_mysql_database import BaseMySQLDatabase
+from fazutil.db.fazdb.model.base_fazdb_model import BaseFazdbModel
+from fazutil.db.fazdb.repository.character_history_repository import (
     CharacterHistoryRepository,
-    CharacterInfoRepository,
-    FazdbUptimeRepository,
-    GuildHistoryRepository,
-    GuildInfoRepository,
-    GuildMemberHistoryRepository,
-    OnlinePlayersRepository,
-    PlayerActivityHistoryRepository,
-    PlayerHistoryRepository,
-    PlayerInfoRepository,
-    WorldsRepository,
 )
+from fazutil.db.fazdb.repository.character_info_repository import (
+    CharacterInfoRepository,
+)
+from fazutil.db.fazdb.repository.fazdb_uptime_repository import FazdbUptimeRepository
+from fazutil.db.fazdb.repository.guild_history_repository import GuildHistoryRepository
+from fazutil.db.fazdb.repository.guild_info_repository import GuildInfoRepository
+from fazutil.db.fazdb.repository.guild_member_history_repository import (
+    GuildMemberHistoryRepository,
+)
+from fazutil.db.fazdb.repository.online_players_repository import (
+    OnlinePlayersRepository,
+)
+from fazutil.db.fazdb.repository.player_activity_history_repository import (
+    PlayerActivityHistoryRepository,
+)
+from fazutil.db.fazdb.repository.player_history_repository import (
+    PlayerHistoryRepository,
+)
+from fazutil.db.fazdb.repository.player_info_repository import PlayerInfoRepository
+from fazutil.db.fazdb.repository.worlds_repository import WorldsRepository
 
 
 class FazdbDatabase(BaseMySQLDatabase):

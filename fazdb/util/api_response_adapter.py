@@ -1,26 +1,23 @@
 from __future__ import annotations
-from datetime import datetime
-from typing import Generator, TYPE_CHECKING
 
-from fazutil.db.fazdb.model import (
-    CharacterHistory,
-    CharacterInfo,
-    GuildHistory,
-    GuildInfo,
-    GuildMemberHistory,
-    OnlinePlayers,
-    PlayerActivityHistory,
-    PlayerHistory,
-    PlayerInfo,
-    Worlds,
-)
+from datetime import datetime
+from typing import TYPE_CHECKING, Generator
+
+from fazutil.db.fazdb.model.character_history import CharacterHistory
+from fazutil.db.fazdb.model.character_info import CharacterInfo
+from fazutil.db.fazdb.model.guild_history import GuildHistory
+from fazutil.db.fazdb.model.guild_info import GuildInfo
+from fazutil.db.fazdb.model.guild_member_history import GuildMemberHistory
+from fazutil.db.fazdb.model.online_players import OnlinePlayers
+from fazutil.db.fazdb.model.player_activity_history import PlayerActivityHistory
+from fazutil.db.fazdb.model.player_history import PlayerHistory
+from fazutil.db.fazdb.model.player_info import PlayerInfo
+from fazutil.db.fazdb.model.worlds import Worlds
 
 if TYPE_CHECKING:
-    from fazutil.api.wynn.response import (
-        GuildResponse,
-        OnlinePlayersResponse,
-        PlayerResponse,
-    )
+    from fazutil.api.wynn.response.guild_response import GuildResponse
+    from fazutil.api.wynn.response.online_players_response import OnlinePlayersResponse
+    from fazutil.api.wynn.response.player_response import PlayerResponse
 
 
 class ApiResponseAdapter:
@@ -97,6 +94,7 @@ class ApiResponseAdapter:
                 uuid=resp.body.uuid.to_bytes(),
                 latest_username=resp.body.username,
                 first_join=resp.body.first_join.to_datetime(),
+                guild_uuid=resp.body.guild.uuid.to_bytes() if resp.body.guild else None,
             )
 
     class Guild:
@@ -124,7 +122,7 @@ class ApiResponseAdapter:
 
         @staticmethod
         def to_guild_member_history(resp: GuildResponse) -> list[GuildMemberHistory]:
-            return (
+            return [
                 GuildMemberHistory(
                     uuid=uuid.to_bytes() if uuid.is_uuid() else memberinfo.uuid.to_bytes(),  # type: ignore
                     contributed=memberinfo.contributed,
@@ -132,7 +130,7 @@ class ApiResponseAdapter:
                     datetime=resp.headers.to_datetime(),
                 )
                 for rank, uuid, memberinfo in resp.body.members.iter_online_members()
-            )  # type: ignore
+            ]  # type: ignore
 
     class OnlinePlayers:
 
@@ -146,8 +144,8 @@ class ApiResponseAdapter:
         @staticmethod
         def to_player_activity_history(
             resp: OnlinePlayersResponse, logon_timestamps: dict[str, datetime]
-        ) -> Generator[PlayerActivityHistory, None, None]:
-            return (
+        ) -> list[PlayerActivityHistory]:
+            return [
                 PlayerActivityHistory(
                     uuid=uuid.to_bytes(),  # the user's uuid
                     logon_datetime=logon_timestamps[
@@ -157,7 +155,7 @@ class ApiResponseAdapter:
                 )
                 for uuid in resp.body.players
                 if uuid.is_uuid() is True
-            )
+            ]
 
         @staticmethod
         def to_worlds(resp: OnlinePlayersResponse) -> list[Worlds]:

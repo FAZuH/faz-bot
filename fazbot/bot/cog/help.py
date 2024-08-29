@@ -2,9 +2,9 @@ from typing import Any
 
 import nextcord
 
-from ..errors import ApplicationException
-from ..invoke import InvokeHelp
-from ._cog_base import CogBase
+from fazbot.bot.cog._cog_base import CogBase
+from fazbot.bot.errors import ApplicationException
+from fazbot.bot.view.help import InvokeHelp
 
 
 class Help(CogBase):

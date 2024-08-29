@@ -1,10 +1,11 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
-from fazutil.heartbeat import BaseHeartbeat
+from fazutil.heartbeat.base_heartbeat import BaseHeartbeat
 
 if TYPE_CHECKING:
-    from fazbot.app import App
+    from fazbot.app.app import App
 
 
 class Heartbeat(BaseHeartbeat):

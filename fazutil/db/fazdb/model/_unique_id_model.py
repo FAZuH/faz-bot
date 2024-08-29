@@ -1,7 +1,7 @@
 import hashlib
 from typing import Any
 
-from .base_fazdb_model import BaseFazdbModel
+from fazutil.db.fazdb.model.base_fazdb_model import BaseFazdbModel
 
 
 class UniqueIdModel(BaseFazdbModel):

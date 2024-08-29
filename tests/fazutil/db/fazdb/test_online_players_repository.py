@@ -1,11 +1,11 @@
 from typing import override
-from uuid import UUID
 
 from fazutil.db.fazdb.repository.online_players_repository import (
     OnlinePlayersRepository,
 )
-
-from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
+from tests.fazutil.db.fazdb._common_fazdb_repository_test import (
+    CommonFazdbRepositoryTest,
+)
 
 
 class TestOnlinePlayersRepository(
@@ -14,17 +14,7 @@ class TestOnlinePlayersRepository(
 
     @override
     def _get_mock_data(self):
-        model = self.repo.model
-
-        uuid1 = UUID("b30f5e97-957d-47f6-bf1e-9e48d9fea200").bytes
-        uuid2 = UUID("33c3ad56-5e9b-4bfe-9685-9fc4df2a67fa").bytes
-        mock_data1 = model(uuid=uuid1, server="a")
-        mock_data2 = mock_data1.clone()
-        mock_data3 = mock_data1.clone()
-        mock_data3.uuid = uuid2
-        mock_data4 = mock_data1.clone()
-        mock_data4.server = "b"
-        return (mock_data1, mock_data2, mock_data3, mock_data4, "server")
+        return self._get_online_players_mock_data()
 
     @property
     @override

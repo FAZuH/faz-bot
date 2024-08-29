@@ -12,7 +12,7 @@ from sqlalchemy.dialects.mysql import (
 )
 from sqlalchemy.orm import Mapped, mapped_column
 
-from ._unique_id_model import UniqueIdModel
+from fazutil.db.fazdb.model._unique_id_model import UniqueIdModel
 
 
 class GuildHistory(UniqueIdModel):
@@ -29,5 +29,6 @@ class GuildHistory(UniqueIdModel):
 
     __table_args__ = (
         Index("datetime_idx", datetime.desc()),
+        Index("name_idx", name),
         UniqueConstraint(unique_id, name="unique_id_idx"),
     )

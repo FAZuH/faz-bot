@@ -1,7 +1,8 @@
 from typing import Any, override
 
-from ...base_response import BaseResponse
-from ..model import Headers, Player
+from fazutil.api.base_response import BaseResponse
+from fazutil.api.wynn.model.headers import Headers
+from fazutil.api.wynn.model.player import Player
 
 
 class PlayerResponse(BaseResponse[Player, Headers]):

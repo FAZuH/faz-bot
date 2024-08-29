@@ -1,22 +1,25 @@
 from __future__ import annotations
+
 from decimal import Decimal
-from typing import Any, Callable, TYPE_CHECKING, override
+from typing import TYPE_CHECKING, Any, Callable, override
 
-from nextcord import ButtonStyle, Embed, Interaction, ui
+from nextcord import ButtonStyle, Embed, Interaction
+from nextcord.ui import Button, button
 
-from fazbot.wynn import CraftedUtil, IngredientField
-from fazutil.util import CacheUtil
-
-from ..errors import BadArgument
-from ._invoke import Invoke
+from fazbot.bot.errors import BadArgument
+from fazbot.bot.view._base_view import BaseView
+from fazbot.wynn.crafted_util import CraftedUtil
+from fazbot.wynn.ingredient_field import IngredientField
+from fazutil.util.cache_util import CacheUtil
 
 if TYPE_CHECKING:
     from nextcord import File
-    from ._asset import Asset
-    from .. import Bot
+
+    from fazbot.bot.bot import Bot
+    from fazbot.bot.view._asset import Asset
 
 
-class InvokeCraftedProbability(Invoke):
+class CraftedProbabilityView(BaseView):
 
     ASSET_CRAFTINGTABLE: Asset
     INGSTR_DEFAULT = "0,0,0"
@@ -36,27 +39,26 @@ class InvokeCraftedProbability(Invoke):
                 self._get_atmost_embed,
             ],
         )
-
         self._craftutil = CraftedUtil(self._parse_ings_str(ing_strs))
-        self._view = self._View(self)
 
     @override
     @classmethod
     def set_assets(cls, assets: dict[str, File]) -> None:
         cls.ASSET_CRAFTINGTABLE = cls._get_from_assets(assets, "craftingtable.png")
 
+    @override
     async def run(self) -> None:
         embed = self._get_craftprobs_embed(self._interaction, self._craftutil)
         await self._interaction.send(
             embed=embed,
-            view=self._view,
+            view=self,
             file=self.ASSET_CRAFTINGTABLE.get_file_to_send(),
         )
 
     def _parse_ings_str(self, ing_strs: list[str]) -> list[IngredientField]:
         res: list[IngredientField] = []
         for ing_str in ing_strs:
-            if ing_str == InvokeCraftedProbability.INGSTR_DEFAULT:
+            if ing_str == CraftedProbabilityView.INGSTR_DEFAULT:
                 continue
             ing_str = ing_str.strip()
             ing_vals = ing_str.split(",")
@@ -178,59 +180,37 @@ class InvokeCraftedProbability(Invoke):
         )
         return embed
 
-    class _View(ui.View):
-        def __init__(self, cmd: InvokeCraftedProbability):
-            super().__init__(timeout=120)
-            self._cmd = cmd
-            self._interaction = cmd._interaction
-            self._craftutil = cmd._craftutil
+    @button(label="Distribution", style=ButtonStyle.green, emoji="🎲", disabled=True)
+    async def button_distribution(
+        self, button: Button[Any], interaction: Interaction[Any]
+    ) -> None:
+        await self._do_button(button, interaction, self._get_craftprobs_embed)
 
-        @override
-        async def on_timeout(self) -> None:
-            # Disable all items on timeout
-            for item in self.children:
-                self.remove_item(item)
-            await self._cmd._interaction.edit_original_message(view=self)
+    @button(label="Atleast", style=ButtonStyle.green, emoji="📉")
+    async def button_atleast(
+        self, button: Button[Any], interaction: Interaction[Any]
+    ) -> None:
+        await self._do_button(button, interaction, self._get_atleast_embed)
 
-        @ui.button(
-            label="Distribution", style=ButtonStyle.green, emoji="🎲", disabled=True
-        )
-        async def button_distribution(
-            self, button: ui.Button[Any], interaction: Interaction[Any]
-        ) -> None:
-            await self._do_button(button, interaction, self._cmd._get_craftprobs_embed)
+    @button(label="Atmost", style=ButtonStyle.green, emoji="📈")
+    async def button_atmost_callback(
+        self, button: Button[Any], interaction: Interaction[Any]
+    ) -> None:
+        await self._do_button(button, interaction, self._get_atmost_embed)
 
-        @ui.button(label="Atleast", style=ButtonStyle.green, emoji="📉")
-        async def button_atleast(
-            self, button: ui.Button[Any], interaction: Interaction[Any]
-        ) -> None:
-            await self._do_button(button, interaction, self._cmd._get_atleast_embed)
+    async def _do_button(
+        self,
+        button: Button[Any],
+        interaction: Interaction[Any],
+        embed_strategy: Callable[[Interaction[Any], CraftedUtil], Embed] | None = None,
+    ) -> None:
+        await interaction.response.defer()
+        self._click_button(button)
+        embed = embed_strategy(interaction, self._craftutil) if embed_strategy else None
+        await interaction.edit_original_message(embed=embed, view=self)
 
-        @ui.button(label="Atmost", style=ButtonStyle.green, emoji="📈")
-        async def button_atmost_callback(
-            self, button: ui.Button[Any], interaction: Interaction[Any]
-        ) -> None:
-            await self._do_button(button, interaction, self._cmd._get_atmost_embed)
-
-        async def _do_button(
-            self,
-            button: ui.Button[Any],
-            interaction: Interaction[Any],
-            embed_strategy: (
-                Callable[[Interaction[Any], CraftedUtil], Embed] | None
-            ) = None,
-        ) -> None:
-            await interaction.response.defer()
-            self._click_button(button)
-            embed = (
-                embed_strategy(interaction, self._craftutil) if embed_strategy else None
-            )
-            await interaction.edit_original_message(embed=embed, view=self)
-
-        def _click_button(
-            self, button: ui.Button[InvokeCraftedProbability._View]
-        ) -> None:
-            for item in self.children:
-                if isinstance(item, ui.Button):
-                    item.disabled = False
-            button.disabled = True
+    def _click_button(self, button: Button[Any]) -> None:
+        for item in self.children:
+            if isinstance(item, Button):
+                item.disabled = False
+        button.disabled = True

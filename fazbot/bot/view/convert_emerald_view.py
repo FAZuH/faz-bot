@@ -1,19 +1,21 @@
 from __future__ import annotations
-from typing import Any, TYPE_CHECKING, override
+
+from typing import TYPE_CHECKING, Any, override
 
 from nextcord import Embed, Interaction
 
-from fazbot.wynn import EmeraldUtil, Emeralds
-
-from ._invoke import Invoke
+from fazbot.bot.view._base_view import BaseView
+from fazbot.wynn.emerald_util import EmeraldUtil
+from fazbot.wynn.emeralds import Emeralds
 
 if TYPE_CHECKING:
     from nextcord import File
-    from ._asset import Asset
-    from .. import Bot
+
+    from fazbot.bot.bot import Bot
+    from fazbot.bot.view._asset import Asset
 
 
-class InvokeConvertEmerald(Invoke):
+class ConvertEmeraldView(BaseView):
 
     ASSET_LIQUIDEMERALD: Asset
 
@@ -30,6 +32,7 @@ class InvokeConvertEmerald(Invoke):
     def set_assets(cls, assets: dict[str, File]) -> None:
         cls.ASSET_LIQUIDEMERALD = cls._get_from_assets(assets, "liquidemerald.png")
 
+    @override
     async def run(self):
         embed_resp = self._get_embed(self._interaction, self._emeralds)
         await self._interaction.send(

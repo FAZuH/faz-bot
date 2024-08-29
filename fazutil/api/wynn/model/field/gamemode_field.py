@@ -1,4 +1,4 @@
-from ..enum import Gamemode
+from fazutil.api.wynn.model.enum.gamemode import Gamemode
 
 
 class GamemodeField:

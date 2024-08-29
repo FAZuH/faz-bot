@@ -1,6 +1,6 @@
 from sqlalchemy import MetaData
 
-from ...base_model import BaseModel
+from fazutil.db.base_model import BaseModel
 
 
 class BaseFazbotModel(BaseModel):

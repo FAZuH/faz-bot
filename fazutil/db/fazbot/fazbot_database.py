@@ -1,8 +1,8 @@
-from ..base_mysql_database import BaseMySQLDatabase
-from .model.base_fazbot_model import BaseFazbotModel
-from .repository import (
-    DiscordGuildRepository,
-    DiscordUserRepository,
+from fazutil.db.base_mysql_database import BaseMySQLDatabase
+from fazutil.db.fazbot.model.base_fazbot_model import BaseFazbotModel
+from fazutil.db.fazbot.repository.discord_guild_repository import DiscordGuildRepository
+from fazutil.db.fazbot.repository.discord_user_repository import DiscordUserRepository
+from fazutil.db.fazbot.repository.whitelist_group_repository import (
     WhitelistGroupRepository,
 )
 

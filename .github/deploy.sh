@@ -2,14 +2,14 @@
 
 set -e
 
-DOCKER_COMPOSE_FILE="/srv/faz-bot/docker/docker-compose.yml"
+DOCKER_COMPOSE_FILE="/home/faz/Workspace/Development/faz-bot/docker/docker-compose.yml"
 DOCKER_COMPOSE_CMD="docker-compose -f $DOCKER_COMPOSE_FILE"
-
-echo "Stopping and removing existing containers..."
-$DOCKER_COMPOSE_CMD down
 
 echo "Pulling latest images..."
 $DOCKER_COMPOSE_CMD pull
+
+echo "Stopping and removing existing containers..."
+$DOCKER_COMPOSE_CMD down
 
 echo "Starting new containers..."
 $DOCKER_COMPOSE_CMD up -d

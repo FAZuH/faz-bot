@@ -1,15 +1,14 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-from fazbot.bot.invoke import InvokeCraftedProbability
+from fazbot.bot.view.crafted_probability_view import CraftedProbabilityView
 
 
-class TestCraftedProbability(unittest.IsolatedAsyncioTestCase):
+class TestConvertEmeraldView(unittest.IsolatedAsyncioTestCase):
 
     def setUp(self) -> None:
         self.image_asset = MagicMock()
-        InvokeCraftedProbability._View = MagicMock
-        InvokeCraftedProbability.ASSET_CRAFTINGTABLE = self.image_asset
+        CraftedProbabilityView.ASSET_CRAFTINGTABLE = self.image_asset
         return super().setUp()
 
     async def test_run(self) -> None:
@@ -17,7 +16,7 @@ class TestCraftedProbability(unittest.IsolatedAsyncioTestCase):
         ing_strs = ["1,2,50", "1,2,50", "1,2,50", "1,2,50"]
         with patch("fazbot.bot.bot.Bot", autospec=True) as mock_bot:
             self.mock_bot = mock_bot
-        craftedprob = InvokeCraftedProbability(self.mock_bot, interaction, ing_strs)
+        craftedprob = CraftedProbabilityView(self.mock_bot, interaction, ing_strs)
         for ing in craftedprob._craftutil.ingredients:
             self.assertEqual(ing.min_value, 1)
             self.assertEqual(ing.max_value, 2)

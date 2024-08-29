@@ -3,7 +3,7 @@ from typing import Callable
 
 from dotenv import load_dotenv
 
-from ._asset import Asset
+from fazbot.app._asset import Asset
 
 
 class Properties:

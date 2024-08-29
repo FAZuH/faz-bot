@@ -1,16 +1,17 @@
 from __future__ import annotations
+
 from datetime import datetime
 from enum import Enum
-from typing import Sequence, TYPE_CHECKING
+from typing import TYPE_CHECKING, Sequence
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ...base_repository import BaseRepository
-from ..model import WhitelistGroup
+from fazutil.db.base_repository import BaseRepository
+from fazutil.db.fazbot.model.whitelist_group import WhitelistGroup
 
 if TYPE_CHECKING:
-    from ...base_mysql_database import BaseMySQLDatabase
+    from fazutil.db.base_mysql_database import BaseMySQLDatabase
 
 
 class WhitelistGroupRepository(BaseRepository[WhitelistGroup, tuple[int, str]]):

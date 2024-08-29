@@ -1,13 +1,14 @@
 from __future__ import annotations
+
 from threading import Thread
 from typing import TYPE_CHECKING
 
 from loguru import logger
 
-from ._heartbeat_task import HeartbeatTask
+from fazutil.heartbeat._heartbeat_task import HeartbeatTask
 
 if TYPE_CHECKING:
-    from fazutil.heartbeat.task import ITask
+    from fazutil.heartbeat.task.itask import ITask
 
 
 class BaseHeartbeat(Thread):

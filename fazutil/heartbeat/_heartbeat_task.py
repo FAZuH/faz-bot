@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from threading import Timer
 from time import perf_counter
 from typing import TYPE_CHECKING
@@ -6,7 +7,7 @@ from typing import TYPE_CHECKING
 from loguru import logger
 
 if TYPE_CHECKING:
-    from .task import ITask
+    from fazutil.heartbeat.task.itask import ITask
 
 
 class HeartbeatTask:

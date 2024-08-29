@@ -1,6 +1,7 @@
 from __future__ import annotations
+
 from decimal import Decimal
-from typing import Any, Self, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Self
 
 from sqlalchemy.ext.asyncio import AsyncAttrs
 from sqlalchemy.orm import ColumnProperty, DeclarativeBase, class_mapper

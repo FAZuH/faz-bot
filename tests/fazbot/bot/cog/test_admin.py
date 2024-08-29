@@ -5,9 +5,9 @@ import unittest
 from unittest.mock import AsyncMock, MagicMock, patch
 
 from fazbot.app.properties import Properties
-from fazbot.bot.cog import Admin
+from fazbot.bot.cog.admin import Admin
 from fazbot.bot.errors import ApplicationException
-from fazutil.db.fazbot import FazbotDatabase
+from fazutil.db.fazbot.fazbot_database import FazbotDatabase
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession

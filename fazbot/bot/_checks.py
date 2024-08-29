@@ -1,11 +1,12 @@
 from __future__ import annotations
-from typing import Any, TYPE_CHECKING
+
+from typing import TYPE_CHECKING, Any
 
 from loguru import logger
 from nextcord import Interaction
 
 if TYPE_CHECKING:
-    from . import Bot
+    from fazbot.bot.bot import Bot
 
 
 class Checks:

@@ -1,7 +1,8 @@
 from typing import Any
 
-from ...base_response import BaseResponse
-from ..model import Headers, OnlinePlayers
+from fazutil.api.base_response import BaseResponse
+from fazutil.api.wynn.model.headers import Headers
+from fazutil.api.wynn.model.online_players import OnlinePlayers
 
 
 class OnlinePlayersResponse(BaseResponse[OnlinePlayers, Headers]):

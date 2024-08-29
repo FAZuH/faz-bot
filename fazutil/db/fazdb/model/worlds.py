@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy.dialects.mysql import DATETIME, SMALLINT, VARCHAR
 from sqlalchemy.orm import Mapped, mapped_column
 
-from .base_fazdb_model import BaseFazdbModel
+from fazutil.db.fazdb.model.base_fazdb_model import BaseFazdbModel
 
 
 class Worlds(BaseFazdbModel):

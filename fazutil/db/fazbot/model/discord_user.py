@@ -3,7 +3,7 @@ from typing import Any
 from sqlalchemy.dialects.mysql import BIGINT, VARCHAR
 from sqlalchemy.orm import Mapped, mapped_column
 
-from .base_fazbot_model import BaseFazbotModel
+from fazutil.db.fazbot.model.base_fazbot_model import BaseFazbotModel
 
 
 class DiscordUser(BaseFazbotModel):

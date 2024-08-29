@@ -4,7 +4,7 @@ from sqlalchemy import Index
 from sqlalchemy.dialects.mysql import BINARY, DATETIME
 from sqlalchemy.orm import Mapped, mapped_column
 
-from .base_fazdb_model import BaseFazdbModel
+from fazutil.db.fazdb.model.base_fazdb_model import BaseFazdbModel
 
 
 class PlayerActivityHistory(BaseFazdbModel):

@@ -1,4 +1,4 @@
-from ..enum import CharacterType
+from fazutil.api.wynn.model.enum.character_type import CharacterType
 
 
 class CharacterTypeField:

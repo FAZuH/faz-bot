@@ -12,7 +12,7 @@ from sqlalchemy.dialects.mysql import (
 )
 from sqlalchemy.orm import Mapped, mapped_column
 
-from ._unique_id_model import UniqueIdModel
+from fazutil.db.fazdb.model._unique_id_model import UniqueIdModel
 
 
 class CharacterHistory(UniqueIdModel):
@@ -55,5 +55,6 @@ class CharacterHistory(UniqueIdModel):
 
     __table_args__ = (
         Index("datetime_idx", datetime.desc()),
+        Index("character_uuid_idx", character_uuid),
         UniqueConstraint(unique_id, name="unique_id_idx"),
     )

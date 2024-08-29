@@ -1,16 +1,19 @@
 from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from contextlib import asynccontextmanager, contextmanager
-from typing import Any, AsyncGenerator, Generator, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, AsyncGenerator, Generator
 
-from sqlalchemy import Connection, URL, create_engine
+from sqlalchemy import URL, Connection, create_engine
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 if TYPE_CHECKING:
     from sqlalchemy import Engine
     from sqlalchemy.ext.asyncio import AsyncConnection, AsyncEngine, AsyncSession
-    from . import BaseRepository, BaseModel
+
+    from fazutil.db.base_model import BaseModel
+    from fazutil.db.base_repository import BaseRepository
 
 
 class BaseDatabase(ABC):
@@ -47,8 +50,10 @@ class BaseDatabase(ABC):
 
         async_url = URL.create(async_driver, user, password, host, port, database)
         url = URL.create(sync_driver, user, password, host, port, database)
-        self._async_engine = create_async_engine(async_url)
-        self._engine = create_engine(url)
+        self._async_engine = create_async_engine(
+            async_url, pool_recycle=60 * 5, pool_pre_ping=True
+        )
+        self._engine = create_engine(url, pool_recycle=60 * 5, pool_pre_ping=True)
 
         self._repositories: list[BaseRepository[Any, Any]] = []
 

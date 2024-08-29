@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import asyncio
 from threading import Thread
 from typing import TYPE_CHECKING
@@ -8,14 +9,14 @@ from nextcord import Intents
 from nextcord.ext import commands
 from sqlalchemy.exc import IntegrityError
 
-from ._asset_manager import AssetManager
-from ._checks import Checks
-from ._events import Events
-from ._utils import Utils
-from .cog.cog_core import CogCore
+from fazbot.bot._asset_manager import AssetManager
+from fazbot.bot._checks import Checks
+from fazbot.bot._events import Events
+from fazbot.bot._utils import Utils
+from fazbot.bot.cog.cog_core import CogCore
 
 if TYPE_CHECKING:
-    from fazbot.app import App
+    from fazbot.app.app import App
 
 
 class Bot:

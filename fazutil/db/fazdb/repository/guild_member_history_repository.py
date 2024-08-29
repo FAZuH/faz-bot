@@ -1,11 +1,12 @@
 from __future__ import annotations
-from typing import Any, TYPE_CHECKING
 
-from ...base_repository import BaseRepository
-from ..model import GuildMemberHistory
+from typing import TYPE_CHECKING, Any
+
+from fazutil.db.base_repository import BaseRepository
+from fazutil.db.fazdb.model.guild_member_history import GuildMemberHistory
 
 if TYPE_CHECKING:
-    from ...base_mysql_database import BaseMySQLDatabase
+    from fazutil.db.base_mysql_database import BaseMySQLDatabase
 
 
 class GuildMemberHistoryRepository(BaseRepository[GuildMemberHistory, Any]):

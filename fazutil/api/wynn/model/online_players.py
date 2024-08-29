@@ -1,6 +1,6 @@
 from typing import Any, Generator
 
-from .field import UsernameOrUuidField
+from fazutil.api.wynn.model.field.username_or_uuid_field import UsernameOrUuidField
 
 
 class OnlinePlayers:

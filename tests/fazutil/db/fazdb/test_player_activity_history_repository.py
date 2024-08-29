@@ -1,34 +1,64 @@
+from __future__ import annotations
+
+from datetime import datetime
 from typing import override
-from uuid import UUID
 
 from fazutil.db.fazdb.repository.player_activity_history_repository import (
     PlayerActivityHistoryRepository,
 )
-
-from ._common_fazdb_repository_test import CommonFazdbRepositoryTest
+from tests.fazutil.db.fazdb._common_fazdb_repository_test import (
+    CommonFazdbRepositoryTest,
+)
 
 
 class TestPlayerActivityHistoryRepository(
     CommonFazdbRepositoryTest.Test[PlayerActivityHistoryRepository]
 ):
 
+    async def test_select_between_period(self) -> None:
+        # Prepare
+        e1, e2, e3, e4, _ = self._get_mock_data()
+        e1.logon_datetime = datetime.fromtimestamp(100)
+        e1.logoff_datetime = datetime.fromtimestamp(200)
+        e2.uuid = e1.uuid
+        e2.logon_datetime = datetime.fromtimestamp(300)
+        e2.logoff_datetime = datetime.fromtimestamp(400)
+        e3.uuid = e1.uuid
+        e3.logon_datetime = datetime.fromtimestamp(500)
+        e3.logoff_datetime = datetime.fromtimestamp(600)
+        e4.uuid = e1.uuid
+        e4.logon_datetime = datetime.fromtimestamp(700)
+        e4.logoff_datetime = datetime.fromtimestamp(800)
+        e5 = e4.clone()
+        e5.logon_datetime = datetime.fromtimestamp(900)
+        e5.logoff_datetime = datetime.fromtimestamp(1000)
+        # for e in [e1, e2, e3, e4]:
+        #     logger.debug(
+        #         f"{e.logon_datetime.timestamp()} - {e.logoff_datetime.timestamp()}"
+        #     )
+        await self.repo.insert([e1, e2, e3, e4, e5])
+        # Act
+        playtime1 = await self.repo.get_playtime_between_period(
+            e1.uuid,
+            datetime.fromtimestamp(0),
+            datetime.fromtimestamp(1000),
+        )
+        playtime2 = await self.repo.get_playtime_between_period(
+            e1.uuid,
+            datetime.fromtimestamp(350),
+            datetime.fromtimestamp(750),
+        )
+        # for e in entities1:
+        #     logger.debug(
+        #         f"{e.logon_datetime.timestamp()} - {e.logoff_datetime.timestamp()}"
+        #     )
+        # Assert
+        self.assertAlmostEqual(playtime1.total_seconds(), 500)
+        self.assertAlmostEqual(playtime2.total_seconds(), 200)
+
     @override
     def _get_mock_data(self):
-        model = self.repo.model
-
-        uuid1 = UUID("b30f5e97-957d-47f6-bf1e-9e48d9fea200").bytes
-        uuid2 = UUID("33c3ad56-5e9b-4bfe-9685-9fc4df2a67fa").bytes
-        mock_data1 = model(
-            uuid=uuid1,
-            logon_datetime=self._get_mock_datetime(),
-            logoff_datetime=self._get_mock_datetime().replace(day=1),
-        )
-        mock_data2 = mock_data1.clone()
-        mock_data3 = mock_data1.clone()
-        mock_data3.uuid = uuid2
-        mock_data4 = mock_data1.clone()
-        mock_data4.logoff_datetime = self._get_mock_datetime().replace(day=2)
-        return (mock_data1, mock_data2, mock_data3, mock_data4, "logoff_datetime")
+        return self._get_player_activity_history_mock_data()
 
     @property
     @override

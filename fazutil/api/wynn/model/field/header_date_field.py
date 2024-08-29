@@ -2,7 +2,7 @@ from datetime import datetime
 
 from dateutil import parser
 
-from ._date_field import DateField
+from fazutil.api.wynn.model.field._date_field import DateField
 
 
 class HeaderDateField(DateField):

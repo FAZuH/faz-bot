@@ -1,5 +1,4 @@
-from ._cog_base import CogBase
+from fazbot.bot.cog._cog_base import CogBase
 
 
-class Info(CogBase):
-    ...
+class Info(CogBase): ...

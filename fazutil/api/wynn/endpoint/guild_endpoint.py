@@ -1,7 +1,7 @@
 from typing import Any, override
 
-from ..response import GuildResponse
-from .base_endpoint import BaseEndpoint
+from fazutil.api.wynn.endpoint.base_endpoint import BaseEndpoint
+from fazutil.api.wynn.response.guild_response import GuildResponse
 
 
 class GuildEndpoint(BaseEndpoint):

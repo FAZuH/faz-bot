@@ -1,7 +1,7 @@
-from datetime import datetime
 import os
 import sys
 import traceback
+from datetime import datetime
 
 from loguru import logger
 from nextcord import Colour, Embed, SyncWebhook

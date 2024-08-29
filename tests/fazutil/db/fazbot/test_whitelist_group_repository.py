@@ -1,8 +1,11 @@
 from typing import override
 
-from fazutil.db.fazbot.repository import WhitelistGroupRepository
-
-from ._common_fazbot_repository_test import CommonFazbotRepositoryTest
+from fazutil.db.fazbot.repository.whitelist_group_repository import (
+    WhitelistGroupRepository,
+)
+from tests.fazutil.db.fazbot._common_fazbot_repository_test import (
+    CommonFazbotRepositoryTest,
+)
 
 
 class TestWhitelistGroupRepository(

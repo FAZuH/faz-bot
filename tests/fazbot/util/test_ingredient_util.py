@@ -1,7 +1,7 @@
 from decimal import Decimal
 from unittest import TestCase
 
-from fazbot.wynn import IngredientUtil
+from fazbot.wynn.ingredient_util import IngredientUtil
 
 
 class TestIngredientUtil(TestCase):

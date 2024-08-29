@@ -1,11 +1,9 @@
 import json
 import os
 
-from fazutil.api.wynn.response import (
-    GuildResponse,
-    OnlinePlayersResponse,
-    PlayerResponse,
-)
+from fazutil.api.wynn.response.guild_response import GuildResponse
+from fazutil.api.wynn.response.online_players_response import OnlinePlayersResponse
+from fazutil.api.wynn.response.player_response import PlayerResponse
 
 
 class FixturesApi:

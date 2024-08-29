@@ -1,8 +1,9 @@
 from typing import override
 
-from fazutil.db.fazbot.repository import DiscordGuildRepository
-
-from ._common_fazbot_repository_test import CommonFazbotRepositoryTest
+from fazutil.db.fazbot.repository.discord_guild_repository import DiscordGuildRepository
+from tests.fazutil.db.fazbot._common_fazbot_repository_test import (
+    CommonFazbotRepositoryTest,
+)
 
 
 class TestDiscordGuildRepository(

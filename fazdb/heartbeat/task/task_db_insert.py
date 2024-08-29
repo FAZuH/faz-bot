@@ -1,23 +1,22 @@
 from __future__ import annotations
+
 import asyncio
 from datetime import datetime
-from typing import Iterable, TYPE_CHECKING
+from typing import TYPE_CHECKING, Iterable
 
 from loguru import logger
 
-from fazdb.util import ApiResponseAdapter
-from fazutil.api.wynn.response import (
-    GuildResponse,
-    OnlinePlayersResponse,
-    PlayerResponse,
-)
+from fazdb.util.api_response_adapter import ApiResponseAdapter
+from fazutil.api.wynn.response.guild_response import GuildResponse
+from fazutil.api.wynn.response.online_players_response import OnlinePlayersResponse
+from fazutil.api.wynn.response.player_response import PlayerResponse
 from fazutil.heartbeat.task.itask import ITask
 
 if TYPE_CHECKING:
-    from fazutil.api import WynnApi
-    from fazutil.db import FazdbDatabase
-    from .request_queue import RequestQueue
-    from .response_queue import ResponseQueue
+    from fazdb.heartbeat.task.request_queue import RequestQueue
+    from fazdb.heartbeat.task.response_queue import ResponseQueue
+    from fazutil.api.wynn.wynn_api import WynnApi
+    from fazutil.db.fazdb.fazdb_database import FazdbDatabase
 
 
 class TaskDbInsert(ITask):
@@ -76,8 +75,8 @@ class TaskDbInsert(ITask):
         self._response_handler.handle_guild_response(guild_resps)
 
         await self._insert_online_players_response(online_players_resp)
-        await self._insert_player_responses(player_resps)
         await self._insert_guild_response(guild_resps)
+        await self._insert_player_responses(player_resps)
 
     async def _insert_online_players_response(
         self, resp: OnlinePlayersResponse | None
