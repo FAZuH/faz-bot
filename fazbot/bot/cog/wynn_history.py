@@ -67,6 +67,10 @@ class WynnHistory(CogBase):
         except ValueError as exc:
             raise BadArgument(f"Can't parse period (reason: {exc})") from exc
         assert period_begin and period_end
+        if period_begin - period_end > timedelta(days=182):
+            raise BadArgument(
+                "Can't parse period (reason: The period range cannot exceed 6 months.)"
+            )
         return period_begin, period_end
 
     @staticmethod
