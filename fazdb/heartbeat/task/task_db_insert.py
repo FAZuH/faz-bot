@@ -118,7 +118,7 @@ class TaskDbInsert(ITask):
             player_info, replace_on_duplicate=True
         )
         await db.character_info_repository.insert(
-            character_info, ignore_on_duplicate=True
+            character_info, replace_on_duplicate=True
         )
         await db.player_history_repository.insert(
             player_history, ignore_on_duplicate=True
@@ -141,7 +141,7 @@ class TaskDbInsert(ITask):
             guild_member_history.extend(adapter.to_guild_member_history(resp))
 
         db = self._db
-        await db.guild_info_repository.insert(guild_info, ignore_on_duplicate=True)
+        await db.guild_info_repository.insert(guild_info, replace_on_duplicate=True)
         await db.guild_history_repository.insert(
             guild_history, ignore_on_duplicate=True
         )
