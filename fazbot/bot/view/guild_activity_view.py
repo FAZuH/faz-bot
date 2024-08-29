@@ -52,6 +52,7 @@ class GuildActivityView(BaseView):
             )
             for member in members
         ]
+        self._activity_res = [res for res in self._activity_res if res.playtime != "0m"]
         self._page_count = len(self._activity_res) // self._items_per_page
         embed = self._get_embed_page(1)
         await self._interaction.send(embed=embed)
