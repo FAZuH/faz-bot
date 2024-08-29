@@ -12,7 +12,7 @@ class Properties:
     AUTHOR = "FAZuH"
     VERSION = "0.0.1"
     ASSET_DIR = "asset"
-    LOG_DIR = "./logs"
+    LOG_DIR = "./logs/fazbot"
 
     # .env
     DISCORD_BOT_TOKEN: str

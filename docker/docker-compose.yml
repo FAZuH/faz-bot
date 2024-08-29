@@ -19,7 +19,7 @@ services:
     networks:
       - faz-network
     volumes:
-      - ../logs/fazbot:/app/logs
+      - ../logs:/app/logs
 
   fazdb:
     image: ghcr.io/fazuh/fazdb:latest
@@ -42,7 +42,7 @@ services:
     networks:
       - faz-network
     volumes:
-      - ../logs/fazdb:/app/logs
+      - ../logs:/app/logs
 
   mysql:
     image: mariadb:11.4.2
