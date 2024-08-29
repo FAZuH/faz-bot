@@ -8,6 +8,7 @@ from nextcord.ui import Button, button
 from tabulate import tabulate
 
 from fazbot.bot.view._base_view import BaseView
+from fazbot.bot.view._view_utils import ViewUtils
 
 if TYPE_CHECKING:
     from nextcord import Interaction
@@ -50,7 +51,7 @@ class WorldlistView(BaseView):
 
         worlds = self._worlds[left_index:right_index]
         worldlist = (
-            [w.name, w.player_count, self._timedelta_to_string(time - w.time_created)]
+            [w.name, w.player_count, ViewUtils.format_timedelta(time - w.time_created)]
             for w in worlds
         )
         embed.description = (
