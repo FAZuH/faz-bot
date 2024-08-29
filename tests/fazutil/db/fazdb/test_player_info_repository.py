@@ -9,6 +9,23 @@ from tests.fazutil.db.fazdb._common_fazdb_repository_test import (
 
 class TestPlayerInfoRepository(CommonFazdbRepositoryTest.Test[PlayerInfoRepository]):
 
+    async def test_safe_insert(self) -> None:
+        """Test if safe_insert inserts PlayerInfo without corresponding GuildInfo
+        without raising a constraint error
+        """
+        # Prepare
+        mocks = self._get_mock_data()
+        # Act
+        await self.repo.safe_insert([mocks[0], mocks[2]])
+        # Assert
+        res = await self.repo.select_all()
+        self.assertEqual(len(res), 2)
+        res2 = await self.database.guild_info_repository.select_all()
+        self.assertEqual(len(res), 2)
+        for r in res2:
+            self.assertEqual(r.name, "-")
+            self.assertEqual(r.prefix, "-")
+
     async def test_guild_relationship(self) -> None:
         # Prepare
         mock_bytes = UUID(int=0).bytes
