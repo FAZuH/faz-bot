@@ -19,7 +19,7 @@ class PlayerInfo(BaseFazdbModel):
     uuid: Mapped[bytes] = mapped_column(BINARY(16), primary_key=True, nullable=False)
     latest_username: Mapped[str] = mapped_column(VARCHAR(16), nullable=False)
     first_join: Mapped[dt] = mapped_column(DATETIME, nullable=False)
-    guild_uuid: Mapped[bytes] = mapped_column(
+    guild_uuid: Mapped[bytes | None] = mapped_column(
         BINARY(16), ForeignKey("guild_info.uuid"), default=None, nullable=True
     )
 

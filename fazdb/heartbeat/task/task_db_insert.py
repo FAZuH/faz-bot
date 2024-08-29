@@ -114,7 +114,9 @@ class TaskDbInsert(ITask):
             player_info.append(adapter.to_player_info(resp))
 
         db = self._db
-        await db.player_info_repository.insert(player_info, replace_on_duplicate=True)
+        await db.player_info_repository.safe_insert(
+            player_info, replace_on_duplicate=True
+        )
         await db.character_info_repository.insert(
             character_info, ignore_on_duplicate=True
         )
