@@ -22,23 +22,17 @@ class WynnUtils(CogBase):
         ingredient5: str = CraftedProbabilityView.INGSTR_DEFAULT,
         ingredient6: str = CraftedProbabilityView.INGSTR_DEFAULT,
     ) -> None:
-        """Computes crafted roll probabilities.
-        Improved with help from afterfive.
+        """
+        Computes crafted roll probabilities.
 
-        Parameters
-        -----------
-        ingredient1: str
-            min,max[,efficiency]
-        ingredient2: str
-            min,max[,efficiency]
-        ingredient3: str
-            min,max[,efficiency]
-        ingredient5: str
-            min,max[,efficiency]
-        ingredient6: str
-            min,max[,efficiency]
-        ingredient4: str
-            min,max[,efficiency]
+        Args:
+            ingredient1 (str, optional): min,max[,efficiency]
+            ingredient2 (str, optional): min,max[,efficiency]
+            ingredient3 (str, optional): min,max[,efficiency]
+            ingredient4 (str, optional): min,max[,efficiency]
+            ingredient5 (str, optional): min,max[,efficiency]
+            ingredient6 (str, optional): min,max[,efficiency]
+
         """
         await CraftedProbabilityView(
             self._bot,
@@ -57,12 +51,12 @@ class WynnUtils(CogBase):
     async def convert_emerald(
         self, interaction: Interaction[Any], emerald_string: str = ""
     ) -> None:
-        """Converts input emeralds into common emerald units.
+        """
+        Converts input emeralds into common emerald units.
 
-        Parameters
-        -----------
-        emerald_string: str
-            Examples: "2x 1stx 1le 1eb 1e", "2.5stx 100.5le 100.2eb", "1/3x 1000eb"
+        Args:
+            emerald_string (str, optional): Examples: "2x 1stx 1le 1eb 1e", "2.5stx 100.5le 100.2eb", "1/3x 1000eb".
+
         """
         await ConvertEmeraldView(self._bot, interaction, emerald_string).run()
 
@@ -74,16 +68,14 @@ class WynnUtils(CogBase):
         loot_bonus: int = 0,
         loot_quality: int = 0,
     ) -> None:
-        """Computes boosted ingredient drop probability after loot bonus and loot quality.
+        """
+        Computes boosted ingredient drop probability after loot bonus and loot quality.
 
-        Parameters
-        -----------
-        base_chance: str
-            Ingredient base drop chance. (Supported format: 1.2%, 1.2/100)
-        loot_bonus: int
-            Loot bonus value.
-        loot_quality: int
-            Loot quality value.
+        Args:
+            base_chance (str): Ingredient base drop chance (Supported format: 1.2%, 1.2/100).
+            loot_bonus (int, optional): Loot bonus value. Defaults to 0.
+            loot_quality (int, optional): Loot quality value. Defaults to 0.
+
         """
         await IngredientProbabilityView(
             self._bot, interaction, base_chance, loot_bonus, loot_quality

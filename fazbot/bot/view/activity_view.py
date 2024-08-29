@@ -6,10 +6,9 @@ from typing import TYPE_CHECKING, Any, override
 from nextcord import Color, Embed
 
 from fazbot.bot.view._base_view import BaseView
+from fazbot.bot.view._view_utils import ViewUtils
 
 if TYPE_CHECKING:
-    from datetime import timedelta
-
     from nextcord import Interaction
 
     from fazbot.bot.bot import Bot
@@ -53,12 +52,5 @@ class ActivityView(BaseView):
         time_period = await self._repo.get_playtime_between_period(
             self._player.uuid, self._period_begin, self._period_end
         )
-        embed.description = f"Playtime (<t:{begin_ts}:R>, <t:{end_ts}:R>): `{self._format_time_delta(time_period)}`"
+        embed.description = f"Playtime (<t:{begin_ts}:R>, <t:{end_ts}:R>): `{ViewUtils.format_timedelta(time_period)}`"
         return embed
-
-    def _format_time_delta(self, timedelta: timedelta) -> str:
-        total_seconds = int(timedelta.total_seconds())
-        hours = total_seconds // 3600
-        minutes = (total_seconds % 3600) // 60
-        formatted_time = f"{hours}h {minutes}m"
-        return formatted_time

@@ -8,6 +8,7 @@ from nextcord.ui import Button, button
 from tabulate import tabulate
 
 from fazbot.bot.view._base_view import BaseView
+from fazbot.bot.view._view_utils import ViewUtils
 
 if TYPE_CHECKING:
     from datetime import timedelta
@@ -51,9 +52,10 @@ class GuildActivityView(BaseView):
             )
             for member in members
         ]
+        self._activity_res = [res for res in self._activity_res if res.playtime != "0m"]
         self._page_count = len(self._activity_res) // self._items_per_page
         embed = self._get_embed_page(1)
-        await self._interaction.send(embed=embed)
+        await self._interaction.send(embed=embed, view=self)
 
     def _get_embed_page(self, page: int) -> Embed:
         begin_ts = int(self._period_begin.timestamp())
@@ -143,7 +145,7 @@ class GuildActivityView(BaseView):
 
         def __init__(self, username: str, playtime: timedelta) -> None:
             self._username: str = username
-            self._playtime: str = self.__format_time_delta(playtime)
+            self._playtime: str = ViewUtils.format_timedelta(playtime)
 
         @property
         def username(self) -> str:
@@ -152,10 +154,3 @@ class GuildActivityView(BaseView):
         @property
         def playtime(self) -> str:
             return self._playtime
-
-        def __format_time_delta(self, timedelta: timedelta) -> str:
-            total_seconds = int(timedelta.total_seconds())
-            hours = total_seconds // 3600
-            minutes = (total_seconds % 3600) // 60
-            formatted_time = f"{hours}h {minutes}m"
-            return formatted_time

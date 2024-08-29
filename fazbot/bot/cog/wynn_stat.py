@@ -15,6 +15,14 @@ class WynnStat(CogBase):
         interaction: Interaction[Any],
         sort_by: Literal["Player Count", "Time Created"] = "Time Created",
     ) -> None:
+        """
+        Shows a list of active worlds, showing player count and world uptime.
+
+        Args:
+            sort_by (Literal["Player Count", "Time Created"], optional): The criteria to sort the worlds by.
+                Can be either "Player Count" or "Time Created". Defaults to "Time Created".
+
+        """
         await WorldlistView(self._bot, interaction, sort_by).run()
 
     # @nextcord.slash_command(name="activity")
