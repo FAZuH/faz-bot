@@ -63,7 +63,7 @@ class WynnHistory(CogBase):
         guild_info = await self._bot.fazdb_db.guild_info_repository.get_guild(guild)
         if not guild_info:
             raise BadArgument(
-                f"Player not found (reason: Can't find guild with name or uuid {guild})"
+                f"Guild not found (reason: Can't find guild with name or uuid {guild})"
             )
         period_begin, period_end = self.__parse_period(intr, period)
         await GuildActivityView(
