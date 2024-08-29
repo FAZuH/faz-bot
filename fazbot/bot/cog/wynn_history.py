@@ -20,6 +20,18 @@ class WynnHistory(CogBase):
 
     @nextcord.slash_command()
     async def activity(self, intr: Interaction[Any], player: str, period: str) -> None:
+        """
+        Shows player active time between the specified time period
+
+        Args:
+            player (str): The player username or UUID to check.
+            period (str): The time period to check. Enter an integer to show active time past the last `n` hours,
+                or enter a date-time range separated by '-' to specify a time range. Check
+                dateparser.readthedocs.io for valid date-time formats. Max period is 6 months.
+
+        Raises:
+            BadArgument: If the player is not found or an error occurred in parsing period.
+        """
         # `player` check
         player_info = await self._bot.fazdb_db.player_info_repository.get_player(player)
         if not player_info:
@@ -35,6 +47,18 @@ class WynnHistory(CogBase):
     async def guild_activity(
         self, intr: Interaction[Any], guild: str, period: str
     ) -> None:
+        """
+        Shows players' active time in a given guild between the specified time period
+
+        Args:
+            guild (str): The guild name or UUID to check.
+            period (str): The time period to check. Enter an integer to show active time past the last `n` hours,
+                or enter a date-time range separated by '-' to specify a time range. Check
+                dateparser.readthedocs.io for valid date-time formats. Max period is 6 months.
+
+        Raises:
+            BadArgument: If the player is not found or an error occurred in parsing period.
+        """
         # `guild` check
         guild_info = await self._bot.fazdb_db.guild_info_repository.get_guild(guild)
         if not guild_info:
