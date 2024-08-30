@@ -3,7 +3,6 @@
 Wynncraft utility and statistics discord bot. Inspired by motoki317's [moto-bot](https://github.com/motoki317/moto-bot/blob/master/README.md).
 
 > [!WARNING]
-> 
 > This repository is currently in development phase, and may undergo many unstable and/or breaking changes.
 
 ## Development
@@ -16,11 +15,12 @@ Some useful shortcuts for development are written in `Makefile`.
 
 For debugging:
 
-- `make bot [build|up|down|bash]` Manage container related to fazbot service.
+- `make bot [build|up|down|bash]` Manage container related to fazcord service.
 - `make db [build|up|down|bash]` Manage container related to fazdb service.
 - `make sql [build|up|down|bash]` Manage container related to mysql service.
 
 Actions:
+
 - `build` to (re-build) the image and launch the service.
 - `up` to launch to launch the service (does not rebuild the image).
 - `down` to stop the service.
