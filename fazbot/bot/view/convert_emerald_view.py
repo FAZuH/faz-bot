@@ -5,19 +5,17 @@ from typing import TYPE_CHECKING, Any, override
 from nextcord import Embed, Interaction
 
 from fazbot.bot.view._base_view import BaseView
+from fazbot.bot.view._custom_embed import CustomEmbed
 from fazbot.wynn.emerald_util import EmeraldUtil
 from fazbot.wynn.emeralds import Emeralds
 
 if TYPE_CHECKING:
-    from nextcord import File
-
     from fazbot.bot.bot import Bot
-    from fazbot.bot.view._asset import Asset
 
 
 class ConvertEmeraldView(BaseView):
 
-    ASSET_LIQUIDEMERALD: Asset
+    _THUMBNAIL_URL = "https://static.wikia.nocookie.net/wynncraft_gamepedia_en/images/8/8c/Experience_bottle.png/revision/latest?cb=20190118234414"
 
     def __init__(
         self, bot: Bot, interaction: Interaction[Any], emerald_string: str
@@ -28,38 +26,28 @@ class ConvertEmeraldView(BaseView):
         self._emeralds.simplify()
 
     @override
-    @classmethod
-    def set_assets(cls, assets: dict[str, File]) -> None:
-        cls.ASSET_LIQUIDEMERALD = cls._get_from_assets(assets, "liquidemerald.png")
-
-    @override
     async def run(self):
-        embed_resp = self._get_embed(self._interaction, self._emeralds)
-        await self._interaction.send(
-            embed=embed_resp, file=self.ASSET_LIQUIDEMERALD.get_file_to_send()
-        )
+        embed = self._get_embed(self._emeralds)
+        await self._interaction.send(embed=embed)
 
-    def _get_embed(self, interaction: Interaction[Any], emeralds: Emeralds) -> Embed:
+    def _get_embed(self, emeralds: Emeralds) -> Embed:
         set_price_tm, set_price_silverbull = EmeraldUtil.get_set_price(emeralds)
-        embed_resp = Embed(title="Emerald Convertor", color=8894804)
-
-        self._set_embed_thumbnail_with_asset(
-            embed_resp, self.ASSET_LIQUIDEMERALD.filename
+        embed = CustomEmbed(
+            self._interaction,
+            title="Emerald Convertor",
+            color=8894804,
+            thumbnail_url=self._THUMBNAIL_URL,
         )
-        embed_resp.description = (
+        embed.description = (
             f"Converted: **{emeralds}**\n" f"Emeralds Total: **{emeralds.total}e**"
         )
-        embed_resp.add_field(
+        embed.add_field(
             name="TM Set Price", value=f"{set_price_tm.emeralds}", inline=True
         )
-        embed_resp.add_field(
+        embed.add_field(
             name="Silverbull Set Price",
             value=f"{set_price_silverbull.emeralds}",
             inline=True,
         )
-        if interaction.user:
-            embed_resp.set_author(
-                name=interaction.user.display_name,
-                icon_url=interaction.user.display_avatar.url,
-            )
-        return embed_resp
+        embed.finalize()
+        return embed

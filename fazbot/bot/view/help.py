@@ -14,6 +14,7 @@ from nextcord import (
 from nextcord.ui import Button, button
 
 from fazbot.bot.view._base_view import BaseView
+from fazbot.bot.view._custom_embed import CustomEmbed
 
 if TYPE_CHECKING:
     from fazbot.bot.bot import Bot
@@ -43,22 +44,22 @@ class InvokeHelp(BaseView):
         self, commands: list[BaseApplicationCommand], page: int
     ) -> Embed:
         """Generates embed page for page nth-page"""
-        embed = Embed(
+        embed = CustomEmbed(
+            self._interaction,
             title=f"Commands List : Page [{page}/{self._page_count}]",
             color=Colour.dark_blue(),
             timestamp=datetime.now(),
         )
         embed.set_footer(text="[text] means optional. <text> means required")
-
         min_idx = self._items_per_page * (page - 1)
         max_idx = self._items_per_page * page
         for cmd in commands[min_idx:max_idx]:
-            parameter_msg = self._get_parameters(cmd.options)
             embed.add_field(
-                name=f"/{cmd.qualified_name}{parameter_msg}",
+                name=f"/{cmd.qualified_name}",
                 value=cmd.description or "No brief description given",
                 inline=False,
             )
+        embed.finalize()
         return embed
 
     def _get_embed_total_pages(self, commands: Sized) -> int:

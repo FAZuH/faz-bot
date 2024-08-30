@@ -1,7 +1,8 @@
 from __future__ import annotations
-from contextlib import asynccontextmanager
-from typing import AsyncGenerator, TYPE_CHECKING
+
 import unittest
+from contextlib import asynccontextmanager
+from typing import TYPE_CHECKING, AsyncGenerator
 from unittest.mock import AsyncMock, MagicMock, patch
 
 from fazbot.app.properties import Properties
@@ -91,13 +92,6 @@ class TestAdmin(unittest.IsolatedAsyncioTestCase):
         mock_intr.send = AsyncMock()
         await self.admin.echo(mock_intr, "test")
         mock_intr.send.assert_awaited_once_with("test")
-
-    async def test_reload_asset(self, mock_intr: MagicMock) -> None:
-        self.mock_bot.app.properties.ASSET.read_all = MagicMock()
-        self.mock_bot.asset_manager.setup = MagicMock()
-        await self.admin.reload_asset(mock_intr)
-        self.mock_bot.app.properties.ASSET.read_all.assert_called_once()
-        self.mock_bot.asset_manager.setup.assert_called_once()
 
     @patch("fazbot.bot._utils.Utils.must_get_channel")
     async def test_send(
