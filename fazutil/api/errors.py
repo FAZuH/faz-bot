@@ -1,4 +1,4 @@
-class HTTPError(BaseException):
+class HTTPError(Exception):
     """Base error class for all HTTP-related exceptions in this file."""
 
 
