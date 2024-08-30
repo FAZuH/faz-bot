@@ -6,7 +6,9 @@ from tests.fazutil.db.fazcord._common_fazcord_repository_test import (
 )
 
 
-class TestDiscordUserRepository(CommonFazcordRepositoryTest.Test[DiscordUserRepository]):
+class TestDiscordUserRepository(
+    CommonFazcordRepositoryTest.Test[DiscordUserRepository]
+):
 
     @override
     def _get_mock_data(self):
