@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from fazbot.bot.bot import Bot
 
 
-class InvokeHelp(BaseView):
+class HelpView(BaseView):
 
     def __init__(
         self,

@@ -4,7 +4,7 @@ import nextcord
 
 from fazbot.bot.cog._cog_base import CogBase
 from fazbot.bot.errors import ApplicationException
-from fazbot.bot.view.help import InvokeHelp
+from fazbot.bot.view.help_view import HelpView
 
 
 class Help(CogBase):
@@ -17,4 +17,4 @@ class Help(CogBase):
             )
 
         cmds = list(interaction.guild.get_application_commands())
-        await InvokeHelp(self._bot, interaction, cmds).run()
+        await HelpView(self._bot, interaction, cmds).run()
