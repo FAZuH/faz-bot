@@ -24,6 +24,12 @@ class ConvertEmeraldView(BaseView):
         self._emerald_string = emerald_string
         self._emeralds = Emeralds.from_string(emerald_string)
         self._emeralds.simplify()
+        self._embed = CustomEmbed(
+            interaction,
+            title="Emerald Convertor",
+            color=8894804,
+            thumbnail_url=self._THUMBNAIL_URL,
+        )
 
     @override
     async def run(self):
@@ -32,12 +38,7 @@ class ConvertEmeraldView(BaseView):
 
     def _get_embed(self, emeralds: Emeralds) -> Embed:
         set_price_tm, set_price_silverbull = EmeraldUtil.get_set_price(emeralds)
-        embed = CustomEmbed(
-            self._interaction,
-            title="Emerald Convertor",
-            color=8894804,
-            thumbnail_url=self._THUMBNAIL_URL,
-        )
+        embed = self._embed.get_base()
         embed.description = (
             f"Converted: **{emeralds}**\n" f"Emeralds Total: **{emeralds.total}e**"
         )

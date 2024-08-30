@@ -51,7 +51,7 @@ class ActivityView(BaseView):
         time_period = await self._repo.get_playtime_between_period(
             self._player.uuid, self._period_begin, self._period_end
         )
-        embed.description = f"`Playtime `: `{ViewUtils.format_timedelta(time_period)}`"
-        embed.description += f"\n`Period   `: [<t:{begin_ts}:R> to <t:{end_ts}:R>]"
+        embed.description = f"`Playtime : ` {ViewUtils.format_timedelta(time_period)}"
+        embed.description += f"\n`Period   : ` <t:{begin_ts}:R> to <t:{end_ts}:R>"
         embed.finalize()
         return embed
