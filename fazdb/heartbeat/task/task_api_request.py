@@ -92,7 +92,8 @@ class TaskApiRequest(ITask):
                     0, self._api.player.get_online_uuids(), priority=999
                 )
 
-            logger.opt(exception=True).error(exc)
+            with logger.catch(level="ERROR"):
+                raise exc
 
         for task in tasks_to_remove:
             self._running_requests.remove(task)
