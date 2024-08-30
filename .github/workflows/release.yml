@@ -7,10 +7,6 @@ on:
     branches:
       - release
 
-permissions:
-  contents: write
-  packages: write
-
 jobs:
   changelog:
     name: Generate Changelog
