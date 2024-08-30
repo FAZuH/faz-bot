@@ -21,7 +21,6 @@ class LoggerSetup:
             level="DEBUG",
             backtrace=False,
             diagnose=False,
-            enqueue=True,
         )
 
         os.makedirs(log_directory, exist_ok=True)
@@ -67,12 +66,12 @@ class LoggerSetup:
     @classmethod
     def _critical_discord_sink(cls, message: str) -> None:
         cls._send_embed_to_webhook(
-            "CRITICAL", message, colour=Colour.red(), is_admin_ping=True
+            "CRITICAL", message, colour=Colour.dark_red(), is_admin_ping=True
         )
 
     @classmethod
     def _error_discord_sink(cls, message: str) -> None:
-        cls._send_embed_to_webhook("ERROR", message, colour=Colour.orange())
+        cls._send_embed_to_webhook("ERROR", message, colour=Colour.red())
 
     @classmethod
     def _warning_discord_sink(cls, message: str) -> None:
