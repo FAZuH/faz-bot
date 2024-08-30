@@ -36,14 +36,16 @@ class LoggerSetup:
         )
 
         default_disc = {"format": cls._discord_exception_formatter, "enqueue": True}
+        # Send webhook & ping admin
         logger.add(
             sink=cls._critical_discord_sink,
-            filter=cls._discord_filter("CRITICAL"),
+            filter=cls._discord_filter("CRITICAL", True),
             **default_disc,
         )
+        # Send webhook
         logger.add(
             sink=cls._error_discord_sink,
-            filter=cls._discord_filter("ERROR"),
+            filter=cls._discord_filter("ERROR", True),
             **default_disc,
         )
         logger.add(
@@ -85,10 +87,10 @@ class LoggerSetup:
         cls._send_embed_to_webhook("INFO", message, colour=Colour.blue())
 
     @classmethod
-    def _discord_filter(cls, level):
+    def _discord_filter(cls, level: str, discord: bool = False):
         def filter(record):
-            return (
-                record["extra"].get("discord", False) and record["level"].name == level
+            return record["level"].name == level and (
+                discord or record["extra"].get("discord", False)
             )
 
         return filter
