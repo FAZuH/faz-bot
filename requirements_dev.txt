@@ -57,6 +57,7 @@ regex==2024.5.15
 requests==2.32.3
 setuptools==70.3.0
 six==1.16.0
+sortedcontainers==2.4.0
 SQLAlchemy==2.0.31
 stack-data==0.6.3
 tabulate==0.9.0
