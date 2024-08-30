@@ -3,12 +3,11 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any, override
 
-from nextcord import ButtonStyle, Color, Embed
-from nextcord.ui import Button, button
+from nextcord import Color, Embed
 from sortedcontainers import SortedList
 from tabulate import tabulate
 
-from fazbot.bot.view._base_view import BaseView
+from fazbot.bot.view._base_pagination_view import BasePaginationView
 from fazbot.bot.view._pagination_embed import PaginationEmbed
 from fazbot.bot.view._view_utils import ViewUtils
 
@@ -21,7 +20,7 @@ if TYPE_CHECKING:
     from fazutil.db.fazdb.model.guild_info import GuildInfo
 
 
-class GuildActivityView(BaseView):
+class GuildActivityView(BasePaginationView):
 
     def __init__(
         self,
@@ -64,7 +63,7 @@ class GuildActivityView(BaseView):
         end_ts = int(self._period_end.timestamp())
         embed = self._embed.get_base()
         results = embed.get_items(page)
-        embed.description = f"`Guild  : `{self._guild.name})"
+        embed.description = f"`Guild  : `{self._guild.name}"
         embed.description += f"\n`Period : `<t:{begin_ts}:R> to <t:{end_ts}:R>"
         if len(results) == 0:
             embed.description = (
@@ -85,50 +84,6 @@ class GuildActivityView(BaseView):
             )
         embed.finalize()
         return embed
-
-    @button(style=ButtonStyle.blurple, emoji="⏮️")
-    async def first_page_callback(
-        self, button: Button[Any], interaction: Interaction[Any]
-    ) -> None:
-        await interaction.response.defer()
-        self._embed.current_page = 1
-        embed = self._get_embed_page(self._embed.current_page)
-        await interaction.edit_original_message(embed=embed)
-
-    @button(style=ButtonStyle.blurple, emoji="◀️")
-    async def previous_page_callback(
-        self, button: Button[Any], interaction: Interaction[Any]
-    ) -> None:
-        await interaction.response.defer()
-        self._embed.current_page -= 1
-        if self._embed.current_page == 0:
-            self._embed.current_page = self._embed.page_count
-        embed = self._get_embed_page(self._embed.current_page)
-        await interaction.edit_original_message(embed=embed)
-
-    @button(style=ButtonStyle.red, emoji="⏹️")
-    async def stop_(self, button: Button[Any], interaction: Interaction[Any]) -> None:
-        await self.on_timeout()
-
-    @button(style=ButtonStyle.blurple, emoji="▶️")
-    async def next_page(
-        self, button: Button[Any], interaction: Interaction[Any]
-    ) -> None:
-        await interaction.response.defer()
-        self._embed.current_page += 1
-        if self._embed.current_page == (self._embed.page_count + 1):
-            self._embed.current_page = 1
-        embed = self._get_embed_page(self._embed.current_page)
-        await interaction.edit_original_message(embed=embed)
-
-    @button(style=ButtonStyle.blurple, emoji="⏭️")
-    async def last_page(
-        self, button: Button[Any], interaction: Interaction[Any]
-    ) -> None:
-        await interaction.response.defer()
-        self._embed.current_page = self._embed.page_count
-        embed = self._get_embed_page(self._embed.current_page)
-        await interaction.edit_original_message(embed=embed)
 
     class ActivityResult:
 

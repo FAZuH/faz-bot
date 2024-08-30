@@ -3,7 +3,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Any, override
 
-from nextcord.ui import View
+from nextcord.ui import Button, View
 
 if TYPE_CHECKING:
     from nextcord import Interaction
@@ -28,9 +28,15 @@ class BaseView(View, ABC):
         self._bot = bot
         self._interaction = interaction
 
-    @abstractmethod
-    async def run(self): ...
+    def _click_button(self, button: Button[Any]) -> None:
+        for item in self.children:
+            if isinstance(item, Button):
+                item.disabled = False
+        button.disabled = True
 
     @override
     async def on_timeout(self) -> None:
         await self._interaction.edit_original_message(view=View(timeout=1))
+
+    @abstractmethod
+    async def run(self): ...

@@ -2,17 +2,16 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, override
 
-from nextcord import BaseApplicationCommand, ButtonStyle, Colour, Embed, Interaction
-from nextcord.ui import Button, button
+from nextcord import BaseApplicationCommand, Colour, Embed, Interaction
 
-from fazbot.bot.view._base_view import BaseView
+from fazbot.bot.view._base_pagination_view import BasePaginationView
 from fazbot.bot.view._pagination_embed import PaginationEmbed
 
 if TYPE_CHECKING:
     from fazbot.bot.bot import Bot
 
 
-class HelpView(BaseView):
+class HelpView(BasePaginationView):
 
     def __init__(
         self,
@@ -34,6 +33,7 @@ class HelpView(BaseView):
     async def run(self) -> None:
         await self._interaction.send(embed=self._get_embed_page(1), view=self)
 
+    @override
     def _get_embed_page(self, page: int) -> Embed:
         """Generates embed page for page nth-page"""
         # title=f"Commands List : Page [{page}/{self._page_count}]",
@@ -61,47 +61,3 @@ class HelpView(BaseView):
     #         msglist.append(p_msg)
     #     msg = ", ".join(msglist)
     #     return f" `{msg}`"
-
-    @button(style=ButtonStyle.blurple, emoji="⏮️")
-    async def first_page_callback(
-        self, button: Button[Any], interaction: Interaction[Any]
-    ) -> None:
-        await interaction.response.defer()
-        self._embed.current_page = 1
-        embed = self._get_embed_page(self._embed.current_page)
-        await interaction.edit_original_message(embed=embed)
-
-    @button(style=ButtonStyle.blurple, emoji="◀️")
-    async def previous_page_callback(
-        self, button: Button[Any], interaction: Interaction[Any]
-    ) -> None:
-        await interaction.response.defer()
-        self._embed.current_page -= 1
-        if self._embed.current_page == 0:
-            self._embed.current_page = self._embed.page_count
-        embed = self._get_embed_page(self._embed.current_page)
-        await interaction.edit_original_message(embed=embed)
-
-    @button(style=ButtonStyle.red, emoji="⏹️")
-    async def stop_(self, button: Button[Any], interaction: Interaction[Any]) -> None:
-        await self.on_timeout()
-
-    @button(style=ButtonStyle.blurple, emoji="▶️")
-    async def next_page(
-        self, button: Button[Any], interaction: Interaction[Any]
-    ) -> None:
-        await interaction.response.defer()
-        self._embed.current_page += 1
-        if self._embed.current_page == (self._embed.page_count + 1):
-            self._embed.current_page = 1
-        embed = self._get_embed_page(self._embed.current_page)
-        await interaction.edit_original_message(embed=embed)
-
-    @button(style=ButtonStyle.blurple, emoji="⏭️")
-    async def last_page(
-        self, button: Button[Any], interaction: Interaction[Any]
-    ) -> None:
-        await interaction.response.defer()
-        self._embed.current_page = self._embed.page_count
-        embed = self._get_embed_page(self._embed.current_page)
-        await interaction.edit_original_message(embed=embed)
