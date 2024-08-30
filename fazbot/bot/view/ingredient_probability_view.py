@@ -8,18 +8,16 @@ from nextcord import Embed, Interaction
 
 from fazbot.bot.errors import BadArgument
 from fazbot.bot.view._base_view import BaseView
+from fazbot.bot.view._custom_embed import CustomEmbed
 from fazbot.wynn.ingredient_util import IngredientUtil
 
 if TYPE_CHECKING:
-    from nextcord import File
-
     from fazbot.bot.bot import Bot
-    from fazbot.bot.view._asset import Asset
 
 
 class IngredientProbabilityView(BaseView):
 
-    ASSET_DECAYINGHEART: Asset
+    _THUMBNAIL_URL = "https://www.wynndata.tk/assets/images/items/v4//ingredients/heads/50d8ba53402f4cb0455067d068973b3d.png"
 
     def __init__(
         self,
@@ -39,43 +37,30 @@ class IngredientProbabilityView(BaseView):
         )
 
     @override
-    @classmethod
-    def set_assets(cls, assets: dict[str, File]) -> None:
-        cls.ASSET_DECAYINGHEART = cls._get_from_assets(assets, "decayingheart.png")
-
-    @override
     async def run(self) -> None:
-        embed_resp = self._get_embed(self._ing_util, self._interaction)
-        await self._interaction.send(
-            embed=embed_resp, file=self.ASSET_DECAYINGHEART.get_file_to_send()
-        )
+        embed = self._get_embed(self._ing_util)
+        await self._interaction.send(embed=embed)
 
-    def _get_embed(
-        self, ing_util: IngredientUtil, interaction: Interaction[Any]
-    ) -> Embed:
+    def _get_embed(self, ing_util: IngredientUtil) -> Embed:
         one_in_n = 1 / ing_util.boosted_probability
-
-        embed_resp = Embed(title="Ingredient Chance Calculator", color=472931)
-        self._set_embed_thumbnail_with_asset(
-            embed_resp, self.ASSET_DECAYINGHEART.filename
+        embed = CustomEmbed(
+            self._interaction,
+            title="Ingredient Chance Calculator",
+            color=472931,
+            thumbnail_url=self._THUMBNAIL_URL,
         )
-        embed_resp.description = (
+        embed.description = (
             f"` Drop Chance  :` **{ing_util.base_probability:.2%}**\n"
             f"` Loot Bonus   :` **{ing_util.loot_bonus}%**\n"
             f"` Loot Quality :` **{ing_util.loot_quality}%**\n"
             f"` Loot Boost   :` **{ing_util.loot_boost}%**"
         )
-        embed_resp.add_field(
+        embed.add_field(
             name="Boosted Drop Chance",
             value=f"**{ing_util.boosted_probability:.2%}** OR **1 in {one_in_n:.2f}** mobs",
         )
-        if interaction.user:
-            embed_resp.set_author(
-                name=interaction.user.display_name,
-                icon_url=interaction.user.display_avatar.url,
-            )
-
-        return embed_resp
+        embed.finalize()
+        return embed
 
     def _parse_base_chance(self, base_chance: str) -> Decimal:
         if base_chance.endswith("%"):

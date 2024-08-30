@@ -9,7 +9,6 @@ from nextcord import Intents
 from nextcord.ext import commands
 from sqlalchemy.exc import IntegrityError
 
-from fazbot.bot._asset_manager import AssetManager
 from fazbot.bot._checks import Checks
 from fazbot.bot._events import Events
 from fazbot.bot._utils import Utils
@@ -41,7 +40,6 @@ class Bot:
         )
 
         # Define self._client before initializing the modules below
-        self._asset_manager = AssetManager(self)
         self._checks = Checks(self)
         self._cogs = CogCore(self)
         self._events = Events(self)
@@ -82,10 +80,6 @@ class Bot:
     @property
     def fazdb_db(self):
         return self._fazdb_db
-
-    @property
-    def asset_manager(self) -> AssetManager:
-        return self._asset_manager
 
     @property
     def cogs(self) -> CogCore:

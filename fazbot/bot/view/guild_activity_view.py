@@ -5,9 +5,11 @@ from typing import TYPE_CHECKING, Any, override
 
 from nextcord import Button, ButtonStyle, Color, Embed
 from nextcord.ui import Button, button
+from sortedcontainers import SortedList
 from tabulate import tabulate
 
 from fazbot.bot.view._base_view import BaseView
+from fazbot.bot.view._custom_embed import CustomEmbed
 from fazbot.bot.view._view_utils import ViewUtils
 
 if TYPE_CHECKING:
@@ -37,22 +39,21 @@ class GuildActivityView(BaseView):
         self._current_page = 1
         self._items_per_page = 20
         self._page_count: int
+        self._activity_res: SortedList = SortedList()
 
     @override
     async def run(self) -> None:
         await self._guild.awaitable_attrs.members
         members = self._guild.members
         repo = self._bot.fazdb_db.player_activity_history_repository
-        self._activity_res: list[GuildActivityView.ActivityResult] = [
-            self.ActivityResult(
-                member.latest_username,
-                await repo.get_playtime_between_period(
-                    member.uuid, self._period_begin, self._period_end
-                ),
+        for player in members:
+            playtime = await repo.get_playtime_between_period(
+                player.uuid, self._period_begin, self._period_end
             )
-            for member in members
-        ]
-        self._activity_res = [res for res in self._activity_res if res.playtime != "0m"]
+            activity_result = self.ActivityResult(player.latest_username, playtime)
+            if activity_result.playtime_seconds < 60:
+                continue
+            self._activity_res.add(activity_result)
         self._page_count = len(self._activity_res) // self._items_per_page
         embed = self._get_embed_page(1)
         await self._interaction.send(embed=embed, view=self)
@@ -60,46 +61,30 @@ class GuildActivityView(BaseView):
     def _get_embed_page(self, page: int) -> Embed:
         begin_ts = int(self._period_begin.timestamp())
         end_ts = int(self._period_end.timestamp())
-        intr = self._interaction
-        assert intr.user
-        embed = Embed(
+        embed = CustomEmbed(
+            self._interaction,
             title=f"Guild Members Activity ",
             color=Color.teal(),
         )
         embed.description = f"`Guild:  `{self._guild.name})\n`Period: `<t:{begin_ts}:R>, <t:{end_ts}:R>`"
-        embed.set_author(
-            name=intr.user.display_name,
-            icon_url=intr.user.display_avatar.url,
-        )
         left_index = self._items_per_page * (page - 1)
         right_index = self._items_per_page * page
         results = self._activity_res[left_index:right_index]
         embed.description = (
             "```ml\n"
             + tabulate(
-                [[res.username, res.playtime] for res in results],
-                headers=["Username", "Activity"],
+                [
+                    [n, res.username, res.playtime_string]  # type: ignore
+                    for n, res in enumerate(reversed(results), 1)
+                ],
+                headers=["No", "Username", "Activity"],
                 tablefmt="github",
             )
             + "\n```"
         )
-        embed.set_author(
-            name=intr.user.display_name, icon_url=intr.user.display_avatar.url
-        )
-        embed.add_field(
-            name="Timestamp",
-            value=f"<t:{int(intr.created_at.timestamp())}:F>",
-            inline=False,
-        )
+        embed.finalize()
         embed.add_field(name="Page", value=f"{page} / {self._page_count}", inline=False)
         return embed
-
-    def _format_time_delta(self, timedelta: timedelta) -> str:
-        total_seconds = int(timedelta.total_seconds())
-        hours = total_seconds // 3600
-        minutes = (total_seconds % 3600) // 60
-        formatted_time = f"{hours}h {minutes}m"
-        return formatted_time
 
     @button(style=ButtonStyle.blurple, emoji="⏮️")
     async def first_page_callback(
@@ -144,13 +129,28 @@ class GuildActivityView(BaseView):
     class ActivityResult:
 
         def __init__(self, username: str, playtime: timedelta) -> None:
-            self._username: str = username
-            self._playtime: str = ViewUtils.format_timedelta(playtime)
+            self._username = username
+            self._playtime_seconds = playtime.total_seconds()
+            self._playtime_string = ViewUtils.format_timedelta(playtime)
 
         @property
         def username(self) -> str:
             return self._username
 
         @property
-        def playtime(self) -> str:
-            return self._playtime
+        def playtime_seconds(self) -> float:
+            return self._playtime_seconds
+
+        @property
+        def playtime_string(self) -> str:
+            return self._playtime_string
+
+        def __lt__(self, other: int) -> bool:
+            if isinstance(other, GuildActivityView.ActivityResult):
+                return self.playtime_seconds < other.playtime_seconds
+            return NotImplemented
+
+        def __eq__(self, other: object) -> bool:
+            if isinstance(other, GuildActivityView.ActivityResult):
+                return self.playtime_seconds == other.playtime_seconds
+            return NotImplemented

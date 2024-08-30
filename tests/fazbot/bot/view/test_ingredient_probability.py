@@ -17,7 +17,6 @@ class TestIngredientProbability(IsolatedAsyncioTestCase):
         self.obj = IngredientProbabilityView(
             self.mock_bot, self.interaction, "1/1000", 500, 100
         )
-        self.obj.set_assets(self.asset)
 
     # async def test_run(self) -> None:
     #     await self.obj.run()

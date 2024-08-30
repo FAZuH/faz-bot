@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING, Any, override
 from nextcord import Color, Embed
 
 from fazbot.bot.view._base_view import BaseView
+from fazbot.bot.view._custom_embed import CustomEmbed
 from fazbot.bot.view._view_utils import ViewUtils
 
 if TYPE_CHECKING:
@@ -41,16 +42,16 @@ class ActivityView(BaseView):
         begin_ts = int(self._period_begin.timestamp())
         end_ts = int(self._period_end.timestamp())
         assert self._interaction.user
-        embed = Embed(
+
+        embed = CustomEmbed(
+            self._interaction,
             title=f"Player Activity ({self._player.latest_username})",
             color=Color.teal(),
-        )
-        embed.set_author(
-            name=self._interaction.user.display_name,
-            icon_url=self._interaction.user.display_avatar.url,
         )
         time_period = await self._repo.get_playtime_between_period(
             self._player.uuid, self._period_begin, self._period_end
         )
-        embed.description = f"Playtime (<t:{begin_ts}:R>, <t:{end_ts}:R>): `{ViewUtils.format_timedelta(time_period)}`"
+        embed.description = f"`Playtime `: `{ViewUtils.format_timedelta(time_period)}`"
+        embed.description += f"\n`Period   `: [<t:{begin_ts}:R> to <t:{end_ts}:R>]"
+        embed.finalize()
         return embed

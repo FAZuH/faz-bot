@@ -5,10 +5,8 @@ from typing import TYPE_CHECKING, Any, override
 
 from nextcord.ui import View
 
-from fazbot.bot.view._asset import Asset
-
 if TYPE_CHECKING:
-    from nextcord import Embed, File, Interaction
+    from nextcord import Interaction
 
     from fazbot.bot.bot import Bot
 
@@ -36,28 +34,3 @@ class BaseView(View, ABC):
     @override
     async def on_timeout(self) -> None:
         await self._interaction.edit_original_message(view=View(timeout=1))
-
-    @staticmethod
-    def _set_embed_thumbnail_with_asset(embed: Embed, filename: str) -> None:
-        embed.set_thumbnail(url=f"attachment://{filename}")
-
-    @staticmethod
-    def _get_from_assets(assets: dict[str, File], key: str) -> Asset:
-        """Helper method to get an asset.
-        Normally only be used inside `_set_assets()`
-
-        Args:
-            assets (dict[str, File]): asset dictionary. Normally obtained from `_set_assets()`
-            key (str): The file name of the asset.
-
-        Returns:
-            Asset: The asset object containing File object and the file name
-        """
-        file = assets.get(key, None)
-        if not file:
-            raise KeyError(f"Asset with key {key} doesn't exist.")
-        asset = Asset(file, key)
-        return asset
-
-    @classmethod
-    def set_assets(cls, assets: dict[str, File]) -> None: ...

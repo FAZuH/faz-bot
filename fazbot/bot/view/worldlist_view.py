@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 from typing import TYPE_CHECKING, Any, Literal, override
 
 from nextcord import ButtonStyle, Color, Embed
@@ -8,6 +8,7 @@ from nextcord.ui import Button, button
 from tabulate import tabulate
 
 from fazbot.bot.view._base_view import BaseView
+from fazbot.bot.view._custom_embed import CustomEmbed
 from fazbot.bot.view._view_utils import ViewUtils
 
 if TYPE_CHECKING:
@@ -41,8 +42,9 @@ class WorldlistView(BaseView):
         await self._interaction.send(embed=self._get_embed_page(1), view=self)
 
     def _get_embed_page(self, page: int) -> Embed:
-        embed = Embed(title="World List", color=Color.dark_teal())
-        time = datetime.now()
+        embed = CustomEmbed(
+            self._interaction, title="World List", color=Color.dark_teal()
+        )
         intr = self._interaction
         assert intr.user
 
@@ -50,25 +52,26 @@ class WorldlistView(BaseView):
         right_index = self._items_per_page * page
 
         worlds = self._worlds[left_index:right_index]
-        worldlist = (
-            [w.name, w.player_count, ViewUtils.format_timedelta(time - w.time_created)]
-            for w in worlds
-        )
+        worldlist = [
+            [
+                n,
+                w.name,
+                w.player_count,
+                ViewUtils.format_timedelta(intr.created_at - w.time_created),
+            ]
+            for n, w in enumerate(worlds, start=1)
+        ]
         embed.description = (
             "```ml\n"
             + tabulate(
-                worldlist, headers=["World", "Players", "Uptime"], tablefmt="github"
+                worldlist,
+                headers=["No", "World", "Players", "Uptime"],
+                tablefmt="github",
             )
             + "\n```"
         )
-
-        embed.set_author(
-            name=intr.user.display_name, icon_url=intr.user.display_avatar.url
-        )
-        embed.add_field(
-            name="Timestamp", value=f"<t:{int(time.timestamp())}:F>", inline=False
-        )
         embed.add_field(name="Page", value=f"{page} / {self._page_count}", inline=False)
+        embed.finalize()
         return embed
 
     @staticmethod

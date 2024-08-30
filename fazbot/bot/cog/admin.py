@@ -104,13 +104,6 @@ class Admin(CogBase):
         """
         await intr.send(message)
 
-    @admin.subcommand(name="reload_asset")
-    async def reload_asset(self, intr: Interaction[Any]) -> None:
-        """(dev only) Reloads asset."""
-        self._bot.app.properties.ASSET.read_all()
-        self._bot.asset_manager.setup()
-        await self._respond_successful(intr, "Reloaded asset successfully.")
-
     @admin.subcommand(name="send")
     async def send(self, intr: Interaction[Any], channel_id: str, message: str) -> None:
         """(dev only) Unbans an user from using the bot.

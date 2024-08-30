@@ -8,20 +8,18 @@ from nextcord.ui import Button, button
 
 from fazbot.bot.errors import BadArgument
 from fazbot.bot.view._base_view import BaseView
+from fazbot.bot.view._custom_embed import CustomEmbed
 from fazbot.wynn.crafted_util import CraftedUtil
 from fazbot.wynn.ingredient_field import IngredientField
 from fazutil.util.cache_util import CacheUtil
 
 if TYPE_CHECKING:
-    from nextcord import File
-
     from fazbot.bot.bot import Bot
-    from fazbot.bot.view._asset import Asset
 
 
 class CraftedProbabilityView(BaseView):
 
-    ASSET_CRAFTINGTABLE: Asset
+    _THUMBNAIL_URL = "https://static.wikia.nocookie.net/minecraft_gamepedia/images/b/b7/Crafting_Table_JE4_BE3.png/revision/latest/thumbnail/width/360/height/360?cb=20191229083528"
     INGSTR_DEFAULT = "0,0,0"
 
     def __init__(
@@ -42,17 +40,11 @@ class CraftedProbabilityView(BaseView):
         self._craftutil = CraftedUtil(self._parse_ings_str(ing_strs))
 
     @override
-    @classmethod
-    def set_assets(cls, assets: dict[str, File]) -> None:
-        cls.ASSET_CRAFTINGTABLE = cls._get_from_assets(assets, "craftingtable.png")
-
-    @override
     async def run(self) -> None:
-        embed = self._get_craftprobs_embed(self._interaction, self._craftutil)
+        embed = self._get_craftprobs_embed(self._craftutil)
         await self._interaction.send(
             embed=embed,
             view=self,
-            file=self.ASSET_CRAFTINGTABLE.get_file_to_send(),
         )
 
     def _parse_ings_str(self, ing_strs: list[str]) -> list[IngredientField]:
@@ -78,16 +70,13 @@ class CraftedProbabilityView(BaseView):
                 raise BadArgument(e.args[0]) from e
         return res
 
-    def _get_base_embed(
-        self, interaction: Interaction[Any], craftutil: CraftedUtil
-    ) -> Embed:
-        embed = Embed(title="Crafteds Probabilites Calculator", color=8894804)
-        self._set_embed_thumbnail_with_asset(embed, self.ASSET_CRAFTINGTABLE.filename)
-        if interaction.user:
-            embed.set_author(
-                name=interaction.user.display_name,
-                icon_url=interaction.user.display_avatar.url,
-            )
+    def _get_base_embed(self, craftutil: CraftedUtil) -> CustomEmbed:
+        embed = CustomEmbed(
+            self._interaction,
+            title="Crafteds Probabilites Calculator",
+            color=8894804,
+            thumbnail_url=self._THUMBNAIL_URL,
+        )
         # Embed descriptions
         embed_desc = ["Ingredients:"]
         for i, ing in enumerate(craftutil.ingredients, start=1):
@@ -101,10 +90,8 @@ class CraftedProbabilityView(BaseView):
         embed.description = "\n".join(embed_desc)
         return embed
 
-    def _get_craftprobs_embed(
-        self, interaction: Interaction[Any], craftutil: CraftedUtil
-    ) -> Embed:
-        embed = self._get_base_embed(interaction, craftutil)
+    def _get_craftprobs_embed(self, craftutil: CraftedUtil) -> Embed:
+        embed = self._get_base_embed(craftutil)
         embed_fields_values = ""
         is_first_embed = True
         for value, probability in craftutil.craft_probs.items():
@@ -124,12 +111,11 @@ class CraftedProbabilityView(BaseView):
             value=embed_fields_values,
             inline=False,
         )
+        embed.finalize()
         return embed
 
-    def _get_atleast_embed(
-        self, interaction: Interaction[Any], craftutil: CraftedUtil
-    ) -> Embed:
-        embed = self._get_base_embed(interaction, craftutil)
+    def _get_atleast_embed(self, craftutil: CraftedUtil) -> Embed:
+        embed = self._get_base_embed(craftutil)
         field_value = ""
         cmlr_prob = 1
         is_first_embed = True
@@ -151,12 +137,11 @@ class CraftedProbabilityView(BaseView):
             value=field_value,
             inline=False,
         )
+        embed.finalize()
         return embed
 
-    def _get_atmost_embed(
-        self, interaction: Interaction[Any], craftutil: CraftedUtil
-    ) -> Embed:
-        embed = self._get_base_embed(interaction, craftutil)
+    def _get_atmost_embed(self, craftutil: CraftedUtil) -> Embed:
+        embed = self._get_base_embed(craftutil)
         field_value = ""
         cml_prob = 0
         is_first_embed = True
@@ -178,6 +163,7 @@ class CraftedProbabilityView(BaseView):
             value=field_value,
             inline=False,
         )
+        embed.finalize()
         return embed
 
     @button(label="Distribution", style=ButtonStyle.green, emoji="🎲", disabled=True)
@@ -202,11 +188,11 @@ class CraftedProbabilityView(BaseView):
         self,
         button: Button[Any],
         interaction: Interaction[Any],
-        embed_strategy: Callable[[Interaction[Any], CraftedUtil], Embed] | None = None,
+        embed_strategy: Callable[[CraftedUtil], Embed] | None = None,
     ) -> None:
         await interaction.response.defer()
         self._click_button(button)
-        embed = embed_strategy(interaction, self._craftutil) if embed_strategy else None
+        embed = embed_strategy(self._craftutil) if embed_strategy else None
         await interaction.edit_original_message(embed=embed, view=self)
 
     def _click_button(self, button: Button[Any]) -> None:
