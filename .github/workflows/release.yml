@@ -51,8 +51,8 @@ jobs:
           name: version
           path: version.json
 
-  build-fazbot:
-    name: Build Docker Images
+  build-fazcord:
+    name: Build fazord Docker Images
     needs: [changelog] # Build needs the new version number
     runs-on: ubuntu-latest
     steps:
@@ -81,7 +81,7 @@ jobs:
         with:
           name: version
 
-      - name: Build and Push fazbot
+      - name: Build and Push fazcord
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -89,15 +89,15 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/fazuh/fazbot:latest
-            ghcr.io/fazuh/fazbot:${{ needs.changelog.outputs.tag }}
+            ghcr.io/fazuh/fazcord:latest
+            ghcr.io/fazuh/fazcord:${{ needs.changelog.outputs.tag }}
           labels: |
             version=${{ needs.changelog.outputs.tag }}
             commit=${{ github.sha }}
             build_date=${{ env.date }}
 
   build-fazdb:
-    name: Build Docker Images
+    name: Build fazdb Docker Images
     needs: [changelog] # Build needs the new version number
     runs-on: ubuntu-latest
     steps:
@@ -143,7 +143,7 @@ jobs:
 
   release-github:
     name: Release to GitHub
-    needs: [build-fazbot, build-fazdb, changelog]
+    needs: [build-fazcord, build-fazdb, changelog]
     if: ${{ needs.changelog.outputs.skipped != 'true' }}
     runs-on: ubuntu-latest
     steps:
@@ -180,7 +180,7 @@ jobs:
 
   deploy:
     name: Deploy to Server
-    needs: [build-fazbot, build-fazdb, changelog]
+    needs: [build-fazcord, build-fazdb, changelog]
     runs-on: ubuntu-latest
     if: ${{ needs.changelog.outputs.skipped != 'true' }}
     steps:

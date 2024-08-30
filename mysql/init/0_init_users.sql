@@ -1,11 +1,11 @@
-CREATE DATABASE IF NOT EXISTS `faz-bot`;
-CREATE DATABASE IF NOT EXISTS `faz-bot_test`;
+CREATE DATABASE IF NOT EXISTS `faz-cord`;
+CREATE DATABASE IF NOT EXISTS `faz-cord_test`;
 CREATE DATABASE IF NOT EXISTS `faz-db`;
 CREATE DATABASE IF NOT EXISTS `faz-db_test`;
 
 CREATE USER IF NOT EXISTS 'faz'@'%' IDENTIFIED BY 'password';
-GRANT ALL PRIVILEGES ON `faz-bot`.* TO 'faz'@'%';
-GRANT ALL PRIVILEGES ON `faz-bot_test`.* TO 'faz'@'%';
+GRANT ALL PRIVILEGES ON `faz-cord`.* TO 'faz'@'%';
+GRANT ALL PRIVILEGES ON `faz-cord_test`.* TO 'faz'@'%';
 GRANT ALL PRIVILEGES ON `faz-db`.* TO 'faz'@'%';
 GRANT ALL PRIVILEGES ON `faz-db_test`.* TO 'faz'@'%';
 FLUSH PRIVILEGES;

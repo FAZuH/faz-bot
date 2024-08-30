@@ -3,10 +3,10 @@ FROM python:3.12.4-slim
 WORKDIR /app
 
 COPY asset ./asset
-COPY fazbot ./fazbot
+COPY fazcord ./fazcord
 COPY fazutil ./fazutil
-COPY requirements_fazbot.txt requirements.txt
+COPY requirements_fazcord.txt requirements.txt
 
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-CMD ["python", "-m", "fazbot"]
+CMD ["python", "-m", "fazcord"]

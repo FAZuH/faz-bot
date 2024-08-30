@@ -43,7 +43,7 @@ db:
 	$(SCRIPT) fazdb $(act)
 
 bot:
-	$(SCRIPT) fazbot $(act)
+	$(SCRIPT) fazcord $(act)
 
 sql:
 	$(SCRIPT) mysql $(act)
@@ -60,16 +60,16 @@ pytest:
 
 test-sql-up:
 	docker run \
-		--rm --name fazbot-test-db \
+		--rm --name fazcord-test-db \
 		-e MYSQL_ROOT_PASSWORD=password \
-		-e MYSQL_USER=fazbot \
+		-e MYSQL_USER=fazcord \
 					-e MYSQL_PASSWORD=password \
-		-e MYSQL_DATABASE=fazbot_test \
+		-e MYSQL_DATABASE=fazcord_test \
 		-v $(PWD)/mysql/init:/docker-entrypoint-initdb.d \
 		--detach --port "3306:3306" mariadb:10.5.11
 
 test-sql-down:
-	docker stop fazbot-test-db
+	docker stop fazcord-test-db
 
 lint:
 	pylint $$(git ls-files '*.py') \

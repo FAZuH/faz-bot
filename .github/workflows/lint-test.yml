@@ -15,7 +15,7 @@ on:
 jobs:
   format-and-test:
     name: Run Python Tests
-    if: "! github.event.pull_request.draft"
+    if: '! github.event.pull_request.draft'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -29,7 +29,7 @@ jobs:
           -e MYSQL_ROOT_PASSWORD=password \
           -e MYSQL_USER=faz \
           -e MYSQL_PASSWORD=password \
-          -e MYSQL_FAZBOT_DATABASE=faz-bot_test \
+          -e MYSQL_FAZCORD_DATABASE=faz-cord_test \
           -e MYSQL_FAZDB_DATABASE=faz-db_test \
           -v ${GITHUB_WORKSPACE}/mysql/init:/docker-entrypoint-initdb.d \
           -d -p "3306:3306" mariadb:11.4.2
@@ -61,7 +61,7 @@ jobs:
           MYSQL_PORT: 3306
           MYSQL_USER: faz
           MYSQL_PASSWORD: password
-          MYSQL_FAZBOT_DATABASE: faz-bot
+          MYSQL_FAZCORD_DATABASE: faz-cord
           MYSQL_FAZDB_DATABASE: faz-db
         run: |
           cp .env-example .env

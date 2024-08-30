@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any, override
 
 from sqlalchemy import inspect
 
-from fazbot.app.properties import Properties
+from fazcord.app.properties import Properties
 from fazutil.db.base_model import BaseModel
 
 if TYPE_CHECKING:
