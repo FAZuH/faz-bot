@@ -1,7 +1,7 @@
 from nextcord import ApplicationError
 
 
-class BotException(BaseException):
+class BotException(Exception):
     """Base exception for all exceptions in fazbot.bot package"""
 
     # def __init__(self, *args):
