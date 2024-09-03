@@ -16,9 +16,9 @@ class WynnApi:
     def __init__(self) -> None:
         self._ratelimit = WynnRatelimitHandler(5, 180)
         self._request = HttpRequest(
-            "https://beta-api.wynncraft.com",
+            "https://api.wynncraft.com",
             ratelimit=self.ratelimit,
-            headers={"User-Agent": "faz-db", "Content-Type": "application/json"},
+            headers={"User-Agent": "faz-bot", "Content-Type": "application/json"},
         )
 
         self._guild_endpoint = GuildEndpoint(self.request, 3, True)
