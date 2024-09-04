@@ -1,288 +1,139 @@
-import unittest
-from datetime import datetime
-from unittest.mock import AsyncMock, MagicMock, Mock
+from unittest import IsolatedAsyncioTestCase
+from unittest.mock import AsyncMock, MagicMock, Mock, patch
 
-from fazdb.heartbeat.task.request_queue import RequestQueue
-from fazdb.heartbeat.task.response_queue import ResponseQueue
 from fazdb.heartbeat.task.task_db_insert import TaskDbInsert
 from fazutil.api.wynn.response.guild_response import GuildResponse
 from fazutil.api.wynn.response.online_players_response import OnlinePlayersResponse
 from fazutil.api.wynn.response.player_response import PlayerResponse
-from fazutil.api.wynn.wynn_api import WynnApi
-from fazutil.db.fazdb.fazdb_database import FazdbDatabase
 
 
-class TestTaskDbInsert(unittest.TestCase):
+class TestTaskDbInsert(IsolatedAsyncioTestCase):
 
     def setUp(self) -> None:
-        self._api = Mock(spec=WynnApi)
-        self._db = Mock(spec=FazdbDatabase)
-        self._request_list = Mock(spec_set=RequestQueue)
-        self._response_list = Mock(spec_set=ResponseQueue)
-        self._task = TaskDbInsert(
-            self._api, self._db, self._request_list, self._response_list
+        self._adapter_patcher = patch(
+            "fazdb.heartbeat.task.task_db_insert.ApiResponseAdapter"
+        )
+        mock_adapter_class = self._adapter_patcher.start()
+        self._mock_adapter = mock_adapter_class.return_value
+        self._mock_api = AsyncMock()
+        self._mock_db = AsyncMock()
+        self._mock_request_list = MagicMock()
+        self._mock_response_list = MagicMock()
+        self._task_db_insert = TaskDbInsert(
+            self._mock_api,
+            self._mock_db,
+            self._mock_request_list,
+            self._mock_response_list,
         )
 
     def test_setup(self) -> None:
-        # PREPARE
-        self._db.create_all = AsyncMock()
+        # Prepare
+        self._mock_db.create_all = AsyncMock()
+        # Act
+        self._task_db_insert.setup()
+        # Assert
+        self._mock_db.create_all.assert_called_once()
 
-        # ACT
-        self._task.setup()
+    def test_run_insert_fazdb_uptime(self) -> None:
+        # Prepare
+        model = self._mock_db.fazdb_uptime_repository.model = Mock()
+        with patch("fazdb.heartbeat.task.task_db_insert.datetime") as mock_datetime:
+            # Act
+            self._task_db_insert.run()
+            # Assert
+            model.assert_called_once_with(
+                start_time=self._task_db_insert._start_time,
+                stop_time=mock_datetime.now.return_value,
+            )
+            self._mock_db.fazdb_uptime_repository.insert.assert_awaited_once_with(
+                model.return_value, replace_on_duplicate=True
+            )
 
-        # ASSERT
-        self._db.create_all.assert_called_once()
+    def test_run_empty_response_list(self) -> None:
+        # Prepare
+        self._task_db_insert._run = AsyncMock()
+        self._mock_response_list.get.return_value = None
+        self._task_db_insert._response_handler = handler = Mock()
+        # Act
+        self._task_db_insert.run()
+        # Assert
+        self._task_db_insert._run.assert_called_once()
+        handler.handle_onlineplayers_response.assert_not_called()
+        handler.handle_player_response.assert_not_called()
+        handler.handle_guild_response.assert_not_called()
 
-    def test_run(self) -> None:
-        # PREPARE
-        self._task._run = AsyncMock()
-
-        # ACT
-        self._task.run()
-
-        # ASSERT
-        self._task._run.assert_called_once()
-
-    async def test__run(self) -> None:
-        # PREPARE
-        self._response_list.get.return_value = None
-        self._task._response_handler = Mock(spec_set=TaskDbInsert._ResponseHandler)
+    def test_run_non_empty_response_list(self) -> None:
+        # Prepare
         online_players = Mock(spec_set=OnlinePlayersResponse)
         player = Mock(spec_set=PlayerResponse)
         guild = Mock(spec_set=GuildResponse)
+        self._task_db_insert._response_handler = handler = Mock()
+        self._mock_response_list.get.return_value = [online_players, player, guild]
+        # Act
+        self._task_db_insert.run()
+        # Assert
+        handler.handle_onlineplayers_response.assert_called_once_with(online_players)
+        handler.handle_player_response.assert_called_once_with([player])
+        handler.handle_guild_response.assert_called_once_with([guild])
 
-        # ACT
-        await self._task._run()
-
-        # ASSERT
-        self._db.fazdb_uptime_repository.insert.assert_called_once()
-        self._task._response_handler.handle_onlineplayers_response.assert_not_called()
-        self._task._response_handler.handle_player_response.assert_not_called()
-        self._task._response_handler.handle_guild_response.assert_not_called()
-
-        # PREPARE
-        self._response_list.get.return_value = [online_players, player, guild]
-
-        # ACT
-        await self._task._run()
-
-        # ASSERT
-        self._task._response_handler.handle_onlineplayers_response.assert_called_once_with(
-            online_players
+    async def test_insert_online_players_response(self) -> None:
+        # Prepare
+        adapter = self._mock_adapter.OnlinePlayers
+        db = self._mock_db
+        # Act
+        await self._task_db_insert._insert_online_players_response(Mock())
+        # Assert
+        db.online_players_repository.update.assert_awaited_once_with(
+            adapter.to_online_players.return_value
         )
-        self._task._response_handler.handle_player_response.assert_called_once_with(
-            player
+        db.player_activity_history_repository.insert.assert_awaited_once_with(
+            adapter.to_player_activity_history.return_value, replace_on_duplicate=True
         )
-        self._task._response_handler.handle_guild_response.assert_called_once_with(
-            guild
-        )
-        self._db.fazdb_uptime_repository.insert.assert_called_once()
-        self._db.online_players_repository.insert.assert_called_once()
-        self._db.player_activity_history_repository.insert.assert_called_once()
-        self._db.player_info_repository.insert.assert_called_once()
-        self._db.character_info_repository.insert.assert_called_once()
-        self._db.player_history_repository.insert.assert_called_once()
-        self._db.character_history_repository.insert.assert_called_once()
-        self._db.guild_info_repository.insert.assert_called_once()
-        self._db.guild_history_repository.insert.assert_called_once()
-        self._db.guild_member_history_repository.insert.assert_called_once()
-
-    def test__insert_online_players_response(self) -> None:
-        # TODO: Implement test
-        # PREPARE
-        # ACT
-        # ASSERT
-        pass
-
-    def test__insert_player_responses(self) -> None:
-        # TODO: Implement test
-        # PREPARE
-        # ACT
-        # ASSERT
-        pass
-
-    def test__insert_guild_response(self) -> None:
-        # TODO: Implement test
-        # PREPARE
-        # ACT
-        # ASSERT
-        pass
-
-
-class TestResponseHandler(unittest.TestCase):
-
-    def setUp(self) -> None:
-        self._api = Mock(spec_set=WynnApi)
-        self.__request_list = Mock(spec_set=RequestQueue)
-        self._manager = TaskDbInsert._ResponseHandler(self._api, self.__request_list)
-
-    # OnlinePlayerResponse
-    def test_process_new_response(self) -> None:
-        # PREPARE
-        uuid0 = "0"
-        uuid1 = "1"
-        uuid2 = "2"
-        datetime0 = Mock(spec_set=datetime)
-        datetime1 = Mock(spec_set=datetime)
-        resp0 = MagicMock()
-        resp1 = MagicMock()
-        resp0.body.players = {uuid0, uuid1}
-        resp0.headers.to_datetime.return_value = datetime0
-        resp1.body.players = {uuid1, uuid2}
-        resp1.headers.to_datetime.return_value = datetime1
-
-        # ACT
-        self._manager._process_onlineplayers_response(resp0)
-
-        # ASSERT
-        # NOTE: Assert that player 1 and 2 has logged on.
-        self.assertSetEqual(self._manager.logged_on_players, {uuid0, uuid1})
-        # NOTE: Assert that player 1 and 2 is online, with the correct logged on datetime.
-        self.assertDictEqual(
-            self._manager.online_players, {uuid0: datetime0, uuid1: datetime0}
+        db.worlds_repository.update_worlds.assert_awaited_once_with(
+            list(adapter.to_worlds.return_value)
         )
 
-        # ACT
-        self._manager._process_onlineplayers_response(resp1)
-
-        # ASSERT
-        # NOTE: Assert that only player 2 has logged on because player 1 is already logged on.
-        self.assertSetEqual(self._manager._logged_on_players, {uuid2})
-        # NOTE: Assert that player 0 is no longer online, while player 1 and player 2 has the correct logged on datetime.
-        self.assertDictEqual(
-            self._manager.online_players, {uuid1: datetime0, uuid2: datetime1}
+    async def test_insert_player_responses(self) -> None:
+        # Prepare
+        a = self._mock_adapter.Player
+        a.to_player_info.return_value = player_info = Mock()
+        a.to_character_info.return_value = character_info = [Mock()]
+        a.to_player_history.return_value = player_history = Mock()
+        a.to_character_history.return_value = character_history = [Mock()]
+        db = self._mock_db
+        # Act
+        await self._task_db_insert._insert_player_responses([Mock()])
+        # Assert
+        db.player_info_repository.safe_insert.assert_awaited_once_with(
+            [player_info], replace_on_duplicate=True
+        )
+        db.character_info_repository.insert.assert_awaited_once_with(
+            character_info, replace_on_duplicate=True
+        )
+        db.player_history_repository.insert.assert_awaited_once_with(
+            [player_history], ignore_on_duplicate=True
+        )
+        db.character_history_repository.insert.assert_awaited_once_with(
+            character_history, ignore_on_duplicate=True
         )
 
-    def test_enqueue_player_stats(self) -> None:
-        # PREPARE
-        uuid0 = "player0"
-        self._manager._logged_on_players = {uuid0}
-
-        # ACT
-        self._manager._enqueue_player()
-
-        # ASSERT
-        # NOTE: Assert that the correct player is being queued.
-        self._api.player.get_full_stats.assert_called_once_with(uuid0)
-        # NOTE: Assert that enqueue is called with the correct arguments.
-        self.__request_list.enqueue.assert_called_once_with(
-            0, self._api.player.get_full_stats()
+    async def test_insert_guild_response(self) -> None:
+        # Prepare
+        a = self._mock_adapter.Guild
+        a.to_guild_member_history.return_value = guild_member_history = [Mock()]
+        db = self._mock_db
+        # Act
+        await self._task_db_insert._insert_guild_response([Mock()])
+        # Assert
+        db.guild_info_repository.insert.assert_awaited_once_with(
+            [a.to_guild_info.return_value], replace_on_duplicate=True
+        )
+        db.guild_history_repository.insert.assert_awaited_once_with(
+            [a.to_guild_history.return_value], ignore_on_duplicate=True
+        )
+        db.guild_member_history_repository.insert.assert_awaited_once_with(
+            guild_member_history, ignore_on_duplicate=True
         )
 
-    def test_requeueonline_players(self) -> None:
-        # PREPARE
-        resp = MagicMock()
-        resp.headers.expires.to_datetime().timestamp.return_value = 69
-
-        # ACT
-        self._manager._requeue_onlineplayers(resp)
-
-        # ASSERT
-        # NOTE: Assert that enqueue is called with the correct arguments.
-        self.__request_list.enqueue.assert_called_once_with(
-            69, self._api.player.get_online_uuids(), priority=999
-        )
-
-    # PlayerResponse
-    def test_process_player_response(self) -> None:
-        # PREPARE
-        guild0 = "guild0"
-        guild1 = "guild1"
-        uuid0 = "0"
-        uuid1 = "1"
-        uuid2 = "2"
-        mock1 = MagicMock()
-        mock2 = MagicMock()
-        mock3 = MagicMock()
-        mock1.body.guild.name = guild0
-        mock1.body.uuid.uuid = uuid0
-        mock1.body.online = True
-        mock2.body.guild.name = guild0
-        mock2.body.uuid.uuid = uuid1
-        mock2.body.online = True
-        mock3.body.guild.name = guild1
-        mock3.body.uuid.uuid = uuid2
-        mock3.body.online = True
-
-        # ACT
-        self._manager._process_player_response([mock1])
-
-        # ASSERT
-        # NOTE: Assert that guild "test0" is logged on.
-        self.assertSetEqual(self._manager._logged_on_guilds, {guild0})
-        # NOTE: Assert that guild "test0" is online with correct players.
-        self.assertDictEqual(self._manager.online_guilds, {guild0: {uuid0}})
-
-        # ACT
-        self._manager._process_player_response([mock2, mock3])
-
-        # ASSERT
-        # NOTE: Assert that only guild test1 is logged on, because test0 is already logged on.
-        self.assertSetEqual(self._manager._logged_on_guilds, {guild1})
-        # NOTE: Assert that both guilds are online with correct players.
-        self.assertDictEqual(
-            self._manager.online_guilds, {guild0: {uuid0, uuid1}, guild1: {uuid2}}
-        )
-
-        # PREPARE
-        mock3.body.online = False
-
-        # ACT
-        self._manager._process_player_response([mock3])
-
-        # ASSERT
-        # NOTE: Assert that guild test1 is no longer online.
-        self.assertDictEqual(self._manager.online_guilds, {guild0: {uuid0, uuid1}})
-
-    def test_enqueue_guild(self) -> None:
-        # PREPARE
-        guild0 = "guild0"
-        self._manager._logged_on_guilds = {guild0}
-
-        # ACT
-        self._manager._enqueue_guild()
-
-        # ASSERT
-        # NOTE: Assert that the correct guild is being queued.
-        self._api.guild.get.assert_called_once_with(guild0)
-        # NOTE: Assert that enqueue is called with the correct arguments.
-        self.__request_list.enqueue.assert_called_once_with(0, self._api.guild.get())
-
-    def test_requeue_player(self) -> None:
-        # PREPARE
-        resp1 = MagicMock()
-        resp2 = MagicMock()  # continued
-        resp1.body.online = True
-        resp1.headers.expires.to_datetime().timestamp.return_value = 69
-        resp2.body.online = False
-
-        # ACT
-        self._manager._requeue_player([resp2, resp1])
-
-        # ASSERT
-        # NOTE: Assert that self._api.player.get_online_uuids() is called with the correct arguments
-        self._api.player.get_full_stats.assert_called_once()
-        # NOTE: Assert that enqueue is called with the correct arguments.
-        self.__request_list.enqueue.assert_called_once_with(
-            69, self._api.player.get_full_stats()
-        )
-
-    # GuildResponse
-    def test_requeue_guild(self) -> None:
-        # PREPARE
-        test_name1 = "guild0"
-        test_resp1 = MagicMock()
-        test_resp2 = MagicMock()  # continued
-        test_resp1.body.name = test_name1
-        test_resp1.body.members.get_online_members.return_value = 1
-        test_resp1.headers.expires.to_datetime().timestamp.return_value = 69
-        test_resp2.body.members.get_online_members.return_value = 0
-
-        # ACT
-        self._manager._requeue_guild([test_resp1, test_resp2])
-
-        # ASSERT
-        # NOTE: Assert that self._api.guild.get() is called with the correct arguments
-        self._api.guild.get.assert_called_once_with(test_name1)
-        # NOTE: Assert that enqueue is called with the correct arguments.
-        self.__request_list.enqueue.assert_called_once_with(69, self._api.guild.get())
+    def tearDown(self) -> None:
+        self._adapter_patcher.stop()
