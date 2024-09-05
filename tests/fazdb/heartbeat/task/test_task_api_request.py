@@ -1,5 +1,6 @@
 import unittest
-from unittest.mock import AsyncMock, MagicMock
+from typing import override
+from unittest.mock import AsyncMock, MagicMock, patch
 
 from fazdb.heartbeat.task.task_api_request import TaskApiRequest
 
@@ -7,64 +8,139 @@ from fazdb.heartbeat.task.task_api_request import TaskApiRequest
 class TestTaskApiRequest(unittest.IsolatedAsyncioTestCase):
 
     def setUp(self):
-        self.api = MagicMock()
-        self.request_list = MagicMock()
-        self.response_list = MagicMock()
-        self.task = TaskApiRequest(self.api, self.request_list, self.response_list)
+        self._event_loop_patcher = patch(
+            "fazdb.heartbeat.task.task_api_request.asyncio"
+        )
+        self._mock_event_loop = self._event_loop_patcher.start()
+        self._mock_api = MagicMock()
+        self._mock_request_queue = MagicMock()
+        self._mock_response_queue = MagicMock()
+        self._task_api_request = TaskApiRequest(
+            self._mock_api, self._mock_request_queue, self._mock_response_queue
+        )
 
-    @unittest.skip("not ready")
     async def test_setup(self):
-        self.task.setup()
-        self.api.start.assert_called_once()
-        self.request_list.enqueue.assert_called_once_with(
-            0, self.api.player.get_online_uuids(), priority=999
+        # Act
+        self._task_api_request.setup()
+        # Assert
+        self._mock_api.start.assert_called_once()
+        self._mock_request_queue.enqueue.assert_called_once_with(
+            0, self._mock_api.player.get_online_uuids(), priority=999
         )
 
     def test_teardown(self):
-        self.api.close = AsyncMock()
-        self.task.teardown()
-        self.api.close.assert_called_once()
+        # Prepare
+        self._mock_api.close = MagicMock()
+        # Act
+        self._task_api_request.teardown()
+        # Assert
+        self._mock_api.close.assert_called_once()
 
     def test_run(self):
-        self.task._run = AsyncMock()
-        self.task.run()
-        self.task._run.assert_called_once()
-        self.assertIsNotNone(self.task._latest_run)
+        # Prepare
+        self._task_api_request._run = AsyncMock()
+        # Act
+        self._task_api_request.run()
+        # Assert
+        self._task_api_request._run.assert_called_once()
+        self.assertIsNotNone(self._task_api_request._latest_run)
 
     async def test_check_api_session(self):
-        self.api.request.is_open.return_value = False
-        self.task._api.start = AsyncMock()
-        await self.task._check_api_session()
-        self.api.start.assert_called_once()
+        # Prepare
+        self._mock_api.request.is_open.return_value = False
+        self._task_api_request._api.start = AsyncMock()
+        # Act
+        await self._task_api_request._check_api_session()
+        # Assert
+        self._mock_api.start.assert_called_once()
 
-    @unittest.skip("not ready")
     async def test_start_requests(self):
-        # PREPARE
-        self.task._request_list = MagicMock()
-        self.task._request_list.dequeue.return_value = [AsyncMock(), AsyncMock()]
+        # Prepare
+        self._mock_request_queue.dequeue.return_value = [AsyncMock(), AsyncMock()]
+        # Act
+        self._task_api_request._start_requests()
+        # Assert
+        self.assertEqual(len(self._task_api_request._running_requests), 2)
 
-        # ACT
-        self.task._start_requests()
+    def test_check_responses_unfinished_requests(self) -> None:
+        # Prepare
+        mock_task = MagicMock()
+        mock_task.done.return_value = False
+        self._task_api_request._running_requests.append(mock_task)
+        # Act
+        self._task_api_request._check_responses()
+        # Assert
+        mock_task.exception.assert_not_called()
 
-        # ASSERT
-        self.assertEqual(len(self.task._running_requests), 2)
-
-    def test_check_responses(self):
-        task1 = MagicMock(
-            done=MagicMock(return_value=True),
-            exception=MagicMock(return_value=None),
-            result=MagicMock(),
+    def test_check_responses_removes_tasks_with_exception(self) -> None:
+        # Prepare
+        mock_coro = MagicMock()
+        mock_coro.__qualname__ = "NotPlayer"
+        self._mock_api.player.get_online_uuids.__qualname__ = (
+            "PlayerEndpoint.get_online_uuids"
         )
-        task2 = MagicMock(
-            done=MagicMock(return_value=True),
-            exception=MagicMock(return_value=None),
-            result=MagicMock(),
+        mock_task = MagicMock()
+        mock_task.get_coro.return_value = mock_coro
+        self._task_api_request._running_requests.append(mock_task)
+        # Act, Assert
+        self._task_api_request._check_responses()
+        self._mock_request_queue.enqueue.assert_not_called()
+        self.assertNotIn(mock_task, self._task_api_request._running_requests)
+
+    def test_check_responses_with_exception(self) -> None:
+        """Test if tasks with exceptions are raised properly on _check_responses.
+        Note that this is separated from test_check_responses_removes_tasks_with_exception,
+        because logger is patched, and the exception is not handled inside.
+        """
+        # Prepare
+        mock_coro = MagicMock()
+        mock_coro.__qualname__ = "NotPlayer"
+        self._mock_api.player.get_online_uuids.__qualname__ = (
+            "PlayerEndpoint.get_online_uuids"
         )
-        task3 = MagicMock(done=MagicMock(return_value=False))
-        self.task._running_requests = [task1, task2, task3]
-        self.task._response_list.put = MagicMock()
+        mock_task = MagicMock()
+        mock_task.get_coro.return_value = mock_coro
+        mock_task.exception.return_value = self._MockException
+        self._task_api_request._running_requests.append(mock_task)
+        with patch("fazdb.heartbeat.task.task_api_request.logger") as _:
+            # Act, Assert
+            with self.assertRaises(self._MockException):
+                self._task_api_request._check_responses()
+            self._mock_request_queue.enqueue.assert_not_called()
 
-        self.task._check_responses()
+    def test_check_responses_with_online_players_exception(self) -> None:
+        # Prepare
+        mock_coro = MagicMock()
+        mock_coro.__qualname__ = "PlayerEndpoint.get_online_uuids"
+        self._mock_api.player.get_online_uuids.__qualname__ = (
+            "PlayerEndpoint.get_online_uuids"
+        )
+        mock_task = MagicMock()
+        mock_task.get_coro.return_value = mock_coro
+        mock_task.exception.return_value = self._MockException
+        self._task_api_request._running_requests.append(mock_task)
+        # Act, Assert
+        self._task_api_request._check_responses()
+        self._mock_request_queue.enqueue.assert_called_once_with(
+            0, self._mock_api.player.get_online_uuids.return_value, priority=999
+        )
 
-        self.assertEqual(len(self.task._running_requests), 1)
-        self.task._response_list.put.assert_called_once()
+    def test_check_responses_successful_requests(self) -> None:
+        # Prepare
+        mock_task = MagicMock()
+        mock_task.done.return_value = True
+        mock_task.exception.return_value = None
+        self._task_api_request._running_requests.append(mock_task)
+        # Act
+        self._task_api_request._check_responses()
+        # Assert
+        self.assertNotIn(mock_task, self._task_api_request._running_requests)
+        self._mock_response_queue.put.assert_called_once_with(
+            [mock_task.result.return_value]
+        )
+
+    @override
+    def tearDown(self) -> None:
+        self._event_loop_patcher.stop()
+
+    class _MockException(Exception): ...
