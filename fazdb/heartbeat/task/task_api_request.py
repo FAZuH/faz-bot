@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import asyncio
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, override
 
 from loguru import logger
 
@@ -33,18 +33,21 @@ class TaskApiRequest(ITask):
         self._latest_run = datetime.now()
         self._running_requests: list[asyncio.Task[Resp]] = []
 
+    @override
     def setup(self) -> None:
         logger.debug(f"Setting up {self.name}")
         self._event_loop.run_until_complete(self._api.start())
         # NOTE: Initial request. Results in a chain reaction of requests.
         self._request_list.enqueue(0, self._api.player.get_online_uuids(), priority=999)
 
+    @override
     def teardown(self) -> None:
         logger.debug(f"Tearing down {self.name}")
         self._event_loop.run_until_complete(self._api.close())
         for req in self._running_requests:
             req.cancel()
 
+    @override
     def run(self) -> None:
         with logger.catch(level="ERROR"):
             self._event_loop.run_until_complete(self._run())
