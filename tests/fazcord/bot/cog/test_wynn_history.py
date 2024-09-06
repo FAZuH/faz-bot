@@ -8,7 +8,7 @@ from fazcord.bot.errors import BadArgument
 
 class TestWynnHistory(unittest.IsolatedAsyncioTestCase):
 
-    async def asyncSetUp(self) -> None:
+    def setUp(self) -> None:
         self.mock_intr = MagicMock()
         self.mock_intr.created_at = datetime.now()
         self.mock_bot = MagicMock()
