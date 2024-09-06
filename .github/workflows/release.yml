@@ -6,6 +6,10 @@ on:
   push:
     branches:
       - release
+  workflow_run:
+    workflows: ["Autopromote branches"]
+    types:
+      - completed
 
 jobs:
   changelog:
