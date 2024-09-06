@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from decimal import Decimal
 from typing import TYPE_CHECKING
 
@@ -11,7 +12,7 @@ if TYPE_CHECKING:
 
 class CraftedUtil:
 
-    def __init__(self, ingredients: list[IngredientField]):
+    def __init__(self, ingredients: Sequence[IngredientField]):
         self._ingredients = ingredients
 
         self._ing_prob_dists = []
@@ -38,7 +39,7 @@ class CraftedUtil:
         return self._craft_probs
 
     @property
-    def ingredients(self) -> list[IngredientField]:
+    def ingredients(self) -> Sequence[IngredientField]:
         return self._ingredients
 
     def _calculate_ingredient_probabilities(self):

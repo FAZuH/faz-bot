@@ -50,7 +50,7 @@ class PaginationEmbed[T](CustomEmbed):
         }
         self._items = items
         self._items_per_page = items_per_page
-        self._page_count = self.__get_page_count()
+        self._page_count = self._get_page_count()
         self._current_page = 1
 
     def get_items(self, page: int) -> Sequence[T]:
@@ -90,5 +90,5 @@ class PaginationEmbed[T](CustomEmbed):
     def current_page(self, value):
         self._current_page = value
 
-    def __get_page_count(self) -> int:
+    def _get_page_count(self) -> int:
         return len(self._items) // self._items_per_page

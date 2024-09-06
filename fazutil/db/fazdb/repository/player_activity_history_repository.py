@@ -21,6 +21,26 @@ class PlayerActivityHistoryRepository(
     def __init__(self, database: BaseMySQLDatabase) -> None:
         super().__init__(database, PlayerActivityHistory)
 
+    async def get_activities_between_period(
+        self,
+        player_uuid: bytes,
+        period_begin: datetime,
+        period_end: datetime,
+        *,
+        session: AsyncSession | None = None,
+    ) -> Sequence[PlayerActivityHistory]:
+        model = self.model
+        stmt = select(model).where(
+            and_(
+                model.logoff_datetime >= period_begin,
+                model.logon_datetime <= period_end,
+                model.uuid == player_uuid,
+            )
+        )
+        async with self.database.must_enter_async_session(session) as ses:
+            res = await ses.execute(stmt)
+            return res.scalars().all()
+
     async def get_playtime_between_period(
         self,
         player_uuid: bytes,
