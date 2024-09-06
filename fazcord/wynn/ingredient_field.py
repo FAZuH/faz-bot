@@ -9,7 +9,7 @@ class IngredientField:
             boost (:obj:`int`, optional): Ingredient boost value. Defaults to 0.
 
         Raises:
-            ValueError: If minimum value is greater than maximum value or boost is negative.
+            ValueError: If minimum value is greater than maximum value.
         """
         self._boost = boost
         self._min_value = min_value
