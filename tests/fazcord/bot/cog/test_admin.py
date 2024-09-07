@@ -5,10 +5,10 @@ from contextlib import asynccontextmanager
 from typing import TYPE_CHECKING, AsyncGenerator
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from fazcord.app.properties import Properties
 from fazcord.bot.cog.admin_cog import AdminCog
 from fazcord.bot.errors import ApplicationException
 from fazutil.db.fazcord.fazcord_database import FazcordDatabase
+from fazutil.properties import Properties
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
