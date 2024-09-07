@@ -191,4 +191,4 @@ jobs:
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
       - name: Deploy
-        run: ssh -o LogLevel=QUIET -t ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "/srv/faz-bot/docker/deploy.sh"
+        run: ssh -o LogLevel=QUIET -t ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "/srv/faz-bot/.github/deploy.sh"
