@@ -52,7 +52,7 @@ jobs:
           path: version.json
 
   build-fazcord:
-    name: Build fazord Docker Images
+    name: Build fazcord Docker Images
     needs: [changelog] # Build needs the new version number
     runs-on: ubuntu-latest
     steps:
