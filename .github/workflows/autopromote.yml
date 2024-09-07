@@ -1,5 +1,5 @@
-# Credit: Workflow configs copied Wynntils
-#
+# Credit: Workflow configs inspired from Wynntils
+
 name: Autopromote branches
 
 on:
