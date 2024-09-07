@@ -23,7 +23,7 @@ class TestWynnHistory(unittest.IsolatedAsyncioTestCase):
             wynn_history = WynnHistoryCog(self.mock_bot)
             await wynn_history.activity(self.mock_intr, "a", "a")
 
-    @patch("fazcord.bot.cog.wynn_history.ActivityView", autospec=True)
+    @patch("fazcord.bot.cog.wynn_history_cog.ActivityView", autospec=True)
     async def test_activity_past_n_hour(self, mock_invoke: MagicMock) -> None:
         # Prepare
         mock_player = MagicMock()
@@ -43,7 +43,7 @@ class TestWynnHistory(unittest.IsolatedAsyncioTestCase):
             self.mock_intr.created_at,
         )
 
-    @patch("fazcord.bot.cog.wynn_history.ActivityView", autospec=True)
+    @patch("fazcord.bot.cog.wynn_history_cog.ActivityView", autospec=True)
     async def test_activity_time_range(self, mock_invoke: MagicMock) -> None:
         # Prepare
         mock_player = MagicMock()
@@ -75,7 +75,7 @@ class TestWynnHistory(unittest.IsolatedAsyncioTestCase):
             wynn_history = WynnHistoryCog(self.mock_bot)
             await wynn_history.guild_activity(self.mock_intr, "a", "a")
 
-    @patch("fazcord.bot.cog.wynn_history.GuildActivityView", autospec=True)
+    @patch("fazcord.bot.cog.wynn_history_cog.GuildActivityView", autospec=True)
     async def test_guild_activity_past_n_hour(self, mock_invoke: MagicMock) -> None:
         # Prepare
         mock_guild = MagicMock()
@@ -95,7 +95,7 @@ class TestWynnHistory(unittest.IsolatedAsyncioTestCase):
             self.mock_intr.created_at,
         )
 
-    @patch("fazcord.bot.cog.wynn_history.GuildActivityView", autospec=True)
+    @patch("fazcord.bot.cog.wynn_history_cog.GuildActivityView", autospec=True)
     async def test_guild_activity_time_range(self, mock_invoke: MagicMock) -> None:
         # Prepare
         mock_guild = MagicMock()

@@ -4,9 +4,9 @@ from typing import Any, Callable
 
 from loguru import logger
 
-from fazdb.app._metrics import Metrics
-from fazdb.app.properties import Properties
-from fazdb.heartbeat.heartbeat import Heartbeat
+from fazbeat.api_collect.app._metrics import Metrics
+from fazbeat.api_collect.app.properties import Properties
+from fazbeat.api_collect.heartbeat.heartbeat import Heartbeat
 from fazutil.api.wynn.wynn_api import WynnApi
 from fazutil.db.fazdb.fazdb_database import FazdbDatabase
 from fazutil.util.logger_setup import LoggerSetup

@@ -5,7 +5,7 @@ WORKDIR /app
 COPY asset ./asset
 COPY fazcord ./fazcord
 COPY fazutil ./fazutil
-COPY requirements_fazcord.txt requirements.txt
+COPY requirements-fazcord.txt requirements.txt
 
 RUN pip3 install --no-cache-dir -r requirements.txt
 
