@@ -15,7 +15,7 @@ from fazcord.wynn.crafted_util import CraftedUtil
 from fazcord.wynn.ingredient_field import IngredientField
 
 
-class WynnUtils(CogBase):
+class WynnUtilsCog(CogBase):
 
     INGSTR_DEFAULT = "0,0,0"
 

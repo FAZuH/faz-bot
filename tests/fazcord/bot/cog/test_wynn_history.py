@@ -2,7 +2,7 @@ import unittest
 from datetime import datetime, timedelta
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from fazcord.bot.cog.wynn_history import WynnHistory
+from fazcord.bot.cog.wynn_history_cog import WynnHistoryCog
 from fazcord.bot.errors import BadArgument
 
 
@@ -20,7 +20,7 @@ class TestWynnHistory(unittest.IsolatedAsyncioTestCase):
         )
         # Act, Assert
         with self.assertRaises(BadArgument):
-            wynn_history = WynnHistory(self.mock_bot)
+            wynn_history = WynnHistoryCog(self.mock_bot)
             await wynn_history.activity(self.mock_intr, "a", "a")
 
     @patch("fazcord.bot.cog.wynn_history.ActivityView", autospec=True)
@@ -30,7 +30,7 @@ class TestWynnHistory(unittest.IsolatedAsyncioTestCase):
         self.mock_bot.fazdb_db.player_info_repository.get_player = AsyncMock(
             return_value=mock_player
         )
-        wynn_history = WynnHistory(self.mock_bot)
+        wynn_history = WynnHistoryCog(self.mock_bot)
         # Act
         await wynn_history.activity(self.mock_intr, "a", "10")
         # Assert
@@ -50,7 +50,7 @@ class TestWynnHistory(unittest.IsolatedAsyncioTestCase):
         self.mock_bot.fazdb_db.player_info_repository.get_player = AsyncMock(
             return_value=mock_player
         )
-        wynn_history = WynnHistory(self.mock_bot)
+        wynn_history = WynnHistoryCog(self.mock_bot)
         # Act
         await wynn_history.activity(self.mock_intr, "a", "2 days ago - 1 days ago")
         # Assert
@@ -72,7 +72,7 @@ class TestWynnHistory(unittest.IsolatedAsyncioTestCase):
         )
         # Act, Assert
         with self.assertRaises(BadArgument):
-            wynn_history = WynnHistory(self.mock_bot)
+            wynn_history = WynnHistoryCog(self.mock_bot)
             await wynn_history.guild_activity(self.mock_intr, "a", "a")
 
     @patch("fazcord.bot.cog.wynn_history.GuildActivityView", autospec=True)
@@ -82,7 +82,7 @@ class TestWynnHistory(unittest.IsolatedAsyncioTestCase):
         self.mock_bot.fazdb_db.guild_info_repository.get_guild = AsyncMock(
             return_value=mock_guild
         )
-        wynn_history = WynnHistory(self.mock_bot)
+        wynn_history = WynnHistoryCog(self.mock_bot)
         # Act
         await wynn_history.guild_activity(self.mock_intr, "a", "10")
         # Assert
@@ -102,7 +102,7 @@ class TestWynnHistory(unittest.IsolatedAsyncioTestCase):
         self.mock_bot.fazdb_db.guild_info_repository.get_guild = AsyncMock(
             return_value=mock_guild
         )
-        wynn_history = WynnHistory(self.mock_bot)
+        wynn_history = WynnHistoryCog(self.mock_bot)
         # Act
         await wynn_history.guild_activity(
             self.mock_intr, "a", "2 days ago - 1 days ago"

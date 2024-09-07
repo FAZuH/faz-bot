@@ -11,7 +11,7 @@ from fazcord.bot.cog._cog_base import CogBase
 from fazcord.bot.errors import ApplicationException
 
 
-class Admin(CogBase):
+class AdminCog(CogBase):
 
     @override
     def _setup(self, whitelisted_guild_ids: Iterable[int]) -> None:

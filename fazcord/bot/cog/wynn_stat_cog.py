@@ -7,7 +7,7 @@ from fazcord.bot.cog._cog_base import CogBase
 from fazcord.bot.view.worldlist_view import WorldlistView
 
 
-class WynnStat(CogBase):
+class WynnStatCog(CogBase):
 
     @nextcord.slash_command(name="worldlist")
     async def worldlist(
