@@ -19,7 +19,7 @@ jobs:
         uses: mtanzi/action-automerge@v1
         id: merge
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.PRIVATE_TOKEN }}
           source: "main"
           target: "release"
 
@@ -34,6 +34,6 @@ jobs:
   #       uses: mtanzi/action-automerge@v1
   #       id: merge
   #       with:
-  #         github_token: ${{ secrets.GITHUB_TOKEN }}
+  #         github_token: ${{ secrets.PRIVATE_TOKEN }}
   #         source: "development"
   #         target: "beta"
