@@ -37,17 +37,6 @@ class CommonDbRepositoryTest:
             self._database.drop_all()
             await self._create_table()
 
-        # async def test_create_table_successful(self) -> None:
-        #     """Test if create_table successfully creates table."""
-        #     # Prepare
-        #     self._database.drop_all()
-        #     # Act
-        #     await self.repo.create_table()
-        #     # Assert
-        #     with self.database.enter_connection() as conn:
-        #         res = self._get_table_names(conn)
-        #         self.assertTrue(self.repo.table_name in res)
-
         async def test_insert_successful(self) -> None:
             """Test if insert inserts an entry successfully and properly to table."""
             # Prepare
@@ -202,7 +191,7 @@ class CommonDbRepositoryTest:
             return self._database
 
         async def _create_table(self) -> None:
-            """Method to create table safely. Override this methods when the
+            """Method to create table safely. Override this method when the
             table being tested requires additional tables to be created first."""
             await self.repo.create_table()
 

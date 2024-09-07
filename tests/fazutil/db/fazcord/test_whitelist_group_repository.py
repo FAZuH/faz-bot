@@ -69,20 +69,7 @@ class TestWhitelistGroupRepository(
 
     @override
     def _get_mock_data(self):
-        model = self.repo.model
-        mock_data1 = model(
-            id=1,
-            type="a",
-            reason="a",
-            from_=self._get_mock_datetime(),
-            until=self._get_mock_datetime(),
-        )
-        mock_data2 = mock_data1.clone()
-        mock_data3 = mock_data1.clone()
-        mock_data3.id = 2
-        mock_data4 = mock_data1.clone()
-        mock_data4.reason = "b"
-        return (mock_data1, mock_data2, mock_data3, mock_data4, "reason")
+        return self._get_whitelist_group_mock_data()
 
     @property
     @override
