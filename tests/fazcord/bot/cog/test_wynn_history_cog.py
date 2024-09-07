@@ -6,7 +6,7 @@ from fazcord.bot.cog.wynn_history_cog import WynnHistoryCog
 from fazcord.bot.errors import BadArgument
 
 
-class TestWynnHistory(unittest.IsolatedAsyncioTestCase):
+class TestWynnHistoryCog(unittest.IsolatedAsyncioTestCase):
 
     def setUp(self) -> None:
         self.mock_intr = MagicMock()

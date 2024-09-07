@@ -7,7 +7,7 @@ from fazcord.bot.cog.wynn_utils_cog import WynnUtilsCog
 from fazcord.bot.errors import BadArgument
 
 
-class TestWynnUtils(TestCase):
+class TestWynnUtilsCog(TestCase):
     """Ugh"""
 
     def setUp(self) -> None:

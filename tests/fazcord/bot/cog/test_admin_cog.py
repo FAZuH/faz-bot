@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 
 @patch("nextcord.interactions.Interaction", autospec=True)
-class TestAdmin(unittest.IsolatedAsyncioTestCase):
+class TestAdminCog(unittest.IsolatedAsyncioTestCase):
 
     @asynccontextmanager
     async def _mock_enter_db_session(
