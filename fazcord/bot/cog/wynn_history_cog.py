@@ -13,7 +13,7 @@ from fazcord.bot.view.activity_view import ActivityView
 from fazcord.bot.view.guild_activity_view import GuildActivityView
 
 
-class WynnHistory(CogBase):
+class WynnHistoryCog(CogBase):
 
     # @nextcord.slash_command()
     # async def history(self, intr: Interaction[Any]) -> None: ...
@@ -83,8 +83,8 @@ class WynnHistory(CogBase):
                 left, right = period.split("-")
                 period_begin = parse(left)
                 period_end = parse(right)
-                WynnHistory.__check_period(period_begin)
-                WynnHistory.__check_period(period_end)
+                WynnHistoryCog.__check_period(period_begin)
+                WynnHistoryCog.__check_period(period_end)
             else:
                 period_begin = intr.created_at - timedelta(hours=float(period))
                 period_end = intr.created_at

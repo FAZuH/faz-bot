@@ -3,14 +3,14 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Iterable
 
 from fazcord.bot.cog._cog_base import CogBase
-from fazcord.bot.cog.admin import Admin
-from fazcord.bot.cog.help import Help
-from fazcord.bot.cog.info import Info
-from fazcord.bot.cog.wynn_analyze import WynnAnalyze
-from fazcord.bot.cog.wynn_history import WynnHistory
-from fazcord.bot.cog.wynn_stat import WynnStat
-from fazcord.bot.cog.wynn_track import WynnTrack
-from fazcord.bot.cog.wynn_utils import WynnUtils
+from fazcord.bot.cog.admin_cog import AdminCog
+from fazcord.bot.cog.help_cog import HelpCog
+from fazcord.bot.cog.info_cog import InfoCog
+from fazcord.bot.cog.wynn_analyze_cog import WynnAnalyzeCog
+from fazcord.bot.cog.wynn_history_cog import WynnHistoryCog
+from fazcord.bot.cog.wynn_stat_cog import WynnStatCog
+from fazcord.bot.cog.wynn_track_cog import WynnTrackCog
+from fazcord.bot.cog.wynn_utils_cog import WynnUtilsCog
 
 if TYPE_CHECKING:
     from fazcord.bot.bot import Bot
@@ -22,14 +22,14 @@ class CogCore:
         self._bot = bot
         self._cogs: list[CogBase] = []
 
-        self.admin = Admin(bot)
-        self.help = Help(bot)
-        self.info = Info(bot)
-        self.wynn_analyze = WynnAnalyze(bot)
-        self.wynn_history = WynnHistory(bot)
-        self.wynn_stat = WynnStat(bot)
-        self.wynn_track = WynnTrack(bot)
-        self.wynn_utils = WynnUtils(bot)
+        self.admin = AdminCog(bot)
+        self.help = HelpCog(bot)
+        self.info = InfoCog(bot)
+        self.wynn_analyze = WynnAnalyzeCog(bot)
+        self.wynn_history = WynnHistoryCog(bot)
+        self.wynn_stat = WynnStatCog(bot)
+        self.wynn_track = WynnTrackCog(bot)
+        self.wynn_utils = WynnUtilsCog(bot)
 
         self._cogs.extend(
             [

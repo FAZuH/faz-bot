@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, AsyncGenerator
 from unittest.mock import AsyncMock, MagicMock, patch
 
 from fazcord.app.properties import Properties
-from fazcord.bot.cog.admin import Admin
+from fazcord.bot.cog.admin_cog import AdminCog
 from fazcord.bot.errors import ApplicationException
 from fazutil.db.fazcord.fazcord_database import FazcordDatabase
 
@@ -39,7 +39,7 @@ class TestAdmin(unittest.IsolatedAsyncioTestCase):
         self.db.create_all()
         await self.db.whitelist_group_repository.truncate()
 
-        self.admin = Admin(mock_bot)
+        self.admin = AdminCog(mock_bot)
         self.admin._enter_botdb_session = self._mock_enter_db_session
         self.admin._respond_successful = AsyncMock()
         return await super().asyncSetUp()

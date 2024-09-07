@@ -3,7 +3,7 @@ from decimal import Decimal
 from unittest import TestCase
 from unittest.mock import MagicMock
 
-from fazcord.bot.cog.wynn_utils import WynnUtils
+from fazcord.bot.cog.wynn_utils_cog import WynnUtilsCog
 from fazcord.bot.errors import BadArgument
 
 
@@ -14,7 +14,7 @@ class TestWynnUtils(TestCase):
         self._mock_interaction = MagicMock()
         self._mock_interaction.created_at = datetime.now()
         self._mock_bot = MagicMock()
-        self._wynn_utils = WynnUtils(self._mock_bot)
+        self._wynn_utils = WynnUtilsCog(self._mock_bot)
         self._parse_ing = self._wynn_utils._parse_ings_str
         self._parse_chance = self._wynn_utils._parse_base_chance
 
