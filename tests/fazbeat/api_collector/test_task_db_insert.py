@@ -1,7 +1,7 @@
 from unittest import IsolatedAsyncioTestCase
 from unittest.mock import AsyncMock, MagicMock, Mock, patch
 
-from fazdb.heartbeat.task.task_db_insert import TaskDbInsert
+from fazbeat.api_collect.heartbeat.task.task_db_insert import TaskDbInsert
 from fazutil.api.wynn.response.guild_response import GuildResponse
 from fazutil.api.wynn.response.online_players_response import OnlinePlayersResponse
 from fazutil.api.wynn.response.player_response import PlayerResponse
@@ -11,7 +11,7 @@ class TestTaskDbInsert(IsolatedAsyncioTestCase):
 
     def setUp(self) -> None:
         self._adapter_patcher = patch(
-            "fazdb.heartbeat.task.task_db_insert.ApiResponseAdapter"
+            "fazbeat.api_collect.heartbeat.task.task_db_insert.ApiResponseAdapter"
         )
         mock_adapter_class = self._adapter_patcher.start()
         self._mock_adapter = mock_adapter_class.return_value
@@ -37,7 +37,9 @@ class TestTaskDbInsert(IsolatedAsyncioTestCase):
     def test_run_insert_fazdb_uptime(self) -> None:
         # Prepare
         model = self._mock_db.fazdb_uptime_repository.model = Mock()
-        with patch("fazdb.heartbeat.task.task_db_insert.datetime") as mock_datetime:
+        with patch(
+            "fazbeat.api_collect.heartbeat.task.task_db_insert.datetime"
+        ) as mock_datetime:
             # Act
             self._task_db_insert.run()
             # Assert

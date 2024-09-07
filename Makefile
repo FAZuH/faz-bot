@@ -26,21 +26,21 @@ wait-for-mysql:
 build-all:
 	make sql act=build
 	make wait-for-mysql
-	make db act=build
+	make api_collect act=build
 	make bot act=build
 
 up-all:
 	make sql act=up
 	make wait-for-mysql
-	make db act=up
+	make api_collect act=up
 	make bot act=up
 
 down-all:
 	docker-compose --file $(DOCKER_COMPOSE) down
 
 
-db:
-	$(SCRIPT) fazdb $(act)
+api_collect:
+	$(SCRIPT) api_collect $(act)
 
 bot:
 	$(SCRIPT) fazcord $(act)

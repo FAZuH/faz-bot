@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from fazdb.heartbeat.task.request_queue import RequestQueue
-from fazdb.heartbeat.task.response_queue import ResponseQueue
-from fazdb.heartbeat.task.task_api_request import TaskApiRequest
-from fazdb.heartbeat.task.task_db_insert import TaskDbInsert
+from fazbeat.api_collect.heartbeat.task.request_queue import RequestQueue
+from fazbeat.api_collect.heartbeat.task.response_queue import ResponseQueue
+from fazbeat.api_collect.heartbeat.task.task_api_request import TaskApiRequest
+from fazbeat.api_collect.heartbeat.task.task_db_insert import TaskDbInsert
 from fazutil.heartbeat.base_heartbeat import BaseHeartbeat
 
 if TYPE_CHECKING:

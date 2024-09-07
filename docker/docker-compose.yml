@@ -21,12 +21,12 @@ services:
     volumes:
       - ../logs:/app/logs
 
-  fazdb:
-    image: ghcr.io/fazuh/fazdb:latest
-    container_name: fazdb
+  api_collect:
+    image: ghcr.io/fazuh/api_collect:latest
+    container_name: api_collect
     build:
       context: ..
-      dockerfile: docker/Dockerfile.db
+      dockerfile: docker/Dockerfile.api_collect
     restart: unless-stopped
     environment:
       MYSQL_HOST: mysql
