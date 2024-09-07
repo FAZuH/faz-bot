@@ -69,7 +69,7 @@ class GuildActivityView(BasePaginationView):
         embed = self._embed.get_base()
         results = embed.get_items(page)
 
-        embed.description = f"`Guild  : `{self._guild.name}`\n"
+        embed.description = f"`Guild  : `{self._guild.name}\n"
         embed.description += f"`Period : `<t:{begin_ts}:R> to <t:{end_ts}:R>"
         if len(results) == 0:
             embed.description = (
