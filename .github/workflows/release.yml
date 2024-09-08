@@ -135,8 +135,8 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/fazuh/fazdb:latest
-            ghcr.io/fazuh/fazdb:${{ needs.changelog.outputs.tag }}
+            ghcr.io/fazuh/api_collect:latest
+            ghcr.io/fazuh/api_collect:${{ needs.changelog.outputs.tag }}
           labels: |
             version=${{ needs.changelog.outputs.tag }}
             commit=${{ github.sha }}
@@ -144,7 +144,7 @@ jobs:
 
   release-github:
     name: Release to GitHub
-    needs: [build-fazcord, build-fazdb, changelog]
+    needs: [build-fazcord, build-api_collect, changelog]
     if: ${{ needs.changelog.outputs.skipped != 'true' }}
     runs-on: ubuntu-latest
     steps:
@@ -181,7 +181,7 @@ jobs:
 
   deploy:
     name: Deploy to Server
-    needs: [build-fazcord, build-fazdb, changelog]
+    needs: [build-fazcord, build-api_collect, changelog]
     runs-on: ubuntu-latest
     if: ${{ needs.changelog.outputs.skipped != 'true' }}
     steps:
