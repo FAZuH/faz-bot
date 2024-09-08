@@ -34,7 +34,7 @@ class Events:
 
     async def on_ready(self) -> None:
         if self._bot.client.user is not None:
-            logger.success("Started discord client")
+            logger.success("Started Discord Client")
 
         await self._bot.client.change_presence(
             activity=Activity(type=ActivityType.playing, name="/help")
@@ -64,8 +64,8 @@ class Events:
         if isinstance(error, errors.ApplicationCheckFailure):
             await interaction.send(
                 (
-                    "You do not have permission to use this command. "
-                    "Please contact bot developer if you believe this is a mistake."
+                    "You do not have sufficient permission to use this command. "
+                    "Contact bot developer if you believe this is a mistake."
                 ),
                 ephemeral=True,
             )

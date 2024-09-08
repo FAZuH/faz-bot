@@ -39,7 +39,7 @@ class WynnHistoryCog(CogBase):
                 f"Player not found (reason: Can't find player with username or uuid {player})"
             )
         # `period` check and parse
-        period_begin, period_end = self.__parse_period(intr, period)
+        period_begin, period_end = self._parse_period(intr, period)
         invoke = ActivityView(self._bot, intr, player_info, period_begin, period_end)  # type: ignore
         await invoke.run()
 
@@ -65,7 +65,7 @@ class WynnHistoryCog(CogBase):
             raise BadArgument(
                 f"Guild not found (reason: Can't find guild with name or uuid {guild})"
             )
-        period_begin, period_end = self.__parse_period(intr, period)
+        period_begin, period_end = self._parse_period(intr, period)
         await GuildActivityView(
             self._bot,
             intr,
@@ -75,16 +75,14 @@ class WynnHistoryCog(CogBase):
         ).run()
 
     @staticmethod
-    def __parse_period(
-        intr: Interaction[Any], period: str
-    ) -> tuple[datetime, datetime]:
+    def _parse_period(intr: Interaction[Any], period: str) -> tuple[datetime, datetime]:
         try:
             if "-" in period:
                 left, right = period.split("-")
                 period_begin = parse(left)
                 period_end = parse(right)
-                WynnHistoryCog.__check_period(period_begin)
-                WynnHistoryCog.__check_period(period_end)
+                WynnHistoryCog._check_period(period_begin)
+                WynnHistoryCog._check_period(period_end)
             else:
                 period_begin = intr.created_at - timedelta(hours=float(period))
                 period_end = intr.created_at
@@ -98,7 +96,7 @@ class WynnHistoryCog(CogBase):
         return period_begin, period_end
 
     @staticmethod
-    def __check_period(period: Any | None) -> None:
+    def _check_period(period: Any | None) -> None:
         if period is None:
             raise BadArgument(
                 f"Can't parse period (reason: Failed interpreting {period} as a datetime)"

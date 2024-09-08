@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from fazutil.db.base_repository import BaseRepository
-from fazutil.db.fazcord.model.track_entry_associations import TrackEntryAssociation
+from fazutil.db.fazcord.model.track_entry_association import TrackEntryAssociation
 
 if TYPE_CHECKING:
     from fazutil.db.base_mysql_database import BaseMySQLDatabase

@@ -56,10 +56,7 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
         return cls.__primarykey_attribute_names__
 
     def __eq__(self, other: object) -> bool:
-        primary_key = self.get_table().primary_key
         for k, v in self.to_dict().items():
-            if k not in primary_key:
-                continue
             v_other = getattr(other, k)
             if v != v_other:
                 return False

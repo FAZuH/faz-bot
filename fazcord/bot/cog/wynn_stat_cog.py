@@ -21,7 +21,6 @@ class WynnStatCog(CogBase):
         Args:
             sort_by (Literal["Player Count", "Time Created"], optional): The criteria to sort the worlds by.
                 Can be either "Player Count" or "Time Created". Defaults to "Time Created".
-
         """
         await WorldlistView(self._bot, interaction, sort_by).run()
 

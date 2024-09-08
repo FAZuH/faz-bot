@@ -73,8 +73,11 @@ class CommonFazcordRepositoryTest:
             mock_data2 = mock_data1.clone()
             mock_data3 = mock_data1.clone()
             mock_data3.id = 2
+            mock_data3.track_entry_id = 2
             mock_data4 = mock_data1.clone()
-            mock_data4.associated_value = b"b"
+            mock_data4.associated_value = (
+                b"b\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+            )
             return (mock_data1, mock_data2, mock_data3, mock_data4, "associated_value")
 
         def _get_track_entry_mock_data(self):
@@ -85,10 +88,12 @@ class CommonFazcordRepositoryTest:
                 created_by=1,
                 created_on=self._get_mock_datetime(),
                 type="GUILD",
+                enabled=False,
             )
             mock_data2 = mock_data1.clone()
             mock_data3 = mock_data1.clone()
             mock_data3.id = 2
+            mock_data3.channel_id = 2
             mock_data4 = mock_data1.clone()
             mock_data4.type = "PLAYER"
             return (mock_data1, mock_data2, mock_data3, mock_data4, "type")
