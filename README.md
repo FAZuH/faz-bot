@@ -16,7 +16,7 @@ Some useful shortcuts for development are written in `Makefile`.
 For debugging:
 
 - `make bot [build|up|down|bash]` Manage container related to fazcord service.
-- `make db [build|up|down|bash]` Manage container related to fazdb service.
+- `make api_collect [build|up|down|bash]` Manage container related to api_collect service.
 - `make sql [build|up|down|bash]` Manage container related to mysql service.
 
 Actions:

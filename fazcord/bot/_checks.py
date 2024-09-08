@@ -37,7 +37,7 @@ class Checks:
 
     async def is_banned(self, interaction: Interaction[Any]) -> bool:
         if not interaction.user:
-            return False
+            return True
 
         user_id = interaction.user.id
         db = self.bot.fazcord_db
@@ -50,6 +50,10 @@ class Checks:
             )
 
         return is_banned
+
+    async def is_not_banned(self, interaction: Interaction[Any]) -> bool:
+        is_banned = await self.is_banned(interaction)
+        return not is_banned
 
     async def is_whitelisted(self, interaction: Interaction[Any]) -> bool:
         if not interaction.guild:
@@ -69,9 +73,18 @@ class Checks:
 
         return is_whitelisted
 
-    async def is_not_banned(self, interaction: Interaction[Any]) -> bool:
-        is_banned = await self.is_banned(interaction)
-        return not is_banned
+    async def is_guild_admin(self, interaction: Interaction[Any]) -> bool:
+        if not interaction.guild or not interaction.user:
+            return False
+
+        is_guild_admin: bool = interaction.user.guild_permissions.administrator  # type: ignore
+        if not is_guild_admin:
+            logger.warning(
+                f"is_whitelisted check for guild {interaction.guild.name} ({guild_id}) returned False",
+                discord=True,
+            )
+
+        return is_guild_admin
 
     @property
     def bot(self) -> Bot:

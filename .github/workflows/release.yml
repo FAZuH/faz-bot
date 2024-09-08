@@ -42,6 +42,7 @@ jobs:
           version-file: ./version.json
           skip-version-file: true
           skip-git-pull: true
+          skip-on-empty: false
           pre-release: false
           release-count: 5
 

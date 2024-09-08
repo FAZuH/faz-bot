@@ -6,11 +6,11 @@ from typing import Generator
 
 from loguru import logger
 
-from fazcord.app.properties import Properties
 from fazcord.bot.bot import Bot
 from fazcord.heartbeat.heartbeat import Heartbeat
 from fazutil.db.fazcord.fazcord_database import FazcordDatabase
 from fazutil.db.fazdb.fazdb_database import FazdbDatabase
+from fazutil.properties import Properties
 from fazutil.util.logger_setup import LoggerSetup
 
 
@@ -22,7 +22,9 @@ class App:
         self._properties = Properties()
         p = self.properties
         p.setup()
-        LoggerSetup.setup(p.LOG_DIR, p.DISCORD_LOG_WEBHOOK, p.ADMIN_DISCORD_ID)
+        LoggerSetup.setup(
+            "logs/fazcord", p.FAZCORD_DISCORD_LOG_WEBHOOK, p.ADMIN_DISCORD_ID
+        )
 
         self._bot = Bot(self)
         self._heartbeat = Heartbeat(self)

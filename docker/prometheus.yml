@@ -2,6 +2,6 @@ global:
   scrape_interval: 15s
 
 scrape_configs:
-  - job_name: "fazdb"
+  - job_name: "api_collect"
     static_configs:
       - targets: ["faz-db:8000"]

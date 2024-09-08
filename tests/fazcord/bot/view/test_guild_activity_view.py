@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from unittest import IsolatedAsyncioTestCase
 from unittest.mock import AsyncMock, MagicMock, create_autospec, patch
 
@@ -54,7 +54,7 @@ class TestGuildActivityView(IsolatedAsyncioTestCase):
         )
         self.assertMultiLineEqual(
             embed_ins.description,
-            "`Guild  : `MockGuild`\n"
+            "`Guild  : `MockGuild\n"
             "`Period : `<t:100:R> to <t:300:R>\n"
             "```ml\n"
             "|   No | Username   | Activity   |\n"
