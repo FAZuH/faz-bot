@@ -61,4 +61,4 @@ jobs:
           MYSQL_FAZDB_DATABASE: faz-db
         run: |
           cp .env-example .env
-          pytest
+          python -m pytest
