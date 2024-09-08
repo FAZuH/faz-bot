@@ -53,7 +53,7 @@ jobs:
           path: version.json
 
   build-fazcord:
-    name: Build fazcord Docker Images
+    name: Build fazcord Docker Image
     needs: [changelog] # Build needs the new version number
     runs-on: ubuntu-latest
     steps:
@@ -97,8 +97,8 @@ jobs:
             commit=${{ github.sha }}
             build_date=${{ env.date }}
 
-  build-fazdb:
-    name: Build fazdb Docker Images
+  build-api_collect:
+    name: Build api_collect Docker Image
     needs: [changelog] # Build needs the new version number
     runs-on: ubuntu-latest
     steps:
@@ -127,11 +127,11 @@ jobs:
         with:
           name: version
 
-      - name: Build and Push fazdb
+      - name: Build and Push api_collect
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./docker/Dockerfile.db
+          file: ./docker/Dockerfile.api_collect
           platforms: linux/amd64
           push: true
           tags: |

@@ -37,9 +37,7 @@ class TestTaskDbInsert(IsolatedAsyncioTestCase):
     def test_run_insert_fazdb_uptime(self) -> None:
         # Prepare
         model = self._mock_db.fazdb_uptime_repository.model = Mock()
-        with patch(
-            "fazbeat.api_collect.task.task_db_insert.datetime"
-        ) as mock_datetime:
+        with patch("fazbeat.api_collect.task.task_db_insert.datetime") as mock_datetime:
             # Act
             self._task_db_insert.run()
             # Assert
