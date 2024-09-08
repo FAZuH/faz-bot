@@ -4,8 +4,7 @@ from typing import Any, Callable
 
 from loguru import logger
 
-from fazbeat.api_collect.app._metrics import Metrics
-from fazbeat.api_collect.heartbeat.heartbeat import Heartbeat
+from fazbeat.api_collect.heartbeat import Heartbeat
 from fazutil.api.wynn.wynn_api import WynnApi
 from fazutil.db.fazdb.fazdb_database import FazdbDatabase
 from fazutil.properties import Properties
@@ -36,7 +35,6 @@ class App:
         self._heartbeat = Heartbeat(self.api, self.db)
 
         self._register_retry_handler()
-        self._register_metric()
 
     def start(self) -> None:
         logger.info("Starting WynnDb Heartbeat...")
@@ -78,42 +76,3 @@ class App:
             register_lambda(repo.insert)
             register_lambda(repo.delete)
             register_lambda(repo.is_exists)
-
-    def _register_metric(self) -> None:
-        metric = Metrics()
-
-        # Summary metrics
-        metric.register_summary(
-            self.api.guild.get,
-            "wapi_request_guild_seconds",
-            "Wynncraft API total request duration on endpoint 'Guild'",
-        )
-        metric.register_summary(
-            self.api.player.get_online_uuids,
-            "wapi_request_onlineplayers_seconds",
-            "Wynncraft API total request duration on endpoint 'Online Players'",
-        )
-        metric.register_summary(
-            self.api.player.get_full_stats,
-            "wapi_request_player_seconds",
-            "Wynncraft API total request duration on endpoint 'Player'",
-        )
-
-        # Counter metrics
-        metric.register_counter(
-            self.api.guild.get,
-            "wapi_request_guild_count",
-            "Wynncraft API request count on endpoint 'Guild'",
-        )
-        metric.register_counter(
-            self.api.player.get_online_uuids,
-            "wapi_request_onlineplayers_count",
-            "Wynncraft API request count on endpoint 'Online Players'",
-        )
-        metric.register_counter(
-            self.api.player.get_full_stats,
-            "wapi_request_player_count",
-            "Wynncraft API request count on endpoint 'Player'",
-        )
-
-        metric.start()

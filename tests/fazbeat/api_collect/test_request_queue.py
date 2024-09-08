@@ -2,7 +2,7 @@ from datetime import datetime as dt
 from unittest import TestCase
 from unittest.mock import MagicMock
 
-from fazbeat.api_collect.heartbeat.task.request_queue import RequestQueue
+from fazbeat.api_collect.task.request_queue import RequestQueue
 
 
 class TestRequestList(TestCase):
