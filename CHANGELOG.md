@@ -1,4 +1,8 @@
-# 0.1.0 (2024-09-08)
+## [0.1.1](https://github.com/FAZuH/faz-bot/compare/v0.1.0...v0.1.1) (2024-09-08)
+
+
+
+# [0.1.0](https://github.com/FAZuH/faz-bot/compare/d4db3299f8c2d4fda51bd5e988f7e609807b0467...v0.1.0) (2024-09-08)
 
 
 ### Bug Fixes
