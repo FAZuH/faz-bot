@@ -2,7 +2,6 @@ FROM python:3.12.4-slim
 
 WORKDIR /app
 
-COPY asset ./asset
 COPY fazcord ./fazcord
 COPY fazutil ./fazutil
 COPY requirements-fazcord.txt requirements.txt

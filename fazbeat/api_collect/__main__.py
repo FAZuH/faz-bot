@@ -5,7 +5,7 @@ from time import sleep
 
 from loguru import logger
 
-from fazbeat.api_collect.app.app import App
+from fazbeat.api_collect.app import App
 
 
 class Main:
