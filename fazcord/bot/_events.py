@@ -63,10 +63,7 @@ class Events:
             error = error.original
         if isinstance(error, errors.ApplicationCheckFailure):
             await interaction.send(
-                (
-                    "You do not have sufficient permission to use this command. "
-                    "Contact bot developer if you believe this is a mistake."
-                ),
+                "You do not have sufficient permission to use this command.",
                 ephemeral=True,
             )
         elif isinstance(error, ApplicationException):
