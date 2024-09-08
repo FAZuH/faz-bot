@@ -2,14 +2,14 @@ import unittest
 from typing import override
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from fazbeat.api_collect.heartbeat.task.task_api_request import TaskApiRequest
+from fazbeat.api_collect.task.task_api_request import TaskApiRequest
 
 
 class TestTaskApiRequest(unittest.IsolatedAsyncioTestCase):
 
     def setUp(self):
         self._event_loop_patcher = patch(
-            "fazbeat.api_collect.heartbeat.task.task_api_request.asyncio"
+            "fazbeat.api_collect.task.task_api_request.asyncio"
         )
         self._mock_event_loop = self._event_loop_patcher.start()
         self._mock_api = MagicMock()
@@ -102,7 +102,7 @@ class TestTaskApiRequest(unittest.IsolatedAsyncioTestCase):
         mock_task.get_coro.return_value = mock_coro
         mock_task.exception.return_value = self._MockException
         self._task_api_request._running_requests.append(mock_task)
-        with patch("fazbeat.api_collect.heartbeat.task.task_api_request.logger") as _:
+        with patch("fazbeat.api_collect.task.task_api_request.logger") as _:
             # Act, Assert
             with self.assertRaises(self._MockException):
                 self._task_api_request._check_responses()
