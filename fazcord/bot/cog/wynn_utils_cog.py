@@ -39,7 +39,6 @@ class WynnUtilsCog(CogBase):
             ingredient4 (str, optional): min,max[,efficiency]
             ingredient5 (str, optional): min,max[,efficiency]
             ingredient6 (str, optional): min,max[,efficiency]
-
         """
         await CraftedProbabilityView(
             self._bot,
@@ -64,7 +63,6 @@ class WynnUtilsCog(CogBase):
 
         Args:
             emerald_string (str, optional): Examples: "2x 1stx 1le 1eb 1e", "2.5stx 100.5le 100.2eb", "1/3x 1000eb".
-
         """
         await ConvertEmeraldView(self._bot, interaction, emerald_string).run()
 
@@ -82,7 +80,6 @@ class WynnUtilsCog(CogBase):
             base_chance (str): Ingredient base drop chance (Supported format: 1.2%, 1.2/100).
             loot_bonus (int, optional): Loot bonus value. Defaults to 0.
             loot_quality (int, optional): Loot quality value. Defaults to 0.
-
         """
         parsed_base_chande = self._parse_base_chance(base_chance)
         await IngredientProbabilityView(

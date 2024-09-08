@@ -6,12 +6,16 @@ from typing import TYPE_CHECKING, Any, AsyncGenerator, Iterable
 from loguru import logger
 from nextcord import Colour, Embed, Interaction
 from nextcord.ext import commands
+from nextcord.types.channel import Channel
+
+from fazcord.bot._utils import Utils
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
 
     from fazcord.bot.bot import Bot
     from fazutil.db.fazcord.fazcord_database import FazcordDatabase
+    from fazutil.db.fazdb.fazdb_database import FazdbDatabase
 
 
 class CogBase(commands.Cog):
@@ -30,6 +34,10 @@ class CogBase(commands.Cog):
             f"with {len(self.application_commands)} application commands"
         )
 
+    async def _must_get_channel(self, channel_id: str | int):
+        channel = await Utils.must_get_channel(self._bot.client, channel_id)
+        return channel
+
     async def _respond_successful(
         self, interaction: Interaction[Any], message: str
     ) -> None:
@@ -44,11 +52,13 @@ class CogBase(commands.Cog):
         async with db.enter_async_session() as session:
             yield db, session
 
-    # @asynccontextmanager
-    # async def _enter_fazdb_session(self) -> AsyncGenerator[tuple[FazdbDatabase, AsyncSession], None]:
-    #     with self._bot.app.enter_fazdb_db() as db:
-    #         async with db.enter_async_session() as session:
-    #             yield db, session
+    @asynccontextmanager
+    async def _enter_fazdb_session(
+        self,
+    ) -> AsyncGenerator[tuple[FazdbDatabase, AsyncSession], None]:
+        db = self._bot.fazdb_db
+        async with db.enter_async_session() as session:
+            yield db, session
 
     def _setup(self, whitelisted_guild_ids: Iterable[int]) -> None:
         """Method to run on cog setup.

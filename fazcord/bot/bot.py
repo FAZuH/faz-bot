@@ -51,7 +51,7 @@ class Bot:
         logger.info("Starting Bot")
         self._discord_bot_thread.start()
         # Note: thread.start() runs self._start()
-        logger.success("Started discord thread")
+        logger.success("Started Discord Thread")
 
     def stop(self) -> None:
         logger.info("Stopping Bot")
