@@ -1,13 +1,13 @@
 #!/bin/bash
 
-scrDir=$(dirname "$(realpath "$0")")
+projectDir=$(dirname "$(dirname "$(realpath "$0")")")
 
-cd "$scrDir" || exit
+cd "$projectDir" || exit
 
-echo "Pulling latest git commit in $scrDir..."
+echo "Pulling latest git commit in $projectDir..."
 git pull origin main
 
 echo "Running update script..."
-UPDATE_SCRIPT="$scrDir/../docker/update.sh"
+UPDATE_SCRIPT="$projectDir/docker/update.sh"
 
 $UPDATE_SCRIPT
