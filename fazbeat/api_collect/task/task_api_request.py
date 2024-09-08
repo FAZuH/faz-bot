@@ -9,8 +9,8 @@ from loguru import logger
 from fazutil.heartbeat.task.itask import ITask
 
 if TYPE_CHECKING:
-    from fazbeat.api_collect.heartbeat.task.request_queue import RequestQueue
-    from fazbeat.api_collect.heartbeat.task.response_queue import ResponseQueue
+    from fazbeat.api_collect.task.request_queue import RequestQueue
+    from fazbeat.api_collect.task.response_queue import ResponseQueue
     from fazutil.api.base_response import BaseResponse
     from fazutil.api.wynn.wynn_api import WynnApi
 
