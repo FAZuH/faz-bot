@@ -7,7 +7,7 @@ from dateparser import parse
 from nextcord import Interaction, slash_command
 
 from fazcord.bot.cog._cog_base import CogBase
-from fazcord.bot.errors import ParseFailure
+from fazcord.bot.errors import BadArgument, ParseFailure
 from fazcord.bot.view.activity_view import ActivityView
 from fazcord.bot.view.guild_activity_view import GuildActivityView
 from fazcord.bot.view.player_history_view import PlayerHistoryView
@@ -27,7 +27,7 @@ class WynnHistoryCog(CogBase):
         Args:
             player (str): The player username or UUID to check.
             period (str): The time period to check. Enter an integer to show active time past the last `n` hours,
-                or enter a date-time range separated by '-' to specify a time range. Check
+                or enter a date-time range separated by '--' to specify a time range. Check
                 dateparser.readthedocs.io for valid date-time formats. Max period is 6 months.
 
         Raises:
@@ -49,7 +49,7 @@ class WynnHistoryCog(CogBase):
         Args:
             guild (str): The guild name or UUID to check.
             period (str): The time period to check. Enter an integer to show active time past the last `n` hours,
-                or enter a date-time range separated by '-' to specify a time range. Check
+                or enter a date-time range separated by '--' to specify a time range. Check
                 dateparser.readthedocs.io for valid date-time formats. Max period is 6 months.
 
         Raises:
@@ -103,8 +103,8 @@ class WynnHistoryCog(CogBase):
     @staticmethod
     def _parse_period(intr: Interaction[Any], period: str) -> tuple[datetime, datetime]:
         try:
-            if "-" in period:
-                left, right = period.split("-")
+            if "--" in period:
+                left, right = period.split("--")
                 period_begin = parse(left)
                 period_end = parse(right)
                 WynnHistoryCog._check_period(period_begin)
@@ -115,9 +115,9 @@ class WynnHistoryCog(CogBase):
         except ValueError as exc:
             raise ParseFailure(f"Can't parse period (reason: {exc})") from exc
         assert period_begin and period_end
-        if period_begin - period_end > timedelta(days=182):
-            raise ParseFailure(
-                "Can't parse period (reason: The period range cannot exceed 6 months.)"
+        if period_end - period_begin > timedelta(days=182):
+            raise BadArgument(
+                "Can't parse period (reason: Period range cannot exceed 6 months.)"
             )
         return period_begin, period_end
 
