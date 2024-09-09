@@ -12,7 +12,7 @@ class HelpCog(CogBase):
     async def _help(self, interaction: nextcord.Interaction[Any]) -> None:
         if not interaction.guild:
             raise UnauthorizedLocationException(
-                "You can only use this command in a guild channel."
+                "You can only use this command in a discord channel."
             )
 
         cmds = list(interaction.guild.get_application_commands())

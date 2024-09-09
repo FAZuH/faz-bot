@@ -38,13 +38,13 @@ class WynnTrackCog(CogBase):
 
     @track.subcommand()
     async def show(self, intr: Interaction[Any]) -> None:
-        """Shows all Wynncraft trackers on this guild."""
+        """Shows all Wynncraft trackers on this server."""
         db = self._bot.fazcord_db
         guild_id = intr.guild.id  # type: ignore
         track_entries = await db.track_entry.select_by_guild_id(guild_id)
         if len(track_entries) == 0:
             await self._respond_successful(
-                intr, "This guild does not have any Wynncraft trackers registred"
+                intr, "This server does not have any Wynncraft trackers registred"
             )
         else:
             responses = []

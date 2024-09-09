@@ -47,7 +47,7 @@ class WynnHistoryCog(CogBase):
     async def guild_activity(
         self, intr: Interaction[Any], guild: str, period: str
     ) -> None:
-        """Shows players' active time in a given guild between the specified time period
+        """Shows players' active time in a guild between the specified time period
 
         Args:
             guild (str): The guild name or UUID to check.

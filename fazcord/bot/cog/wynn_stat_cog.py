@@ -19,8 +19,7 @@ class WynnStatCog(CogBase):
         intr: Interaction[Any],
         sort_by: Literal["Player Count", "Time Created"] = "Time Created",
     ) -> None:
-        """
-        Shows a list of active worlds, showing player count and world uptime.
+        """Shows a list of active worlds, showing player count and world uptime.
 
         Args:
             sort_by (Literal["Player Count", "Time Created"], optional): The criteria to sort the worlds by.
