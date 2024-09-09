@@ -1,3 +1,17 @@
+## [0.1.3](https://github.com/FAZuH/faz-bot/compare/v0.1.2...v0.1.3) (2024-09-09)
+
+
+### Bug Fixes
+
+* fix undefined variable [skip ci] ([#29](https://github.com/FAZuH/faz-bot/issues/29)) ([78b7e0b](https://github.com/FAZuH/faz-bot/commit/78b7e0bcacb3b950a47a8643f48cfde7b09ea37c))
+
+
+### Performance Improvements
+
+* improve api performance ([#30](https://github.com/FAZuH/faz-bot/issues/30)) ([45252a1](https://github.com/FAZuH/faz-bot/commit/45252a1e259a5914e1bd84dc0ae1500b72c37c24))
+
+
+
 ## [0.1.2](https://github.com/FAZuH/faz-bot/compare/v0.1.1...v0.1.2) (2024-09-08)
 
 
