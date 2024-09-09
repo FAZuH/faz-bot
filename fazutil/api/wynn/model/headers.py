@@ -6,6 +6,16 @@ from fazutil.api.wynn.model.field.header_date_field import HeaderDateField
 
 class Headers:
 
+    __slots__ = (
+        "_raw",
+        "_cache_control",
+        "_date",
+        "_expires",
+        "_ratelimit_limit",
+        "_ratelimit_remaining",
+        "_ratelimit_reset",
+    )
+
     def __init__(self, raw: dict[str, Any]) -> None:
         self._raw = raw
         self._cache_control = raw["Cache-Control"]

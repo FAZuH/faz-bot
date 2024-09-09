@@ -3,6 +3,8 @@ from uuid import UUID
 
 class UsernameOrUuidField:
 
+    __slots__ = ("_username_or_uuid", "_is_uuid", "_username", "_uuid")
+
     def __init__(self, username_or_uuid: str) -> None:
         self._username_or_uuid: str = username_or_uuid
         self._is_uuid: bool = False

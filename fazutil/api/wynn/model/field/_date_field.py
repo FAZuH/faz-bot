@@ -3,9 +3,11 @@ from datetime import datetime
 
 class DateField:
 
+    __slots__ = ("_datestr", "_datefmt")
+
     def __init__(self, datestr: str, datefmt: str) -> None:
-        self._datestr: str = datestr
-        self._datefmt: str = datefmt
+        self._datestr = datestr
+        self._datefmt = datefmt
 
     def __str__(self) -> str:
         return self.datestr
