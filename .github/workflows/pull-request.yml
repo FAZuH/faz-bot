@@ -49,7 +49,7 @@ jobs:
 
       - name: Format with Ruff and Black
         run: |
-          python -m ruff check --fix --exit-zero .
+          python -m ruff check --fix --exit-zero --no-cache .
           python -m black .
 
       - name: Commit Format
@@ -70,4 +70,4 @@ jobs:
           MYSQL_FAZDB_DATABASE: faz-db
         run: |
           cp .env-example .env
-          python -m pytest tests/
+          python -m pytest --cache-clear tests/
