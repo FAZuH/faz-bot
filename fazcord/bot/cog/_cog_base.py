@@ -6,7 +6,6 @@ from typing import TYPE_CHECKING, Any, AsyncGenerator, Iterable
 from loguru import logger
 from nextcord import Colour, Embed, Interaction
 from nextcord.ext import commands
-from nextcord.types.channel import Channel
 
 from fazcord.bot._utils import Utils
 
