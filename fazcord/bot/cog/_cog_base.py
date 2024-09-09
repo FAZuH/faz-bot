@@ -22,6 +22,7 @@ class CogBase(commands.Cog):
     def __init__(self, bot: Bot) -> None:
         super().__init__()
         self._bot = bot
+        self._utils = self._bot.utils
 
     def setup(self, whitelisted_guild_ids: Iterable[int]) -> None:
         """Adds cog to the bot."""
@@ -32,10 +33,6 @@ class CogBase(commands.Cog):
             f"Added cog {self.__class__.__qualname__} "
             f"with {len(self.application_commands)} application commands"
         )
-
-    async def _must_get_channel(self, channel_id: str | int):
-        channel = await Utils.must_get_channel(self._bot.client, channel_id)
-        return channel
 
     async def _respond_successful(
         self, interaction: Interaction[Any], message: str

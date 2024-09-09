@@ -40,8 +40,9 @@ class Bot:
         )
 
         # Define self._client before initializing the modules below
+        self._utils = Utils(self)
         self._checks = Checks(self)
-        self._cogs = CogCore(self)
+        self._cogs = CogCore(self)  # needs utils
         self._events = Events(self)
 
         self.fazcord_db.create_all()
@@ -101,6 +102,10 @@ class Bot:
     def events(self) -> Events:
         return self._events
 
+    @property
+    def utils(self) -> Utils:
+        return self._utils
+
     def _start(self) -> None:
         logger.info("Starting discord client")
         asyncio.set_event_loop(self._event_loop)
@@ -126,9 +131,7 @@ class Bot:
 
     async def _whitelist_dev_guild(self) -> None:
         """Adds dev guild to whitelist database, if not already added."""
-        guild = await Utils.must_get_guild(
-            self.client, self.app.properties.DEV_SERVER_ID
-        )
+        guild = await self.utils.must_get_guild(self.app.properties.DEV_SERVER_ID)
         try:
             await self.fazcord_db.whitelist_group_repository.whitelist_guild(
                 guild.id, reason="DEV GUILD"

@@ -3,7 +3,7 @@ DOCKER_COMPOSE := $(DOCKER_DIR)/docker-compose.yml
 SCRIPT := ./makefile.sh
 .DEFAULT_GOAL := help
 
-.PHONY: wait-for-mysql build-all up-all down-all api-collect bot mysql pma test lint-format rmpycache countlines
+.PHONY: wait-for-mysql build-all up-all down-all api-collect bot mysql pma test lint-format lint-format-fix rmpycache countlines
 
 help:
 	@echo "Usage:"
@@ -16,6 +16,7 @@ help:
 	@echo "  make pma act=[build|up|down|bash]          # Manage phpmyadmin service"
 	@echo "  make test                                  # Run python tests"
 	@echo "  make lint-format                           # Run python formatting with Ruff"
+	@echo "  make lint-format-fix                       # Run python formatting with Ruff with --fix on"
 	@echo "  make rmpycache                             # Remove __pycache__ directories"
 	@echo "  make countlines                            # Count sum of lines of all python files"
 
@@ -60,6 +61,9 @@ test:
 	python -m pytest --disable-warnings tests
 
 lint-format:
+	python -m ruff check
+
+lint-format-fix:
 	python -m ruff check --fix
 
 

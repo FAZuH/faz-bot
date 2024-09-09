@@ -47,7 +47,7 @@ class AdminCog(CogBase):
         until : str | None, optional
             Time when the user will be unbanned, by default None
         """
-        user = await Utils.must_get_user(self._bot.client, user_id)
+        user = await self._bot.utils.must_get_user(user_id)
 
         async with self._enter_botdb_session() as (db, s):
             repo = db.whitelist_group_repository
@@ -77,7 +77,7 @@ class AdminCog(CogBase):
         user_id : str
             The user ID to unban.
         """
-        user = await Utils.must_get_user(self._bot.client, user_id)
+        user = await self._utils.must_get_user(user_id)
 
         async with self._enter_botdb_session() as (db, s):
             repo = db.whitelist_group_repository
@@ -115,7 +115,7 @@ class AdminCog(CogBase):
         message : str
             Message to send.
         """
-        channel = await Utils.must_get_channel(self._bot.client, channel_id)
+        channel = await self._utils.must_get_channel(channel_id)
 
         if not self._is_channel_sendable(channel):
             raise ApplicationException(
@@ -139,7 +139,7 @@ class AdminCog(CogBase):
             The guild ID to sync app commands to.
         """
         await intr.response.defer()
-        guild = await Utils.must_get_guild(self._bot.client, guild_id)
+        guild = await self._utils.must_get_guild(guild_id)
 
         await self._bot.client.sync_application_commands(guild_id=guild.id)
 
@@ -177,7 +177,7 @@ class AdminCog(CogBase):
         message : str
             The message to whisper to the user.
         """
-        user = await Utils.must_get_user(self._bot.client, user_id)
+        user = await self._utils.must_get_user(user_id)
 
         try:
             await user.send(message)
@@ -203,7 +203,7 @@ class AdminCog(CogBase):
         until : str | None, optional
             Date until the whitelist expires, by default None
         """
-        guild = await Utils.must_get_guild(self._bot.client, guild_id)
+        guild = await self._utils.must_get_guild(guild_id)
 
         async with self._enter_botdb_session() as (db, s):
             repo = db.whitelist_group_repository
@@ -232,7 +232,7 @@ class AdminCog(CogBase):
         guild_id : str
             The guild ID to unwhitelist.
         """
-        guild = await Utils.must_get_guild(self._bot.client, guild_id)
+        guild = await self._utils.must_get_guild(guild_id)
 
         async with self._enter_botdb_session() as (db, s):
             repo = db.whitelist_group_repository
