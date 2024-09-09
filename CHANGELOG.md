@@ -1,3 +1,12 @@
+## [0.1.4](https://github.com/FAZuH/faz-bot/compare/v0.1.3...v0.1.4) (2024-09-09)
+
+
+### Bug Fixes
+
+* fix overwritten admin cog commands ([#32](https://github.com/FAZuH/faz-bot/issues/32)) ([b250e38](https://github.com/FAZuH/faz-bot/commit/b250e38a678d305d59cf615b986c4427801ecb2d))
+
+
+
 ## [0.1.3](https://github.com/FAZuH/faz-bot/compare/v0.1.2...v0.1.3) (2024-09-09)
 
 
