@@ -2,7 +2,7 @@ from typing import Any
 
 import nextcord
 
-from fazcord.bot.cog._base_cog import CogBase
+from fazcord.bot.cog._cog_base import CogBase
 from fazcord.bot.errors import UnauthorizedLocationException
 from fazcord.bot.view.help_view import HelpView
 
@@ -12,7 +12,7 @@ class HelpCog(CogBase):
     async def _help(self, interaction: nextcord.Interaction[Any]) -> None:
         if not interaction.guild:
             raise UnauthorizedLocationException(
-                "You can only use this command in a discord channel."
+                "You can only use this command in a guild channel."
             )
 
         cmds = list(interaction.guild.get_application_commands())

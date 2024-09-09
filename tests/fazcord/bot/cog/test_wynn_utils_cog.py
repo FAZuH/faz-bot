@@ -4,7 +4,7 @@ from unittest import TestCase
 from unittest.mock import MagicMock
 
 from fazcord.bot.cog.wynn_utils_cog import WynnUtilsCog
-from fazcord.bot.errors import InvalidArgumentException, ParseException
+from fazcord.bot.errors import InvalidArgumentException
 
 
 class TestWynnUtilsCog(TestCase):
@@ -36,7 +36,7 @@ class TestWynnUtilsCog(TestCase):
             self._wynn_utils._parse_ings_str("1")
 
     def test_parse_ing_non_integer_values(self):
-        with self.assertRaises(ParseException):
+        with self.assertRaises(InvalidArgumentException):
             self._wynn_utils._parse_ings_str("one,5,2")
 
     def test_parse_ing_skip_default_value(self):
@@ -71,6 +71,6 @@ class TestWynnUtilsCog(TestCase):
         test6 = self._parse_chance("0.1")
         self.assertAlmostEqual(test6, Decimal("0.1"))
 
-    def test_parse_chance_invalid_argument(self) -> None:
+    def test_parse_chance_bad_argument(self) -> None:
         with self.assertRaises(InvalidArgumentException):
             self._parse_chance("abc")

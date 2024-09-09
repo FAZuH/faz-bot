@@ -2,7 +2,7 @@ from typing import Any, Iterable, Literal, override
 
 from nextcord import Interaction, slash_command
 
-from fazcord.bot.cog._base_cog import CogBase
+from fazcord.bot.cog._cog_base import CogBase
 from fazcord.bot.errors import InvalidActionException, InvalidArgumentException
 
 
@@ -44,7 +44,7 @@ class WynnTrackCog(CogBase):
         track_entries = await db.track_entry.select_by_guild_id(guild_id)
         if len(track_entries) == 0:
             await self._respond_successful(
-                intr, "This server does not have any Wynncraft trackers registred"
+                intr, "This guild does not have any Wynncraft trackers registred"
             )
         else:
             responses = []

@@ -22,3 +22,4 @@ class UnauthorizedUserException(ApplicationCheckFailure):
 
 class UnauthorizedLocationException(ApplicationCheckFailure):
     """A command was executed in a disallowed location."""
+

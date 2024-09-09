@@ -7,7 +7,7 @@ import nextcord
 from nextcord import Interaction
 
 from fazcord.bot._utils import Utils
-from fazcord.bot.cog._base_cog import CogBase
+from fazcord.bot.cog._cog_base import CogBase
 from fazcord.bot.errors import ApplicationException, InvalidActionException
 
 
