@@ -1,3 +1,12 @@
+## [0.2.1](https://github.com/FAZuH/faz-bot/compare/v0.2.0...v0.2.1) (2024-09-09)
+
+
+### Bug Fixes
+
+* fix missing library on api_collect ([#41](https://github.com/FAZuH/faz-bot/issues/41)) ([f3234e8](https://github.com/FAZuH/faz-bot/commit/f3234e8f24efa0864dc9301410ffed6c7c4bf047))
+
+
+
 # [0.2.0](https://github.com/FAZuH/faz-bot/compare/v0.1.4...v0.2.0) (2024-09-09)
 
 
@@ -31,10 +40,6 @@
 
 
 ## [0.1.2](https://github.com/FAZuH/faz-bot/compare/v0.1.1...v0.1.2) (2024-09-08)
-
-
-
-## [0.1.1](https://github.com/FAZuH/faz-bot/compare/v0.1.0...v0.1.1) (2024-09-08)
 
 
 
