@@ -1,3 +1,12 @@
+## [0.2.2](https://github.com/FAZuH/faz-bot/compare/v0.2.1...v0.2.2) (2024-09-09)
+
+
+### Bug Fixes
+
+* **bot:** Various command fixes ([#43](https://github.com/FAZuH/faz-bot/issues/43)) ([0cd8038](https://github.com/FAZuH/faz-bot/commit/0cd80385bde564092744514a550f603752d31791))
+
+
+
 ## [0.2.1](https://github.com/FAZuH/faz-bot/compare/v0.2.0...v0.2.1) (2024-09-09)
 
 
@@ -36,10 +45,6 @@
 ### Performance Improvements
 
 * improve api performance ([#30](https://github.com/FAZuH/faz-bot/issues/30)) ([45252a1](https://github.com/FAZuH/faz-bot/commit/45252a1e259a5914e1bd84dc0ae1500b72c37c24))
-
-
-
-## [0.1.2](https://github.com/FAZuH/faz-bot/compare/v0.1.1...v0.1.2) (2024-09-08)
 
 
 
