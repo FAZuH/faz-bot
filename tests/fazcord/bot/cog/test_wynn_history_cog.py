@@ -1,122 +1,103 @@
 import unittest
 from datetime import datetime, timedelta
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, create_autospec, patch
 
+from fazcord.bot._utils import Utils
 from fazcord.bot.cog.wynn_history_cog import WynnHistoryCog
-from fazcord.bot.errors import BadArgument
 
 
 class TestWynnHistoryCog(unittest.IsolatedAsyncioTestCase):
     def setUp(self) -> None:
-        self.mock_intr = MagicMock()
-        self.mock_intr.created_at = datetime.now()
-        self.mock_bot = MagicMock()
-
-    async def test_activity_raises_badargument_nonexisting_guild(self) -> None:
-        # Prepare
-        self.mock_bot.fazdb_db.player_info_repository.get_player = AsyncMock(
-            return_value=None
-        )
-        # Act, Assert
-        with self.assertRaises(BadArgument):
-            wynn_history = WynnHistoryCog(self.mock_bot)
-            await wynn_history.activity(self.mock_intr, "a", "a")
+        self.intr = MagicMock()
+        self.intr.created_at = datetime.now()
+        self.bot = MagicMock()
+        self.utils = create_autospec(Utils, spec_set=True)
+        self.bot.utils = self.utils
 
     @patch("fazcord.bot.cog.wynn_history_cog.ActivityView", autospec=True)
     async def test_activity_past_n_hour(self, mock_invoke: MagicMock) -> None:
         # Prepare
         mock_player = MagicMock()
-        self.mock_bot.fazdb_db.player_info_repository.get_player = AsyncMock(
-            return_value=mock_player
-        )
-        wynn_history = WynnHistoryCog(self.mock_bot)
+        mock_player.awaitable_attrs = self._mock_awaitable_attr()
+        self.utils.must_get_wynn_player = AsyncMock(return_value=mock_player)
+        wynn_history = WynnHistoryCog(self.bot)
         # Act
-        await wynn_history.activity(self.mock_intr, "a", "10")
+        await wynn_history.activity(self.intr, "a", "10")
         # Assert
         mock_invoke.return_value.run.assert_awaited_once()
         mock_invoke.assert_called_once_with(
-            self.mock_bot,
-            self.mock_intr,
+            self.bot,
+            self.intr,
             mock_player,
-            self.mock_intr.created_at - timedelta(hours=10),
-            self.mock_intr.created_at,
+            self.intr.created_at - timedelta(hours=10),
+            self.intr.created_at,
         )
 
     @patch("fazcord.bot.cog.wynn_history_cog.ActivityView", autospec=True)
     async def test_activity_time_range(self, mock_invoke: MagicMock) -> None:
         # Prepare
         mock_player = MagicMock()
-        self.mock_bot.fazdb_db.player_info_repository.get_player = AsyncMock(
+        mock_player.awaitable_attrs = self._mock_awaitable_attr()
+        self.bot.fazdb_db.player_info_repository.get_player = AsyncMock(
             return_value=mock_player
         )
-        wynn_history = WynnHistoryCog(self.mock_bot)
+        wynn_history = WynnHistoryCog(self.bot)
         # Act
-        await wynn_history.activity(self.mock_intr, "a", "2 days ago - 1 days ago")
+        await wynn_history.activity(self.intr, "a", "2 days ago - 1 days ago")
         # Assert
         mock_invoke.return_value.run.assert_awaited_once()
         call_args = mock_invoke.call_args[0]
         begin = call_args[3].timestamp()
         end = call_args[4].timestamp()
         self.assertAlmostEqual(
-            (self.mock_intr.created_at - timedelta(days=2)).timestamp(), begin, delta=5
+            (self.intr.created_at - timedelta(days=2)).timestamp(), begin, delta=5
         )
         self.assertAlmostEqual(
-            (self.mock_intr.created_at - timedelta(days=1)).timestamp(), end, delta=5
+            (self.intr.created_at - timedelta(days=1)).timestamp(), end, delta=5
         )
-
-    async def test_guild_activity_raises_badargument_nonexisting_guild(self) -> None:
-        # Prepare
-        self.mock_bot.fazdb_db.guild_info_repository.get_guild = AsyncMock(
-            return_value=None
-        )
-        # Act, Assert
-        with self.assertRaises(BadArgument):
-            wynn_history = WynnHistoryCog(self.mock_bot)
-            await wynn_history.guild_activity(self.mock_intr, "a", "a")
 
     @patch("fazcord.bot.cog.wynn_history_cog.GuildActivityView", autospec=True)
     async def test_guild_activity_past_n_hour(self, mock_invoke: MagicMock) -> None:
         # Prepare
         mock_guild = MagicMock()
-        self.mock_bot.fazdb_db.guild_info_repository.get_guild = AsyncMock(
-            return_value=mock_guild
-        )
-        wynn_history = WynnHistoryCog(self.mock_bot)
+        mock_guild.awaitable_attrs.members = self._mock_awaitable_attr()
+        self.utils.must_get_wynn_guild = AsyncMock(return_value=mock_guild)
+        wynn_history = WynnHistoryCog(self.bot)
         # Act
-        await wynn_history.guild_activity(self.mock_intr, "a", "10")
+        await wynn_history.guild_activity(self.intr, "a", "10")
         # Assert
         mock_invoke.return_value.run.assert_awaited_once()
         mock_invoke.assert_called_once_with(
-            self.mock_bot,
-            self.mock_intr,
+            self.bot,
+            self.intr,
             mock_guild,
-            self.mock_intr.created_at - timedelta(hours=10),
-            self.mock_intr.created_at,
+            self.intr.created_at - timedelta(hours=10),
+            self.intr.created_at,
         )
 
     @patch("fazcord.bot.cog.wynn_history_cog.GuildActivityView", autospec=True)
     async def test_guild_activity_time_range(self, mock_invoke: MagicMock) -> None:
-        # Prepare
         mock_guild = MagicMock()
-        self.mock_bot.fazdb_db.guild_info_repository.get_guild = AsyncMock(
+        mock_guild.awaitable_attrs.members = self._mock_awaitable_attr()
+        self.bot.fazdb_db.guild_info_repository.get_guild = AsyncMock(
             return_value=mock_guild
         )
-        wynn_history = WynnHistoryCog(self.mock_bot)
+        wynn_history = WynnHistoryCog(self.bot)
         # Act
-        await wynn_history.guild_activity(
-            self.mock_intr, "a", "2 days ago - 1 days ago"
-        )
+        await wynn_history.guild_activity(self.intr, "a", "2 days ago - 1 days ago")
         # Assert
         mock_invoke.return_value.run.assert_awaited_once()
         call_args = mock_invoke.call_args[0]
         begin = call_args[3].timestamp()
         end = call_args[4].timestamp()
         self.assertAlmostEqual(
-            (self.mock_intr.created_at - timedelta(days=2)).timestamp(), begin, delta=5
+            (self.intr.created_at - timedelta(days=2)).timestamp(), begin, delta=5
         )
         self.assertAlmostEqual(
-            (self.mock_intr.created_at - timedelta(days=1)).timestamp(), end, delta=5
+            (self.intr.created_at - timedelta(days=1)).timestamp(), end, delta=5
         )
+
+    async def _mock_awaitable_attr(self) -> None: ...
 
     async def asyncTearDown(self) -> None:
         return await super().asyncTearDown()
