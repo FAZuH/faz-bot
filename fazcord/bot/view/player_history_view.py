@@ -6,7 +6,7 @@ from decimal import Decimal
 from typing import TYPE_CHECKING, Any, override
 
 from nextcord import ButtonStyle, Color, Embed
-from nextcord.ui import Button
+from nextcord.ui import Button, button
 
 from fazcord.bot.view._base_view import BaseView
 from fazcord.bot.view._custom_embed import CustomEmbed
@@ -33,23 +33,30 @@ class PlayerHistoryView(BaseView):
         self._period_begin = period_begin
         self._period_end = period_end
 
-    @override
-    async def run(self) -> None:
-        embed = await self._get_embed()
-        await self._interaction.send(embed=embed, view=self)
-
-    async def _get_embed(self) -> Embed:
         begin_ts = int(self._period_begin.timestamp())
         end_ts = int(self._period_end.timestamp())
-        assert self._interaction.user
-        db = self._bot.fazdb_db
-
-        embed = CustomEmbed(
+        self._base_embed = CustomEmbed(
             self._interaction,
             title=f"Player History ({self._player.latest_username})",
+            description=f"`Period : ` <t:{begin_ts}:R> to <t:{end_ts}:R>\n\n",
             color=Color.teal(),
         )
-        embed.description = f"`Period : ` <t:{begin_ts}:R> to <t:{end_ts}:R>\n\n"
+
+    @override
+    async def run(self) -> None:
+        self._embed = await self._get_embed()
+        await self._interaction.send(embed=self._embed, view=self)
+
+    @button(style=ButtonStyle.blurple, label="Total", disabled=True)
+    async def default_button(self, button: Button[Any], intr: Interaction[Any]) -> None:
+        embed = self._embed
+        self._click_button(button)
+        # HACK: Using intr returns error. Use self._interaction instead.
+        await self._interaction.edit_original_message(embed=embed, view=self)
+
+    async def _get_embed(self) -> Embed:
+        db = self._bot.fazdb_db
+        embed = self._base_embed.get_base()
 
         player_hist = await db.player_history_repository.select_between_period(
             self._player.uuid, self._period_begin, self._period_end
@@ -102,7 +109,7 @@ class PlayerHistoryView(BaseView):
             type = char.type
             charcount[type] += 1
             d["Level"][0] += c1.level
-            d["Level"][1] = c2.level
+            d["Level"][1] += c2.level
             d["Xp"][0] += c1.xp
             d["Xp"][1] += c2.xp
             d["Wars"][0] += c1.wars
@@ -152,7 +159,7 @@ class PlayerHistoryView(BaseView):
             )
 
         max_label_length = max(len(label) for label in d)
-        embed.description += "".join(
+        embed.description += "".join(  # type: ignore
             [
                 self._diff_str_or_blank(diff[0], diff[1], label, max_label_length)
                 for label, diff in d.items()
@@ -165,19 +172,6 @@ class PlayerHistoryView(BaseView):
     def _diff_str_or_blank(
         self, before: Any, after: Any, label: str, label_space: int
     ) -> str:
-        """
-        Returns a formatted string showing the difference between `before` and `after`
-        if they are not equal. Otherwise, returns an empty string.
-
-        Args:
-            before (Any): The initial value of the stat.
-            after (Any): The new value of the stat.
-            label (str): The label of the difference string.
-            label_space (int): The number of spaces for the label alignment.
-
-        Returns:
-            str: A formatted string if there is a difference; otherwise, an empty string.
-        """
         if before != after:
             formatted_label = f"`{label:{label_space}}:`"
             return f"{formatted_label} {before} -> {after}\n"
@@ -218,15 +212,18 @@ class PlayerHistoryView(BaseView):
         }
         max_label_length = max(len(label) for label in d)
 
-        embed = CustomEmbed(
-            self._interaction,
-            title=f"Player History ({self._player.latest_username})",
-            color=Color.teal(),
-        )
-        embed.description = "".join(
+        embed = self._base_embed.get_base()
+        embed.description += "".join(  # type: ignore
             [
                 self._diff_str_or_blank(diff[0], diff[1], label, max_label_length)
                 for label, diff in d.items()
             ]
         )
-        self.add_item(Button(style=ButtonStyle.green, label=label))
+
+        class _CharacterButton(Button):
+            async def callback(s, interaction: Interaction) -> None:  # type: ignore To grab self from outer
+                await interaction.response.defer()
+                self._click_button(s)
+                await interaction.edit_original_message(embed=embed, view=self)
+
+        self.add_item(_CharacterButton(style=ButtonStyle.green, label=label))
