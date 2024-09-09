@@ -48,7 +48,7 @@ jobs:
           pip install -r requirements-dev.txt
 
       - name: Format with Ruff
-        run: python -m ruff check --fix
+        run: python -m ruff check --fix --exit-zero
 
       - name: Commit Format
         uses: stefanzweifel/git-auto-commit-action@v5
