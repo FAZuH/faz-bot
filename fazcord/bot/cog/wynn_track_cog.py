@@ -44,7 +44,7 @@ class WynnTrackCog(CogBase):
         track_entries = await db.track_entry.select_by_guild_id(guild_id)
         if len(track_entries) == 0:
             await self._respond_successful(
-                intr, "This guild does not have any Wynncraft trackers registred"
+                intr, "This server does not have any Wynncraft trackers registred"
             )
         else:
             responses = []
