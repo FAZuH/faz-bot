@@ -72,8 +72,7 @@ class BaseView(View, ABC):
         This method is called when the view times out. It updates the original message to
         remove the view.
         """
-        for item in self.children:
-            self.remove_item(item)
+        self.clear_items()
         await self._interaction.edit_original_message(view=self)
 
     @abstractmethod
