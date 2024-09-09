@@ -12,18 +12,18 @@ class WynnTrackCog(CogBase):
     @override
     def _setup(self, whitelisted_guild_ids: Iterable[int]) -> None:
         super()._setup(whitelisted_guild_ids)
-        self.admin.add_check(self._bot.checks.is_admin)
         self.track.add_check(self._bot.checks.is_guild_admin)
-        self.admin.add_guild_rollout(self._bot.app.properties.DEV_SERVER_ID)
+        self.track_admin.add_check(self._bot.checks.is_admin)
+        self.track_admin.add_guild_rollout(self._bot.app.properties.DEV_SERVER_ID)
         self._bot.client.add_application_command(
-            self.admin, overwrite=True, use_rollout=True
+            self.track_admin, overwrite=True, use_rollout=True
         )
 
-    @slash_command(name="admin", description="Admin WynnTrack commands.")
-    async def admin(self, intr: Interaction[Any]) -> None:
+    @slash_command(name="track_admin", description="Admin WynnTrack commands.")
+    async def track_admin(self, intr: Interaction[Any]) -> None:
         """Contains administrative commands for managing WynnTrack."""
 
-    @admin.subcommand(name="toggle")
+    @track_admin.subcommand(name="toggle")
     async def toggle(self, intr: Interaction[Any], channel_id: str) -> None:
         """(dev only) Toggles a track entry on any channel_id."""
         db = self._bot.fazcord_db
@@ -65,7 +65,7 @@ class WynnTrackCog(CogBase):
             response = "\n".join(responses)
             await self._respond_successful(intr, response)
 
-    @track.subcommand()
+    @track.subcommand(name="toggle")
     async def toggle_(self, intr: Interaction[Any], channel_id: str) -> None:
         """Toggles a track entry on/off.
 
