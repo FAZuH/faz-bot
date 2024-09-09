@@ -10,6 +10,7 @@ from fazcord.bot.cog._cog_base import CogBase
 from fazcord.bot.errors import ParseFailure
 from fazcord.bot.view.activity_view import ActivityView
 from fazcord.bot.view.guild_activity_view import GuildActivityView
+from fazcord.bot.view.player_history_view import PlayerHistoryView
 
 
 class WynnHistoryCog(CogBase):
@@ -55,6 +56,7 @@ class WynnHistoryCog(CogBase):
             BadArgument: If the player is not found.
             ParseFailure: If the period failed to be parsed
         """
+        await intr.response.defer()
         guild_info = await self._bot.utils.must_get_wynn_guild(guild)
         period_begin, period_end = self._parse_period(intr, period)
         await GuildActivityView(
@@ -66,7 +68,9 @@ class WynnHistoryCog(CogBase):
         ).run()
 
     @slash_command()
-    async def player(self, intr: Interaction[Any], player: str, period: str) -> None:
+    async def player_history(
+        self, intr: Interaction[Any], player: str, period: str
+    ) -> None:
         """Show stat differences of a player between a time period.
 
         Args:
@@ -79,17 +83,22 @@ class WynnHistoryCog(CogBase):
             BadArgument: If the player is not found.
             ParseFailure: If the period failed to be parsed
         """
-        # player_info = await self._bot.utils.must_get_wynn_player(player)
-        # period_begin, period_end = self._parse_period(intr, period)
-        ...
+        await intr.response.defer()
+        player_info = await self._bot.utils.must_get_wynn_player(player)
+        period_begin, period_end = self._parse_period(intr, period)
+        await PlayerHistoryView(
+            self._bot, intr, player_info, period_begin, period_end
+        ).run()
 
-    @slash_command()
-    async def guild(self, intr: Interaction[Any], guild: str, period: str) -> None: ...
+    # @slash_command()
+    # async def guild_history(
+    #     self, intr: Interaction[Any], guild: str, period: str
+    # ) -> None: ...
 
-    @slash_command()
-    async def member(
-        self, intr: Interaction[Any], player: str, period: str
-    ) -> None: ...
+    # @slash_command()
+    # async def member(
+    #     self, intr: Interaction[Any], player: str, period: str
+    # ) -> None: ...
 
     @staticmethod
     def _parse_period(intr: Interaction[Any], period: str) -> tuple[datetime, datetime]:
