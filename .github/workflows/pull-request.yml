@@ -16,6 +16,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          token: ${{ secrets.PRIVATE_TOKEN }}
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
 
       - name: Stop Default MySQL Server (if any)
         run: sudo service mysql stop
@@ -42,15 +47,15 @@ jobs:
           pip install pytest ruff
           pip install -r requirements-dev.txt
 
-      - name: Lint & Format with Ruff
+      - name: Format with Ruff
         run: python -m ruff check --fix
 
-      - name: Commit Lint & Format
+      - name: Commit Format
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_user_name: "faz-bot-bot"
+          commit_user_name: "FAZBot"
           commit_user_email: "fazuhhh@proton.me"
-          commit_message: "ci: spotless formatting"
+          commit_message: "ci: ruff formatting"
 
       # NOTE: Make sure tests still works even with placeholder .env values
       - name: Test with pytest
