@@ -9,7 +9,6 @@ from nextcord import (
     ActivityType,
     ApplicationCheckFailure,
     Colour,
-    Embed,
     Interaction,
     errors,
 )
@@ -122,13 +121,11 @@ class Events:
         self, interaction: Interaction[Any], exception: Exception
     ) -> None:
         description = f"An unexpected error occurred while executing the command: \n**{exception}**"
-        embed = Embed(
-            title="Unexpected Error", description=description, color=Colour.dark_red()
-        )
-        embed.add_field(
-            name="Timestamp",
-            value=f"<t:{int(datetime.now().timestamp())}:F>",
-            inline=False,
+        embed = CustomEmbed(
+            interaction,
+            title="Unexpected Error",
+            description=description,
+            color=Colour.dark_red(),
         )
         embed.finalize()
         is_admin = await self._bot.checks.is_admin(interaction)
@@ -167,23 +164,5 @@ class Events:
             color=Colour.dark_teal(),
         )
         embed.finalize()
-        await interaction.send(embed=embed)
-        logger.opt(exception=exception).warning(description, discord=True)
-
-        # await interaction.send(
-        #     "You do not have sufficient permission to use this command.",
-        #     ephemeral=True,
-        # )
-
-    async def _send_check_error(
-        self, interaction: Interaction[Any], exception: ApplicationCheckFailure
-    ) -> None:
-        description = f"**{exception}**"
-        embed = Embed(title="Error", description=description, color=Colour.dark_teal())
-        embed.add_field(
-            name="Timestamp",
-            value=f"<t:{int(datetime.now().timestamp())}:F>",
-            inline=False,
-        )
         await interaction.send(embed=embed)
         logger.opt(exception=exception).warning(description, discord=True)
