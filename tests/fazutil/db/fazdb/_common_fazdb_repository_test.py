@@ -12,9 +12,7 @@ if TYPE_CHECKING:
 
 
 class CommonFazdbRepositoryTest:
-
     class Test[R: BaseRepository](CommonDbRepositoryTest.Test[FazdbDatabase, R], ABC):
-
         @property
         @override
         def database_type(self) -> type[FazdbDatabase]:

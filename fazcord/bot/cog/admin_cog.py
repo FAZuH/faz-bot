@@ -12,7 +12,6 @@ from fazcord.bot.errors import ApplicationException
 
 
 class AdminCog(CogBase):
-
     @override
     def _setup(self, whitelisted_guild_ids: Iterable[int]) -> None:
         for app_cmd in self.application_commands:
@@ -127,7 +126,9 @@ class AdminCog(CogBase):
         except nextcord.DiscordException as exc:
             raise ApplicationException(f"Failed sending message: {exc}") from exc
 
-        await self._respond_successful(intr, f"Sent message on channel `{channel.name}` (`{channel.id}`).")  # type: ignore
+        await self._respond_successful(
+            intr, f"Sent message on channel `{channel.name}` (`{channel.id}`)."
+        )  # type: ignore
 
     @admin.subcommand(name="sync_guild")
     async def sync_guild(self, intr: Interaction[Any], guild_id: str) -> None:

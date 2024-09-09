@@ -10,7 +10,6 @@ from fazutil.api.wynn.wynn_api import WynnApi
 
 
 class FixturesApiCreator:
-
     _ONLINE_PLAYERS_FIXTURE_FP = "tests/_fixtures/online_players.json"
     _PLAYERS_FIXTURE_FP = "tests/_fixtures/players.json"
     _GUILDS_FIXTURE_FP = "tests/_fixtures/guilds.json"

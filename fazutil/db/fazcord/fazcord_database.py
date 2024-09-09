@@ -17,7 +17,6 @@ from fazutil.db.fazcord.repository.whitelist_group_repository import (
 
 
 class FazcordDatabase(BaseMySQLDatabase):
-
     def __init__(
         self, user: str, password: str, host: str, port: int, database: str
     ) -> None:

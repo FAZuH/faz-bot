@@ -12,7 +12,6 @@ if TYPE_CHECKING:
 
 
 class OnlinePlayersRepository(BaseRepository[OnlinePlayers, Any]):
-
     def __init__(self, database: BaseMySQLDatabase) -> None:
         super().__init__(database, OnlinePlayers)
 

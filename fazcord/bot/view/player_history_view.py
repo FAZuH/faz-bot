@@ -7,8 +7,6 @@ from nextcord import Color, Embed
 
 from fazcord.bot.view._base_view import BaseView
 from fazcord.bot.view._custom_embed import CustomEmbed
-from fazcord.bot.view._view_utils import ViewUtils
-from fazutil.db.fazdb.model import player_history
 
 if TYPE_CHECKING:
     from nextcord import Interaction
@@ -18,7 +16,6 @@ if TYPE_CHECKING:
 
 
 class PlayerHistoryView(BaseView):
-
     def __init__(
         self,
         bot: Bot,

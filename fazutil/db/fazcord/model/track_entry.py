@@ -25,9 +25,7 @@ class TrackEntry(BaseFazcordModel):
     created_by: Mapped[int] = mapped_column(
         BIGINT, ForeignKey("discord_user.user_id", ondelete="CASCADE")
     )
-    created_on: Mapped[datetime] = mapped_column(
-        DATETIME, server_default=func.now()
-    )  # pylint: disable=E1102. Not sure why this causes pylint warning
+    created_on: Mapped[datetime] = mapped_column(DATETIME, server_default=func.now())  # pylint: disable=E1102. Not sure why this causes pylint warning
     type: Mapped[str] = mapped_column(
         ENUM("GUILD", "HUNTED", "ONLINE", "PLAYER", "STAFF"), nullable=False
     )

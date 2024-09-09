@@ -10,7 +10,7 @@ from fazutil.db.fazdb.model.guild_info import GuildInfo
 from fazutil.db.fazdb.model.player_info import PlayerInfo
 
 if TYPE_CHECKING:
-    from nextcord import Client, Guild, Interaction, PartialMessageable, Thread, User
+    from nextcord import Guild, Interaction, PartialMessageable, Thread, User
     from nextcord.abc import GuildChannel, PrivateChannel
     from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -20,7 +20,6 @@ if TYPE_CHECKING:
 
 
 class Utils:
-
     def __init__(self, bot: Bot) -> None:
         self._bot = bot
 
@@ -44,7 +43,9 @@ class Utils:
         )
         await channel_repo.insert(
             channel_repo.model(
-                channel_id=channel.id, channel_name=channel.name, guild_id=channel.guild.id  # type: ignore
+                channel_id=channel.id,
+                channel_name=channel.name,
+                guild_id=channel.guild.id,  # type: ignore
             ),
             session=session,
             replace_on_duplicate=True,

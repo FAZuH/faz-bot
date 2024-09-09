@@ -9,7 +9,6 @@ from tests.fazutil.db.fazdb._common_fazdb_repository_test import (
 class TestGuildHistoryRepository(
     CommonFazdbRepositoryTest.Test[GuildHistoryRepository]
 ):
-
     @override
     def _get_mock_data(self):
         return self._get_guild_history_mock_data()

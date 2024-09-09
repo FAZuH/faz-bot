@@ -7,7 +7,6 @@ from fazcord.bot.cog.wynn_track_cog import WynnTrackCog
 
 
 class TestWynnTrackCog(unittest.IsolatedAsyncioTestCase):
-
     @staticmethod
     async def _mock_awaitable_attr() -> None: ...
 

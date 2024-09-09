@@ -10,6 +10,5 @@ if TYPE_CHECKING:
 
 
 class PlayerHistoryRepository(BaseRepository[PlayerHistory, Any]):
-
     def __init__(self, database: BaseMySQLDatabase) -> None:
         super().__init__(database, PlayerHistory)

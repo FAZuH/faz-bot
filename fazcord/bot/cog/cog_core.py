@@ -17,7 +17,6 @@ if TYPE_CHECKING:
 
 
 class CogCore:
-
     def __init__(self, bot: Bot) -> None:
         self._bot = bot
         self._cogs: list[CogBase] = []

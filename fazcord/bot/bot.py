@@ -19,7 +19,6 @@ if TYPE_CHECKING:
 
 
 class Bot:
-
     def __init__(self, app: App) -> None:
         self._app = app
 

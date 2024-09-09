@@ -18,7 +18,6 @@ if TYPE_CHECKING:
 
 
 class WorldlistView(BasePaginationView):
-
     def __init__(
         self,
         bot: Bot,

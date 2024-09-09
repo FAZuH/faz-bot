@@ -2,13 +2,11 @@ from typing import Any, Iterable, Literal, override
 
 from nextcord import Interaction, slash_command
 
-from fazcord.bot._utils import Utils
 from fazcord.bot.cog._cog_base import CogBase
 from fazcord.bot.errors import BadArgument
 
 
 class WynnTrackCog(CogBase):
-
     @override
     def _setup(self, whitelisted_guild_ids: Iterable[int]) -> None:
         super()._setup(whitelisted_guild_ids)
@@ -177,7 +175,6 @@ class WynnTrackCog(CogBase):
         assert intr.user
 
         async with db.enter_async_session() as ses:
-
             await self._utils.add_to_db(intr, channel, ses)
             track_entry = await track_repo.select_by_channel_id(channel.id, session=ses)
 

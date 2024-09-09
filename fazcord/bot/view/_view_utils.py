@@ -2,7 +2,6 @@ from datetime import timedelta
 
 
 class ViewUtils:
-
     @staticmethod
     def format_timedelta(timedelta: timedelta) -> str:
         total_seconds = int(timedelta.total_seconds())

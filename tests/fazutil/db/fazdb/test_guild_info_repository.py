@@ -8,7 +8,6 @@ from tests.fazutil.db.fazdb._common_fazdb_repository_test import (
 
 
 class TestGuildInfoRepository(CommonFazdbRepositoryTest.Test[GuildInfoRepository]):
-
     async def test_members_relationship(self) -> None:
         # Prepare
         mock_bytes = UUID(int=0).bytes

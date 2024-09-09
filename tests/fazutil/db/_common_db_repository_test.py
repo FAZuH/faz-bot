@@ -18,12 +18,10 @@ if TYPE_CHECKING:
 
 
 class CommonDbRepositoryTest:
-
     # HACK: Nesting test classes like this prevents CommonDbRepositoryTest.Test from being discovered by unittest.
     class Test[DB: BaseMySQLDatabase, R: BaseRepository[BaseModel, Any]](
         unittest.IsolatedAsyncioTestCase, ABC
     ):
-
         @override
         async def asyncSetUp(self) -> None:
             Properties.setup()

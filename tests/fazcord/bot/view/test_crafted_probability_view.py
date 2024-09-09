@@ -10,7 +10,6 @@ from fazcord.wynn.crafted_util import CraftedUtil
 
 
 class TestCraftedProbabilityView(IsolatedAsyncioTestCase):
-
     @override
     async def asyncSetUp(self) -> None:
         self._mock_bot = MagicMock()

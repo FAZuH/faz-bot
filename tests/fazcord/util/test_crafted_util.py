@@ -6,7 +6,6 @@ from fazcord.wynn.ingredient_field import IngredientField
 
 
 class TestCraftedUtil(TestCase):
-
     def test_crafted_util(self) -> None:
         # PREPARE
         ing1 = IngredientField(1, 2, 50)

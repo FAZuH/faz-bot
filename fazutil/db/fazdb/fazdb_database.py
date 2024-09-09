@@ -26,7 +26,6 @@ from fazutil.db.fazdb.repository.worlds_repository import WorldsRepository
 
 
 class FazdbDatabase(BaseMySQLDatabase):
-
     def __init__(
         self, user: str, password: str, host: str, port: int, database: str
     ) -> None:

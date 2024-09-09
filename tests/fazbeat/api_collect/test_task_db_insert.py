@@ -8,7 +8,6 @@ from fazutil.api.wynn.response.player_response import PlayerResponse
 
 
 class TestTaskDbInsert(IsolatedAsyncioTestCase):
-
     def setUp(self) -> None:
         self._adapter_patcher = patch(
             "fazbeat.api_collect.task.task_db_insert.ApiResponseAdapter"

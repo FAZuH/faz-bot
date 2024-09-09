@@ -8,7 +8,6 @@ if TYPE_CHECKING:
 
 
 class BaseEndpoint(ABC):
-
     __slots__ = ("_request", "_retries", "_retry_on_exc")
 
     def __init__(self, request: HttpRequest, retries: int, retry_on_exc: bool) -> None:

@@ -6,7 +6,6 @@ from fazbeat.api_collect.task.request_queue import RequestQueue
 
 
 class TestRequestList(TestCase):
-
     def setUp(self) -> None:
         self.request_list = RequestQueue()
 

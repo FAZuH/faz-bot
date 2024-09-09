@@ -8,11 +8,8 @@ from loguru import logger
 
 
 class RetryHandler:
-
     @staticmethod
-    def async_decorator[
-        T, **P
-    ](
+    def async_decorator[T, **P](
         max_retries: int, exceptions: type[BaseException] | tuple[type[BaseException]]
     ) -> Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]:
         """Retries the wrapped function/method `max_retries` times if the exceptions listed in `exceptions` are thrown"""
@@ -33,9 +30,7 @@ class RetryHandler:
         return decorator
 
     @staticmethod
-    def decorator[
-        T, **P
-    ](
+    def decorator[T, **P](
         max_retries: int, exceptions: type[BaseException] | tuple[type[BaseException]]
     ) -> Callable[[Callable[P, T]], Callable[P, T]]:
         """Retries the wrapped function/method `max_retries` times if the exceptions listed in `exceptions` are thrown"""

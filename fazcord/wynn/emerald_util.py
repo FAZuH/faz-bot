@@ -5,7 +5,6 @@ from fazcord.wynn.emeralds import Emeralds
 
 
 class EmeraldUtil:
-
     @staticmethod
     def get_set_price(emerald: Emeralds) -> tuple[Emeralds, Emeralds]:
         set_price_tm = floor(emerald.total * Decimal(100 / 105)) - 1

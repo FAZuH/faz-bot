@@ -9,7 +9,6 @@ from fazcord.bot.view.worldlist_view import WorldlistView
 
 
 class TestWorldlistView(IsolatedAsyncioTestCase):
-
     @patch("fazcord.bot.view.worldlist_view.PaginationEmbed")
     async def test_run(self, mock_embed: MagicMock) -> None:
         # Prepare

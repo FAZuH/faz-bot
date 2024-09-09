@@ -9,7 +9,6 @@ from fazcord.bot.view.guild_activity_view import GuildActivityView
 
 
 class TestGuildActivityView(IsolatedAsyncioTestCase):
-
     @staticmethod
     async def _mock_awaitable_attr() -> None: ...
 

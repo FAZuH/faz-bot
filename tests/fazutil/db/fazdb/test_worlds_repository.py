@@ -8,7 +8,6 @@ from tests.fazutil.db.fazdb._common_fazdb_repository_test import (
 
 
 class TestWorldsRepository(CommonFazdbRepositoryTest.Test[WorldsRepository]):
-
     async def test_update_worlds(self) -> None:
         """Test if update_words properly update worlds. Deletes worlds that's
         not up anymore, and updates player_count for worlds that's still up

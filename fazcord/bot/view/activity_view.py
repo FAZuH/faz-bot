@@ -17,7 +17,6 @@ if TYPE_CHECKING:
 
 
 class ActivityView(BaseView):
-
     def __init__(
         self,
         bot: Bot,

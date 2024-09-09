@@ -13,7 +13,6 @@ from fazcord.bot.view._view_utils import ViewUtils
 from fazutil.db.fazdb.model.player_activity_history import PlayerActivityHistory
 
 if TYPE_CHECKING:
-
     from nextcord import Interaction
 
     from fazcord.bot.bot import Bot
@@ -21,7 +20,6 @@ if TYPE_CHECKING:
 
 
 class GuildActivityView(BasePaginationView):
-
     def __init__(
         self,
         bot: Bot,
@@ -111,7 +109,6 @@ class GuildActivityView(BasePaginationView):
         return ret
 
     class ActivityResult:
-
         def __init__(self, username: str, playtime: timedelta) -> None:
             self._username = username
             self._playtime = playtime

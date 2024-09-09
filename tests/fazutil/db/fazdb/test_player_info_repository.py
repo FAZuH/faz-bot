@@ -8,7 +8,6 @@ from tests.fazutil.db.fazdb._common_fazdb_repository_test import (
 
 
 class TestPlayerInfoRepository(CommonFazdbRepositoryTest.Test[PlayerInfoRepository]):
-
     async def test_safe_insert(self) -> None:
         """Test if safe_insert inserts PlayerInfo without corresponding GuildInfo
         without raising a constraint error

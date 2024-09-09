@@ -16,7 +16,6 @@ from fazcord.wynn.ingredient_field import IngredientField
 
 
 class WynnUtilsCog(CogBase):
-
     INGSTR_DEFAULT = "0,0,0"
 
     @nextcord.slash_command(name="crafted_probability")

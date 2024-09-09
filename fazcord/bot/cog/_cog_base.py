@@ -7,7 +7,6 @@ from loguru import logger
 from nextcord import Colour, Embed, Interaction
 from nextcord.ext import commands
 
-from fazcord.bot._utils import Utils
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
@@ -18,7 +17,6 @@ if TYPE_CHECKING:
 
 
 class CogBase(commands.Cog):
-
     def __init__(self, bot: Bot) -> None:
         super().__init__()
         self._bot = bot

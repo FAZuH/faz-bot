@@ -11,7 +11,6 @@ if TYPE_CHECKING:
 
 
 class CraftedUtil:
-
     def __init__(self, ingredients: Sequence[IngredientField]):
         self._ingredients = ingredients
 

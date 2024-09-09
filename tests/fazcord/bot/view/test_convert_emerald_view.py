@@ -7,7 +7,6 @@ from fazcord.bot.view.convert_emerald_view import ConvertEmeraldView
 
 
 class TestConvertEmeraldView(IsolatedAsyncioTestCase):
-
     @patch("fazcord.bot.view.convert_emerald_view.CustomEmbed")
     async def test_run(self, mock_embed: MagicMock) -> None:
         # Prepare

@@ -10,6 +10,5 @@ if TYPE_CHECKING:
 
 
 class DiscordChannelRepository(BaseRepository[DiscordChannel, Any]):
-
     def __init__(self, database: BaseMySQLDatabase) -> None:
         super().__init__(database, DiscordChannel)

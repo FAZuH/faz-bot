@@ -11,7 +11,6 @@ from tests.fazutil.db.fazdb._common_fazdb_repository_test import (
 class TestOnlinePlayersRepository(
     CommonFazdbRepositoryTest.Test[OnlinePlayersRepository]
 ):
-
     @override
     def _get_mock_data(self):
         return self._get_online_players_mock_data()

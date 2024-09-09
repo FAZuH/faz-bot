@@ -5,7 +5,6 @@ from fazcord.wynn.emeralds import Emeralds
 
 
 class TestEmeraldUtil(TestCase):
-
     def test_crafted_util(self) -> None:
         # ASSERT
         set_price_tm, set_price_silverbull = EmeraldUtil.get_set_price(

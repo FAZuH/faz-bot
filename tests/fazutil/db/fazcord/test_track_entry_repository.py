@@ -7,7 +7,6 @@ from tests.fazutil.db.fazcord._common_fazcord_repository_test import (
 
 
 class TestTrackEntryRepository(CommonFazcordRepositoryTest.Test[TrackEntryRepository]):
-
     async def test_insert_get_id_after(self) -> None:
         # TODO: just testing if this works
         # Prepare

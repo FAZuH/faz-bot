@@ -14,7 +14,6 @@ if TYPE_CHECKING:
 
 
 class WorldsRepository(BaseRepository[Worlds, Any]):
-
     def __init__(self, database: BaseMySQLDatabase) -> None:
         super().__init__(database, Worlds)
 

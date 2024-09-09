@@ -3,7 +3,6 @@ from typing import Any, Awaitable, Callable
 
 
 class CacheUtil:
-
     def __init__(self) -> None:
         self._cache: dict[str, Any] = {}
 
@@ -17,9 +16,9 @@ class CacheUtil:
 
         return wrapper
 
-    def async_decorator[
-        T, **P
-    ](self, func: Callable[P, Awaitable[T]]) -> Callable[P, Awaitable[T]]:
+    def async_decorator[T, **P](
+        self, func: Callable[P, Awaitable[T]]
+    ) -> Callable[P, Awaitable[T]]:
         @wraps(func)
         async def wrapper(*args: P.args, **kwargs: P.kwargs) -> T:
             key = func.__name__
