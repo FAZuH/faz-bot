@@ -5,6 +5,8 @@ from datetime import datetime
 class BaseResponse[B, H](ABC):
     """Class for storing data from a HTTP response."""
 
+    __slots__ = ("_body", "_creation_datetime", "_headers")
+
     def __init__(self, body: B, headers: H) -> None:
         self._body: B = body
         self._headers: H = headers

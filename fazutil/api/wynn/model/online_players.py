@@ -5,6 +5,8 @@ from fazutil.api.wynn.model.field.username_or_uuid_field import UsernameOrUuidFi
 
 class OnlinePlayers:
 
+    __slots__ = ("_raw", "_total", "_players")
+
     def __init__(self, raw: dict[str, Any]) -> None:
         self._raw = raw
         self._total = raw["total"]

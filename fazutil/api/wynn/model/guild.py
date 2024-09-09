@@ -11,6 +11,22 @@ from fazutil.api.wynn.model.field.uuid_field import UuidField
 
 class Guild:
 
+    __slots__ = (
+        "_raw",
+        "_uuid",
+        "_name",
+        "_prefix",
+        "_level",
+        "_xp_percent",
+        "_territories",
+        "_wars",
+        "_created",
+        "_members",
+        "_online",
+        "_banner",
+        "_season_ranks",
+    )
+
     def __init__(self, raw: dict[str, Any]) -> None:
         self._raw = raw
         self._uuid = UuidField(raw["uuid"])
@@ -35,6 +51,17 @@ class Guild:
         yield from self.season_ranks.items()
 
     class Members:
+
+        __slots__ = (
+            "_total",
+            "_owner",
+            "_chief",
+            "_strategist",
+            "_captain",
+            "_recruiter",
+            "_recruit",
+        )
+
         def __init__(self, node: dict[str, Any]) -> None:
             self._total = node["total"]
             self._owner = self._members_constructor(node["owner"])
@@ -82,6 +109,17 @@ class Guild:
             }
 
         class MemberInfo:
+
+            __slots__ = (
+                "_uuid",
+                "_username",
+                "_online",
+                "_server",
+                "_contributed",
+                "_contribution_rank",
+                "_joined",
+            )
+
             def __init__(self, node: dict[str, Any]) -> None:
                 self._uuid = Nullable(UuidField, node.get("uuid"))
                 self._username = node.get("username")
@@ -148,6 +186,9 @@ class Guild:
             return self._recruit
 
     class Banner:
+
+        __slots__ = ("_base", "_tier", "_structure", "_layers")
+
         def __init__(self, node: dict[str, Any]) -> None:
             self._base = node["base"]
             self._tier = node["tier"]
@@ -184,6 +225,9 @@ class Guild:
             return self._layers
 
     class SeasonRankInfo:
+
+        __slots__ = ("_rating", "_final_territories")
+
         def __init__(self, node: dict[str, Any]) -> None:
             self._rating = node["rating"]
             self._final_territories = node["finalTerritories"]
