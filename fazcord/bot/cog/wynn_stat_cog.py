@@ -10,7 +10,10 @@ from fazcord.bot.view.worldlist_view import WorldlistView
 class WynnStatCog(CogBase):
     """Shows statistics from most recent Wynncraft data."""
 
-    @nextcord.slash_command(name="worldlist")
+    @nextcord.slash_command()
+    async def stats(self, intr: Interaction[Any]) -> None: ...
+
+    @stats.subcommand(name="worldlist")
     async def worldlist(
         self,
         interaction: Interaction[Any],

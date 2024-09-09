@@ -18,7 +18,10 @@ from fazcord.wynn.ingredient_field import IngredientField
 class WynnUtilsCog(CogBase):
     INGSTR_DEFAULT = "0,0,0"
 
-    @nextcord.slash_command(name="crafted_probability")
+    @nextcord.slash_command()
+    async def utils(self, intr: Interaction[Any]) -> None: ...
+
+    @utils.subcommand()
     async def crafted_probability(
         self,
         interaction: Interaction[Any],
@@ -54,7 +57,7 @@ class WynnUtilsCog(CogBase):
             ),
         ).run()
 
-    @nextcord.slash_command(name="convert_emerald")
+    @utils.subcommand()
     async def convert_emerald(
         self, interaction: Interaction[Any], emerald_string: str = ""
     ) -> None:
@@ -65,7 +68,7 @@ class WynnUtilsCog(CogBase):
         """
         await ConvertEmeraldView(self._bot, interaction, emerald_string).run()
 
-    @nextcord.slash_command(name="ingredient_probability")
+    @utils.subcommand()
     async def ingredient_probability(
         self,
         interaction: Interaction[Any],

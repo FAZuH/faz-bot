@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import datetime, timedelta
 from typing import Any
 
+import nextcord
 from dateparser import parse
 from nextcord import Interaction, slash_command
 
@@ -16,13 +17,14 @@ from fazcord.bot.view.player_history_view import PlayerHistoryView
 class WynnHistoryCog(CogBase):
     """Shows statistics from historical Wynncraft data."""
 
-    # @nextcord.slash_command()
-    # async def history(self, intr: Interaction[Any]) -> None: ...
+    @nextcord.slash_command()
+    async def history(self, intr: Interaction[Any]) -> None: ...
 
-    @slash_command()
-    async def activity(self, intr: Interaction[Any], player: str, period: str) -> None:
-        """
-        Shows player active time between the specified time period
+    @history.subcommand()
+    async def player_activity(
+        self, intr: Interaction[Any], player: str, period: str
+    ) -> None:
+        """Shows player active time between the specified time period
 
         Args:
             player (str): The player username or UUID to check.
@@ -39,12 +41,11 @@ class WynnHistoryCog(CogBase):
         invoke = ActivityView(self._bot, intr, player_info, period_begin, period_end)
         await invoke.run()
 
-    @slash_command()
+    @history.subcommand()
     async def guild_activity(
         self, intr: Interaction[Any], guild: str, period: str
     ) -> None:
-        """
-        Shows players' active time in a given guild between the specified time period
+        """Shows players' active time in a given guild between the specified time period
 
         Args:
             guild (str): The guild name or UUID to check.
@@ -67,7 +68,7 @@ class WynnHistoryCog(CogBase):
             period_end,
         ).run()
 
-    @slash_command()
+    @history.subcommand()
     async def player_history(
         self, intr: Interaction[Any], player: str, period: str
     ) -> None:
@@ -96,7 +97,7 @@ class WynnHistoryCog(CogBase):
     # ) -> None: ...
 
     # @slash_command()
-    # async def member(
+    # async def member_history(
     #     self, intr: Interaction[Any], player: str, period: str
     # ) -> None: ...
 
