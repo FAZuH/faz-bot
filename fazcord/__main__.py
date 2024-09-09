@@ -9,7 +9,6 @@ from fazcord.app.app import App
 
 
 class Main:
-
     app = App()
 
     @classmethod

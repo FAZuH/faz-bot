@@ -11,7 +11,6 @@ from tests.fazutil.db.fazdb._common_fazdb_repository_test import (
 class TestCharacterHistoryRepository(
     CommonFazdbRepositoryTest.Test[CharacterHistoryRepository]
 ):
-
     @override
     def _get_mock_data(self):
         return self._get_character_history_mock_data()

@@ -12,7 +12,6 @@ if TYPE_CHECKING:
 
 
 class RequestQueue:
-
     def __init__(self) -> None:
         self._list: list[RequestQueue.RequestItem] = []
         self._lock: Lock = Lock()
@@ -38,7 +37,6 @@ class RequestQueue:
                 self._list.append(item)
 
     class RequestItem:
-
         def __init__(
             self,
             coro: RespCoro,

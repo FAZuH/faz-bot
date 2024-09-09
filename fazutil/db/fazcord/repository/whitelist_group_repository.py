@@ -15,7 +15,6 @@ if TYPE_CHECKING:
 
 
 class WhitelistGroupRepository(BaseRepository[WhitelistGroup, tuple[int, str]]):
-
     def __init__(self, database: BaseMySQLDatabase) -> None:
         super().__init__(database, WhitelistGroup)
 

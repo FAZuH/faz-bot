@@ -5,7 +5,6 @@ from fazcord.wynn.ingredient_util import IngredientUtil
 
 
 class TestIngredientUtil(TestCase):
-
     def test_ingredient_util(self) -> None:
         # PREPARE
         ingutil = IngredientUtil(Decimal(0.1), 50, 50)

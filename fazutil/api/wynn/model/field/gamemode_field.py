@@ -2,7 +2,6 @@ from fazutil.api.wynn.model.enum.gamemode import Gamemode
 
 
 class GamemodeField:
-
     __slots__ = ("_gamemodes_str", "_gamemodes")
 
     def __init__(self, gamemodes: list[str]) -> None:

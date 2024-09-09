@@ -16,7 +16,6 @@ if TYPE_CHECKING:
 
 
 class BaseRepository[T: BaseModel, ID](ABC):
-
     def __init__(self, database: BaseMySQLDatabase, model_cls: type[T]) -> None:
         self._database = database
         self._model_cls = model_cls
@@ -52,7 +51,11 @@ class BaseRepository[T: BaseModel, ID](ABC):
         async with self._database.must_enter_async_session(session) as session:
             result = await session.execute(text(sql), params)
             row = result.fetchone()
-            ret = Decimal(row["size_bytes"]) if (row and row["size_bytes"] is not None) else Decimal(0)  # type: ignore
+            ret = (
+                Decimal(row["size_bytes"])
+                if (row and row["size_bytes"] is not None)
+                else Decimal(0)
+            )  # type: ignore
         return ret
 
     async def create_table(self) -> None:

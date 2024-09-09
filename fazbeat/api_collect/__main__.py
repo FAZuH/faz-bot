@@ -9,7 +9,6 @@ from fazbeat.api_collect.app import App
 
 
 class Main:
-
     app = App()
 
     @classmethod

@@ -5,7 +5,6 @@ from math import floor
 
 
 class Emeralds:
-
     def __init__(
         self, emeralds: int = 0, blocks: int = 0, liquids: int = 0, stacks: int = 0
     ) -> None:

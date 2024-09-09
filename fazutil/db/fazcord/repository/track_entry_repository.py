@@ -13,7 +13,6 @@ if TYPE_CHECKING:
 
 
 class TrackEntryRepository(BaseRepository[TrackEntry, Any]):
-
     def __init__(self, database: FazcordDatabase) -> None:
         super().__init__(database, TrackEntry)
         self._database = database

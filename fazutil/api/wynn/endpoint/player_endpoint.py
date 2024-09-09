@@ -11,7 +11,6 @@ if TYPE_CHECKING:
 
 
 class PlayerEndpoint(BaseEndpoint):
-
     async def get_full_stats(self, username_or_uuid: str | UUID) -> PlayerResponse:
         response = await self._request.get(
             f"{self.path}/%s?fullResult=True" % username_or_uuid,

@@ -11,7 +11,6 @@ if TYPE_CHECKING:
 
 
 class HeartbeatTask:
-
     def __init__(self, task: ITask) -> None:
         self._task = task
         self._timer = Timer(self.task.first_delay, self._run)

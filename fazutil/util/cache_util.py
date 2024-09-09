@@ -3,7 +3,6 @@ from typing import Any, Awaitable, Callable
 
 
 class CacheUtil:
-
     def __init__(self) -> None:
         self._cache: dict[str, Any] = {}
 

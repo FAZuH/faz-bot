@@ -16,7 +16,6 @@ if TYPE_CHECKING:
 
 
 class CraftedProbabilityView(BaseView):
-
     _THUMBNAIL_URL = "https://static.wikia.nocookie.net/minecraft_gamepedia/images/b/b7/Crafting_Table_JE4_BE3.png/revision/latest/thumbnail/width/360/height/360?cb=20191229083528"
 
     def __init__(

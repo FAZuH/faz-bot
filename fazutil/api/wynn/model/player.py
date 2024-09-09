@@ -11,7 +11,6 @@ from fazutil.api.wynn.model.field.uuid_field import UuidField
 
 
 class Player:
-
     __slots__ = (
         "_raw",
         "_username",
@@ -75,7 +74,6 @@ class Player:
             yield (character_uuid, character)
 
     class LegacyRankColour:
-
         __slots__ = ("_main", "_sub")
 
         def __init__(self, node: dict[str, str]) -> None:
@@ -91,7 +89,6 @@ class Player:
             return self._sub
 
     class Guild:
-
         __slots__ = ("_uuid", "_name", "_prefix", "_rank", "_rank_stars")
 
         def __init__(self, node: dict[str, Any]) -> None:
@@ -122,7 +119,6 @@ class Player:
             return self._rank_stars
 
     class GlobalData:
-
         __slots__ = (
             "_wars",
             "_total_level",
@@ -177,7 +173,6 @@ class Player:
             return self._pvp
 
     class Dungeons:
-
         __slots__ = ("_total", "_list")
 
         def __init__(self, node: dict[str, Any]) -> None:
@@ -194,7 +189,6 @@ class Player:
             return self._list
 
     class Raids:
-
         __slots__ = ("_total", "_list")
 
         def __init__(self, node: dict[str, Any]) -> None:
@@ -211,7 +205,6 @@ class Player:
             return self._list
 
     class Pvp:
-
         __slots__ = ("_kills", "_deaths")
 
         def __init__(self, node: dict[str, Any]) -> None:
@@ -227,7 +220,6 @@ class Player:
             return self._deaths
 
     class Character:
-
         __slots__ = (
             "_type",
             "_nickname",
@@ -280,7 +272,6 @@ class Player:
             self._quests = node["quests"]
 
         class SkillPoints:
-
             __slots__ = ("_earth", "_thunder", "_water", "_fire", "_air")
 
             def __init__(self, node: dict[str, Any]) -> None:
@@ -311,7 +302,6 @@ class Player:
                 return self._air
 
         class Professions:
-
             __slots__ = (
                 "_alchemism",
                 "_armouring",
@@ -343,7 +333,6 @@ class Player:
                 self._woodworking = ProfessionInfo(node.get("woodworking", {}))
 
             class ProfessionInfo:
-
                 __slots__ = ("_level", "_xp_percent")
 
                 def __init__(self, node: dict[str, Any]) -> None:

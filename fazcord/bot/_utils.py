@@ -5,10 +5,12 @@ from typing import TYPE_CHECKING, Any, Callable
 
 import dateparser
 
-from fazcord.bot.errors import ParseFailure
+from fazcord.bot.errors import BadArgument, ParseFailure
+from fazutil.db.fazdb.model.guild_info import GuildInfo
+from fazutil.db.fazdb.model.player_info import PlayerInfo
 
 if TYPE_CHECKING:
-    from nextcord import Client, Guild, Interaction, PartialMessageable, Thread, User
+    from nextcord import Guild, Interaction, PartialMessageable, Thread, User
     from nextcord.abc import GuildChannel, PrivateChannel
     from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -18,17 +20,18 @@ if TYPE_CHECKING:
 
 
 class Utils:
+    def __init__(self, bot: Bot) -> None:
+        self._bot = bot
 
-    @staticmethod
     async def add_to_db(
-        bot: Bot,
+        self,
         interaction: Interaction[Any],
         channel: Channel,
         session: AsyncSession,
     ) -> None:
         intr = interaction
         assert intr.user
-        db = bot.fazcord_db
+        db = self._bot.fazcord_db
         guild_repo = db.discord_guild_repository
         channel_repo = db.discord_channel_repository
         user_repo = db.discord_user_repository
@@ -40,7 +43,9 @@ class Utils:
         )
         await channel_repo.insert(
             channel_repo.model(
-                channel_id=channel.id, channel_name=channel.name, guild_id=channel.guild.id  # type: ignore
+                channel_id=channel.id,
+                channel_name=channel.name,  # type: ignore
+                guild_id=channel.guild.id,  # type: ignore
             ),
             session=session,
             replace_on_duplicate=True,
@@ -53,26 +58,41 @@ class Utils:
             columns_to_replace=["username"],
         )
 
-    @staticmethod
-    async def must_get_channel(client: Client, channel_id: Any) -> Channel:
-        return await Utils.must_get_id(client.get_channel, channel_id)
+    async def must_get_wynn_guild(self, guild: str) -> GuildInfo:
+        guild_info = await self._bot.fazdb_db.guild_info_repository.get_guild(guild)
+        if not guild_info:
+            raise BadArgument(
+                f"Guild not found (reason: Can't find guild with name or uuid {guild})"
+            )
+        return guild_info
 
-    @staticmethod
-    async def must_get_sendable_channel(client: Client, channel_id: Any) -> Channel:
-        channel = await Utils.must_get_id(client.get_channel, channel_id)
+    async def must_get_wynn_player(self, player: str) -> PlayerInfo:
+        player_info = await self._bot.fazdb_db.player_info_repository.get_player(player)
+        if not player_info:
+            raise BadArgument(
+                f"Player not found (reason: Can't find player with username or uuid {player})"
+            )
+        return player_info
+
+    async def must_get_channel(self, channel_id: Any) -> Channel:
+        channel = await self.must_get_id(self._bot.client.get_channel, channel_id)
+        return channel
+
+    async def must_get_sendable_channel(self, channel_id: Any) -> Channel:
+        channel = await self.must_get_id(self._bot.client.get_channel, channel_id)
         if not hasattr(channel, "send"):
             raise ParseFailure(
                 f"Channel with id {channel_id} does not support sending messages."
             )
         return channel
 
-    @staticmethod
-    async def must_get_guild(client: Client, guild_id: Any) -> Guild:
-        return await Utils.must_get_id(client.get_guild, guild_id)
+    async def must_get_guild(self, guild_id: Any) -> Guild:
+        guild = await self.must_get_id(self._bot.client.get_guild, guild_id)
+        return guild
 
-    @staticmethod
-    async def must_get_user(client: Client, user_id: Any) -> User:
-        return await Utils.must_get_id(client.get_user, user_id)
+    async def must_get_user(self, user_id: Any) -> User:
+        user = await self.must_get_id(self._bot.client.get_user, user_id)
+        return user
 
     @staticmethod
     async def must_get_id[T](get_strategy: Callable[[int], T | None], id_: Any) -> T:

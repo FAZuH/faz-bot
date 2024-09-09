@@ -14,7 +14,6 @@ if TYPE_CHECKING:
 
 
 class IngredientProbabilityView(BaseView):
-
     _THUMBNAIL_URL = "https://www.wynndata.tk/assets/images/items/v4//ingredients/heads/50d8ba53402f4cb0455067d068973b3d.png"
 
     def __init__(

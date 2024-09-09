@@ -25,10 +25,6 @@ class WynnStatCog(CogBase):
         """
         await WorldlistView(self._bot, interaction, sort_by).run()
 
-    # @nextcord.slash_command(name="activity")
-    # async def activity(self, interaction: Interaction[Any], player: str | None = None, guild: str | None = None) -> None:
-    #     return
-
     # @nextcord.slash_command(name="player")
     # async def player(self, interaction: Interaction[Any]) -> None:
     #     return

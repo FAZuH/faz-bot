@@ -10,7 +10,6 @@ if TYPE_CHECKING:
 
 
 class Checks:
-
     def __init__(self, bot: Bot) -> None:
         self._bot = bot
         self.load_checks()

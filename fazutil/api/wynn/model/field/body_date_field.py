@@ -6,7 +6,6 @@ from fazutil.api.wynn.model.field._date_field import DateField
 
 
 class BodyDateField(DateField):
-
     def __init__(self, datestr: str) -> None:
         super().__init__(datestr, "")
 

@@ -11,7 +11,6 @@ from tests.fazutil.db.fazcord._common_fazcord_repository_test import (
 class TestTrackEntryAssociationRepository(
     CommonFazcordRepositoryTest.Test[TrackEntryAssociationRepository]
 ):
-
     async def test_cascade_on_track_entry_delete(self) -> None:
         # Prepare
         mock_data = self._get_mock_data()[0]

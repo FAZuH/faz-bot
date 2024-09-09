@@ -7,7 +7,6 @@ from fazutil.api.wynn.response.player_response import PlayerResponse
 
 
 class FixturesApi:
-
     _ONLINE_PLAYERS_FIXTURE_FP = "tests/_fixtures/online_players.json"
     _PLAYERS_FIXTURE_FP = "tests/_fixtures/players.json"
     _GUILDS_FIXTURE_FP = "tests/_fixtures/guilds.json"

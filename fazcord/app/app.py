@@ -15,7 +15,6 @@ from fazutil.util.logger_setup import LoggerSetup
 
 
 class App:
-
     def __init__(self) -> None:
         self._locks: dict[str, Lock] = {}
 

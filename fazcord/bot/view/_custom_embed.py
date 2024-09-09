@@ -8,7 +8,6 @@ from nextcord.types.embed import EmbedType
 
 
 class CustomEmbed(Embed):
-
     def __init__(
         self,
         interaction: Interaction[Any],

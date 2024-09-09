@@ -8,7 +8,6 @@ from fazcord.bot.view.ingredient_probability_view import IngredientProbabilityVi
 
 
 class TestIngredientProbabilityView(IsolatedAsyncioTestCase):
-
     @patch("fazcord.bot.view.ingredient_probability_view.CustomEmbed")
     async def test_run(self, mock_embed: MagicMock) -> None:
         mock_bot = MagicMock()

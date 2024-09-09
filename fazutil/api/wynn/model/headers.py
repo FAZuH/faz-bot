@@ -5,7 +5,6 @@ from fazutil.api.wynn.model.field.header_date_field import HeaderDateField
 
 
 class Headers:
-
     __slots__ = (
         "_raw",
         "_cache_control",
