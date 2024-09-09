@@ -28,7 +28,10 @@ class WynnTrackCog(CogBase):
         """(dev only) Toggles a track entry on any channel_id."""
         db = self._bot.fazcord_db
         channel = await self._must_get_channel(channel_id)
-        track_entry = await db.track_entry_repository.toggle(channel.id)
+        try:
+            track_entry = await db.track_entry_repository.toggle(channel.id)
+        except ValueError as exc:
+            raise BadArgument from exc
         await self._respond_successful(
             intr,
             f"Toggled track entry on channel `{channel.id}` (`{channel.name}`) to {track_entry}",  # type: ignore
@@ -74,7 +77,10 @@ class WynnTrackCog(CogBase):
         """
         db = self._bot.fazcord_db
         channel = await self._must_get_channel(channel_id)
-        track_entry = await db.track_entry_repository.toggle(channel.id)
+        try:
+            track_entry = await db.track_entry_repository.toggle(channel.id)
+        except ValueError as exc:
+            raise BadArgument from exc
         await self._respond_successful(
             intr,
             f"Toggled track entry on channel `{channel.id}` (`{channel.name}`) to {track_entry}",  # type: ignore
