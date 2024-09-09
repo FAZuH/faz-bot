@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from fazutil.db.fazdb.model.player_info import PlayerInfo
 
 
-class ActivityView(BaseView):
+class HistoryPlayerActivityView(BaseView):
     def __init__(
         self,
         bot: Bot,

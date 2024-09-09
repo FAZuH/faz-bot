@@ -16,13 +16,13 @@ class TestWynnHistoryCog(unittest.IsolatedAsyncioTestCase):
         self.utils = create_autospec(Utils, spec_set=True)
         self.bot.utils = self.utils
 
-    @patch("fazcord.bot.cog.wynn_history_cog.ActivityView", autospec=True)
+    @patch("fazcord.bot.cog.wynn_history_cog.HistoryPlayerActivityView", autospec=True)
     async def test_activity_command(self, mock_invoke: MagicMock) -> None:
         mock_player = MagicMock()
         self.utils.must_get_wynn_player = AsyncMock(return_value=mock_player)
         wynn_history = WynnHistoryCog(self.bot)
 
-        await wynn_history.activity(self.intr, "a", "10")
+        await wynn_history.player_activity(self.intr, "a", "10")
 
         mock_invoke.return_value.run.assert_awaited_once()
         mock_invoke.assert_called_once_with(
@@ -33,7 +33,7 @@ class TestWynnHistoryCog(unittest.IsolatedAsyncioTestCase):
             self.intr.created_at,
         )
 
-    @patch("fazcord.bot.cog.wynn_history_cog.GuildActivityView", autospec=True)
+    @patch("fazcord.bot.cog.wynn_history_cog.HistoryGuildActivityView", autospec=True)
     async def test_guild_activity_command(self, mock_invoke: MagicMock) -> None:
         mock_guild = MagicMock()
         self.utils.must_get_wynn_guild = AsyncMock(return_value=mock_guild)

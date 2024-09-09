@@ -4,16 +4,16 @@ from unittest.mock import AsyncMock, MagicMock, create_autospec, patch
 
 from nextcord import Color, Interaction
 
-from fazcord.bot.view.activity_view import ActivityView
+from fazcord.bot.view.history_player_activity_view import HistoryPlayerActivityView
 
 
-class TestActivityView(IsolatedAsyncioTestCase):
-    @patch("fazcord.bot.view.activity_view.CustomEmbed")
+class TestHistoryPlayerActivity(IsolatedAsyncioTestCase):
+    @patch("fazcord.bot.view.history_player_activity_view.CustomEmbed")
     async def test_run(self, mock_embed: MagicMock) -> None:
         # Prepare
         mock_bot = MagicMock()
         mock_interaction = create_autospec(Interaction, spec_set=True)
-        view = ActivityView(
+        view = HistoryPlayerActivityView(
             mock_bot,
             mock_interaction,
             MagicMock(latest_username="Foo"),

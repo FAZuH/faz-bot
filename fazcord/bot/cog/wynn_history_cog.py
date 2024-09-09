@@ -5,13 +5,13 @@ from typing import Any
 
 import nextcord
 from dateparser import parse
-from nextcord import Interaction, slash_command
+from nextcord import Interaction
 
 from fazcord.bot.cog._cog_base import CogBase
 from fazcord.bot.errors import BadArgument, ParseFailure
-from fazcord.bot.view.activity_view import ActivityView
-from fazcord.bot.view.guild_activity_view import GuildActivityView
-from fazcord.bot.view.player_history_view import PlayerHistoryView
+from fazcord.bot.view.history_player_activity_view import HistoryPlayerActivityView
+from fazcord.bot.view.history_guild_activity_view import HistoryGuildActivityView
+from fazcord.bot.view.history_player_history_view import HistoryPlayerHistoryView
 
 
 class WynnHistoryCog(CogBase):
@@ -38,7 +38,7 @@ class WynnHistoryCog(CogBase):
         """
         player_info = await self._bot.utils.must_get_wynn_player(player)
         period_begin, period_end = self._parse_period(intr, period)
-        invoke = ActivityView(self._bot, intr, player_info, period_begin, period_end)
+        invoke = HistoryPlayerActivityView(self._bot, intr, player_info, period_begin, period_end)
         await invoke.run()
 
     @history.subcommand()
@@ -60,7 +60,7 @@ class WynnHistoryCog(CogBase):
         await intr.response.defer()
         guild_info = await self._bot.utils.must_get_wynn_guild(guild)
         period_begin, period_end = self._parse_period(intr, period)
-        await GuildActivityView(
+        await HistoryGuildActivityView(
             self._bot,
             intr,
             guild_info,
@@ -87,7 +87,7 @@ class WynnHistoryCog(CogBase):
         await intr.response.defer()
         player_info = await self._bot.utils.must_get_wynn_player(player)
         period_begin, period_end = self._parse_period(intr, period)
-        await PlayerHistoryView(
+        await HistoryPlayerHistoryView(
             self._bot, intr, player_info, period_begin, period_end
         ).run()
 

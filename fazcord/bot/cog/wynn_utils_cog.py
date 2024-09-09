@@ -8,9 +8,9 @@ from nextcord import Interaction
 
 from fazcord.bot.cog._cog_base import CogBase
 from fazcord.bot.errors import BadArgument
-from fazcord.bot.view.convert_emerald_view import ConvertEmeraldView
-from fazcord.bot.view.crafted_probability_view import CraftedProbabilityView
-from fazcord.bot.view.ingredient_probability_view import IngredientProbabilityView
+from fazcord.bot.view.utils_convert_emerald_view import UtilsConvertEmeraldView
+from fazcord.bot.view.utils_crafted_probability_view import UtilsCraftedProbabilityView
+from fazcord.bot.view.utils_ingredient_probability_view import UtilsIngredientProbabilityView
 from fazcord.wynn.crafted_util import CraftedUtil
 from fazcord.wynn.ingredient_field import IngredientField
 
@@ -42,7 +42,7 @@ class WynnUtilsCog(CogBase):
             ingredient5 (str, optional): min,max[,efficiency]
             ingredient6 (str, optional): min,max[,efficiency]
         """
-        await CraftedProbabilityView(
+        await UtilsCraftedProbabilityView(
             self._bot,
             interaction,
             CraftedUtil(
@@ -66,7 +66,7 @@ class WynnUtilsCog(CogBase):
         Args:
             emerald_string (str, optional): Examples: "2x 1stx 1le 1eb 1e", "2.5stx 100.5le 100.2eb", "1/3x 1000eb".
         """
-        await ConvertEmeraldView(self._bot, interaction, emerald_string).run()
+        await UtilsConvertEmeraldView(self._bot, interaction, emerald_string).run()
 
     @utils.subcommand()
     async def ingredient_probability(
@@ -84,7 +84,7 @@ class WynnUtilsCog(CogBase):
             loot_quality (int, optional): Loot quality value. Defaults to 0.
         """
         parsed_base_chande = self._parse_base_chance(base_chance)
-        await IngredientProbabilityView(
+        await UtilsIngredientProbabilityView(
             self._bot, interaction, parsed_base_chande, loot_bonus, loot_quality
         ).run()
 
