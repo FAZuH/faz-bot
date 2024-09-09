@@ -17,22 +17,25 @@ jobs:
       clean_changelog: ${{ steps.changelog.outputs.clean_changelog }}
       changelog: ${{ steps.changelog.outputs.changelog }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v4
+      - name: Set Up Node
+        uses: actions/setup-node@v4
         with:
           node-version: 16
 
-      - run: |
+      - name: Install Changelog Tools
+        run: |
           npm install conventional-changelog-conventionalcommits@7.0.2
           npm install conventional-recommended-bump@9.0.0
 
       - name: Set Up version.json
         run: echo "{"version":$(git describe --tags --abbrev=0)}" > version.json
 
-      - name: Create changelog
+      - name: Create Changelog
         id: changelog
         uses: TriPSs/conventional-changelog-action@v5.2.1
         with:
@@ -57,27 +60,28 @@ jobs:
     needs: [changelog] # Build needs the new version number
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Set up QEMU
+      - name: Set Up QEMU
         uses: docker/setup-qemu-action@v1
         with:
           platforms: all
 
-      - name: Set up Docker Buildx
+      - name: Set Up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Log in to GitHub Container Registry
+      - name: Log In to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: FAZuH
           password: ${{ secrets.PRIVATE_TOKEN }}
 
-      - name: Set up build date
+      - name: Set Up Build Date
         run: echo "date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
 
-      - name: Download version information
+      - name: Download Version Information
         uses: actions/download-artifact@v4 # Download version information from changelog
         with:
           name: version
@@ -102,27 +106,28 @@ jobs:
     needs: [changelog] # Build needs the new version number
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Set up QEMU
+      - name: Set Up QEMU
         uses: docker/setup-qemu-action@v1
         with:
           platforms: all
 
-      - name: Set up Docker Buildx
+      - name: Set Up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Log in to GitHub Container Registry
+      - name: Log In to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: FAZuH
           password: ${{ secrets.PRIVATE_TOKEN }}
 
-      - name: Set up build date
+      - name: Set Up Build Date
         run: echo "date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
 
-      - name: Download version information
+      - name: Download Version Information
         uses: actions/download-artifact@v4 # Download version information from changelog
         with:
           name: version
