@@ -2,7 +2,7 @@ from typing import Any, Iterable, Literal, override
 
 from nextcord import Interaction, slash_command
 
-from fazcord.bot.cog._cog_base import CogBase
+from fazcord.bot.cog._base_cog import CogBase
 from fazcord.bot.errors import InvalidActionException, InvalidArgumentException
 
 

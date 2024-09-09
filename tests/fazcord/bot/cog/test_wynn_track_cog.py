@@ -47,7 +47,7 @@ class TestWynnTrackCog(unittest.IsolatedAsyncioTestCase):
             123456789
         )
         mock_respond_successful.assert_called_once_with(
-            self.intr, "This guild does not have any Wynncraft trackers registred"
+            self.intr, "This server does not have any Wynncraft trackers registred"
         )
 
     @patch("fazcord.bot.cog.wynn_track_cog.WynnTrackCog._respond_successful")

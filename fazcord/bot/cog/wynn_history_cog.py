@@ -7,7 +7,7 @@ import nextcord
 from dateparser import parse
 from nextcord import Interaction
 
-from fazcord.bot.cog._cog_base import CogBase
+from fazcord.bot.cog._base_cog import CogBase
 from fazcord.bot.errors import InvalidArgumentException, ParseException
 from fazcord.bot.view.history_guild_activity_view import HistoryGuildActivityView
 from fazcord.bot.view.history_player_activity_view import HistoryPlayerActivityView
