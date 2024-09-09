@@ -6,7 +6,7 @@ from typing import Any
 import nextcord
 from nextcord import Interaction
 
-from fazcord.bot.cog._cog_base import CogBase
+from fazcord.bot.cog._base_cog import CogBase
 from fazcord.bot.errors import InvalidArgumentException, ParseException
 from fazcord.bot.view.utils_convert_emerald_view import UtilsConvertEmeraldView
 from fazcord.bot.view.utils_crafted_probability_view import UtilsCraftedProbabilityView

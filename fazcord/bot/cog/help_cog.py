@@ -2,7 +2,7 @@ from typing import Any
 
 import nextcord
 
-from fazcord.bot.cog._cog_base import CogBase
+from fazcord.bot.cog._base_cog import CogBase
 from fazcord.bot.errors import UnauthorizedLocationException
 from fazcord.bot.view.help_view import HelpView
 

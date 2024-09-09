@@ -3,7 +3,7 @@ from typing import Any, Literal
 import nextcord
 from nextcord import Interaction
 
-from fazcord.bot.cog._cog_base import CogBase
+from fazcord.bot.cog._base_cog import CogBase
 from fazcord.bot.view.stat_worldlist_view import StatWorldlistView
 
 

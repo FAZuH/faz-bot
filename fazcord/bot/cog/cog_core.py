@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Iterable
 
-from fazcord.bot.cog._cog_base import CogBase
+from fazcord.bot.cog._base_cog import CogBase
 from fazcord.bot.cog.admin_cog import AdminCog
 from fazcord.bot.cog.help_cog import HelpCog
 from fazcord.bot.cog.info_cog import InfoCog
