@@ -5,7 +5,6 @@ from datetime import datetime
 from decimal import Decimal
 from typing import TYPE_CHECKING, Any, override
 
-from loguru import logger
 from nextcord import ButtonStyle, Color, Embed
 from nextcord.ui import Button
 
@@ -66,7 +65,6 @@ class PlayerHistoryView(BaseView):
             "Level": [0, 0],
             "Xp": [0, 0],
             "Wars": [0, 0],
-            "Playtime": [Decimal(0), Decimal(0)],
             "Mobs Killed": [0, 0],
             "Chests Found": [0, 0],
             "Logins": [0, 0],
@@ -109,8 +107,6 @@ class PlayerHistoryView(BaseView):
             d["Xp"][1] += c2.xp
             d["Wars"][0] += c1.wars
             d["Wars"][1] += c2.wars
-            d["Playtime"][0] += c1.playtime
-            d["Playtime"][1] += c2.playtime
             d["Mobs Killed"][0] += c1.mobs_killed
             d["Mobs Killed"][1] += c2.mobs_killed
             d["Chests Found"][0] += c1.chests_found

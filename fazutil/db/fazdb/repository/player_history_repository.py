@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import TYPE_CHECKING, Any, Sequence
 
 from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from fazutil.db.base_repository import BaseRepository
-from fazutil.db.fazdb.model.player_activity_history import PlayerActivityHistory
 from fazutil.db.fazdb.model.player_history import PlayerHistory
 
 if TYPE_CHECKING:

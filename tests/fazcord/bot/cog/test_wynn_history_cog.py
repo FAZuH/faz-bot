@@ -9,6 +9,7 @@ from fazcord.bot.cog.wynn_history_cog import WynnHistoryCog
 class TestWynnHistoryCog(unittest.IsolatedAsyncioTestCase):
     def setUp(self) -> None:
         self.intr = MagicMock()
+        self.intr.response.defer = AsyncMock()
         self.intr.created_at = datetime.now()
         self.bot = MagicMock()
         self.utils = create_autospec(Utils, spec_set=True)

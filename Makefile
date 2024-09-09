@@ -75,6 +75,6 @@ countlines:
 
 
 clean:
-	make lint-format
+	make lint-format-fix
 	make test
 	make rmpycache
