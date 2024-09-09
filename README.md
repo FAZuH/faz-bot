@@ -9,14 +9,14 @@ Wynncraft utility and statistics discord bot. Inspired by motoki317's [moto-bot]
 
 Some useful shortcuts for development are written in `Makefile`.
 
-- `make build` to (re-)build the image and launch the bot.
-- `make up` to launch the bot (does not rebuild the image).
-- `make down` to stop the bot and DB.
+- `make build-all` to (re-)build the image and all services.
+- `make up-all` to launch all services (does not rebuild the image).
+- `make down-all` to stop all services.
 
 For debugging:
 
 - `make bot [build|up|down|bash]` Manage container related to fazcord service.
-- `make api_collect [build|up|down|bash]` Manage container related to api_collect service.
+- `make api-collect [build|up|down|bash]` Manage container related to api_collect service.
 - `make sql [build|up|down|bash]` Manage container related to mysql service.
 
 Actions:

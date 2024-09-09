@@ -7,10 +7,8 @@ from fazutil.api.wynn.model.field._date_field import DateField
 
 class HeaderDateField(DateField):
 
-    HEADERS_DATEFMT: str = "%a, %d %b %Y %H:%M:%S %Z"
-
     def __init__(self, datestr: str) -> None:
-        super().__init__(datestr, self.HEADERS_DATEFMT)
+        super().__init__(datestr, "%a, %d %b %Y %H:%M:%S %Z")
 
     def to_datetime(self) -> datetime:
         return parser.parse(self.datestr)

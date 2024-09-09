@@ -45,7 +45,6 @@ class TestGuildActivityView(IsolatedAsyncioTestCase):
         await view.run()
 
         # Assert
-        self.maxDiff = 2000
         mock_embed.assert_called_once_with(
             mock_interaction,
             view._activity_res,

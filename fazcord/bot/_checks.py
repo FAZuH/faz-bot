@@ -80,7 +80,7 @@ class Checks:
         is_guild_admin: bool = interaction.user.guild_permissions.administrator  # type: ignore
         if not is_guild_admin:
             logger.warning(
-                f"is_whitelisted check for guild {interaction.guild.name} ({guild_id}) returned False",
+                f"is_whitelisted check for guild {interaction.guild.name} ({interaction.guild.id}) returned False",
                 discord=True,
             )
 

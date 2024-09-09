@@ -13,9 +13,10 @@ jobs:
     name: Merge main into release after a PR is merged
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v4
-      - name: merge
+
+      - name: Merge
         uses: mtanzi/action-automerge@v1
         id: merge
         with:

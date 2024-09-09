@@ -3,6 +3,8 @@ from fazutil.api.wynn.model.enum.character_type import CharacterType
 
 class CharacterTypeField:
 
+    __slots__ = ("_type",)
+
     def __init__(self, type_: str) -> None:
         self._type: str = type_
 

@@ -12,6 +12,30 @@ from fazutil.api.wynn.model.field.uuid_field import UuidField
 
 class Player:
 
+    __slots__ = (
+        "_raw",
+        "_username",
+        "_online",
+        "_server",
+        "_active_character",
+        "_uuid",
+        "_rank",
+        "_rank_badge",
+        "_legacy_rank_colour",
+        "_shortened_rank",
+        "_support_rank",
+        "_veteran",
+        "_first_join",
+        "_last_join",
+        "_playtime",
+        "_guild",
+        "_global_data",
+        "_forum_link",
+        "_ranking",
+        "_public_profile",
+        "_characters",
+    )
+
     def __init__(self, raw: dict[str, Any]) -> None:
         self._raw = raw
         self._username = raw["username"]
@@ -51,6 +75,9 @@ class Player:
             yield (character_uuid, character)
 
     class LegacyRankColour:
+
+        __slots__ = ("_main", "_sub")
+
         def __init__(self, node: dict[str, str]) -> None:
             self._main = node["main"]
             self._sub = node["sub"]
@@ -64,6 +91,9 @@ class Player:
             return self._sub
 
     class Guild:
+
+        __slots__ = ("_uuid", "_name", "_prefix", "_rank", "_rank_stars")
+
         def __init__(self, node: dict[str, Any]) -> None:
             self._uuid = UuidField(node["uuid"])
             self._name = node["name"]
@@ -92,6 +122,18 @@ class Player:
             return self._rank_stars
 
     class GlobalData:
+
+        __slots__ = (
+            "_wars",
+            "_total_level",
+            "_killed_mobs",
+            "_chests_found",
+            "_dungeons",
+            "_raids",
+            "_completed_quests",
+            "_pvp",
+        )
+
         def __init__(self, node: dict[str, Any]) -> None:
             self._wars = node["wars"]
             self._total_level = node["totalLevel"]
@@ -135,6 +177,9 @@ class Player:
             return self._pvp
 
     class Dungeons:
+
+        __slots__ = ("_total", "_list")
+
         def __init__(self, node: dict[str, Any]) -> None:
             self._total = node.get("total", 0)
             self._list = node.get("list", {})
@@ -149,6 +194,9 @@ class Player:
             return self._list
 
     class Raids:
+
+        __slots__ = ("_total", "_list")
+
         def __init__(self, node: dict[str, Any]) -> None:
             self._total = node.get("total", 0)
             self._list = node.get("list", {})
@@ -163,6 +211,9 @@ class Player:
             return self._list
 
     class Pvp:
+
+        __slots__ = ("_kills", "_deaths")
+
         def __init__(self, node: dict[str, Any]) -> None:
             self._kills = node.get("kills", 0) or 0
             self._deaths = node.get("deaths", 0) or 0
@@ -176,6 +227,33 @@ class Player:
             return self._deaths
 
     class Character:
+
+        __slots__ = (
+            "_type",
+            "_nickname",
+            "_level",
+            "_xp",
+            "_xp_percent",
+            "_total_level",
+            "_wars",
+            "_playtime",
+            "_mobs_killed",
+            "_chests_found",
+            "_items_identified",
+            "_blocks_walked",
+            "_logins",
+            "_deaths",
+            "_discoveries",
+            "_pre_economy",
+            "_pvp",
+            "_gamemode",
+            "_skill_points",
+            "_professions",
+            "_dungeons",
+            "_raids",
+            "_quests",
+        )
+
         def __init__(self, node: dict[str, Any]) -> None:
             self._type = CharacterTypeField(node["type"])
             self._nickname = node["nickname"]
@@ -202,6 +280,9 @@ class Player:
             self._quests = node["quests"]
 
         class SkillPoints:
+
+            __slots__ = ("_earth", "_thunder", "_water", "_fire", "_air")
+
             def __init__(self, node: dict[str, Any]) -> None:
                 self._earth = node.get("earth", 0)
                 self._thunder = node.get("thunder", 0)
@@ -230,6 +311,22 @@ class Player:
                 return self._air
 
         class Professions:
+
+            __slots__ = (
+                "_alchemism",
+                "_armouring",
+                "_cooking",
+                "_farming",
+                "_fishing",
+                "_jeweling",
+                "_mining",
+                "_scribing",
+                "_tailoring",
+                "_weaponsmithing",
+                "_woodcutting",
+                "_woodworking",
+            )
+
             def __init__(self, node: dict[str, Any]) -> None:
                 ProfessionInfo = self.ProfessionInfo
                 self._alchemism = ProfessionInfo(node.get("alchemism", {}))
@@ -246,6 +343,9 @@ class Player:
                 self._woodworking = ProfessionInfo(node.get("woodworking", {}))
 
             class ProfessionInfo:
+
+                __slots__ = ("_level", "_xp_percent")
+
                 def __init__(self, node: dict[str, Any]) -> None:
                     self._level = node.get("level", 0)
                     self._xp_percent = node.get("xpPercent", 0)

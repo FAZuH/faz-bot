@@ -14,6 +14,7 @@ from fazcord.bot.view.guild_activity_view import GuildActivityView
 
 
 class WynnHistoryCog(CogBase):
+    """Shows statistics from historical Wynncraft data."""
 
     # @nextcord.slash_command()
     # async def history(self, intr: Interaction[Any]) -> None: ...
