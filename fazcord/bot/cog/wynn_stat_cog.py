@@ -16,7 +16,7 @@ class WynnStatCog(CogBase):
     @stats.subcommand(name="worldlist")
     async def worldlist(
         self,
-        interaction: Interaction[Any],
+        intr: Interaction[Any],
         sort_by: Literal["Player Count", "Time Created"] = "Time Created",
     ) -> None:
         """
@@ -26,7 +26,7 @@ class WynnStatCog(CogBase):
             sort_by (Literal["Player Count", "Time Created"], optional): The criteria to sort the worlds by.
                 Can be either "Player Count" or "Time Created". Defaults to "Time Created".
         """
-        await StatWorldlistView(self._bot, interaction, sort_by).run()
+        await StatWorldlistView(self._bot, intr, sort_by).run()
 
     # @nextcord.slash_command(name="player")
     # async def player(self, interaction: Interaction[Any]) -> None:

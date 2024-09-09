@@ -3,7 +3,7 @@ from typing import Any, Iterable, Literal, override
 from nextcord import Interaction, slash_command
 
 from fazcord.bot.cog._cog_base import CogBase
-from fazcord.bot.errors import BadArgument
+from fazcord.bot.errors import InvalidActionException, InvalidArgumentException
 
 
 class WynnTrackCog(CogBase):
@@ -44,7 +44,7 @@ class WynnTrackCog(CogBase):
         track_entries = await db.track_entry_repository.select_by_guild_id(guild_id)
         if len(track_entries) == 0:
             await self._respond_successful(
-                intr, "This guild does not have any Wynn Trackers registred"
+                intr, "This guild does not have any Wynncraft trackers registred"
             )
         else:
             responses = []
@@ -90,7 +90,7 @@ class WynnTrackCog(CogBase):
         await db.track_entry_repository.delete(channel.id)
         await self._respond_successful(
             intr,
-            f"Removed track entry on channel `{channel.id}` (`{channel.name}`)",  # type: ignore
+            f"Removed track entry on channel `{channel.id} ({channel.name})`",  # type: ignore
         )
 
     @track.subcommand()
@@ -190,7 +190,7 @@ class WynnTrackCog(CogBase):
 
                 await self._respond_successful(
                     intr,
-                    f"Added `{type}` track entry on channel `{channel.id}` (`{channel.name}`)",  # type: ignore
+                    f"Added `{type}` track entry on channel `{channel.id} ({channel.name})`",  # type: ignore
                 )
                 return
 
@@ -198,7 +198,9 @@ class WynnTrackCog(CogBase):
                 assert value
                 guild = await self._bot.fazdb_db.guild_info_repository.get_guild(value)
                 if not guild:
-                    raise BadArgument(f"Cannot fetch guild with name/uuid {value}.")
+                    raise InvalidArgumentException(
+                        f"Guild {value} does not exist in faz-bot's database"
+                    )
                 uuid = guild.uuid
 
             elif type == "ONLINE":
@@ -207,12 +209,12 @@ class WynnTrackCog(CogBase):
                     value
                 )
                 if not player:
-                    raise BadArgument(
-                        f"Cannot fetch player with username/uuid {value}."
+                    raise InvalidArgumentException(
+                        f"Player {value} does not exist in faz-bot's database"
                     )
                 uuid = player.uuid
             else:
-                raise BadArgument(
+                raise InvalidActionException(
                     "Tracker that is not of type `guild` or `online` cannot be edited. "
                     f"Remove with `/remove {channel_id}`."
                 )

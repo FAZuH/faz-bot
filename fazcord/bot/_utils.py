@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Any, Callable
 
 import dateparser
 
-from fazcord.bot.errors import BadArgument, ParseFailure
+from fazcord.bot.errors import InvalidArgumentException, ParseException
 from fazutil.db.fazdb.model.guild_info import GuildInfo
 from fazutil.db.fazdb.model.player_info import PlayerInfo
 
@@ -61,7 +61,7 @@ class Utils:
     async def must_get_wynn_guild(self, guild: str) -> GuildInfo:
         guild_info = await self._bot.fazdb_db.guild_info_repository.get_guild(guild)
         if not guild_info:
-            raise BadArgument(
+            raise InvalidArgumentException(
                 f"Guild not found (reason: Can't find guild with name or uuid {guild})"
             )
         return guild_info
@@ -69,7 +69,7 @@ class Utils:
     async def must_get_wynn_player(self, player: str) -> PlayerInfo:
         player_info = await self._bot.fazdb_db.player_info_repository.get_player(player)
         if not player_info:
-            raise BadArgument(
+            raise InvalidArgumentException(
                 f"Player not found (reason: Can't find player with username or uuid {player})"
             )
         return player_info
@@ -81,7 +81,7 @@ class Utils:
     async def must_get_sendable_channel(self, channel_id: Any) -> Channel:
         channel = await self.must_get_id(self._bot.client.get_channel, channel_id)
         if not hasattr(channel, "send"):
-            raise ParseFailure(
+            raise ParseException(
                 f"Channel with id {channel_id} does not support sending messages."
             )
         return channel
@@ -98,15 +98,15 @@ class Utils:
     async def must_get_id[T](get_strategy: Callable[[int], T | None], id_: Any) -> T:
         try:
             parsed_id = int(id_)
-        except ParseFailure as exc:
-            raise ParseFailure(f"Failed parsing {id_} into an integer.") from exc
+        except ParseException as exc:
+            raise ParseException(f"Failed parsing {id_} into an integer.") from exc
         if not (ret := get_strategy(parsed_id)):
-            raise ParseFailure(f"Failed getting object from ID {id_}")
+            raise ParseException(f"Failed getting object from ID {id_}")
         return ret
 
     @staticmethod
     def must_parse_date_string(datestr: str) -> datetime:
         date = dateparser.parse(datestr)
         if not date:
-            raise ParseFailure(f"Failed parsing date string {datestr}")
+            raise ParseException(f"Failed parsing date string {datestr}")
         return date

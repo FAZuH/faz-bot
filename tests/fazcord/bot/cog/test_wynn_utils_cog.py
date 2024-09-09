@@ -4,7 +4,7 @@ from unittest import TestCase
 from unittest.mock import MagicMock
 
 from fazcord.bot.cog.wynn_utils_cog import WynnUtilsCog
-from fazcord.bot.errors import BadArgument
+from fazcord.bot.errors import InvalidArgumentException
 
 
 class TestWynnUtilsCog(TestCase):
@@ -33,11 +33,11 @@ class TestWynnUtilsCog(TestCase):
         self.assertEqual(result[0].boost, 2)
 
     def test_parse_ing_invalid_format(self):
-        with self.assertRaises(BadArgument):
+        with self.assertRaises(InvalidArgumentException):
             self._wynn_utils._parse_ings_str("1")
 
     def test_parse_ing_non_integer_values(self):
-        with self.assertRaises(BadArgument):
+        with self.assertRaises(InvalidArgumentException):
             self._wynn_utils._parse_ings_str("one,5,2")
 
     def test_parse_ing_skip_default_value(self):
@@ -45,7 +45,7 @@ class TestWynnUtilsCog(TestCase):
         self.assertEqual(len(result), 0)
 
     def test_parse_ing_ingredient_field_errors(self):
-        with self.assertRaises(BadArgument):
+        with self.assertRaises(InvalidArgumentException):
             self._wynn_utils._parse_ings_str("5,1")
 
     def test_parse_chance_percentage(self) -> None:
@@ -73,5 +73,5 @@ class TestWynnUtilsCog(TestCase):
         self.assertAlmostEqual(test6, Decimal("0.1"))
 
     def test_parse_chance_bad_argument(self) -> None:
-        with self.assertRaises(BadArgument):
+        with self.assertRaises(InvalidArgumentException):
             self._parse_chance("abc")

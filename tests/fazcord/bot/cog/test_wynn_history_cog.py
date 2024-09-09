@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock, create_autospec, patch
 
 from fazcord.bot._utils import Utils
 from fazcord.bot.cog.wynn_history_cog import WynnHistoryCog
-from fazcord.bot.errors import BadArgument, ParseFailure
+from fazcord.bot.errors import InvalidArgumentException, ParseException
 
 
 class TestWynnHistoryCog(unittest.IsolatedAsyncioTestCase):
@@ -64,12 +64,12 @@ class TestWynnHistoryCog(unittest.IsolatedAsyncioTestCase):
 
     def test_parse_period_invalid_period_format(self):
         # Test with an invalid date format
-        with self.assertRaises(ParseFailure):
+        with self.assertRaises(ParseException):
             WynnHistoryCog._parse_period(self.intr, "invalid--period")
 
     def test_parse_period_period_exceeds_six_months(self):
         # Test with a period that exceeds 6 months
-        with self.assertRaises(BadArgument):
+        with self.assertRaises(InvalidArgumentException):
             WynnHistoryCog._parse_period(self.intr, "2023-01-01--2023-12-31")
 
     # def test_parse_period_period_with_nonexistent_date(self):
@@ -84,7 +84,7 @@ class TestWynnHistoryCog(unittest.IsolatedAsyncioTestCase):
 
     def test_parse_period_period_without_separator(self):
         # Test with missing separator in period string
-        with self.assertRaises(ParseFailure):
+        with self.assertRaises(ParseException):
             WynnHistoryCog._parse_period(self.intr, "20240101--20240201")
 
     async def asyncTearDown(self) -> None:
