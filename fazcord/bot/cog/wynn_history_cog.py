@@ -38,7 +38,9 @@ class WynnHistoryCog(CogBase):
         """
         player_info = await self._bot.utils.must_get_wynn_player(player)
         period_begin, period_end = self._parse_period(intr, period)
-        invoke = HistoryPlayerActivityView(self._bot, intr, player_info, period_begin, period_end)
+        invoke = HistoryPlayerActivityView(
+            self._bot, intr, player_info, period_begin, period_end
+        )
         await invoke.run()
 
     @history.subcommand()

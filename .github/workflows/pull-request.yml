@@ -47,15 +47,17 @@ jobs:
           pip install pytest ruff
           pip install -r requirements-dev.txt
 
-      - name: Format with Ruff
-        run: python -m ruff check --fix --exit-zero
+      - name: Format with Ruff and Black
+        run: |
+          python -m ruff check --fix --exit-zero .
+          python -m black .
 
       - name: Commit Format
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_user_name: "FAZBot"
           commit_user_email: "fazuhhh@proton.me"
-          commit_message: "ci: ruff formatting"
+          commit_message: "ci: ruff and black formatting"
 
       # NOTE: Make sure tests still works even with placeholder .env values
       - name: Test with pytest
@@ -68,4 +70,4 @@ jobs:
           MYSQL_FAZDB_DATABASE: faz-db
         run: |
           cp .env-example .env
-          python -m pytest
+          python -m pytest tests/

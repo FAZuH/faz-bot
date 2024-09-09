@@ -4,7 +4,9 @@ from unittest.mock import MagicMock, create_autospec, patch
 
 from nextcord import Interaction
 
-from fazcord.bot.view.utils_ingredient_probability_view import UtilsIngredientProbabilityView
+from fazcord.bot.view.utils_ingredient_probability_view import (
+    UtilsIngredientProbabilityView,
+)
 
 
 class TestUtilsIngredientProbabilityView(IsolatedAsyncioTestCase):

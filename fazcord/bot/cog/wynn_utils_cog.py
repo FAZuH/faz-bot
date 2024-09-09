@@ -10,7 +10,9 @@ from fazcord.bot.cog._cog_base import CogBase
 from fazcord.bot.errors import BadArgument
 from fazcord.bot.view.utils_convert_emerald_view import UtilsConvertEmeraldView
 from fazcord.bot.view.utils_crafted_probability_view import UtilsCraftedProbabilityView
-from fazcord.bot.view.utils_ingredient_probability_view import UtilsIngredientProbabilityView
+from fazcord.bot.view.utils_ingredient_probability_view import (
+    UtilsIngredientProbabilityView,
+)
 from fazcord.wynn.crafted_util import CraftedUtil
 from fazcord.wynn.ingredient_field import IngredientField
 
