@@ -8,7 +8,6 @@ from loguru import logger
 
 
 class RetryHandler:
-
     @staticmethod
     def async_decorator[
         T, **P

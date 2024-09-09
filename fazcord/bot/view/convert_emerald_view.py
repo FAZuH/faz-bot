@@ -14,7 +14,6 @@ if TYPE_CHECKING:
 
 
 class ConvertEmeraldView(BaseView):
-
     _THUMBNAIL_URL = "https://static.wikia.nocookie.net/wynncraft_gamepedia_en/images/8/8c/Experience_bottle.png/revision/latest?cb=20190118234414"
 
     def __init__(

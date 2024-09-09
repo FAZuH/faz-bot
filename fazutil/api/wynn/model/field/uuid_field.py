@@ -2,7 +2,6 @@ from uuid import UUID
 
 
 class UuidField:
-
     __slots__ = ("_uuid",)
 
     def __init__(self, uuid_: str) -> None:

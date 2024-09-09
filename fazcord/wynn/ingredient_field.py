@@ -1,5 +1,4 @@
 class IngredientField:
-
     def __init__(self, min_value: int, max_value: int, boost: int = 0) -> None:
         """Constructor of :obj:`IngredientValue`
 

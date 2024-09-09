@@ -2,7 +2,6 @@ from datetime import datetime
 
 
 class DateField:
-
     __slots__ = ("_datestr", "_datefmt")
 
     def __init__(self, datestr: str, datefmt: str) -> None:

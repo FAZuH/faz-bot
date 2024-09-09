@@ -14,7 +14,6 @@ from tests.fazutil.db.fazdb._common_fazdb_repository_test import (
 class TestPlayerActivityHistoryRepository(
     CommonFazdbRepositoryTest.Test[PlayerActivityHistoryRepository]
 ):
-
     async def test_select_between_period(self) -> None:
         # Prepare
         e1, e2, e3, e4, _ = self._get_mock_data()

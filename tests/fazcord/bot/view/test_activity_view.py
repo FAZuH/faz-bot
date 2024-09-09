@@ -8,7 +8,6 @@ from fazcord.bot.view.activity_view import ActivityView
 
 
 class TestActivityView(IsolatedAsyncioTestCase):
-
     @patch("fazcord.bot.view.activity_view.CustomEmbed")
     async def test_run(self, mock_embed: MagicMock) -> None:
         # Prepare

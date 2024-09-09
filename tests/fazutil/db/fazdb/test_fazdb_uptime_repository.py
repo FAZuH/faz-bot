@@ -7,7 +7,6 @@ from tests.fazutil.db.fazdb._common_fazdb_repository_test import (
 
 
 class TestFazdbUptimeRepository(CommonFazdbRepositoryTest.Test[FazdbUptimeRepository]):
-
     @override
     def _get_mock_data(self):
         return self._get_fazdb_uptime_mock_data()

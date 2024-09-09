@@ -6,7 +6,6 @@ from loguru import logger
 
 
 class BaseRatelimitHandler(ABC):
-
     async def limit(self) -> None:
         if self.remaining <= self.min_limit:
             await self.ratelimited()

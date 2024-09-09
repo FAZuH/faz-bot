@@ -17,7 +17,6 @@ if TYPE_CHECKING:
 
 
 class PlayerInfoRepository(BaseRepository[PlayerInfo, Any]):
-
     def __init__(self, database: FazdbDatabase) -> None:
         self._database = database
         super().__init__(database, PlayerInfo)

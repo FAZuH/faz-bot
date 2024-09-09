@@ -6,7 +6,6 @@ from fazutil.api.wynn.model.headers import Headers
 
 
 class GuildResponse(BaseResponse[Guild, Headers]):
-
     def __init__(self, body: dict[str, Any], headers: dict[str, Any]) -> None:
         super().__init__(Guild(body), Headers(headers))
 

@@ -13,7 +13,6 @@ from fazutil.util.retry_handler import RetryHandler
 
 
 class App:
-
     def __init__(self) -> None:
         self._properties = Properties()
         p = self.properties

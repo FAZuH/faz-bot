@@ -10,7 +10,6 @@ if TYPE_CHECKING:
 
 
 class ResponseQueue:
-
     def __init__(self):
         self._list: list[Resp] = []
         self._lock = Lock()

@@ -8,7 +8,6 @@ from nextcord import Colour, Embed, SyncWebhook
 
 
 class LoggerSetup:
-
     @classmethod
     def setup(cls, log_directory: str, webhook_url: str, admin_discord_id: int) -> None:
         cls._log_directory = log_directory

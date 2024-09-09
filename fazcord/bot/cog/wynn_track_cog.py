@@ -2,13 +2,11 @@ from typing import Any, Iterable, Literal, override
 
 from nextcord import Interaction, slash_command
 
-from fazcord.bot._utils import Utils
 from fazcord.bot.cog._cog_base import CogBase
 from fazcord.bot.errors import BadArgument
 
 
 class WynnTrackCog(CogBase):
-
     @override
     def _setup(self, whitelisted_guild_ids: Iterable[int]) -> None:
         super()._setup(whitelisted_guild_ids)
@@ -27,11 +25,8 @@ class WynnTrackCog(CogBase):
     async def toggle(self, intr: Interaction[Any], channel_id: str) -> None:
         """(dev only) Toggles a track entry on any channel_id."""
         db = self._bot.fazcord_db
-        channel = await self._must_get_channel(channel_id)
-        try:
-            track_entry = await db.track_entry_repository.toggle(channel.id)
-        except ValueError as exc:
-            raise BadArgument from exc
+        channel = await self._utils.must_get_channel(channel_id)
+        track_entry = await db.track_entry_repository.toggle(channel.id)
         await self._respond_successful(
             intr,
             f"Toggled track entry on channel `{channel.id}` (`{channel.name}`) to {track_entry}",  # type: ignore
@@ -76,11 +71,8 @@ class WynnTrackCog(CogBase):
             channel_id (str): The ID of the channel to toggle tracking for.
         """
         db = self._bot.fazcord_db
-        channel = await self._must_get_channel(channel_id)
-        try:
-            track_entry = await db.track_entry_repository.toggle(channel.id)
-        except ValueError as exc:
-            raise BadArgument from exc
+        channel = await self._utils.must_get_channel(channel_id)
+        track_entry = await db.track_entry_repository.toggle(channel.id)
         await self._respond_successful(
             intr,
             f"Toggled track entry on channel `{channel.id}` (`{channel.name}`) to {track_entry}",  # type: ignore
@@ -94,7 +86,7 @@ class WynnTrackCog(CogBase):
             channel_id (str): The ID of the channel to remove the track entry from.
         """
         db = self._bot.fazcord_db
-        channel = await self._must_get_channel(channel_id)
+        channel = await self._utils.must_get_channel(channel_id)
         await db.track_entry_repository.delete(channel.id)
         await self._respond_successful(
             intr,
@@ -179,12 +171,11 @@ class WynnTrackCog(CogBase):
         db = self._bot.fazcord_db
         track_repo = db.track_entry_repository
         track_value_repo = db.track_entry_association_repository
-        channel = await self._must_get_channel(channel_id)
+        channel = await self._utils.must_get_channel(channel_id)
         assert intr.user
 
         async with db.enter_async_session() as ses:
-
-            await Utils.add_to_db(self._bot, intr, channel, ses)
+            await self._utils.add_to_db(intr, channel, ses)
             track_entry = await track_repo.select_by_channel_id(channel.id, session=ses)
 
             if track_entry is None:

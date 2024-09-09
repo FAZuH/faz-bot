@@ -8,7 +8,6 @@ from fazcord.bot.view.help_view import HelpView
 
 
 class HelpCog(CogBase):
-
     @nextcord.slash_command(name="help", description="Help command")
     async def _help(self, interaction: nextcord.Interaction[Any]) -> None:
         if not interaction.guild:

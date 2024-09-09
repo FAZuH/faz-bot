@@ -24,7 +24,7 @@ class WhitelistGroup(BaseFazcordModel):
         reason: str | None = None,
         from_: datetime | None = None,
         until: datetime | None = None,
-        **kw: Any
+        **kw: Any,
     ) -> None:
         self.id = id
         self.type = type

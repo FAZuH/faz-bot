@@ -5,7 +5,6 @@ from fazbeat.api_collect.task.response_queue import ResponseQueue
 
 
 class TestResponseList(unittest.TestCase):
-
     def setUp(self) -> None:
         self.response_list = ResponseQueue()
 

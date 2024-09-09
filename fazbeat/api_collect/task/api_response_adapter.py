@@ -24,7 +24,6 @@ class ApiResponseAdapter:
     """Adapter for converting wynncraft API responses to DB models."""
 
     class Player:
-
         @staticmethod
         def to_character_history(resp: PlayerResponse) -> list[CharacterHistory]:
             return [
@@ -98,7 +97,6 @@ class ApiResponseAdapter:
             )
 
     class Guild:
-
         @staticmethod
         def to_guild_history(resp: GuildResponse) -> GuildHistory:
             return GuildHistory(
@@ -124,7 +122,11 @@ class ApiResponseAdapter:
         def to_guild_member_history(resp: GuildResponse) -> list[GuildMemberHistory]:
             return [
                 GuildMemberHistory(
-                    uuid=uuid.to_bytes() if uuid.is_uuid() else memberinfo.uuid.to_bytes(),  # type: ignore
+                    uuid=(
+                        uuid.to_bytes()
+                        if uuid.is_uuid()
+                        else memberinfo.uuid.to_bytes()
+                    ),  # type: ignore
                     contributed=memberinfo.contributed,
                     joined=memberinfo.joined.to_datetime(),
                     datetime=resp.headers.to_datetime(),
@@ -133,7 +135,6 @@ class ApiResponseAdapter:
             ]  # type: ignore
 
     class OnlinePlayers:
-
         @staticmethod
         def to_online_players(resp: OnlinePlayersResponse) -> list[OnlinePlayers]:
             return [

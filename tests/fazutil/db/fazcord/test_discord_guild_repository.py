@@ -11,7 +11,6 @@ from tests.fazutil.db.fazcord._common_fazcord_repository_test import (
 class TestDiscordGuildRepository(
     CommonFazcordRepositoryTest.Test[DiscordGuildRepository]
 ):
-
     @override
     async def _create_table(self) -> None:
         await self.database.discord_guild_repository.create_table()

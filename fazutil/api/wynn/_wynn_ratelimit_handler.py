@@ -7,7 +7,6 @@ from fazutil.api.wynn.model.headers import Headers
 
 
 class WynnRatelimitHandler(BaseRatelimitHandler):
-
     def __init__(self, min_limit: int, total: int) -> None:
         self._min_limit = min_limit
         self._remaining = total

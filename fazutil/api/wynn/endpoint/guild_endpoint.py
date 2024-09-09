@@ -5,7 +5,6 @@ from fazutil.api.wynn.response.guild_response import GuildResponse
 
 
 class GuildEndpoint(BaseEndpoint):
-
     async def get(self, name: str) -> GuildResponse:
         return await self._get(f"{self.path}/{name}")
 

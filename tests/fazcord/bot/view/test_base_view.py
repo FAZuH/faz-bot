@@ -8,13 +8,11 @@ from fazcord.bot.view._base_view import BaseView
 
 
 class _MockView(BaseView):
-
     @override
     async def run(self) -> None: ...
 
 
 class TestBaseView(IsolatedAsyncioTestCase):
-
     @override
     async def asyncSetUp(self) -> None:
         self._mock_bot = MagicMock()

@@ -12,7 +12,6 @@ if TYPE_CHECKING:
 
 
 class HelpView(BasePaginationView):
-
     def __init__(
         self,
         bot: Bot,

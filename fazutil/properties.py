@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 
 
 class Properties:
-
     # Application constants
     AUTHOR = "FAZuH"
     VERSION = "0.0.1"

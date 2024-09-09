@@ -8,7 +8,6 @@ from fazutil.api.wynn.wynn_api import WynnApi
 
 
 class TestResponseHandler(TestCase):
-
     def setUp(self) -> None:
         self._api = MagicMock(spec_set=WynnApi)
         self.__request_list = MagicMock(spec_set=RequestQueue)

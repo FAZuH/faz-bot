@@ -14,7 +14,6 @@ if TYPE_CHECKING:
 
 
 class Heartbeat(BaseHeartbeat):
-
     def __init__(self, api: WynnApi, db: FazdbDatabase) -> None:
         super().__init__("heartbeat_fazdb")
 

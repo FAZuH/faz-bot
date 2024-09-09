@@ -10,7 +10,6 @@ from fazutil.api.wynn.model.field.uuid_field import UuidField
 
 
 class Guild:
-
     __slots__ = (
         "_raw",
         "_uuid",
@@ -51,7 +50,6 @@ class Guild:
         yield from self.season_ranks.items()
 
     class Members:
-
         __slots__ = (
             "_total",
             "_owner",
@@ -109,7 +107,6 @@ class Guild:
             }
 
         class MemberInfo:
-
             __slots__ = (
                 "_uuid",
                 "_username",
@@ -186,7 +183,6 @@ class Guild:
             return self._recruit
 
     class Banner:
-
         __slots__ = ("_base", "_tier", "_structure", "_layers")
 
         def __init__(self, node: dict[str, Any]) -> None:
@@ -225,7 +221,6 @@ class Guild:
             return self._layers
 
     class SeasonRankInfo:
-
         __slots__ = ("_rating", "_final_territories")
 
         def __init__(self, node: dict[str, Any]) -> None:

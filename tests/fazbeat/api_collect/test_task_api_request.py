@@ -6,7 +6,6 @@ from fazbeat.api_collect.task.task_api_request import TaskApiRequest
 
 
 class TestTaskApiRequest(unittest.IsolatedAsyncioTestCase):
-
     def setUp(self):
         self._event_loop_patcher = patch(
             "fazbeat.api_collect.task.task_api_request.asyncio"

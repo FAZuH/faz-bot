@@ -16,7 +16,6 @@ if TYPE_CHECKING:
 
 
 class Events:
-
     def __init__(self, bot: Bot) -> None:
         self._bot = bot
         self._cooldown = CooldownMapping(Cooldown(1, 3.0), BucketType.user)

@@ -12,7 +12,6 @@ if TYPE_CHECKING:
 
 
 class WynnApi:
-
     def __init__(self) -> None:
         self._ratelimit = WynnRatelimitHandler(5, 180)
         self._request = HttpRequest(

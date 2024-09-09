@@ -9,6 +9,5 @@ if TYPE_CHECKING:
 
 
 class Heartbeat(BaseHeartbeat):
-
     def __init__(self, app: App) -> None:
         super().__init__("heartbeat_fazcord")

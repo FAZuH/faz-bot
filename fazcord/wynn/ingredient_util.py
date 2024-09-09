@@ -2,7 +2,6 @@ from decimal import Decimal
 
 
 class IngredientUtil:
-
     def __init__(
         self,
         base_probability: Decimal | float,
