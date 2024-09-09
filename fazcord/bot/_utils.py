@@ -4,7 +4,6 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any, Callable
 
 import dateparser
-from nextcord import PartialMessage
 
 from fazcord.bot.errors import ParseFailure
 

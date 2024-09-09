@@ -25,7 +25,7 @@ class HelpView(BasePaginationView):
             self._interaction,
             commands,
             5,
-            title=f"Commands List",
+            title="Commands List",
             color=Colour.dark_blue(),
         )
 
