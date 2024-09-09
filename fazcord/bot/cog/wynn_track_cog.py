@@ -17,9 +17,13 @@ class WynnTrackCog(CogBase):
             self.track_admin, overwrite=True, use_rollout=True
         )
 
-    @slash_command(name="track_admin", description="Admin WynnTrack commands.")
+    @slash_command()
+    async def track(self, intr: Interaction[Any]) -> None:
+        """Commands to manage and view Wynncraft trackers."""
+
+    @slash_command()
     async def track_admin(self, intr: Interaction[Any]) -> None:
-        """Contains administrative commands for managing WynnTrack."""
+        """Contains administrative commands for managing Wynncraft trackers."""
 
     @track_admin.subcommand(name="toggle")
     async def toggle(self, intr: Interaction[Any], channel_id: str) -> None:
@@ -31,10 +35,6 @@ class WynnTrackCog(CogBase):
             intr,
             f"Toggled track entry on channel `{channel.id}` (`{channel.name}`) to {track_entry}",  # type: ignore
         )
-
-    @slash_command()
-    async def track(self, intr: Interaction[Any]) -> None:
-        """Commands to manage and view Wynncraft trackers."""
 
     @track.subcommand()
     async def show(self, intr: Interaction[Any]) -> None:

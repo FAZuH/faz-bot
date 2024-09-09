@@ -5,11 +5,11 @@ from unittest.mock import AsyncMock, MagicMock, create_autospec, patch
 
 from nextcord import Interaction
 
-from fazcord.bot.view.worldlist_view import WorldlistView
+from fazcord.bot.view.stat_worldlist_view import StatWorldlistView
 
 
-class TestWorldlistView(IsolatedAsyncioTestCase):
-    @patch("fazcord.bot.view.worldlist_view.PaginationEmbed")
+class TestStatWorldlistView(IsolatedAsyncioTestCase):
+    @patch("fazcord.bot.view.stat_worldlist_view.PaginationEmbed")
     async def test_run(self, mock_embed: MagicMock) -> None:
         # Prepare
         mock_bot = MagicMock()
@@ -20,7 +20,7 @@ class TestWorldlistView(IsolatedAsyncioTestCase):
         mock_bot.fazdb_db.worlds_repository.get_worlds = AsyncMock(
             return_value=self._get_mock_worlds()
         )
-        view = WorldlistView(mock_bot, mock_interaction, "Player Count")
+        view = StatWorldlistView(mock_bot, mock_interaction, "Player Count")
         embed_ins = MagicMock()
         embed_ins.get_items.return_value = self._get_mock_worlds()
         mock_embed.return_value.get_base.return_value = embed_ins

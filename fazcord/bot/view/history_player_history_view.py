@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from fazutil.db.fazdb.model.player_info import PlayerInfo
 
 
-class PlayerHistoryView(BaseView):
+class HistoryPlayerHistoryView(BaseView):
     def __init__(
         self,
         bot: Bot,
@@ -63,7 +63,7 @@ class PlayerHistoryView(BaseView):
         )
         p1, p2 = player_hist[0], player_hist[-1]
 
-        d = {
+        d: dict[str, list[Any]] = {
             "Username": [p1.username, p2.username],
             "Rank": [p1.support_rank, p2.support_rank],
             "Playtime": [p1.playtime, p2.playtime],
@@ -100,10 +100,8 @@ class PlayerHistoryView(BaseView):
                 char.character_uuid, self._period_begin, self._period_end
             )
             reslen = len(res)
-            if reslen == 0:
+            if reslen < 2:
                 continue
-            elif reslen == 1:
-                c1 = c2 = res[0]
             else:
                 c1, c2 = res[0], res[-1]
             type = char.type
@@ -158,7 +156,9 @@ class PlayerHistoryView(BaseView):
                 c1, c2, f"{char.type}{charcount[type]}"
             )
 
-        max_label_length = max(len(label) for label in d)
+        max_label_length = max(
+            len(label) for label, data in d.items() if data[1] != data[0]
+        )
         embed.description += "".join(  # type: ignore
             [
                 self._diff_str_or_blank(diff[0], diff[1], label, max_label_length)
@@ -189,6 +189,7 @@ class PlayerHistoryView(BaseView):
             "Level": [c1.level, c2.level],
             "Xp": [c1.xp, c2.xp],
             "Wars": [c1.wars, c2.wars],
+            "Mobs Killed": [c1.mobs_killed, c2.mobs_killed],
             "Playtime": [c1.playtime, c2.playtime],
             "Chests Found": [c1.chests_found, c2.chests_found],
             "Logins": [c1.logins, c2.logins],
@@ -210,7 +211,9 @@ class PlayerHistoryView(BaseView):
             "Quests": [c1.quest_completions, c2.quest_completions],
             "Raids": [c1.raid_completions, c2.raid_completions],
         }
-        max_label_length = max(len(label) for label in d)
+        max_label_length = max(
+            len(label) for label, data in d.items() if data[1] != data[0]
+        )
 
         embed = self._base_embed.get_base()
         embed.description += "".join(  # type: ignore
@@ -221,9 +224,13 @@ class PlayerHistoryView(BaseView):
         )
 
         class _CharacterButton(Button):
-            async def callback(s, interaction: Interaction) -> None:  # type: ignore To grab self from outer
+            @override
+            async def callback(self_, interaction: Interaction) -> None:
                 await interaction.response.defer()
-                self._click_button(s)
+                self._click_button(self_)
                 await interaction.edit_original_message(embed=embed, view=self)
 
-        self.add_item(_CharacterButton(style=ButtonStyle.green, label=label))
+        button = _CharacterButton(style=ButtonStyle.green, label=label.title())
+        button._view = self  # type: ignore
+
+        self.add_item(button)
