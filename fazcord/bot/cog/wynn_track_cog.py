@@ -216,7 +216,9 @@ class WynnTrackCog(CogBase):
                     value
                 )
                 if not player:
-                    raise BadArgument(f"Cannot fech player with username/uuid {value}.")
+                    raise BadArgument(
+                        f"Cannot fetch player with username/uuid {value}."
+                    )
                 uuid = player.uuid
             else:
                 raise BadArgument(
