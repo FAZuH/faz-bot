@@ -66,7 +66,7 @@ class CustomEmbed(Embed):
     def add_timestamp_field(self) -> None:
         """Adds a timestamp field to this embed."""
         timestamp = self._interaction.created_at.timestamp()
-        self.add_field(name="Timestamp", value=f"<t:{int(timestamp)}:F>", inline=False)
+        self.add_field(name="", value=f"<t:{int(timestamp)}:F>", inline=False)
 
     @property
     def interaction(self) -> Interaction[Any]:

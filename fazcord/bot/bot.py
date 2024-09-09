@@ -106,7 +106,7 @@ class Bot:
         return self._utils
 
     def _start(self) -> None:
-        logger.info("Starting discord client")
+        logger.info("Starting Discord Client")
         asyncio.set_event_loop(self._event_loop)
         coro = self.client.start(self.app.properties.DISCORD_BOT_TOKEN)
         self._event_loop.create_task(coro)
