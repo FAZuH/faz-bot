@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import traceback
-from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 from loguru import logger
@@ -10,7 +9,6 @@ from nextcord import (
     ActivityType,
     ApplicationCheckFailure,
     Colour,
-    Embed,
     Interaction,
     errors,
 )
@@ -18,6 +16,7 @@ from nextcord.ext import commands
 from nextcord.ext.commands import BucketType, Cooldown, CooldownMapping
 
 from fazcord.bot.errors import ApplicationException
+from fazcord.bot.view._custom_embed import CustomEmbed
 
 if TYPE_CHECKING:
     from fazcord.bot.bot import Bot
@@ -122,14 +121,13 @@ class Events:
         self, interaction: Interaction[Any], exception: Exception
     ) -> None:
         description = f"An unexpected error occurred while executing the command: \n**{exception}**"
-        embed = Embed(
-            title="Unexpected Error", description=description, color=Colour.dark_red()
+        embed = CustomEmbed(
+            interaction,
+            title="Unexpected Error",
+            description=description,
+            color=Colour.dark_red(),
         )
-        embed.add_field(
-            name="Timestamp",
-            value=f"<t:{int(datetime.now().timestamp())}:F>",
-            inline=False,
-        )
+        embed.finalize()
         is_admin = await self._bot.checks.is_admin(interaction)
         if is_admin:
             tb = traceback.format_exception(exception)
@@ -143,12 +141,10 @@ class Events:
         self, interaction: Interaction[Any], exception: ApplicationException
     ) -> None:
         description = f"**{exception}**"
-        embed = Embed(title="Error", description=description, color=Colour.red())
-        embed.add_field(
-            name="Timestamp",
-            value=f"<t:{int(datetime.now().timestamp())}:F>",
-            inline=False,
+        embed = CustomEmbed(
+            interaction, title="Error", description=description, color=Colour.red()
         )
+        embed.finalize()
         await interaction.send(embed=embed)
         logger.opt(exception=exception).warning(description, discord=True)
 
@@ -161,11 +157,12 @@ class Events:
         self, interaction: Interaction[Any], exception: ApplicationCheckFailure
     ) -> None:
         description = f"**{exception}**"
-        embed = Embed(title="Error", description=description, color=Colour.dark_teal())
-        embed.add_field(
-            name="Timestamp",
-            value=f"<t:{int(datetime.now().timestamp())}:F>",
-            inline=False,
+        embed = CustomEmbed(
+            interaction,
+            title="Error",
+            description=description,
+            color=Colour.dark_teal(),
         )
+        embed.finalize()
         await interaction.send(embed=embed)
         logger.opt(exception=exception).warning(description, discord=True)
