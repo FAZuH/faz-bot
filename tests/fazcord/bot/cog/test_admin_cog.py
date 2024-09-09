@@ -37,7 +37,7 @@ class TestAdminCog(IsolatedAsyncioTestCase):
             f"{p.FAZCORD_DB_NAME}_test",
         )
         self.db.create_all()
-        await self.db.whitelist_group_repository.truncate()
+        await self.db.whitelist_group.truncate()
 
         self.mock_utils = create_autospec(Utils, spec_set=True)
         self.mock_utils.must_get_user.return_value = self._get_mock_user()
@@ -51,21 +51,21 @@ class TestAdminCog(IsolatedAsyncioTestCase):
     async def test_ban_user_not_banned(self, mock_intr: MagicMock) -> None:
         """Test if ban method successfully bans user that's not already banned."""
         await self.admin.ban(mock_intr, user_id="1")
-        self.assertTrue(await self.db.whitelist_group_repository.is_banned_user(1))
+        self.assertTrue(await self.db.whitelist_group.is_banned_user(1))
 
     async def test_ban_user_already_banned(self, mock_intr: MagicMock) -> None:
         """Test if ban method fails banning user that's already banned."""
         mock_intr.send = AsyncMock()
-        await self.db.whitelist_group_repository.ban_user(user_id=1)
+        await self.db.whitelist_group.ban_user(user_id=1)
         with self.assertRaises(ApplicationException):
             await self.admin.ban(mock_intr, user_id="1")
 
     async def test_unban_already_banned(self, mock_intr: MagicMock) -> None:
         """Test if unban successfully unbans a banned user."""
-        await self.db.whitelist_group_repository.ban_user(user_id=1)
+        await self.db.whitelist_group.ban_user(user_id=1)
 
         await self.admin.unban(mock_intr, user_id="1")
-        self.assertFalse(await self.db.whitelist_group_repository.is_banned_user(1))
+        self.assertFalse(await self.db.whitelist_group.is_banned_user(1))
 
     async def test_unban_not_banned(self, mock_intr: MagicMock) -> None:
         """Test if ban method fails banning user that's already banned."""
@@ -119,15 +119,13 @@ class TestAdminCog(IsolatedAsyncioTestCase):
     async def test_whitelist_guild_not_whitelisted(self, mock_intr: MagicMock) -> None:
         """Test if whitelist method successfully whitelists guild that's not already whitelisted."""
         await self.admin.whitelist(mock_intr, guild_id="1")
-        self.assertTrue(
-            await self.db.whitelist_group_repository.is_whitelisted_guild(1)
-        )
+        self.assertTrue(await self.db.whitelist_group.is_whitelisted_guild(1))
 
     async def test_whitelist_guild_already_whitelisted(
         self, mock_intr: MagicMock
     ) -> None:
         """Test if whitelist method fails whitelisting guild that's already whitelisted."""
-        await self.db.whitelist_group_repository.whitelist_guild(guild_id=1)
+        await self.db.whitelist_group.whitelist_guild(guild_id=1)
         with self.assertRaises(ApplicationException):
             await self.admin.whitelist(mock_intr, guild_id="1")
 

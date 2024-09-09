@@ -45,7 +45,7 @@ class PlayerInfoRepository(BaseRepository[PlayerInfo, Any]):
         Raises:
             ValueError: If both `ignore_on_duplicate` and `replace_on_duplicate` are set to `True`.
         """
-        guild_repo = self._database.guild_info_repository
+        guild_repo = self._database.guild_info
         guild_model = guild_repo.model
         to_insert_guild = [
             # NOTE: illegal guild name. Still select-able if someone deliberately searches

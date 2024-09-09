@@ -31,7 +31,7 @@ class StatWorldlistView(BasePaginationView):
 
     @override
     async def run(self):
-        items = await self._bot.fazdb_db.worlds_repository.get_worlds(self._sort_by)
+        items = await self._bot.fazdb_db.worlds.get_worlds(self._sort_by)
         self._embed: PaginationEmbed[Worlds] = PaginationEmbed(
             self._interaction, items, title="World List", color=Color.dark_teal()
         )

@@ -19,7 +19,7 @@ class TestPlayerInfoRepository(CommonFazdbRepositoryTest.Test[PlayerInfoReposito
         # Assert
         res = await self.repo.select_all()
         self.assertEqual(len(res), 2)
-        res2 = await self.database.guild_info_repository.select_all()
+        res2 = await self.database.guild_info.select_all()
         self.assertEqual(len(res), 2)
         for r in res2:
             self.assertEqual(r.name, "-")
@@ -30,7 +30,7 @@ class TestPlayerInfoRepository(CommonFazdbRepositoryTest.Test[PlayerInfoReposito
         mock_bytes = UUID(int=0).bytes
         mock_guild_info = self._get_guild_info_mock_data()[0]
         mock_guild_info.uuid = mock_bytes
-        await self.database.guild_info_repository.insert(mock_guild_info)
+        await self.database.guild_info.insert(mock_guild_info)
         entity = self._get_mock_data()[0]
         entity.guild_uuid = mock_bytes
         await self.repo.insert(entity)
@@ -65,8 +65,8 @@ class TestPlayerInfoRepository(CommonFazdbRepositoryTest.Test[PlayerInfoReposito
 
     @override
     async def _create_table(self) -> None:
-        await self.database.guild_info_repository.create_table()
-        await self.database.player_info_repository.create_table()
+        await self.database.guild_info.create_table()
+        await self.database.player_info.create_table()
 
     @override
     def _get_mock_data(self):
@@ -75,4 +75,4 @@ class TestPlayerInfoRepository(CommonFazdbRepositoryTest.Test[PlayerInfoReposito
     @property
     @override
     def repo(self):
-        return self.database.player_info_repository
+        return self.database.player_info

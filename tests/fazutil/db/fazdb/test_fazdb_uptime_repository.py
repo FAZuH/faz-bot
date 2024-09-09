@@ -14,4 +14,4 @@ class TestFazdbUptimeRepository(CommonFazdbRepositoryTest.Test[FazdbUptimeReposi
     @property
     @override
     def repo(self):
-        return self.database.fazdb_uptime_repository
+        return self.database.fazdb_uptime

@@ -73,4 +73,4 @@ class TestWhitelistGroupRepository(
     @property
     @override
     def repo(self):
-        return self.database.whitelist_group_repository
+        return self.database.whitelist_group

@@ -16,4 +16,4 @@ class TestGuildHistoryRepository(
     @property
     @override
     def repo(self):
-        return self.database.guild_history_repository
+        return self.database.guild_history

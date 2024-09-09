@@ -35,4 +35,4 @@ class TestPlayerHistoryRepository(
     @property
     @override
     def repo(self):
-        return self.database.player_history_repository
+        return self.database.player_history

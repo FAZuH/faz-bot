@@ -49,8 +49,8 @@ class TrackEntryRepository(BaseRepository[TrackEntry, Any]):
     async def select_by_guild_id(
         self, guild_id, *, session: AsyncSession | None = None
     ) -> Sequence[TrackEntry]:
-        channel_model = self._database.discord_channel_repository.model
-        guild_model = self._database.discord_guild_repository.model
+        channel_model = self._database.discord_channel.model
+        guild_model = self._database.discord_guild.model
         stmt = (
             select(self.model)
             .join(channel_model, TrackEntry.channel_id == channel_model.channel_id)

@@ -58,7 +58,7 @@ class HistoryPlayerHistoryView(BaseView):
         db = self._bot.fazdb_db
         embed = self._base_embed.get_base()
 
-        player_hist = await db.player_history_repository.select_between_period(
+        player_hist = await db.player_history.select_between_period(
             self._player.uuid, self._period_begin, self._period_end
         )
         p1, p2 = player_hist[0], player_hist[-1]
@@ -93,10 +93,10 @@ class HistoryPlayerHistoryView(BaseView):
             "Quests": [0, 0],
             "Raids": [0, 0],
         }
-        chars = await db.character_info_repository.select_from_player(self._player.uuid)
+        chars = await db.character_info.select_from_player(self._player.uuid)
         charcount: dict[str, int] = defaultdict(int)
         for char in chars:
-            res = await db.character_history_repository.select_between_period(
+            res = await db.character_history.select_between_period(
                 char.character_uuid, self._period_begin, self._period_end
             )
             reslen = len(res)

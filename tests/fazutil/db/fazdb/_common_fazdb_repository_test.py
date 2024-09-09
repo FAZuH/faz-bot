@@ -24,7 +24,7 @@ class CommonFazdbRepositoryTest:
             return "faz-db_test"
 
         def _get_character_history_mock_data(self):
-            repo = self.database.character_history_repository
+            repo = self.database.character_history
             model = repo.model
             uuid1 = UUID("b30f5e97-957d-47f6-bf1e-9e48d9fea200").bytes
             uuid2 = UUID("33c3ad56-5e9b-4bfe-9685-9fc4df2a67fa").bytes
@@ -71,7 +71,7 @@ class CommonFazdbRepositoryTest:
             return mock1, mock2, mock3, mock4, "level"
 
         def _get_character_info_mock_data(self):
-            repo = self.database.character_info_repository
+            repo = self.database.character_info
             model = repo.model
             chuuid1 = UUID("b30f5e97-957d-47f6-bf1e-9e48d9fea200").bytes
             chuuid2 = UUID("33c3ad56-5e9b-4bfe-9685-9fc4df2a67fa").bytes
@@ -85,7 +85,7 @@ class CommonFazdbRepositoryTest:
             return mock1, mock2, mock3, mock4, "type"
 
         def _get_fazdb_uptime_mock_data(self):
-            repo = self.database.fazdb_uptime_repository
+            repo = self.database.fazdb_uptime
             model = repo.model
             mock1 = model(
                 start_time=self._get_mock_datetime().replace(day=1),
@@ -99,7 +99,7 @@ class CommonFazdbRepositoryTest:
             return mock1, mock2, mock3, mock4, "stop_time"
 
         def _get_guild_history_mock_data(self):
-            repo = self.database.guild_history_repository
+            repo = self.database.guild_history
             model = repo.model
             mock1 = model(
                 name="a",
@@ -120,7 +120,7 @@ class CommonFazdbRepositoryTest:
             return mock1, mock2, mock3, mock4, "level"
 
         def _get_guild_info_mock_data(self):
-            repo = self.database.guild_info_repository
+            repo = self.database.guild_info
             model = repo.model
             uuid1 = UUID("b30f5e97-957d-47f6-bf1e-9e48d9fea200").bytes
             uuid2 = UUID("33c3ad56-5e9b-4bfe-9685-9fc4df2a67fa").bytes
@@ -135,7 +135,7 @@ class CommonFazdbRepositoryTest:
             return mock1, mock2, mock3, mock4, "prefix"
 
         def _get_guild_member_history_mock_data(self):
-            repo = self.database.guild_member_history_repository
+            repo = self.database.guild_member_history
             model = repo.model
             uuid1 = UUID("b30f5e97-957d-47f6-bf1e-9e48d9fea200").bytes
             uuid2 = UUID("33c3ad56-5e9b-4bfe-9685-9fc4df2a67fa").bytes
@@ -155,7 +155,7 @@ class CommonFazdbRepositoryTest:
             return mock1, mock2, mock3, mock4, "contributed"
 
         def _get_online_players_mock_data(self):
-            repo = self.database.online_players_repository
+            repo = self.database.online_players
             model = repo.model
             uuid1 = UUID("b30f5e97-957d-47f6-bf1e-9e48d9fea200").bytes
             uuid2 = UUID("33c3ad56-5e9b-4bfe-9685-9fc4df2a67fa").bytes
@@ -168,7 +168,7 @@ class CommonFazdbRepositoryTest:
             return mock1, mock2, mock3, mock4, "server"
 
         def _get_player_activity_history_mock_data(self):
-            repo = self.database.player_activity_history_repository
+            repo = self.database.player_activity_history
             model = repo.model
             uuid1 = UUID("b30f5e97-957d-47f6-bf1e-9e48d9fea200").bytes
             uuid2 = UUID("33c3ad56-5e9b-4bfe-9685-9fc4df2a67fa").bytes
@@ -189,7 +189,7 @@ class CommonFazdbRepositoryTest:
         #     model = repo.model
 
         def _get_player_history_mock_data(self):
-            repo = self.database.player_history_repository
+            repo = self.database.player_history
             model = repo.model
             uuid1 = UUID("b30f5e97-957d-47f6-bf1e-9e48d9fea200").bytes
             uuid2 = UUID("33c3ad56-5e9b-4bfe-9685-9fc4df2a67fa").bytes
@@ -213,7 +213,7 @@ class CommonFazdbRepositoryTest:
             return mock1, mock2, mock3, mock4, "username"
 
         def _get_player_info_mock_data(self):
-            repo = self.database.player_info_repository
+            repo = self.database.player_info
             model = repo.model
             uuid1 = UUID("b30f5e97-957d-47f6-bf1e-9e48d9fea200").bytes
             uuid2 = UUID("33c3ad56-5e9b-4bfe-9685-9fc4df2a67fa").bytes
@@ -228,7 +228,7 @@ class CommonFazdbRepositoryTest:
             return mock1, mock2, mock3, mock4, "latest_username"
 
         def _get_worlds_mock_data(self):
-            repo = self.database.worlds_repository
+            repo = self.database.worlds
             model = repo.model
             mock1 = model(
                 name="WC1",

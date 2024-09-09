@@ -49,7 +49,7 @@ class AdminCog(CogBase):
         user = await self._bot.utils.must_get_user(user_id)
 
         async with self._enter_botdb_session() as (db, s):
-            repo = db.whitelist_group_repository
+            repo = db.whitelist_group
 
             if await repo.is_banned_user(user.id, session=s):
                 raise InvalidActionException(
@@ -77,7 +77,7 @@ class AdminCog(CogBase):
         user = await self._utils.must_get_user(user_id)
 
         async with self._enter_botdb_session() as (db, s):
-            repo = db.whitelist_group_repository
+            repo = db.whitelist_group
 
             if not await repo.is_banned_user(user.id, session=s):
                 raise InvalidActionException(
@@ -205,7 +205,7 @@ class AdminCog(CogBase):
         guild = await self._utils.must_get_guild(guild_id)
 
         async with self._enter_botdb_session() as (db, s):
-            repo = db.whitelist_group_repository
+            repo = db.whitelist_group
 
             if await repo.is_whitelisted_guild(guild.id, session=s):
                 raise InvalidActionException(
@@ -234,7 +234,7 @@ class AdminCog(CogBase):
         guild = await self._utils.must_get_guild(guild_id)
 
         async with self._enter_botdb_session() as (db, s):
-            repo = db.whitelist_group_repository
+            repo = db.whitelist_group
 
             if not await repo.is_whitelisted_guild(guild.id, session=s):
                 raise InvalidActionException(

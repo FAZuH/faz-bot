@@ -32,9 +32,9 @@ class Utils:
         intr = interaction
         assert intr.user
         db = self._bot.fazcord_db
-        guild_repo = db.discord_guild_repository
-        channel_repo = db.discord_channel_repository
-        user_repo = db.discord_user_repository
+        guild_repo = db.discord_guild
+        channel_repo = db.discord_channel
+        user_repo = db.discord_user
         await guild_repo.insert(
             guild_repo.model(guild_id=channel.guild.id, guild_name=channel.guild.name),  # type: ignore
             session=session,
@@ -59,7 +59,7 @@ class Utils:
         )
 
     async def must_get_wynn_guild(self, guild: str) -> GuildInfo:
-        guild_info = await self._bot.fazdb_db.guild_info_repository.get_guild(guild)
+        guild_info = await self._bot.fazdb_db.guild_info.get_guild(guild)
         if not guild_info:
             raise InvalidArgumentException(
                 f"Guild not found (reason: Can't find guild with name or uuid {guild})"
@@ -67,7 +67,7 @@ class Utils:
         return guild_info
 
     async def must_get_wynn_player(self, player: str) -> PlayerInfo:
-        player_info = await self._bot.fazdb_db.player_info_repository.get_player(player)
+        player_info = await self._bot.fazdb_db.player_info.get_player(player)
         if not player_info:
             raise InvalidArgumentException(
                 f"Player not found (reason: Can't find player with username or uuid {player})"

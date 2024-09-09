@@ -18,4 +18,4 @@ class TestCharacterHistoryRepository(
     @property
     @override
     def repo(self):
-        return self.database.character_history_repository
+        return self.database.character_history

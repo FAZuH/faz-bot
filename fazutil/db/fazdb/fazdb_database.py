@@ -1,3 +1,4 @@
+from typing import override
 from fazutil.db.base_mysql_database import BaseMySQLDatabase
 from fazutil.db.fazdb.model.base_fazdb_model import BaseFazdbModel
 from fazutil.db.fazdb.repository.character_history_repository import (
@@ -61,49 +62,50 @@ class FazdbDatabase(BaseMySQLDatabase):
         )
 
     @property
-    def character_history_repository(self) -> CharacterHistoryRepository:
+    def character_history(self) -> CharacterHistoryRepository:
         return self._character_history_repository
 
     @property
-    def character_info_repository(self) -> CharacterInfoRepository:
+    def character_info(self) -> CharacterInfoRepository:
         return self._character_info_repository
 
     @property
-    def fazdb_uptime_repository(self) -> FazdbUptimeRepository:
+    def fazdb_uptime(self) -> FazdbUptimeRepository:
         return self._fazdb_uptime_repository
 
     @property
-    def guild_history_repository(self) -> GuildHistoryRepository:
+    def guild_history(self) -> GuildHistoryRepository:
         return self._guild_history_repository
 
     @property
-    def guild_info_repository(self) -> GuildInfoRepository:
+    def guild_info(self) -> GuildInfoRepository:
         return self._guild_info_repository
 
     @property
-    def guild_member_history_repository(self) -> GuildMemberHistoryRepository:
+    def guild_member_history(self) -> GuildMemberHistoryRepository:
         return self._guild_member_history_repository
 
     @property
-    def online_players_repository(self) -> OnlinePlayersRepository:
+    def online_players(self) -> OnlinePlayersRepository:
         return self._online_players_repository
 
     @property
-    def player_activity_history_repository(self) -> PlayerActivityHistoryRepository:
+    def player_activity_history(self) -> PlayerActivityHistoryRepository:
         return self._player_activity_history_repository
 
     @property
-    def player_history_repository(self) -> PlayerHistoryRepository:
+    def player_history(self) -> PlayerHistoryRepository:
         return self._player_history_repository
 
     @property
-    def player_info_repository(self) -> PlayerInfoRepository:
+    def player_info(self) -> PlayerInfoRepository:
         return self._player_info_repository
 
     @property
-    def worlds_repository(self) -> WorldsRepository:
+    def worlds(self) -> WorldsRepository:
         return self._worlds_repository
 
     @property
+    @override
     def base_model(self) -> BaseFazdbModel:
         return self._base_model
