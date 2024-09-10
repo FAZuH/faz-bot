@@ -172,9 +172,13 @@ class HistoryPlayerHistoryView(BaseView):
     def _diff_str_or_blank(
         self, before: Any, after: Any, label: str, label_space: int
     ) -> str:
+        fmt_num = lambda x: (
+            f"{x:,}"
+            if isinstance(x, int)
+            else f"{x:,.2f}" if isinstance(x, (float, Decimal)) else x
+        )
         if before != after:
-            formatted_label = f"`{label:{label_space}}:`"
-            return f"{formatted_label} {before} -> {after}\n"
+            return f"`{label:{label_space}} : ` {fmt_num(before)} -> {fmt_num(after)}\n"
         return ""
 
     def _add_character_difference_to_view(
