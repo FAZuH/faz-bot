@@ -50,14 +50,15 @@ class CraftedUtil:
             ing_base_values = np.linspace(ing.min_value, ing.max_value, 101)
             ing_rolls_boosted = np.floor(
                 np.round(ing_base_values) * ing_stat_eff
-            ).astype(int) - np.floor(ing.min_value * ing_stat_eff).astype(int)
-            ingredient_rolls_occurrences = np.bincount(ing_rolls_boosted)
-            ingredient_prob_dist = ingredient_rolls_occurrences / 101
+            ).astype(int)
+            offset = -np.min(ing_rolls_boosted)  # Offset to ensure no negative indices
+            ing_rolls_occurrences = np.bincount(ing_rolls_boosted + offset)
+            ing_prob_dist = ing_rolls_occurrences / 101
 
             # Assign values into class attributes
-            self._ing_prob_dists.append(ingredient_prob_dist)
-            self._crafted_roll_min += np.floor(ing.min_value * ing_stat_eff)
-            self._crafted_roll_max += np.floor(ing.max_value * ing_stat_eff)
+            self._ing_prob_dists.append(ing_prob_dist)
+            self._crafted_roll_min += np.min(ing_rolls_boosted)
+            self._crafted_roll_max += np.max(ing_rolls_boosted)
 
     def _calculate_crafted_probabilities(self):
         # Calculate crafted roll probabilities
