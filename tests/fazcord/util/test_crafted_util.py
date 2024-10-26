@@ -1,8 +1,8 @@
 from decimal import Decimal
 from unittest import TestCase
 
-from fazcord.wynn.crafted_util import CraftedUtil
-from fazcord.wynn.ingredient_field import IngredientField
+from fazutil.wynn.crafted_util import CraftedUtil
+from fazutil.wynn.ingredient_field import IngredientField
 
 
 class TestCraftedUtil(TestCase):

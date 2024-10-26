@@ -8,7 +8,7 @@ from nextcord.ui import Button, button
 
 from fazcord.bot.view._base_view import BaseView
 from fazcord.bot.view._custom_embed import CustomEmbed
-from fazcord.wynn.crafted_util import CraftedUtil
+from fazutil.wynn.crafted_util import CraftedUtil
 from fazutil.util.cache_util import CacheUtil
 
 if TYPE_CHECKING:

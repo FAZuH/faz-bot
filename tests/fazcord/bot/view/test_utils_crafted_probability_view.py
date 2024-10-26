@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, create_autospec, patch
 from nextcord import Interaction
 
 from fazcord.bot.view.utils_crafted_probability_view import UtilsCraftedProbabilityView
-from fazcord.wynn.crafted_util import CraftedUtil
+from fazutil.wynn.crafted_util import CraftedUtil
 
 
 class TestUtilsCraftedProbabilityView(IsolatedAsyncioTestCase):
