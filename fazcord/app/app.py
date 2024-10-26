@@ -11,7 +11,7 @@ from fazcord.heartbeat.heartbeat import Heartbeat
 from fazutil.db.fazcord.fazcord_database import FazcordDatabase
 from fazutil.db.fazdb.fazdb_database import FazdbDatabase
 from fazutil.properties import Properties
-from fazutil.util.logger_setup import LoggerSetup
+from fazutil.logger_setup import LoggerSetup
 
 
 class App:
