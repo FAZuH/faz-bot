@@ -40,7 +40,7 @@ class Checks:
 
         user_id = interaction.user.id
         db = self.bot.fazcord_db
-        is_banned = await db.whitelist_group_repository.is_banned_user(user_id)
+        is_banned = await db.whitelist_group.is_banned_user(user_id)
 
         if is_banned:
             logger.warning(
@@ -60,9 +60,7 @@ class Checks:
         guild_id = interaction.guild.id
 
         db = self.bot.fazcord_db
-        is_whitelisted = await db.whitelist_group_repository.is_whitelisted_guild(
-            guild_id
-        )
+        is_whitelisted = await db.whitelist_group.is_whitelisted_guild(guild_id)
 
         if not is_whitelisted:
             logger.warning(

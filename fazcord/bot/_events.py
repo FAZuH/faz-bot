@@ -1,15 +1,22 @@
 from __future__ import annotations
 
 import traceback
-from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 from loguru import logger
-from nextcord import Activity, ActivityType, Colour, Embed, Interaction, errors
+from nextcord import (
+    Activity,
+    ActivityType,
+    ApplicationCheckFailure,
+    Colour,
+    Interaction,
+    errors,
+)
 from nextcord.ext import commands
 from nextcord.ext.commands import BucketType, Cooldown, CooldownMapping
 
 from fazcord.bot.errors import ApplicationException
+from fazcord.bot.view._custom_embed import CustomEmbed
 
 if TYPE_CHECKING:
     from fazcord.bot.bot import Bot
@@ -52,23 +59,20 @@ class Events:
         )
 
     async def on_application_command_error(
-        self, interaction: Interaction[Any], error: Exception
+        self, intr: Interaction[Any], error: Exception
     ) -> None:
-        await self._log_event(interaction, self.on_application_command_error.__name__)
+        await self._log_event(intr, self.on_application_command_error.__name__)
         # NOTE: Error is being wrapped by ApplicationInvokeError. Unwrap is first
         if isinstance(error, errors.ApplicationInvokeError) and isinstance(
             error.original, ApplicationException
         ):
             error = error.original
-        if isinstance(error, errors.ApplicationCheckFailure):
-            await interaction.send(
-                "You do not have sufficient permission to use this command.",
-                ephemeral=True,
-            )
+        if isinstance(error, ApplicationCheckFailure):
+            await self._send_check_error(intr, error)
         elif isinstance(error, ApplicationException):
-            await self._send_expected_error(interaction, error)
+            await self._send_expected_error(intr, error)
         else:
-            await self._send_unexpected_error(interaction, error)
+            await self._send_unexpected_error(intr, error)
 
     async def before_application_invoke(self, interaction: Interaction[Any]) -> None:
         # await self.__log_event(interaction, self.before_application_invoke.__name__)
@@ -117,14 +121,13 @@ class Events:
         self, interaction: Interaction[Any], exception: Exception
     ) -> None:
         description = f"An unexpected error occurred while executing the command: \n**{exception}**"
-        embed = Embed(
-            title="Unexpected Error", description=description, color=Colour.red()
+        embed = CustomEmbed(
+            interaction,
+            title="Unexpected Error",
+            description=description,
+            color=Colour.dark_red(),
         )
-        embed.add_field(
-            name="Timestamp",
-            value=f"<t:{int(datetime.now().timestamp())}:F>",
-            inline=False,
-        )
+        embed.finalize()
         is_admin = await self._bot.checks.is_admin(interaction)
         if is_admin:
             tb = traceback.format_exception(exception)
@@ -138,11 +141,28 @@ class Events:
         self, interaction: Interaction[Any], exception: ApplicationException
     ) -> None:
         description = f"**{exception}**"
-        embed = Embed(title="Error", description=description, color=Colour.red())
-        embed.add_field(
-            name="Timestamp",
-            value=f"<t:{int(datetime.now().timestamp())}:F>",
-            inline=False,
+        embed = CustomEmbed(
+            interaction, title="Error", description=description, color=Colour.red()
         )
+        embed.finalize()
+        await interaction.send(embed=embed)
+        logger.opt(exception=exception).warning(description, discord=True)
+
+        # await interaction.send(
+        #     "You do not have sufficient permission to use this command.",
+        #     ephemeral=True,
+        # )
+
+    async def _send_check_error(
+        self, interaction: Interaction[Any], exception: ApplicationCheckFailure
+    ) -> None:
+        description = f"**{exception}**"
+        embed = CustomEmbed(
+            interaction,
+            title="Error",
+            description=description,
+            color=Colour.dark_teal(),
+        )
+        embed.finalize()
         await interaction.send(embed=embed)
         logger.opt(exception=exception).warning(description, discord=True)

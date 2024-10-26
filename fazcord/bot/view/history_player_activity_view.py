@@ -30,7 +30,7 @@ class HistoryPlayerActivityView(BaseView):
         self._period_begin = period_begin
         self._period_end = period_end
 
-        self._repo = self._bot.fazdb_db.player_activity_history_repository
+        self._repo = self._bot.fazdb_db.player_activity_history
 
     @override
     async def run(self) -> None:

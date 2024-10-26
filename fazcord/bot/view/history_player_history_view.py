@@ -58,7 +58,7 @@ class HistoryPlayerHistoryView(BaseView):
         db = self._bot.fazdb_db
         embed = self._base_embed.get_base()
 
-        player_hist = await db.player_history_repository.select_between_period(
+        player_hist = await db.player_history.select_between_period(
             self._player.uuid, self._period_begin, self._period_end
         )
         p1, p2 = player_hist[0], player_hist[-1]
@@ -93,10 +93,10 @@ class HistoryPlayerHistoryView(BaseView):
             "Quests": [0, 0],
             "Raids": [0, 0],
         }
-        chars = await db.character_info_repository.select_from_player(self._player.uuid)
+        chars = await db.character_info.select_from_player(self._player.uuid)
         charcount: dict[str, int] = defaultdict(int)
         for char in chars:
-            res = await db.character_history_repository.select_between_period(
+            res = await db.character_history.select_between_period(
                 char.character_uuid, self._period_begin, self._period_end
             )
             reslen = len(res)
@@ -172,9 +172,13 @@ class HistoryPlayerHistoryView(BaseView):
     def _diff_str_or_blank(
         self, before: Any, after: Any, label: str, label_space: int
     ) -> str:
+        fmt_num = lambda x: (
+            f"{x:,}"
+            if isinstance(x, int)
+            else f"{x:,.2f}" if isinstance(x, (float, Decimal)) else x
+        )
         if before != after:
-            formatted_label = f"`{label:{label_space}}:`"
-            return f"{formatted_label} {before} -> {after}\n"
+            return f"`{label:{label_space}} : ` {fmt_num(before)} -> {fmt_num(after)}\n"
         return ""
 
     def _add_character_difference_to_view(

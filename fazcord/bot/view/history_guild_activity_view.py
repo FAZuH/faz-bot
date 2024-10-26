@@ -39,7 +39,7 @@ class HistoryGuildActivityView(BasePaginationView):
     async def run(self) -> None:
         await self._guild.awaitable_attrs.members
         members = self._guild.members
-        repo = self._bot.fazdb_db.player_activity_history_repository
+        repo = self._bot.fazdb_db.player_activity_history
 
         for player in members:
             entities = await repo.get_activities_between_period(

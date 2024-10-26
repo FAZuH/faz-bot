@@ -1,24 +1,24 @@
-from nextcord import ApplicationError
+from nextcord import ApplicationCheckFailure, ApplicationError
 
 
-class BotException(Exception):
-    """Base exception for all exceptions in fazcord.bot package"""
-
-    # def __init__(self, *args):
-    #     if message:
-    #         message = f"{self.__class__.__doc__}\n{message}"
-    #     else:
-    #         message = self.__class__.__doc__
-    #     super().__init__(message, args)
+class ApplicationException(ApplicationError): ...
 
 
-class ApplicationException(BotException, ApplicationError): ...
+class InvalidArgumentException(ApplicationException):
+    """An invalid command argument."""
 
 
-class ArgumentValidationFailure(ApplicationException): ...
+class InvalidActionException(ApplicationException):
+    """An invalid action or task attempted by the command."""
 
 
-class ParseFailure(ApplicationException): ...
+class ParseException(ApplicationException):
+    """A parsing error of a command argument."""
 
 
-class BadArgument(ApplicationException): ...
+class UnauthorizedUserException(ApplicationCheckFailure):
+    """A user with insufficient permissions attempted to execute the command."""
+
+
+class UnauthorizedLocationException(ApplicationCheckFailure):
+    """A command was executed in a disallowed location."""

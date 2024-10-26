@@ -7,10 +7,10 @@ import nextcord
 from dateparser import parse
 from nextcord import Interaction
 
-from fazcord.bot.cog._cog_base import CogBase
-from fazcord.bot.errors import BadArgument, ParseFailure
-from fazcord.bot.view.history_player_activity_view import HistoryPlayerActivityView
+from fazcord.bot.cog._base_cog import CogBase
+from fazcord.bot.errors import InvalidArgumentException, ParseException
 from fazcord.bot.view.history_guild_activity_view import HistoryGuildActivityView
+from fazcord.bot.view.history_player_activity_view import HistoryPlayerActivityView
 from fazcord.bot.view.history_player_history_view import HistoryPlayerHistoryView
 
 
@@ -47,7 +47,7 @@ class WynnHistoryCog(CogBase):
     async def guild_activity(
         self, intr: Interaction[Any], guild: str, period: str
     ) -> None:
-        """Shows players' active time in a given guild between the specified time period
+        """Shows players' active time in a guild between the specified time period
 
         Args:
             guild (str): The guild name or UUID to check.
@@ -103,30 +103,26 @@ class WynnHistoryCog(CogBase):
     #     self, intr: Interaction[Any], player: str, period: str
     # ) -> None: ...
 
-    @staticmethod
-    def _parse_period(intr: Interaction[Any], period: str) -> tuple[datetime, datetime]:
+    def _parse_period(
+        self, intr: Interaction[Any], period: str
+    ) -> tuple[datetime, datetime]:
         try:
             if "--" in period:
                 left, right = period.split("--")
                 period_begin = parse(left)
                 period_end = parse(right)
-                WynnHistoryCog._check_period(period_begin)
-                WynnHistoryCog._check_period(period_end)
+                self._check_period(period_begin)
+                self._check_period(period_end)
             else:
                 period_begin = intr.created_at - timedelta(hours=float(period))
                 period_end = intr.created_at
         except ValueError as exc:
-            raise ParseFailure(f"Can't parse period (reason: {exc})") from exc
+            raise ParseException(f"{exc}") from exc
         assert period_begin and period_end
         if period_end - period_begin > timedelta(days=182):
-            raise BadArgument(
-                "Can't parse period (reason: Period range cannot exceed 6 months.)"
-            )
+            raise InvalidArgumentException("Period range cannot exceed 6 months")
         return period_begin, period_end
 
-    @staticmethod
-    def _check_period(period: Any | None) -> None:
+    def _check_period(self, period: Any | None) -> None:
         if period is None:
-            raise ParseFailure(
-                f"Can't parse period (reason: Failed interpreting {period} as a datetime)"
-            )
+            raise ParseException(f"Failed interpreting {period} as a datetime")

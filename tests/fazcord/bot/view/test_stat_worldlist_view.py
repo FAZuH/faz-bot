@@ -17,7 +17,7 @@ class TestStatWorldlistView(IsolatedAsyncioTestCase):
         mock_interaction.created_at = datetime.fromtimestamp(600).replace(
             tzinfo=timezone.utc
         )
-        mock_bot.fazdb_db.worlds_repository.get_worlds = AsyncMock(
+        mock_bot.fazdb_db.worlds.get_worlds = AsyncMock(
             return_value=self._get_mock_worlds()
         )
         view = StatWorldlistView(mock_bot, mock_interaction, "Player Count")

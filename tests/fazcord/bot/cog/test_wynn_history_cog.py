@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock, create_autospec, patch
 
 from fazcord.bot._utils import Utils
 from fazcord.bot.cog.wynn_history_cog import WynnHistoryCog
-from fazcord.bot.errors import BadArgument, ParseFailure
+from fazcord.bot.errors import InvalidArgumentException, ParseException
 
 
 class TestWynnHistoryCog(unittest.IsolatedAsyncioTestCase):
@@ -15,14 +15,14 @@ class TestWynnHistoryCog(unittest.IsolatedAsyncioTestCase):
         self.bot = MagicMock()
         self.utils = create_autospec(Utils, spec_set=True)
         self.bot.utils = self.utils
+        self.wynn_history = WynnHistoryCog(self.bot)
 
     @patch("fazcord.bot.cog.wynn_history_cog.HistoryPlayerActivityView", autospec=True)
     async def test_activity_command(self, mock_invoke: MagicMock) -> None:
         mock_player = MagicMock()
         self.utils.must_get_wynn_player = AsyncMock(return_value=mock_player)
-        wynn_history = WynnHistoryCog(self.bot)
 
-        await wynn_history.player_activity(self.intr, "a", "10")
+        await self.wynn_history.player_activity(self.intr, "a", "10")
 
         mock_invoke.return_value.run.assert_awaited_once()
         mock_invoke.assert_called_once_with(
@@ -37,9 +37,8 @@ class TestWynnHistoryCog(unittest.IsolatedAsyncioTestCase):
     async def test_guild_activity_command(self, mock_invoke: MagicMock) -> None:
         mock_guild = MagicMock()
         self.utils.must_get_wynn_guild = AsyncMock(return_value=mock_guild)
-        wynn_history = WynnHistoryCog(self.bot)
 
-        await wynn_history.guild_activity(self.intr, "a", "10")
+        await self.wynn_history.guild_activity(self.intr, "a", "10")
 
         mock_invoke.return_value.run.assert_awaited_once()
         mock_invoke.assert_called_once_with(
@@ -52,25 +51,25 @@ class TestWynnHistoryCog(unittest.IsolatedAsyncioTestCase):
 
     def test_parse_period_valid_period_dates(self):
         # Test with a valid date range
-        result = WynnHistoryCog._parse_period(self.intr, "2024-01-01--2024-01-31")
+        result = self.wynn_history._parse_period(self.intr, "2024-01-01--2024-01-31")
         self.assertEqual(result[0], datetime(2024, 1, 1))
         self.assertEqual(result[1], datetime(2024, 1, 31))
 
     def test_parse_period_valid_period_hours(self):
         # Test with a valid period in hours
-        result = WynnHistoryCog._parse_period(self.intr, "48")
+        result = self.wynn_history._parse_period(self.intr, "48")
         self.assertEqual(result[0], self.intr.created_at - timedelta(hours=48))
         self.assertEqual(result[1], self.intr.created_at)
 
     def test_parse_period_invalid_period_format(self):
         # Test with an invalid date format
-        with self.assertRaises(ParseFailure):
-            WynnHistoryCog._parse_period(self.intr, "invalid--period")
+        with self.assertRaises(ParseException):
+            self.wynn_history._parse_period(self.intr, "invalid--period")
 
     def test_parse_period_period_exceeds_six_months(self):
         # Test with a period that exceeds 6 months
-        with self.assertRaises(BadArgument):
-            WynnHistoryCog._parse_period(self.intr, "2023-01-01--2023-12-31")
+        with self.assertRaises(InvalidArgumentException):
+            self.wynn_history._parse_period(self.intr, "2023-01-01--2023-12-31")
 
     # def test_parse_period_period_with_nonexistent_date(self):
     #     # Test with a date that does not exist
@@ -84,8 +83,8 @@ class TestWynnHistoryCog(unittest.IsolatedAsyncioTestCase):
 
     def test_parse_period_period_without_separator(self):
         # Test with missing separator in period string
-        with self.assertRaises(ParseFailure):
-            WynnHistoryCog._parse_period(self.intr, "20240101--20240201")
+        with self.assertRaises(ParseException):
+            self.wynn_history._parse_period(self.intr, "20240101--20240201")
 
     async def asyncTearDown(self) -> None:
         return await super().asyncTearDown()

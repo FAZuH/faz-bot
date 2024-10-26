@@ -52,8 +52,8 @@ class TaskDbInsert(ITask):
         self._latest_run = datetime.now()
 
     async def _run(self) -> None:
-        model = self._db.fazdb_uptime_repository.model
-        await self._db.fazdb_uptime_repository.insert(
+        model = self._db.fazdb_uptime.model
+        await self._db.fazdb_uptime.insert(
             model(start_time=self._start_time, stop_time=datetime.now()),
             replace_on_duplicate=True,
         )
@@ -93,11 +93,11 @@ class TaskDbInsert(ITask):
         worlds = list(adapter.to_worlds(resp))
 
         db = self._db
-        await db.online_players_repository.update(online_players)
-        await db.player_activity_history_repository.insert(
+        await db.online_players.update(online_players)
+        await db.player_activity_history.insert(
             player_activity_history, replace_on_duplicate=True
         )
-        await db.worlds_repository.update_worlds(worlds)
+        await db.worlds.update_worlds(worlds)
 
     async def _insert_player_responses(self, resps: list[PlayerResponse]) -> None:
         if not resps:
@@ -115,18 +115,10 @@ class TaskDbInsert(ITask):
             player_info.append(adapter.to_player_info(resp))
 
         db = self._db
-        await db.player_info_repository.safe_insert(
-            player_info, replace_on_duplicate=True
-        )
-        await db.character_info_repository.insert(
-            character_info, replace_on_duplicate=True
-        )
-        await db.player_history_repository.insert(
-            player_history, ignore_on_duplicate=True
-        )
-        await db.character_history_repository.insert(
-            character_history, ignore_on_duplicate=True
-        )
+        await db.player_info.safe_insert(player_info, replace_on_duplicate=True)
+        await db.character_info.insert(character_info, replace_on_duplicate=True)
+        await db.player_history.insert(player_history, ignore_on_duplicate=True)
+        await db.character_history.insert(character_history, ignore_on_duplicate=True)
 
     async def _insert_guild_response(self, resps: list[GuildResponse]) -> None:
         if not resps:
@@ -142,11 +134,9 @@ class TaskDbInsert(ITask):
             guild_member_history.extend(adapter.to_guild_member_history(resp))
 
         db = self._db
-        await db.guild_info_repository.insert(guild_info, replace_on_duplicate=True)
-        await db.guild_history_repository.insert(
-            guild_history, ignore_on_duplicate=True
-        )
-        await db.guild_member_history_repository.insert(
+        await db.guild_info.insert(guild_info, replace_on_duplicate=True)
+        await db.guild_history.insert(guild_history, ignore_on_duplicate=True)
+        await db.guild_member_history.insert(
             guild_member_history, ignore_on_duplicate=True
         )
 

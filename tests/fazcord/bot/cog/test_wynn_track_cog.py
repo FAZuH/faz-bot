@@ -27,29 +27,27 @@ class TestWynnTrackCog(unittest.IsolatedAsyncioTestCase):
         mock_channel.id = "123"
         mock_channel.name = "test-channel"
         self.utils.must_get_channel.return_value = mock_channel
-        self.bot.fazcord_db.track_entry_repository.toggle = AsyncMock(return_value=True)
+        self.bot.fazcord_db.track_entry.toggle = AsyncMock(return_value=True)
 
         await self.cog.toggle(self.intr, "123")
 
         self.utils.must_get_channel.assert_called_once_with("123")
-        self.bot.fazcord_db.track_entry_repository.toggle.assert_called_once_with("123")
+        self.bot.fazcord_db.track_entry.toggle.assert_called_once_with("123")
         mock_respond_successful.assert_called_once_with(
             self.intr, "Toggled track entry on channel `123` (`test-channel`) to True"
         )
 
     @patch("fazcord.bot.cog.wynn_track_cog.WynnTrackCog._respond_successful")
     async def test_show_no_trackers(self, mock_respond_successful: MagicMock):
-        self.bot.fazcord_db.track_entry_repository.select_by_guild_id = AsyncMock(
-            return_value=[]
-        )
+        self.bot.fazcord_db.track_entry.select_by_guild_id = AsyncMock(return_value=[])
 
         await self.cog.show(self.intr)
 
-        self.bot.fazcord_db.track_entry_repository.select_by_guild_id.assert_called_once_with(
+        self.bot.fazcord_db.track_entry.select_by_guild_id.assert_called_once_with(
             123456789
         )
         mock_respond_successful.assert_called_once_with(
-            self.intr, "This guild does not have any Wynn Trackers registred"
+            self.intr, "This server does not have any Wynncraft trackers registred"
         )
 
     @patch("fazcord.bot.cog.wynn_track_cog.WynnTrackCog._respond_successful")
@@ -61,13 +59,13 @@ class TestWynnTrackCog(unittest.IsolatedAsyncioTestCase):
         mock_entry.awaitable_attrs.channel = self._mock_awaitable_attr()
         mock_entry.awaitable_attrs.associations = self._mock_awaitable_attr()
         mock_entry.associations = [MagicMock(associated_value="test-guild")]
-        self.bot.fazcord_db.track_entry_repository.select_by_guild_id = AsyncMock(
+        self.bot.fazcord_db.track_entry.select_by_guild_id = AsyncMock(
             return_value=[mock_entry]
         )
 
         await self.cog.show(self.intr)
 
-        self.bot.fazcord_db.track_entry_repository.select_by_guild_id.assert_called_once_with(
+        self.bot.fazcord_db.track_entry.select_by_guild_id.assert_called_once_with(
             123456789
         )
         mock_respond_successful.assert_called_once_with(
@@ -80,14 +78,14 @@ class TestWynnTrackCog(unittest.IsolatedAsyncioTestCase):
         mock_channel.id = "123"
         mock_channel.name = "test-channel"
         self.utils.must_get_channel.return_value = mock_channel
-        self.bot.fazcord_db.track_entry_repository.delete = AsyncMock()
+        self.bot.fazcord_db.track_entry.delete = AsyncMock()
 
         await self.cog.remove(self.intr, "123")
 
         self.utils.must_get_channel.assert_called_once_with("123")
-        self.bot.fazcord_db.track_entry_repository.delete.assert_called_once_with("123")
+        self.bot.fazcord_db.track_entry.delete.assert_called_once_with("123")
         mock_respond_successful.assert_called_once_with(
-            self.intr, "Removed track entry on channel `123` (`test-channel`)"
+            self.intr, "Removed track entry on channel `123 (test-channel)`"
         )
 
     @patch("fazcord.bot.cog.wynn_track_cog.WynnTrackCog._add_track_entry")
@@ -127,22 +125,22 @@ class TestWynnTrackCog(unittest.IsolatedAsyncioTestCase):
         mock_channel.id = "123"
         mock_channel.name = "test-channel"
         self.utils.must_get_channel.return_value = mock_channel
-        self.bot.fazcord_db.track_entry_repository.select_by_channel_id = AsyncMock(
+        self.bot.fazcord_db.track_entry.select_by_channel_id = AsyncMock(
             return_value=None
         )
-        self.bot.fazcord_db.track_entry_repository.model = MagicMock()
-        self.bot.fazcord_db.track_entry_repository.insert = AsyncMock()
+        self.bot.fazcord_db.track_entry.model = MagicMock()
+        self.bot.fazcord_db.track_entry.insert = AsyncMock()
 
         await self.cog._add_track_entry(self.intr, "123", "GUILD", "test-guild")
 
         self.utils.must_get_channel.assert_called_once_with("123")
-        self.bot.fazcord_db.track_entry_repository.select_by_channel_id.assert_called_once_with(
+        self.bot.fazcord_db.track_entry.select_by_channel_id.assert_called_once_with(
             "123",
             session=self.bot.fazcord_db.enter_async_session.return_value.__aenter__.return_value,
         )
-        self.bot.fazcord_db.track_entry_repository.insert.assert_called_once()
+        self.bot.fazcord_db.track_entry.insert.assert_called_once()
         mock_respond_successful.assert_called_once_with(
-            self.intr, "Added `GUILD` track entry on channel `123` (`test-channel`)"
+            self.intr, "Added `GUILD` track entry on channel `123 (test-channel)`"
         )
 
     @patch("fazcord.bot.cog.wynn_track_cog.WynnTrackCog._respond_successful")
@@ -156,26 +154,26 @@ class TestWynnTrackCog(unittest.IsolatedAsyncioTestCase):
         mock_track_entry = MagicMock()
         mock_track_entry.associations = []
         mock_track_entry.awaitable_attrs.associations = self._mock_awaitable_attr()
-        self.bot.fazcord_db.track_entry_repository.select_by_channel_id = AsyncMock(
+        self.bot.fazcord_db.track_entry.select_by_channel_id = AsyncMock(
             return_value=mock_track_entry
         )
-        self.bot.fazcord_db.track_entry_association_repository.model = MagicMock()
-        self.bot.fazcord_db.track_entry_association_repository.insert = AsyncMock()
-        self.bot.fazdb_db.guild_info_repository.get_guild = AsyncMock(
+        self.bot.fazcord_db.track_entry_association.model = MagicMock()
+        self.bot.fazcord_db.track_entry_association.insert = AsyncMock()
+        self.bot.fazdb_db.guild_info.get_guild = AsyncMock(
             return_value=MagicMock(uuid="test-uuid")
         )
 
         await self.cog._add_track_entry(self.intr, "123", "GUILD", "test-guild")
 
         self.utils.must_get_channel.assert_called_once_with("123")
-        self.bot.fazcord_db.track_entry_repository.select_by_channel_id.assert_called_once_with(
+        self.bot.fazcord_db.track_entry.select_by_channel_id.assert_called_once_with(
             "123",
             session=self.bot.fazcord_db.enter_async_session.return_value.__aenter__.return_value,
         )
-        self.bot.fazcord_db.track_entry_association_repository.insert.assert_called_once()
+        self.bot.fazcord_db.track_entry_association.insert.assert_called_once()
         mock_respond_successful.assert_called_once_with(
             self.intr,
-            "Added guild `test-guild` to `GUILD` track entry on channel `123` (`test-channel`)",
+            "Added guild `test-guild` to `GUILD` track entry on channel `123 (test-channel)`",
         )
 
     @patch("fazcord.bot.cog.wynn_track_cog.WynnTrackCog._respond_successful")
@@ -192,25 +190,25 @@ class TestWynnTrackCog(unittest.IsolatedAsyncioTestCase):
             MagicMock(associated_value="test-uuid"),
         ]
         mock_track_entry.awaitable_attrs.associations = self._mock_awaitable_attr()
-        self.bot.fazcord_db.track_entry_repository.select_by_channel_id = AsyncMock(
+        self.bot.fazcord_db.track_entry.select_by_channel_id = AsyncMock(
             return_value=mock_track_entry
         )
-        self.bot.fazcord_db.track_entry_association_repository.model = MagicMock()
-        self.bot.fazcord_db.track_entry_association_repository.insert = AsyncMock()
-        self.bot.fazdb_db.guild_info_repository.get_guild = AsyncMock(
+        self.bot.fazcord_db.track_entry_association.model = MagicMock()
+        self.bot.fazcord_db.track_entry_association.insert = AsyncMock()
+        self.bot.fazdb_db.guild_info.get_guild = AsyncMock(
             return_value=MagicMock(uuid="test-uuid")
         )
 
         await self.cog._add_track_entry(self.intr, "123", "GUILD", "test-guild")
 
         self.utils.must_get_channel.assert_called_once_with("123")
-        self.bot.fazcord_db.track_entry_repository.select_by_channel_id.assert_called_once_with(
+        self.bot.fazcord_db.track_entry.select_by_channel_id.assert_called_once_with(
             "123",
             session=self.bot.fazcord_db.enter_async_session.return_value.__aenter__.return_value,
         )
         mock_respond_successful.assert_called_once_with(
             self.intr,
-            "Removed guild `test-guild` from `GUILD` track entry on channel `123` (`test-channel`)",
+            "Removed guild `test-guild` from `GUILD` track entry on channel `123 (test-channel)`",
         )
 
     @patch("fazcord.bot.cog.wynn_track_cog.WynnTrackCog._respond_successful")
@@ -224,22 +222,22 @@ class TestWynnTrackCog(unittest.IsolatedAsyncioTestCase):
         mock_track_entry = MagicMock()
         mock_track_entry.associations = [MagicMock(associated_value="test-uuid")]
         mock_track_entry.awaitable_attrs.associations = self._mock_awaitable_attr()
-        self.bot.fazcord_db.track_entry_repository.select_by_channel_id = AsyncMock(
+        self.bot.fazcord_db.track_entry.select_by_channel_id = AsyncMock(
             return_value=mock_track_entry
         )
-        self.bot.fazcord_db.track_entry_association_repository.model = MagicMock()
-        self.bot.fazcord_db.track_entry_association_repository.insert = AsyncMock()
-        self.bot.fazdb_db.guild_info_repository.get_guild = AsyncMock(
+        self.bot.fazcord_db.track_entry_association.model = MagicMock()
+        self.bot.fazcord_db.track_entry_association.insert = AsyncMock()
+        self.bot.fazdb_db.guild_info.get_guild = AsyncMock(
             return_value=MagicMock(uuid="test-uuid")
         )
 
         await self.cog._add_track_entry(self.intr, "123", "GUILD", "test-guild")
 
         self.utils.must_get_channel.assert_called_once_with("123")
-        self.bot.fazcord_db.track_entry_repository.select_by_channel_id.assert_called_once_with(
+        self.bot.fazcord_db.track_entry.select_by_channel_id.assert_called_once_with(
             "123",
             session=self.bot.fazcord_db.enter_async_session.return_value.__aenter__.return_value,
         )
         mock_respond_successful.assert_called_once_with(
-            self.intr, "Removed track entry on channel `123` (`test-channel`)"
+            self.intr, "Removed track entry on channel `123 (test-channel)`"
         )
