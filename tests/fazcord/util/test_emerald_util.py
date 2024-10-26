@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from fazcord.wynn.emerald_util import EmeraldUtil
-from fazcord.wynn.emeralds import Emeralds
+from fazutil.wynn.emerald_util import EmeraldUtil
+from fazutil.wynn.emeralds import Emeralds
 
 
 class TestEmeraldUtil(TestCase):

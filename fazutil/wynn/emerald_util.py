@@ -1,7 +1,7 @@
 from decimal import Decimal
 from math import floor
 
-from fazcord.wynn.emeralds import Emeralds
+from fazutil.wynn.emeralds import Emeralds
 
 
 class EmeraldUtil:

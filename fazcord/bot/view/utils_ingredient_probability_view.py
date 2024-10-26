@@ -7,7 +7,7 @@ from nextcord import Embed, Interaction
 
 from fazcord.bot.view._base_view import BaseView
 from fazcord.bot.view._custom_embed import CustomEmbed
-from fazcord.wynn.ingredient_util import IngredientUtil
+from fazutil.wynn.ingredient_util import IngredientUtil
 
 if TYPE_CHECKING:
     from fazcord.bot.bot import Bot

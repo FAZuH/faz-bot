@@ -6,8 +6,8 @@ from nextcord import Embed, Interaction
 
 from fazcord.bot.view._base_view import BaseView
 from fazcord.bot.view._custom_embed import CustomEmbed
-from fazcord.wynn.emerald_util import EmeraldUtil
-from fazcord.wynn.emeralds import Emeralds
+from fazutil.wynn.emerald_util import EmeraldUtil
+from fazutil.wynn.emeralds import Emeralds
 
 if TYPE_CHECKING:
     from fazcord.bot.bot import Bot
