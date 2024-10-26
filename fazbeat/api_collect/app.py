@@ -8,8 +8,8 @@ from fazbeat.api_collect.heartbeat import Heartbeat
 from fazutil.api.wynn.wynn_api import WynnApi
 from fazutil.db.fazdb.fazdb_database import FazdbDatabase
 from fazutil.properties import Properties
-from fazutil.util.logger_setup import LoggerSetup
-from fazutil.util.retry_handler import RetryHandler
+from fazutil.logger_setup import LoggerSetup
+from fazutil.retry_handler import RetryHandler
 
 
 class App:
