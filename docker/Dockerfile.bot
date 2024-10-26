@@ -6,6 +6,10 @@ COPY fazcord ./fazcord
 COPY fazutil ./fazutil
 COPY requirements-fazcord.txt requirements.txt
 
-RUN pip3 install --no-cache-dir -r requirements.txt
+COPY scripts ./scripts
+COPY alembic.ini alembic.ini
+COPY mysql/vcs ./mysql/vcs
 
-CMD ["python", "-m", "fazcord"]
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/* && pip3 install --no-cache-dir -r requirements.txt
+
+CMD ["./scripts/safestart.sh", "fazcord", ">=1.0.0,<1.1 >=1.0.0,<1.1", "faz-cord faz-db", "FAZCORD_DISCORD_LOG_WEBHOOK API_COLLECT_DISCORD_LOG_WEBHOOK"]
