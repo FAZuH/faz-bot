@@ -8,7 +8,7 @@ from nextcord.ui import Button, button
 
 from fazcord.bot.view._base_view import BaseView
 from fazcord.bot.view._custom_embed import CustomEmbed
-from fazutil.wynn.crafted_util import CraftedUtil
+from fazutil.wynn.crafted_roll_probability import CraftedRollProbability
 from fazutil.cache_util import CacheUtil
 
 if TYPE_CHECKING:
@@ -19,7 +19,7 @@ class UtilsCraftedProbabilityView(BaseView):
     _THUMBNAIL_URL = "https://static.wikia.nocookie.net/minecraft_gamepedia/images/b/b7/Crafting_Table_JE4_BE3.png/revision/latest/thumbnail/width/360/height/360?cb=20191229083528"
 
     def __init__(
-        self, bot: Bot, interaction: Interaction[Any], craftutil: CraftedUtil
+        self, bot: Bot, interaction: Interaction[Any], craftutil: CraftedRollProbability
     ) -> None:
         super().__init__(bot, interaction)
         self._craftutil = craftutil
@@ -65,7 +65,7 @@ class UtilsCraftedProbabilityView(BaseView):
         embed = self._get_base_embed()
         embed_fields_values = ""
         is_first_embed = True
-        for value, probability in self._craftutil.craft_probs.items():
+        for value, probability in self._craftutil.roll_pmfs.items():
             one_in_n = round(Decimal(1 / probability), 2)
             result = f"Roll: **{value}**, Chance: **{probability * 100:.2f}%** (1 in {one_in_n:,})"
             if len(embed_fields_values + f"{result}\n") > 1024:
@@ -90,7 +90,7 @@ class UtilsCraftedProbabilityView(BaseView):
         field_value = ""
         cmlr_prob = 1
         is_first_embed = True
-        for val, prob in self._craftutil.craft_probs.items():
+        for val, prob in self._craftutil.roll_pmfs.items():
             one_in_n = round(Decimal(1 / cmlr_prob), 2)
             line = f"Roll: **atleast {val}**, Chance: **{cmlr_prob * 100:.2f}%** (1 in {one_in_n:,})"
             if len(field_value + f"{line}\n") > 1024:
@@ -116,7 +116,7 @@ class UtilsCraftedProbabilityView(BaseView):
         field_value = ""
         cml_prob = 0
         is_first_embed = True
-        for val, prob in self._craftutil.craft_probs.items():
+        for val, prob in self._craftutil.roll_pmfs.items():
             cml_prob += prob
             one_in_n = round(Decimal(1 / cml_prob), 2)
             line = f"Roll: **atmost {val}**, Chance: **{cml_prob * 100:.2f}%** (1 in {one_in_n:,})"
