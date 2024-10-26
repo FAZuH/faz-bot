@@ -13,7 +13,7 @@ from fazcord.bot.view.utils_crafted_probability_view import UtilsCraftedProbabil
 from fazcord.bot.view.utils_ingredient_probability_view import (
     UtilsIngredientProbabilityView,
 )
-from fazutil.wynn.crafted_util import CraftedUtil
+from fazutil.wynn.crafted_roll_probability import CraftedRollProbability
 from fazutil.wynn.ingredient_field import IngredientField
 
 
@@ -47,7 +47,7 @@ class WynnUtilsCog(CogBase):
         await UtilsCraftedProbabilityView(
             self._bot,
             interaction,
-            CraftedUtil(
+            CraftedRollProbability(
                 self._parse_ings_str(
                     ingredient1,
                     ingredient2,

@@ -1,7 +1,7 @@
 from decimal import Decimal
 
 
-class IngredientUtil:
+class IngredientDropProbability:
     def __init__(
         self,
         base_probability: Decimal | float,
