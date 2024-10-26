@@ -1,4 +1,4 @@
-"""1.0.0 Initial fazdb version
+"""1.0.0 Initial faz-db version
 
 Revision ID: 339ac85161c0
 Revises: 

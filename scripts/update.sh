@@ -5,7 +5,7 @@ set -e
 scrDir=$(dirname "$(realpath "$0")")
 
 COMPOSE_FILE="$scrDir/docker-compose.yml"
-COMPOSE_CMD="docker-compose -f $COMPOSE_FILE"
+COMPOSE_CMD="docker-compose --file $COMPOSE_FILE"
 
 echo "Pulling latest images..."
 $COMPOSE_CMD pull

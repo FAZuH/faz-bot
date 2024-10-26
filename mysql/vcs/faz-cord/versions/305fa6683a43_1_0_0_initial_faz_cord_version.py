@@ -1,4 +1,4 @@
-"""1.0.0 Initial fazcord version
+"""1.0.0 Initial faz-cord version
 
 Revision ID: 305fa6683a43
 Revises: 
