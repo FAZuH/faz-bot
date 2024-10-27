@@ -41,7 +41,7 @@ class GuildHistory(UniqueIdModel):
     )
 
     __table_args__ = (
-        Index("datetime_idx", datetime.desc()),
-        Index("name_idx", name),
-        UniqueConstraint(unique_id, name="unique_id_idx"),
+        Index(None, datetime.desc()),
+        Index(None, name),
+        UniqueConstraint(unique_id),
     )

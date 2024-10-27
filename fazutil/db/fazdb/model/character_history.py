@@ -73,7 +73,7 @@ class CharacterHistory(UniqueIdModel):
     )
 
     __table_args__ = (
-        Index("datetime_idx", datetime.desc()),
-        Index("character_uuid_idx", character_uuid),
-        UniqueConstraint(unique_id, name="unique_id_idx"),
+        Index(None, datetime.desc()),
+        Index(None, character_uuid),
+        UniqueConstraint(unique_id),
     )

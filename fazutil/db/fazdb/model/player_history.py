@@ -42,7 +42,7 @@ class PlayerHistory(UniqueIdModel):
     )
 
     __table_args__ = (
-        Index("datetime_idx", datetime.desc()),
-        Index("uuid_idx", uuid),
-        UniqueConstraint("unique_id", name="unique_id_idx"),
+        Index(None, datetime.desc()),
+        Index(None, uuid),
+        UniqueConstraint("unique_id"),
     )
