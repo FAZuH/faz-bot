@@ -295,6 +295,7 @@ def upgrade() -> None:
         mysql_default_charset="utf8mb4",
         mysql_engine="InnoDB",
     )
+
     op.create_index(
         "logon_datetime_idx",
         "player_activity_history",
@@ -319,4 +320,6 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    pass
+    raise ValueError(
+        "Downgrade is not supported here. run `python -m alembic stamp base` to checkout to base."
+    )
