@@ -2,35 +2,44 @@ import os
 from logging.config import fileConfig
 
 from alembic import context
-from sqlalchemy import engine_from_config, pool
+from sqlalchemy import engine_from_config
 
-# from fazutil.db.fazcord.model.base_fazcord_model import BaseFazcordModel
+# Necessary to load the models
+from fazutil.db.fazcord.fazcord_database import FazcordDatabase
+from fazutil.db.fazcord.model.base_fazcord_model import BaseFazcordModel
+
+FazcordDatabase  # prevent being removed by linter lol
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 
 
-# Override sqlalchemy.url with environment variables
 def get_url():
-    user = os.getenv("MYSQL_USER", "faz")
-    password = os.getenv("MYSQL_PASSWORD", "password")
-    host = os.getenv("MYSQL_HOST", "localhost")
-    db_name = os.getenv("MYSQL_FAZCORD_DATABASE", "faz-cord")  # Default fallback
+    """Override sqlalchemy.url with environment variables if set"""
+    user = os.getenv("MYSQL_USER", None)
+    password = os.getenv("MYSQL_PASSWORD", None)
+    host = os.getenv("MYSQL_HOST", None)
+    db_name = os.getenv("MYSQL_FAZCORD_DATABASE", None)
+
+    if None in {user, password, host, db_name}:
+        section = config.get_section(config.config_ini_section)
+        assert section is not None
+        return section["sqlalchemy.url"]
+
     return f"mysql+pymysql://{user}:{password}@{host}/{db_name}"
 
 
 # Override the sqlalchemy.url in the alembic.ini
 config.set_main_option("sqlalchemy.url", get_url())
 
+
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# Add your model's MetaData object here for 'autogenerate' support
-# target_metadata = BaseFazcordModel.metadata
-target_metadata = None
+target_metadata = BaseFazcordModel.metadata
 
 
 def run_migrations_offline() -> None:
@@ -49,17 +58,12 @@ def run_migrations_offline() -> None:
 
 def run_migrations_online() -> None:
     """Run migrations in 'online' mode."""
-    # Use the environment-based URL for the configuration
-    configuration = config.get_section(config.config_ini_section)
-    configuration["sqlalchemy.url"] = get_url()
+    section = config.get_section(config.config_ini_section)
+    section["sqlalchemy.url"] = get_url()
 
-    connectable = engine_from_config(
-        configuration,
-        prefix="sqlalchemy.",
-        poolclass=pool.NullPool,
-    )
+    engine = engine_from_config(section, prefix="sqlalchemy.")
 
-    with connectable.connect() as connection:
+    with engine.connect() as connection:
         context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
