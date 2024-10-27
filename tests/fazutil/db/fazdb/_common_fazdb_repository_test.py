@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC
+from datetime import timedelta
 from typing import TYPE_CHECKING, override
 from uuid import UUID
 
@@ -73,13 +74,13 @@ class CommonFazdbRepositoryTest:
         def _get_character_info_mock_data(self):
             repo = self.database.character_info
             model = repo.model
-            chuuid1 = UUID("b30f5e97-957d-47f6-bf1e-9e48d9fea200").bytes
-            chuuid2 = UUID("33c3ad56-5e9b-4bfe-9685-9fc4df2a67fa").bytes
-            uuid = UUID("b30f5e97-957d-47f6-bf1e-9e48d9fea201").bytes
-            mock1 = model(character_uuid=chuuid1, uuid=uuid, type="ARCHER")
+            uuid1 = UUID("b30f5e97-957d-47f6-bf1e-9e48d9fea200").bytes
+            uuid2 = UUID("33c3ad56-5e9b-4bfe-9685-9fc4df2a67fa").bytes
+            mock1 = model(character_uuid=uuid1, uuid=uuid1, type="ARCHER")
             mock2 = mock1.clone()
             mock3 = mock1.clone()
-            mock3.character_uuid = chuuid2
+            mock3.character_uuid = uuid2
+            mock3.uuid = uuid2
             mock4 = mock1.clone()
             mock4.type = "ASSASSIN"
             return mock1, mock2, mock3, mock4, "type"
@@ -114,6 +115,7 @@ class CommonFazdbRepositoryTest:
             mock3 = mock1.clone()
             del mock3.unique_id
             mock3.name = "b"
+            mock3.datetime += timedelta(seconds=10)
             mock3 = mock3.clone()
             mock4 = mock1.clone()
             mock4.level = 2.0
@@ -129,6 +131,7 @@ class CommonFazdbRepositoryTest:
             )
             mock2 = mock1.clone()
             mock3 = mock1.clone()
+            mock3.name = "b"
             mock3.uuid = uuid2
             mock4 = mock1.clone()
             mock4.prefix = "c"
