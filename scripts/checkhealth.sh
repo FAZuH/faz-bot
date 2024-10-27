@@ -68,6 +68,12 @@ for i in "${!ARR_WEBHOOK[@]}"; do
     alembic_output=$(python3 -m alembic --name "$db_name" current -v)
     version=$(echo "$alembic_output" | grep -oP '\d+\.\d+\.\d+')
 
+    if [ -z "$version" ]; then
+        version="Not found"
+        send_discord_error "$version" "$ver_range" "$webhook_var" "$db_name"
+        exit 1
+    fi
+
     is_inside_range=$(python3 "$VERSION_CHECK_FILE" "$version" "$ver_range")
 
     if [ "$is_inside_range" == "False" ]; then
@@ -75,7 +81,6 @@ for i in "${!ARR_WEBHOOK[@]}"; do
         # Send error to Discord before exiting
         send_discord_error "$version" "$ver_range" "$webhook_var" "$db_name"
         exit 1
-    else
-        echo "Database version $version is within the range $ver_range."
     fi
+    echo "Database version $version is within the range $ver_range."
 done

@@ -12,6 +12,7 @@ SCRIPTS_PATH="$(dirname "$(realpath "$0")")"
 res=$?
 if [[ "$res" != 0 ]]; then
     echo "Error: Health check failed. Exiting."
+    # To give developers time to connect to the container and debug
     sleep 500
     exit 1
 fi
