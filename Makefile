@@ -4,7 +4,7 @@ SCRIPTS_DIR := scripts
 MAKESCRIPT := $(SCRIPTS_DIR)/service.sh
 .DEFAULT_GOAL := help
 
-.PHONY: wait-for-mysql build-all up-all down-all api-collect bot mysql pma test lint lint-fix format rmpycache countlines clean
+.PHONY: wait-for-mysql build-all up-all down-all api-collect bot mysql pma test lint lint-fix format rmpycache countlines clean backup
 
 help:
 	@echo "Usage:"
@@ -58,6 +58,16 @@ sql:
 
 pma:
 	$(MAKESCRIPT) phpmyadmin $(act)
+
+
+backup:
+	mkdir -p mysql/backup
+	docker-compose --file $(DOCKER_DIR)/docker-compose.yml \
+		exec mysql sh -c 'mariadb-dump -u root -p$$MYSQL_ROOT_PASSWORD faz-cord' \
+		> mysql/backup/faz-cord_`date +%s`.sql
+	docker-compose --file $(DOCKER_DIR)/docker-compose.yml \
+		exec mysql sh -c 'mariadb-dump -u root -p$$MYSQL_ROOT_PASSWORD faz-db' \
+		> mysql/backup/faz-db_`date +%s`.sql
 
 
 test:
