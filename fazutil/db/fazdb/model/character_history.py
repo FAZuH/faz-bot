@@ -1,6 +1,9 @@
-from datetime import datetime as dt
+from __future__ import annotations
 
-from sqlalchemy import Index, UniqueConstraint
+from datetime import datetime as dt
+from typing import TYPE_CHECKING
+
+from sqlalchemy import ForeignKey, Index, UniqueConstraint
 from sqlalchemy.dialects.mysql import (
     BIGINT,
     BINARY,
@@ -10,16 +13,27 @@ from sqlalchemy.dialects.mysql import (
     INTEGER,
     TINYINT,
 )
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from fazutil.db.fazdb.model._unique_id_model import UniqueIdModel
 
+if TYPE_CHECKING:
+    from fazutil.db.fazdb.model.character_info import CharacterInfo
+
 
 class CharacterHistory(UniqueIdModel):
+    """
+    Assumptions:
+        - There must be a CharacterInfo entry for each CharacterHistory entry
+    """
+
     __tablename__ = "character_history"
 
     character_uuid: Mapped[bytes] = mapped_column(
-        BINARY(16), nullable=False, primary_key=True
+        BINARY(16),
+        ForeignKey("character_info.character_uuid"),
+        nullable=False,
+        primary_key=True,
     )
     level: Mapped[int] = mapped_column(TINYINT, nullable=False)
     xp: Mapped[int] = mapped_column(BIGINT, nullable=False)
@@ -52,6 +66,11 @@ class CharacterHistory(UniqueIdModel):
     raid_completions: Mapped[int] = mapped_column(INTEGER, nullable=False)
     datetime: Mapped[dt] = mapped_column(DATETIME, nullable=False, primary_key=True)
     unique_id: Mapped[bytes] = mapped_column(BINARY(16), nullable=False)
+
+    character_info: Mapped[CharacterInfo] = relationship(
+        "CharacterInfo",
+        back_populates="stat_history",
+    )
 
     __table_args__ = (
         Index("datetime_idx", datetime.desc()),

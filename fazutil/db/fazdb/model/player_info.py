@@ -11,6 +11,7 @@ from fazutil.db.fazdb.model.base_fazdb_model import BaseFazdbModel
 
 if TYPE_CHECKING:
     from fazutil.db.fazdb.model.guild_info import GuildInfo
+    from fazutil.db.fazdb.model.player_history import PlayerHistory
 
 
 class PlayerInfo(BaseFazdbModel):
@@ -26,6 +27,23 @@ class PlayerInfo(BaseFazdbModel):
     guild: Mapped[GuildInfo | None] = relationship(
         "GuildInfo", back_populates="members", lazy="selectin"
     )
-    # player_histories: Mapped[list[PlayerHistory]] = relationship(
-    #     "PlayerHistory", back_populates="player_info"
-    # )
+    characters: Mapped[list[PlayerInfo]] = relationship(
+        "CharacterInfo", back_populates="player", lazy="selectin"
+    )
+
+    latest_stat: Mapped[PlayerHistory] = relationship(
+        "PlayerHistory",
+        primaryjoin="and_(PlayerHistory.uuid == PlayerInfo.uuid, "
+        "PlayerHistory.datetime == (select(func.max(PlayerHistory.datetime))"
+        ".where(PlayerHistory.uuid == PlayerInfo.uuid)"
+        ".scalar_subquery()))",
+        viewonly=True,
+        uselist=False,
+    )
+
+    stat_history: Mapped[list[PlayerHistory]] = relationship(
+        "PlayerHistory",
+        back_populates="player_info",
+        order_by="PlayerHistory.datetime.desc()",
+        lazy="selectin",
+    )
