@@ -30,9 +30,9 @@ class GuildInfo(BaseFazdbModel):
 
     latest_stat: Mapped[GuildHistory] = relationship(
         "GuildHistory",
-        primaryjoin="and_(GuildHistory.name == GuildInfo.name, "
+        primaryjoin="and_(GuildHistory.uuid == GuildInfo.uuid, "
         "GuildHistory.datetime == (select(func.max(GuildHistory.datetime))"
-        ".where(GuildHistory.name == GuildInfo.name)"
+        ".where(GuildHistory.uuid == GuildInfo.uuid)"
         ".scalar_subquery()))",
         viewonly=True,
         uselist=False,

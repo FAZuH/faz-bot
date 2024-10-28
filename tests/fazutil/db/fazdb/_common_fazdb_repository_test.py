@@ -102,8 +102,10 @@ class CommonFazdbRepositoryTest:
         def _get_guild_history_mock_data(self):
             repo = self.database.guild_history
             model = repo.model
+            uuid1 = UUID("b30f5e97-957d-47f6-bf1e-9e48d9fea200").bytes
+            uuid2 = UUID("33c3ad56-5e9b-4bfe-9685-9fc4df2a67fa").bytes
             mock1 = model(
-                name="a",
+                uuid=uuid1,
                 level=1.0,
                 territories=1,
                 wars=1,
@@ -114,7 +116,7 @@ class CommonFazdbRepositoryTest:
             mock2 = mock1.clone()
             mock3 = mock1.clone()
             del mock3.unique_id
-            mock3.name = "b"
+            mock3.uuid = uuid2
             mock3.datetime += timedelta(seconds=10)
             mock3 = mock3.clone()
             mock4 = mock1.clone()

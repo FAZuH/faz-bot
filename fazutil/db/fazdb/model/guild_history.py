@@ -11,7 +11,6 @@ from sqlalchemy.dialects.mysql import (
     INTEGER,
     SMALLINT,
     TINYINT,
-    VARCHAR,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -24,8 +23,8 @@ if TYPE_CHECKING:
 class GuildHistory(UniqueIdModel):
     __tablename__ = "guild_history"
 
-    name: Mapped[str] = mapped_column(  # stupid decision
-        VARCHAR(30), ForeignKey("guild_info.name"), nullable=False, primary_key=True
+    uuid: Mapped[bytes] = mapped_column(
+        BINARY(16), ForeignKey("guild_info.uuid"), nullable=False, primary_key=True
     )
     level: Mapped[float] = mapped_column(DECIMAL(5, 2, unsigned=True), nullable=False)
     territories: Mapped[int] = mapped_column(SMALLINT(unsigned=True), nullable=False)
@@ -42,6 +41,6 @@ class GuildHistory(UniqueIdModel):
 
     __table_args__ = (
         Index(None, datetime.desc()),
-        Index(None, name),
+        Index(None, uuid),
         UniqueConstraint(unique_id),
     )
