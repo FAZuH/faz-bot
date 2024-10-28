@@ -43,6 +43,12 @@ ssh -L 3306:localhost:3306 user@remote-ip
 You can either manually build and install the bot, or pull image from the release.
 Using docker might be easier but overheads could be a problem.
 
+**Dependencies**:
+- Bash terminal (see [Git Bash](https://git-scm.com/downloads) for windows)
+- Atleast Python 3.12 (tested up to Python 3.13.0)
+- MariaDB/MySQL
+- GNU Make
+
 1. Clone the repository:
 
 ```sh
@@ -50,22 +56,23 @@ git clone https://github.com/FAZuH/faz-bot.git
 
 cd faz-bot
 ```
+2. Run `make init` (or if you don't have make, run each line in Makefile on init section line-by-line).
+3. Fill in the `.env` file with your own values.
+4. View database revision history with `python -m alembic -n <service> history`.
+5. Run `python -m alembic -n <service> upgrade <revision>` with the revision you need.
 
 ### Docker Installation
 
-2. Create a file named `.env` and fill in the environment variables (see `.env-example`)
-3. Execute `docker-compose up -d`
+6. Execute `docker-compose up -d`
 
 ### Manual Installation
 
-2. Create a virtual environment: `python -m venv .venv`
-3. Activate the virtual environment: `source .venv/bin/activate`
-4. Install dependencies: `pip install -r requirements-dev.txt`.
-5. Create a file named `.env` and fill in the environment variables (see `.env-example`).
 6. Export the environment variables: `export $(grep -v '^#' .env | xargs)`
-7. Run the service: `python -m <path-to-services-mainpy>`
+7. Run `mysql/init/0_init_users.sql` using your SQL client.
+8. Run the service: `python -m <module-path>`
 
 > [!NOTE]
+> - Make sure you have MariaDB/MySQL and atleast Python 3.12 installed.
 > - You have to do step 3 and 6 every time you open a new terminal.
 > - Argument for step 7 is the path to the __main__.py file of the service you want to run. e.g., `fazbeat.api_collect`.
 > - Currently database version checking is not supported on manual installation.

@@ -2,9 +2,8 @@
 
 set -e
 
-scrDir=$(dirname "$(realpath "$0")")
-
-COMPOSE_FILE="$scrDir/docker-compose.yml"
+SCRIPTS_PATH="$(dirname "$(realpath "$0")")"
+COMPOSE_FILE="$SCRIPTS_PATH/docker-compose.yml"
 COMPOSE_CMD="docker-compose --file $COMPOSE_FILE"
 
 echo "Pulling latest images..."

@@ -41,9 +41,6 @@ class TaskDbInsert(ITask):
         self._response_handler = ResponseHandler(self._api, self._request_list)
         self._start_time = datetime.now()
 
-    def setup(self) -> None:
-        self._db.create_all()
-
     def teardown(self) -> None: ...
 
     def run(self) -> None:

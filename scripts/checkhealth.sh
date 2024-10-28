@@ -4,9 +4,8 @@ DB_VERSION_RANGES=$1  # Space separated list of database versions ranges
 DB_NAMES=$2           # Space separated list of database names
 WEBHOOK_VAR_NAMES=$3  # Space separated list of webhook environment variable names
 
-PROJECT_PATH="$(dirname "$(dirname "$(realpath "$0")")")"
-SCRIPT_PATH="$PROJECT_PATH/scripts"
-VERSION_CHECK_FILE="$SCRIPT_PATH/_version_check.py"
+SCRIPTS_PATH="$(dirname "$(realpath "$0")")"
+VERSION_CHECK_FILE="$SCRIPTS_PATH/_version_check.py"
 
 # Convert space-separated strings into arrays
 IFS=' ' read -r -a ARR_WEBHOOK <<< "$WEBHOOK_VAR_NAMES"
