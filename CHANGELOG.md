@@ -1,3 +1,12 @@
+# [0.3.0](https://github.com/FAZuH/faz-bot/compare/v0.2.3...v0.3.0) (2024-10-28)
+
+
+### Features
+
+* Improve fazdb relationships [skip ci] ([#49](https://github.com/FAZuH/faz-bot/issues/49)) ([f316851](https://github.com/FAZuH/faz-bot/commit/f3168518b50a74b57bbe6f716d9ff6dc42a0b960))
+
+
+
 ## [0.2.3](https://github.com/FAZuH/faz-bot/compare/v0.2.2...v0.2.3) (2024-10-25)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * add player history command ([#38](https://github.com/FAZuH/faz-bot/issues/38)) ([53745ed](https://github.com/FAZuH/faz-bot/commit/53745ed7913c5faf8ca0a23f4af270823fd6c1c0))
-
-
-
-## [0.1.4](https://github.com/FAZuH/faz-bot/compare/v0.1.3...v0.1.4) (2024-09-09)
-
-
-### Bug Fixes
-
-* fix overwritten admin cog commands ([#32](https://github.com/FAZuH/faz-bot/issues/32)) ([b250e38](https://github.com/FAZuH/faz-bot/commit/b250e38a678d305d59cf615b986c4427801ecb2d))
 
 
 
