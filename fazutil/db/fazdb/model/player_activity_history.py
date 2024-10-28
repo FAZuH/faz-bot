@@ -17,6 +17,6 @@ class PlayerActivityHistory(BaseFazdbModel):
     logoff_datetime: Mapped[dt] = mapped_column(DATETIME, nullable=False)
 
     __table_args__ = (
-        Index("logon_datetime_idx", logon_datetime.desc()),
-        Index("logoff_datetime_idx", logoff_datetime.desc()),
+        Index(None, logon_datetime.desc()),
+        Index(None, logoff_datetime.desc()),
     )

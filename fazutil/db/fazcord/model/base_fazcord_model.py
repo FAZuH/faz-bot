@@ -5,4 +5,4 @@ from fazutil.db.base_model import BaseModel
 
 class BaseFazcordModel(BaseModel):
     __abstract__ = True
-    metadata = MetaData()
+    metadata = MetaData(naming_convention=BaseModel._naming_convention)

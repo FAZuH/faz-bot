@@ -1,16 +1,27 @@
-from datetime import datetime as dt
+from __future__ import annotations
 
-from sqlalchemy import Index, UniqueConstraint
+from datetime import datetime as dt
+from typing import TYPE_CHECKING
+
+from sqlalchemy import ForeignKey, Index, UniqueConstraint
 from sqlalchemy.dialects.mysql import BINARY, DATETIME, DECIMAL, ENUM, VARCHAR
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from fazutil.db.fazdb.model._unique_id_model import UniqueIdModel
+
+if TYPE_CHECKING:
+    from fazutil.db.fazdb.model.player_info import PlayerInfo
 
 
 class PlayerHistory(UniqueIdModel):
     __tablename__ = "player_history"
 
-    uuid: Mapped[bytes] = mapped_column(BINARY(16), nullable=False, primary_key=True)
+    uuid: Mapped[bytes] = mapped_column(
+        BINARY(16),
+        ForeignKey("player_info.uuid"),
+        nullable=False,
+        primary_key=True,
+    )
     username: Mapped[str] = mapped_column(VARCHAR(16), nullable=False)
     support_rank: Mapped[str] = mapped_column(VARCHAR(45), default=None)
     playtime: Mapped[float] = mapped_column(
@@ -25,8 +36,13 @@ class PlayerHistory(UniqueIdModel):
     datetime: Mapped[dt] = mapped_column(DATETIME, nullable=False, primary_key=True)
     unique_id: Mapped[bytes] = mapped_column(BINARY(16), nullable=False)
 
+    player_info: Mapped[PlayerInfo] = relationship(
+        "PlayerInfo",
+        back_populates="stat_history",
+    )
+
     __table_args__ = (
-        Index("datetime_idx", datetime.desc()),
-        Index("uuid_idx", uuid),
-        UniqueConstraint("unique_id", name="unique_id_idx"),
+        Index(None, datetime.desc()),
+        Index(None, uuid),
+        UniqueConstraint("unique_id"),
     )

@@ -15,6 +15,14 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
     __column_attribute_names__ = None
     __primarykey_attribute_names__ = None
 
+    _naming_convention = {
+        "ix": "ix_%(column_0_label)s",
+        "uq": "uq_%(table_name)s_%(column_0_name)s",
+        "ck": "ck_%(table_name)s_%(constraint_name)s",
+        "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+        "pk": "pk_%(table_name)s",
+    }
+
     @classmethod
     def get_table(cls) -> Table:
         return cls.__table__  # type: ignore
