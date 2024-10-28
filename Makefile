@@ -27,9 +27,19 @@ help:
 	@echo "  make load-backup-fazcord path=<path>           # Load faz-cord database from a .sql backup file"
 
 
+init:
+	@echo "Initializing..."
+	cp $(DOCKER_DIR)/.env.example $(DOCKER_DIR)/.env
+	python -m venv .venv
+	source .venv/bin/activate
+	pip install -r requirements-dev.txt
+	python -m alembic -n api_collect ensure_version
+	python -m alembic -n fazcord ensure_version
+	@echo "Done!"
+
 wait-for-mysql:
 	@echo "Waiting for MySQL to be ready..."
-	@./$(DOCKER_DIR)/wait-for-it.sh -t 5 mysql:3306 -- echo "MySQL is ready!"
+	./$(DOCKER_DIR)/wait-for-it.sh -t 5 mysql:3306 -- echo "MySQL is ready!"
 
 build-all:
 	make sql act=build
@@ -84,10 +94,10 @@ countlines:
 
 
 clean:
-	make lint-fix
-	make format
-	make test
-	make rmpycache
+	@make lint-fix
+	@make format
+	@make test
+	@make rmpycache
 
 
 backup:
