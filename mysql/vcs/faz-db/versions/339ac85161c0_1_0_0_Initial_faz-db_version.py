@@ -320,6 +320,19 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    raise ValueError(
-        "Downgrade is not supported here. run `python -m alembic stamp base` to checkout to base."
-    )
+    # raise ValueError(
+    #     "Downgrade is not supported here. run `python -m alembic stamp base` to checkout to base."
+    # )
+    op.drop_table("character_history")
+    op.drop_table("guild_history")
+    op.drop_table("player_history")
+
+    op.drop_table("character_info")
+    op.drop_table("player_info")
+    op.drop_table("guild_info")
+
+    op.drop_table("guild_member_history")
+    op.drop_table("player_activity_history")
+    op.drop_table("online_players")
+    op.drop_table("fazdb_uptime")
+    op.drop_table("worlds")
