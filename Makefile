@@ -1,5 +1,5 @@
 DOCKER_DIR := docker
-DOCKER_COMPOSE := $(DOCKER_DIR)/docker-compose.yml
+DOCKER_COMPOSE := docker-compose.yml
 SCRIPTS_DIR := scripts
 MAKESCRIPT := $(SCRIPTS_DIR)/service.sh
 .DEFAULT_GOAL := help

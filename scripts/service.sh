@@ -2,7 +2,8 @@
 
 SERVICE=$1
 ACTION=$2
-COMPOSE_FILE="./docker/docker-compose.yml"
+PROJECT_PATH=$(dirname "$(dirname "$(realpath "$0")")")
+COMPOSE_FILE="$PROJECT_PATH/docker-compose.yml"
 
 case $ACTION in
   pull)
