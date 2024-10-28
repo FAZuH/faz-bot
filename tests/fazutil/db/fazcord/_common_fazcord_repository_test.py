@@ -4,7 +4,7 @@ from abc import ABC
 from typing import TYPE_CHECKING, override
 
 from fazutil.db.fazcord.fazcord_database import FazcordDatabase
-from tests.fazutil.db._common_db_repository_test import CommonDbRepositoryTest
+from tests.fazutil.db.common_db_repository_test import CommonDbRepositoryTest
 
 if TYPE_CHECKING:
     from fazutil.db.base_repository import BaseRepository
