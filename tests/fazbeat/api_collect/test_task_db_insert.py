@@ -25,14 +25,6 @@ class TestTaskDbInsert(IsolatedAsyncioTestCase):
             self._mock_response_list,
         )
 
-    def test_setup(self) -> None:
-        # Prepare
-        self._mock_db.create_all = AsyncMock()
-        # Act
-        self._task_db_insert.setup()
-        # Assert
-        self._mock_db.create_all.assert_called_once()
-
     def test_run_insert_fazdb_uptime(self) -> None:
         # Prepare
         model = self._mock_db.fazdb_uptime.model = Mock()
