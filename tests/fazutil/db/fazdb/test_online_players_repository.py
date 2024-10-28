@@ -18,4 +18,4 @@ class TestOnlinePlayersRepository(
     @property
     @override
     def repo(self):
-        return self.database.online_players_repository
+        return self.database.online_players

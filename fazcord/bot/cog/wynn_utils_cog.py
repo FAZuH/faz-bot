@@ -6,8 +6,8 @@ from typing import Any
 import nextcord
 from nextcord import Interaction
 
-from fazcord.bot.cog._cog_base import CogBase
-from fazcord.bot.errors import BadArgument
+from fazcord.bot.cog._base_cog import CogBase
+from fazcord.bot.errors import InvalidArgumentException, ParseException
 from fazcord.bot.view.utils_convert_emerald_view import UtilsConvertEmeraldView
 from fazcord.bot.view.utils_crafted_probability_view import UtilsCraftedProbabilityView
 from fazcord.bot.view.utils_ingredient_probability_view import (
@@ -98,19 +98,19 @@ class WynnUtilsCog(CogBase):
             ing_str = ing_str.strip()
             ing_vals = ing_str.split(",")
             if len(ing_vals) not in {2, 3}:
-                raise BadArgument(
-                    f"Invalid format on {ing_str}. Value must be 'min,max[,efficiency]'"
+                raise InvalidArgumentException(
+                    f"Invalid format on {ing_str}: Value must be 'min,max[,efficiency]'"
                 )
             try:
                 parsed_ing_vals: list[int] = [int(v) for v in ing_vals]
             except ValueError as exc:
-                raise BadArgument(
+                raise ParseException(
                     f"Failed parsing ingredient value on {ing_str}"
                 ) from exc
             try:
                 res.append(IngredientField(*parsed_ing_vals))
             except ValueError as e:
-                raise BadArgument(e.args[0]) from e
+                raise InvalidArgumentException(e.args[0]) from e
         return res
 
     def _parse_base_chance(self, base_chance: str) -> Decimal:
@@ -122,9 +122,11 @@ class WynnUtilsCog(CogBase):
                 numerator = float(match.group(1))
                 denominator = float(match.group(2))
                 return Decimal(numerator) / Decimal(denominator)
-            raise BadArgument("Invalid format: .")
+            raise InvalidArgumentException("Invalid format: .")
         try:
             ret = Decimal(base_chance)
         except InvalidOperation as exc:
-            raise BadArgument(f"Failed parsing base chance: {exc}") from exc
+            raise InvalidArgumentException(
+                f"Failed parsing base chance: {exc}"
+            ) from exc
         return ret

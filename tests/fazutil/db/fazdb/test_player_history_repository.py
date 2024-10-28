@@ -29,10 +29,17 @@ class TestPlayerHistoryRepository(
         self.assertEqual(res[1], mock2)
 
     @override
+    async def _create_table(self) -> None:
+        db = self.database
+        db.create_all()
+        mock_data = self._get_player_info_mock_data()
+        await db.player_info.insert([mock_data[0], mock_data[2]])
+
+    @override
     def _get_mock_data(self):
         return self._get_player_history_mock_data()
 
     @property
     @override
     def repo(self):
-        return self.database.player_history_repository
+        return self.database.player_history

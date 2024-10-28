@@ -90,4 +90,4 @@ class TestWorldsRepository(CommonFazdbRepositoryTest.Test[WorldsRepository]):
     @property
     @override
     def repo(self):
-        return self.database.worlds_repository
+        return self.database.worlds

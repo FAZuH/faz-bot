@@ -4,7 +4,7 @@ from abc import ABC
 from typing import TYPE_CHECKING, override
 
 from fazutil.db.fazcord.fazcord_database import FazcordDatabase
-from tests.fazutil.db._common_db_repository_test import CommonDbRepositoryTest
+from tests.fazutil.db.common_db_repository_test import CommonDbRepositoryTest
 
 if TYPE_CHECKING:
     from fazutil.db.base_repository import BaseRepository
@@ -31,7 +31,7 @@ class CommonFazcordRepositoryTest:
         # await self.database.whitelist_group_repository.create_table()
 
         def _get_discord_channel_mock_data(self):
-            model = self.database.discord_channel_repository.model
+            model = self.database.discord_channel.model
             mock_data1 = model(channel_id=1, channel_name="a", guild_id=1)
             mock_data2 = mock_data1.clone()
             mock_data3 = mock_data1.clone()
@@ -41,7 +41,7 @@ class CommonFazcordRepositoryTest:
             return (mock_data1, mock_data2, mock_data3, mock_data4, "channel_name")
 
         def _get_discord_guild_mock_data(self):
-            model = self.database.discord_guild_repository.model
+            model = self.database.discord_guild.model
             mock_data1 = model(guild_id=1, guild_name="a")
             mock_data2 = mock_data1.clone()
             mock_data3 = mock_data1.clone()
@@ -51,7 +51,7 @@ class CommonFazcordRepositoryTest:
             return (mock_data1, mock_data2, mock_data3, mock_data4, "guild_name")
 
         def _get_discord_user_mock_data(self):
-            model = self.database.discord_user_repository.model
+            model = self.database.discord_user.model
             mock_data1 = model(user_id=1, username="a")
             mock_data2 = mock_data1.clone()
             mock_data3 = mock_data1.clone()
@@ -61,7 +61,7 @@ class CommonFazcordRepositoryTest:
             return (mock_data1, mock_data2, mock_data3, mock_data4, "username")
 
         def _get_track_entry_association_mock_data(self):
-            model = self.database.track_entry_association_repository.model
+            model = self.database.track_entry_association.model
             mock_data1 = model(
                 id=1,
                 track_entry_id=1,
@@ -78,7 +78,7 @@ class CommonFazcordRepositoryTest:
             return (mock_data1, mock_data2, mock_data3, mock_data4, "associated_value")
 
         def _get_track_entry_mock_data(self):
-            model = self.database.track_entry_repository.model
+            model = self.database.track_entry.model
             mock_data1 = model(
                 id=1,
                 channel_id=1,
@@ -96,7 +96,7 @@ class CommonFazcordRepositoryTest:
             return (mock_data1, mock_data2, mock_data3, mock_data4, "type")
 
         def _get_whitelist_group_mock_data(self):
-            model = self.database.whitelist_group_repository.model
+            model = self.database.whitelist_group.model
             mock_data1 = model(
                 id=1,
                 type="a",

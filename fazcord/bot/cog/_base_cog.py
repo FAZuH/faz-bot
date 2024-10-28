@@ -4,9 +4,10 @@ from contextlib import asynccontextmanager
 from typing import TYPE_CHECKING, Any, AsyncGenerator, Iterable
 
 from loguru import logger
-from nextcord import Colour, Embed, Interaction
+from nextcord import Colour, Interaction
 from nextcord.ext import commands
 
+from fazcord.bot.view._custom_embed import CustomEmbed
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
@@ -35,7 +36,10 @@ class CogBase(commands.Cog):
     async def _respond_successful(
         self, interaction: Interaction[Any], message: str
     ) -> None:
-        embed = Embed(title="Success", description=message, color=Colour.dark_green())
+        embed = CustomEmbed(
+            interaction, title="Success", description=message, color=Colour.dark_green()
+        )
+        embed.finalize()
         await interaction.send(embed=embed)
 
     @asynccontextmanager

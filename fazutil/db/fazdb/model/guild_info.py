@@ -9,6 +9,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from fazutil.db.fazdb.model.base_fazdb_model import BaseFazdbModel
 
 if TYPE_CHECKING:
+    from fazutil.db.fazdb.model.guild_history import GuildHistory
     from fazutil.db.fazdb.model.player_info import PlayerInfo
 
 
@@ -24,5 +25,21 @@ class GuildInfo(BaseFazdbModel):
         "PlayerInfo",
         back_populates="guild",
         foreign_keys="PlayerInfo.guild_uuid",
+        lazy="selectin",
+    )
+
+    latest_stat: Mapped[GuildHistory] = relationship(
+        "GuildHistory",
+        primaryjoin="and_(GuildHistory.uuid == GuildInfo.uuid, "
+        "GuildHistory.datetime == (select(func.max(GuildHistory.datetime))"
+        ".where(GuildHistory.uuid == GuildInfo.uuid)"
+        ".scalar_subquery()))",
+        viewonly=True,
+        uselist=False,
+    )
+    stat_history: Mapped[list[GuildHistory]] = relationship(
+        "GuildHistory",
+        back_populates="guild_info",
+        order_by="GuildHistory.datetime.desc()",
         lazy="selectin",
     )

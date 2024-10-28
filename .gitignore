@@ -5,5 +5,9 @@ mysql/data
 logs
 __pycache__
 .sandbox.py
+.sandbox.ipynb
 .pytest_cache
+.jukit
+.ruff_cache
+mysql/backup
 

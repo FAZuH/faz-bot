@@ -25,17 +25,9 @@ class TestTaskDbInsert(IsolatedAsyncioTestCase):
             self._mock_response_list,
         )
 
-    def test_setup(self) -> None:
-        # Prepare
-        self._mock_db.create_all = AsyncMock()
-        # Act
-        self._task_db_insert.setup()
-        # Assert
-        self._mock_db.create_all.assert_called_once()
-
     def test_run_insert_fazdb_uptime(self) -> None:
         # Prepare
-        model = self._mock_db.fazdb_uptime_repository.model = Mock()
+        model = self._mock_db.fazdb_uptime.model = Mock()
         with patch("fazbeat.api_collect.task.task_db_insert.datetime") as mock_datetime:
             # Act
             self._task_db_insert.run()
@@ -44,7 +36,7 @@ class TestTaskDbInsert(IsolatedAsyncioTestCase):
                 start_time=self._task_db_insert._start_time,
                 stop_time=mock_datetime.now.return_value,
             )
-            self._mock_db.fazdb_uptime_repository.insert.assert_awaited_once_with(
+            self._mock_db.fazdb_uptime.insert.assert_awaited_once_with(
                 model.return_value, replace_on_duplicate=True
             )
 
@@ -82,13 +74,13 @@ class TestTaskDbInsert(IsolatedAsyncioTestCase):
         # Act
         await self._task_db_insert._insert_online_players_response(Mock())
         # Assert
-        db.online_players_repository.update.assert_awaited_once_with(
+        db.online_players.update.assert_awaited_once_with(
             adapter.to_online_players.return_value
         )
-        db.player_activity_history_repository.insert.assert_awaited_once_with(
+        db.player_activity_history.insert.assert_awaited_once_with(
             adapter.to_player_activity_history.return_value, replace_on_duplicate=True
         )
-        db.worlds_repository.update_worlds.assert_awaited_once_with(
+        db.worlds.update_worlds.assert_awaited_once_with(
             list(adapter.to_worlds.return_value)
         )
 
@@ -103,16 +95,16 @@ class TestTaskDbInsert(IsolatedAsyncioTestCase):
         # Act
         await self._task_db_insert._insert_player_responses([Mock()])
         # Assert
-        db.player_info_repository.safe_insert.assert_awaited_once_with(
+        db.player_info.safe_insert.assert_awaited_once_with(
             [player_info], replace_on_duplicate=True
         )
-        db.character_info_repository.insert.assert_awaited_once_with(
+        db.character_info.insert.assert_awaited_once_with(
             character_info, replace_on_duplicate=True
         )
-        db.player_history_repository.insert.assert_awaited_once_with(
+        db.player_history.insert.assert_awaited_once_with(
             [player_history], ignore_on_duplicate=True
         )
-        db.character_history_repository.insert.assert_awaited_once_with(
+        db.character_history.insert.assert_awaited_once_with(
             character_history, ignore_on_duplicate=True
         )
 
@@ -124,13 +116,13 @@ class TestTaskDbInsert(IsolatedAsyncioTestCase):
         # Act
         await self._task_db_insert._insert_guild_response([Mock()])
         # Assert
-        db.guild_info_repository.insert.assert_awaited_once_with(
+        db.guild_info.insert.assert_awaited_once_with(
             [a.to_guild_info.return_value], replace_on_duplicate=True
         )
-        db.guild_history_repository.insert.assert_awaited_once_with(
+        db.guild_history.insert.assert_awaited_once_with(
             [a.to_guild_history.return_value], ignore_on_duplicate=True
         )
-        db.guild_member_history_repository.insert.assert_awaited_once_with(
+        db.guild_member_history.insert.assert_awaited_once_with(
             guild_member_history, ignore_on_duplicate=True
         )
 

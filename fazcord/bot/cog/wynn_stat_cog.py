@@ -3,7 +3,7 @@ from typing import Any, Literal
 import nextcord
 from nextcord import Interaction
 
-from fazcord.bot.cog._cog_base import CogBase
+from fazcord.bot.cog._base_cog import CogBase
 from fazcord.bot.view.stat_worldlist_view import StatWorldlistView
 
 
@@ -16,17 +16,16 @@ class WynnStatCog(CogBase):
     @stats.subcommand(name="worldlist")
     async def worldlist(
         self,
-        interaction: Interaction[Any],
+        intr: Interaction[Any],
         sort_by: Literal["Player Count", "Time Created"] = "Time Created",
     ) -> None:
-        """
-        Shows a list of active worlds, showing player count and world uptime.
+        """Shows a list of active worlds, showing player count and world uptime.
 
         Args:
             sort_by (Literal["Player Count", "Time Created"], optional): The criteria to sort the worlds by.
                 Can be either "Player Count" or "Time Created". Defaults to "Time Created".
         """
-        await StatWorldlistView(self._bot, interaction, sort_by).run()
+        await StatWorldlistView(self._bot, intr, sort_by).run()
 
     # @nextcord.slash_command(name="player")
     # async def player(self, interaction: Interaction[Any]) -> None:

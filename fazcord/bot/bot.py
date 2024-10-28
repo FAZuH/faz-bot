@@ -44,9 +44,6 @@ class Bot:
         self._cogs = CogCore(self)  # needs utils
         self._events = Events(self)
 
-        self.fazcord_db.create_all()
-        self.fazdb_db.create_all()
-
     def start(self) -> None:
         logger.info("Starting Bot")
         self._discord_bot_thread.start()
@@ -117,7 +114,7 @@ class Bot:
 
     async def _get_whitelisted_guild_ids(self) -> list[int]:
         db = self.fazcord_db
-        guild_ids = await db.whitelist_group_repository.get_all_whitelisted_guild_ids()
+        guild_ids = await db.whitelist_group.get_all_whitelisted_guild_ids()
         return list(guild_ids)
 
     async def _sync_dev_guild(self) -> None:
@@ -132,7 +129,7 @@ class Bot:
         """Adds dev guild to whitelist database, if not already added."""
         guild = await self.utils.must_get_guild(self.app.properties.DEV_SERVER_ID)
         try:
-            await self.fazcord_db.whitelist_group_repository.whitelist_guild(
+            await self.fazcord_db.whitelist_group.whitelist_guild(
                 guild.id, reason="DEV GUILD"
             )
         except IntegrityError:

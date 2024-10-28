@@ -3,7 +3,6 @@ services:
     image: ghcr.io/fazuh/fazcord:latest
     container_name: fazcord
     build:
-      context: ..
       dockerfile: docker/Dockerfile.bot
     restart: unless-stopped
     environment:
@@ -13,19 +12,18 @@ services:
       MYSQL_PASSWORD: password
       MYSQL_FAZCORD_DATABASE: faz-cord
       MYSQL_FAZDB_DATABASE: faz-db
-    env_file: ../.env
+    env_file: .env
     depends_on:
       - mysql
     networks:
       - faz-network
     volumes:
-      - ../logs:/app/logs
+      - ./logs:/app/logs
 
   api_collect:
     image: ghcr.io/fazuh/api_collect:latest
     container_name: api_collect
     build:
-      context: ..
       dockerfile: docker/Dockerfile.api_collect
     restart: unless-stopped
     environment:
@@ -34,7 +32,7 @@ services:
       MYSQL_USER: faz
       MYSQL_PASSWORD: password
       MYSQL_FAZDB_DATABASE: faz-db
-    env_file: ../.env
+    env_file: .env
     depends_on:
       - mysql
     expose:
@@ -42,7 +40,7 @@ services:
     networks:
       - faz-network
     volumes:
-      - ../logs:/app/logs
+      - ./logs:/app/logs
 
   mysql:
     image: mariadb:11.4.2
@@ -57,8 +55,8 @@ services:
     ports:
       - "127.0.0.1:3306:3306"
     volumes:
-      - ../mysql/data:/var/lib/mysql
-      - ../mysql/init:/docker-entrypoint-initdb.d
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
     networks:
       - faz-network
 

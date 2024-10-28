@@ -13,12 +13,12 @@ class TestDiscordChannelRepository(
 ):
     @override
     async def _create_table(self) -> None:
-        await self.database.discord_guild_repository.create_table()
-        await self.database.discord_user_repository.create_table()
-        await self.database.discord_channel_repository.create_table()
-        await self.database.track_entry_repository.create_table()
+        await self.database.discord_guild.create_table()
+        await self.database.discord_user.create_table()
+        await self.database.discord_channel.create_table()
+        await self.database.track_entry.create_table()
         mock_data = self._get_discord_guild_mock_data()
-        await self.database.discord_guild_repository.insert([mock_data[0]])
+        await self.database.discord_guild.insert([mock_data[0]])
 
     @override
     def _get_mock_data(self):
@@ -27,4 +27,4 @@ class TestDiscordChannelRepository(
     @property
     @override
     def repo(self):
-        return self.database.discord_channel_repository
+        return self.database.discord_channel

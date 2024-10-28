@@ -7,8 +7,8 @@ import nextcord
 from nextcord import Interaction
 
 from fazcord.bot._utils import Utils
-from fazcord.bot.cog._cog_base import CogBase
-from fazcord.bot.errors import ApplicationException
+from fazcord.bot.cog._base_cog import CogBase
+from fazcord.bot.errors import ApplicationException, InvalidActionException
 
 
 class AdminCog(CogBase):
@@ -49,11 +49,11 @@ class AdminCog(CogBase):
         user = await self._bot.utils.must_get_user(user_id)
 
         async with self._enter_botdb_session() as (db, s):
-            repo = db.whitelist_group_repository
+            repo = db.whitelist_group
 
             if await repo.is_banned_user(user.id, session=s):
-                raise ApplicationException(
-                    f"User `{user.name}` (`{user.id}`) is already banned."
+                raise InvalidActionException(
+                    f"User `{user.name} ({user.id})` is already banned"
                 )
 
             await repo.ban_user(
@@ -63,9 +63,7 @@ class AdminCog(CogBase):
                 session=s,
             )
 
-        await self._respond_successful(
-            intr, f"Banned user `{user.name}` (`{user.id}`)."
-        )
+        await self._respond_successful(intr, f"Banned user `{user.name} ({user.id})`")
 
     @admin.subcommand(name="unban")
     async def unban(self, intr: Interaction[Any], user_id: str) -> None:
@@ -79,17 +77,17 @@ class AdminCog(CogBase):
         user = await self._utils.must_get_user(user_id)
 
         async with self._enter_botdb_session() as (db, s):
-            repo = db.whitelist_group_repository
+            repo = db.whitelist_group
 
             if not await repo.is_banned_user(user.id, session=s):
-                raise ApplicationException(
-                    f"User `{user.name}` (`{user.id}`) is not banned."
+                raise InvalidActionException(
+                    f"User `{user.name} ({user.id})` is not banned"
                 )
 
             await repo.unban_user(user.id, session=s)
 
         await self._respond_successful(
-            intr, f"Unbanned user `{user.name}` (`{user.id}`)."
+            intr, f"Unbanned user `{user.name} ({user.id}).`"
         )
 
     @admin.subcommand(name="echo")
@@ -118,7 +116,7 @@ class AdminCog(CogBase):
 
         if not self._is_channel_sendable(channel):
             raise ApplicationException(
-                f"Channel of type `{type(channel)}` does not support sending messages."
+                f"Channel of type `{type(channel)}` does not support sending messages"
             )
 
         try:
@@ -127,7 +125,7 @@ class AdminCog(CogBase):
             raise ApplicationException(f"Failed sending message: {exc}") from exc
 
         await self._respond_successful(
-            intr, f"Sent message on channel `{channel.name}` (`{channel.id}`)."
+            intr, f"Sent message on channel `{channel.name} ({channel.id})`"  # type: ignore
         )  # type: ignore
 
     @admin.subcommand(name="sync_guild")
@@ -188,7 +186,7 @@ class AdminCog(CogBase):
             ) from exc
 
         await self._respond_successful(
-            intr, f"Whispered message to `{user.name}` (`{user.id}`)."
+            intr, f"Whispered message to `{user.name} ({user.id})`"
         )
 
     @admin.subcommand(name="whitelist")
@@ -207,11 +205,11 @@ class AdminCog(CogBase):
         guild = await self._utils.must_get_guild(guild_id)
 
         async with self._enter_botdb_session() as (db, s):
-            repo = db.whitelist_group_repository
+            repo = db.whitelist_group
 
             if await repo.is_whitelisted_guild(guild.id, session=s):
-                raise ApplicationException(
-                    f"Guild `{guild.name}` (`{guild.id}`) is already whitelisted."
+                raise InvalidActionException(
+                    f"Guild `{guild.name}` ({guild.id})` is already whitelisted"
                 )
 
             await repo.whitelist_guild(
@@ -221,7 +219,7 @@ class AdminCog(CogBase):
             )
 
         await self._respond_successful(
-            intr, f"Whitelisted guild `{guild.name}` (`{guild.id}`)."
+            intr, f"Whitelisted guild `{guild.name} ({guild.id})`"
         )
 
     @admin.subcommand(name="unwhitelist")
@@ -236,17 +234,17 @@ class AdminCog(CogBase):
         guild = await self._utils.must_get_guild(guild_id)
 
         async with self._enter_botdb_session() as (db, s):
-            repo = db.whitelist_group_repository
+            repo = db.whitelist_group
 
             if not await repo.is_whitelisted_guild(guild.id, session=s):
-                raise ApplicationException(
-                    f"Guild `{guild.name}` (`{guild.id}`) is not whitelisted."
+                raise InvalidActionException(
+                    f"Guild `{guild.name} ({guild.id})` is not whitelisted"
                 )
 
             await repo.unwhitelist_guild(guild.id, session=s)
 
         await self._respond_successful(
-            intr, f"Unwhitelisted guild `{guild.name}` (`{guild.id}`)."
+            intr, f"Unwhitelisted guild `{guild.name} ({guild.id})`"
         )
 
     @admin.subcommand(name="execute")
@@ -263,11 +261,11 @@ class AdminCog(CogBase):
 
         if result.returncode == 0:
             success_msg = (
-                "Command executed successfully!\n" "Output:\n" f"{result.stdout}"
+                f"Command executed successfully!\nOutput:\n```\n{result.stdout}```"
             )
             await self._respond_successful(intr, success_msg)
         else:
-            err_msg = "Error executing command.\n" "Error message:\n" f"{result.stderr}"
+            err_msg = f"Error executing command.\nError message:\n```\n{result.stderr}"
             raise ApplicationException(err_msg)
 
     def _is_channel_sendable(self, channel: object) -> bool:

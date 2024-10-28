@@ -36,15 +36,15 @@ jobs:
           -v ${GITHUB_WORKSPACE}/mysql/init:/docker-entrypoint-initdb.d \
           -d -p "3306:3306" mariadb:11.4.2
 
-      - name: Set Up Python 3.12
+      - name: Set Up Python 3.13
         uses: actions/setup-python@v3
         with:
-          python-version: "3.12.4"
+          python-version: "3.13.0"
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest ruff
+          pip install pytest ruff black
           pip install -r requirements-dev.txt
 
       - name: Format with Ruff and Black

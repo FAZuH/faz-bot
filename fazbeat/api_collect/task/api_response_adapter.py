@@ -100,7 +100,7 @@ class ApiResponseAdapter:
         @staticmethod
         def to_guild_history(resp: GuildResponse) -> GuildHistory:
             return GuildHistory(
-                name=resp.body.name,
+                uuid=resp.body.uuid.to_bytes(),
                 level=resp.body.level,
                 territories=resp.body.territories,
                 wars=resp.body.wars,

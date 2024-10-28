@@ -2,8 +2,8 @@ from typing import Any, Iterable, Literal, override
 
 from nextcord import Interaction, slash_command
 
-from fazcord.bot.cog._cog_base import CogBase
-from fazcord.bot.errors import BadArgument
+from fazcord.bot.cog._base_cog import CogBase
+from fazcord.bot.errors import InvalidActionException, InvalidArgumentException
 
 
 class WynnTrackCog(CogBase):
@@ -30,7 +30,7 @@ class WynnTrackCog(CogBase):
         """(dev only) Toggles a track entry on any channel_id."""
         db = self._bot.fazcord_db
         channel = await self._utils.must_get_channel(channel_id)
-        track_entry = await db.track_entry_repository.toggle(channel.id)
+        track_entry = await db.track_entry.toggle(channel.id)
         await self._respond_successful(
             intr,
             f"Toggled track entry on channel `{channel.id}` (`{channel.name}`) to {track_entry}",  # type: ignore
@@ -38,13 +38,13 @@ class WynnTrackCog(CogBase):
 
     @track.subcommand()
     async def show(self, intr: Interaction[Any]) -> None:
-        """Shows all Wynncraft trackers on this guild."""
+        """Shows all Wynncraft trackers on this server."""
         db = self._bot.fazcord_db
         guild_id = intr.guild.id  # type: ignore
-        track_entries = await db.track_entry_repository.select_by_guild_id(guild_id)
+        track_entries = await db.track_entry.select_by_guild_id(guild_id)
         if len(track_entries) == 0:
             await self._respond_successful(
-                intr, "This guild does not have any Wynn Trackers registred"
+                intr, "This server does not have any Wynncraft trackers registred"
             )
         else:
             responses = []
@@ -72,10 +72,10 @@ class WynnTrackCog(CogBase):
         """
         db = self._bot.fazcord_db
         channel = await self._utils.must_get_channel(channel_id)
-        track_entry = await db.track_entry_repository.toggle(channel.id)
+        track_entry = await db.track_entry.toggle(channel.id)
         await self._respond_successful(
             intr,
-            f"Toggled track entry on channel `{channel.id}` (`{channel.name}`) to {track_entry}",  # type: ignore
+            f"Toggled track entry on channel `{channel.id} ({channel.name})` to {track_entry}",  # type: ignore
         )
 
     @track.subcommand()
@@ -87,10 +87,10 @@ class WynnTrackCog(CogBase):
         """
         db = self._bot.fazcord_db
         channel = await self._utils.must_get_channel(channel_id)
-        await db.track_entry_repository.delete(channel.id)
+        await db.track_entry.delete(channel.id)
         await self._respond_successful(
             intr,
-            f"Removed track entry on channel `{channel.id}` (`{channel.name}`)",  # type: ignore
+            f"Removed track entry on channel `{channel.id} ({channel.name})`",  # type: ignore
         )
 
     @track.subcommand()
@@ -169,8 +169,8 @@ class WynnTrackCog(CogBase):
                 an invalid track entry type is provided for editing.
         """
         db = self._bot.fazcord_db
-        track_repo = db.track_entry_repository
-        track_value_repo = db.track_entry_association_repository
+        track_repo = db.track_entry
+        track_value_repo = db.track_entry_association
         channel = await self._utils.must_get_channel(channel_id)
         assert intr.user
 
@@ -190,29 +190,29 @@ class WynnTrackCog(CogBase):
 
                 await self._respond_successful(
                     intr,
-                    f"Added `{type}` track entry on channel `{channel.id}` (`{channel.name}`)",  # type: ignore
+                    f"Added `{type}` track entry on channel `{channel.id} ({channel.name})`",  # type: ignore
                 )
                 return
 
             if type == "GUILD":
                 assert value
-                guild = await self._bot.fazdb_db.guild_info_repository.get_guild(value)
+                guild = await self._bot.fazdb_db.guild_info.get_guild(value)
                 if not guild:
-                    raise BadArgument(f"Cannot fetch guild with name/uuid {value}.")
+                    raise InvalidArgumentException(
+                        f"Guild {value} does not exist in faz-bot's database"
+                    )
                 uuid = guild.uuid
 
             elif type == "ONLINE":
                 assert value
-                player = await self._bot.fazdb_db.player_info_repository.get_player(
-                    value
-                )
+                player = await self._bot.fazdb_db.player_info.get_player(value)
                 if not player:
-                    raise BadArgument(
-                        f"Cannot fetch player with username/uuid {value}."
+                    raise InvalidArgumentException(
+                        f"Player {value} does not exist in faz-bot's database"
                     )
                 uuid = player.uuid
             else:
-                raise BadArgument(
+                raise InvalidActionException(
                     "Tracker that is not of type `guild` or `online` cannot be edited. "
                     f"Remove with `/remove {channel_id}`."
                 )
@@ -229,12 +229,12 @@ class WynnTrackCog(CogBase):
                         await ses.delete(track_entry)
                         await self._respond_successful(
                             intr,
-                            f"Removed track entry on channel `{channel.id}` (`{channel.name}`)",  # type: ignore
+                            f"Removed track entry on channel `{channel.id} ({channel.name})`",  # type: ignore
                         )
                         return
                     await self._respond_successful(
                         intr,
-                        f"Removed {type.lower()} `{value}` from `{type}` track entry on channel `{channel.id}` (`{channel.name}`)",  # type: ignore
+                        f"Removed {type.lower()} `{value}` from `{type}` track entry on channel `{channel.id} ({channel.name})`",  # type: ignore
                     )
                     return
 
@@ -246,5 +246,5 @@ class WynnTrackCog(CogBase):
             await track_value_repo.insert(track_value, session=ses)
             await self._respond_successful(
                 intr,
-                f"Added {type.lower()} `{value}` to `{type}` track entry on channel `{channel.id}` (`{channel.name}`)",  # type: ignore
+                f"Added {type.lower()} `{value}` to `{type}` track entry on channel `{channel.id} ({channel.name})`",  # type: ignore
             )
