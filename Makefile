@@ -12,9 +12,9 @@ help:
 	@echo "  make up-all                                	# Up all docker services"
 	@echo "  make down-all                              	# Down all docker services"
 	@echo "  make api-collect act=[pull|build|up|down|bash] # Manage api-collect service"
-	@echo "  make bot act=[pullbuild|up|down|bash]          # Manage bot service"
-	@echo "  make sql act=[pullbuild|up|down|bash]          # Manage sql service"
-	@echo "  make pma act=[pullbuild|up|down|bash]          # Manage phpmyadmin service"
+	@echo "  make bot act=[pull|build|up|down|bash]         # Manage bot service"
+	@echo "  make sql act=[pull|build|up|down|bash]         # Manage sql service"
+	@echo "  make pma act=[pull|build|up|down|bash]         # Manage phpmyadmin service"
 	@echo "  make test                                  	# Run python tests"
 	@echo "  make lint                                  	# Run python linting with Ruff"
 	@echo "  make lint-fix                              	# Run python linting with Ruff with --fix on"
@@ -22,6 +22,9 @@ help:
 	@echo "  make rmpycache                             	# Remove __pycache__ directories"
 	@echo "  make countlines                            	# Count sum of lines of all python files"
 	@echo "  make clean                                 	# Lint, format, test, and rmpycache"
+	@echo "  make backup                                 	# Backup faz-cord and faz-db databases"
+	@echo "  make load-backup-fazdb path=<path>             # Load faz-db database from a .sql backup file"
+	@echo "  make load-backup-fazcord path=<path>           # Load faz-cord database from a .sql backup file"
 
 
 wait-for-mysql:
@@ -60,16 +63,6 @@ pma:
 	$(MAKESCRIPT) phpmyadmin $(act)
 
 
-backup:
-	mkdir -p mysql/backup
-	docker-compose --file $(DOCKER_DIR)/docker-compose.yml \
-		exec mysql sh -c 'mariadb-dump -u root -p$$MYSQL_ROOT_PASSWORD faz-cord' \
-		> mysql/backup/faz-cord_`date +%s`.sql
-	docker-compose --file $(DOCKER_DIR)/docker-compose.yml \
-		exec mysql sh -c 'mariadb-dump -u root -p$$MYSQL_ROOT_PASSWORD faz-db' \
-		> mysql/backup/faz-db_`date +%s`.sql
-
-
 test:
 	python -m pytest --disable-warnings tests/
 
@@ -95,3 +88,25 @@ clean:
 	make format
 	make test
 	make rmpycache
+
+
+backup:
+	mkdir -p mysql/backup
+	docker-compose --file $(DOCKER_DIR)/docker-compose.yml \
+		exec mysql sh -c 'mariadb-dump -u root -p$$MYSQL_ROOT_PASSWORD faz-cord' \
+		> mysql/backup/faz-cord_`date +%s`.sql
+	docker-compose --file $(DOCKER_DIR)/docker-compose.yml \
+		exec mysql sh -c 'mariadb-dump -u root -p$$MYSQL_ROOT_PASSWORD faz-db' \
+		> mysql/backup/faz-db_`date +%s`.sql
+
+load-fazcord-backup:
+	# Accept first argument as path to .sql backup file
+	docker-compose --file $(DOCKER_DIR)/docker-compose.yml \
+		exec mysql sh -c 'mariadb -u root -p$$MYSQL_ROOT_PASSWORD faz-cord' \
+		< $(backup)
+
+load-fazdb-backup:
+	# Accept first argument as path to .sql backup file
+	docker-compose --file $(DOCKER_DIR)/docker-compose.yml \
+		exec mysql sh -c 'mariadb -u root -p$$MYSQL_ROOT_PASSWORD faz-db' \
+		< $(backup)
