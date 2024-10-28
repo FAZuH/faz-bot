@@ -20,6 +20,11 @@ class FazcordEnv(BaseEnv):
     def metadata(self) -> MetaData:
         return self._metadata
 
+    @property
+    @override
+    def default_schema_env_name(self) -> str:
+        return "MYSQL_FAZCORD_DATABASE"
+
 
 env = FazcordEnv()
 env.run()

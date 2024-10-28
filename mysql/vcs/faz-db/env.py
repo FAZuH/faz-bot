@@ -20,6 +20,11 @@ class FazdbEnv(BaseEnv):
     def metadata(self) -> MetaData:
         return self._metadata
 
+    @property
+    @override
+    def default_schema_env_name(self) -> str:
+        return "MYSQL_FAZDB_DATABASE"
+
 
 env = FazdbEnv()
 env.run()
