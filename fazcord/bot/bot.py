@@ -44,9 +44,6 @@ class Bot:
         self._cogs = CogCore(self)  # needs utils
         self._events = Events(self)
 
-        self.fazcord_db.create_all()
-        self.fazdb_db.create_all()
-
     def start(self) -> None:
         logger.info("Starting Bot")
         self._discord_bot_thread.start()
