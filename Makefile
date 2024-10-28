@@ -99,14 +99,12 @@ backup:
 		exec mysql sh -c 'mariadb-dump -u root -p$$MYSQL_ROOT_PASSWORD faz-db' \
 		> mysql/backup/faz-db_`date +%s`.sql
 
-load-fazcord-backup:
-	# Accept first argument as path to .sql backup file
+load-backup-fazcord:
 	docker-compose --file $(DOCKER_DIR)/docker-compose.yml \
-		exec mysql sh -c 'mariadb -u root -p$$MYSQL_ROOT_PASSWORD faz-cord' \
-		< $(backup)
+		exec -T mysql sh -c 'mariadb -u root -p"$$MYSQL_ROOT_PASSWORD" faz-cord' \
+		< $(path)
 
-load-fazdb-backup:
-	# Accept first argument as path to .sql backup file
+load-backup-fazdb:
 	docker-compose --file $(DOCKER_DIR)/docker-compose.yml \
-		exec mysql sh -c 'mariadb -u root -p$$MYSQL_ROOT_PASSWORD faz-db' \
-		< $(backup)
+		exec -T mysql sh -c 'mariadb -u root -p"$$MYSQL_ROOT_PASSWORD" faz-db' \
+		< $(path)
