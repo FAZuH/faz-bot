@@ -30,7 +30,7 @@ class BaseEnv(ABC):
         user = os.getenv("MYSQL_USER", None)
         password = os.getenv("MYSQL_PASSWORD", None)
         host = os.getenv("MYSQL_HOST", None)
-        db_name = os.getenv("MYSQL_FAZCORD_DATABASE", None)
+        db_name = os.getenv(self.default_schema_env_name, None)
 
         if None in {user, password, host, db_name}:
             section = self.config.get_section(self.config.config_ini_section)
@@ -67,10 +67,15 @@ class BaseEnv(ABC):
                 context.run_migrations()
 
     @property
+    def config(self) -> Config:
+        return self._config
+
+    @property
     @abstractmethod
-    def metadata(self) -> MetaData:
+    def default_schema_env_name(self) -> str:
         pass
 
     @property
-    def config(self) -> Config:
-        return self._config
+    @abstractmethod
+    def metadata(self) -> MetaData:
+        pass
