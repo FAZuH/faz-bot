@@ -2,27 +2,25 @@
 
 SERVICE=$1
 ACTION=$2
-PROJECT_PATH=$(dirname "$(dirname "$(realpath "$0")")")
-COMPOSE_FILE="$PROJECT_PATH/docker-compose.yml"
 
 case $ACTION in
   pull)
-    docker-compose --file "$COMPOSE_FILE" pull "$SERVICE" --detach
+    docker-compose pull "$SERVICE"
     ;;
   build)
-    docker-compose --file "$COMPOSE_FILE" up "$SERVICE" --detach --build 
+    docker-compose up "$SERVICE" --detach --build 
     ;;
   up)
-    docker-compose --file "$COMPOSE_FILE" up "$SERVICE" --detach
+    docker-compose up "$SERVICE" --detach
     ;;
   down)
-    docker-compose --file "$COMPOSE_FILE" down "$SERVICE"
+    docker-compose down "$SERVICE"
     ;;
   bash)
-    docker exec -it "$SERVICE" /bin/bash
+    docker-compose exec -it "$SERVICE" /bin/bash
     ;;
   "")
-    docker attach "$SERVICE" --no-stdin 
+    docker-compose attach "$SERVICE" --no-stdin 
     ;;
   *)
     echo "Invalid action: $ACTION"

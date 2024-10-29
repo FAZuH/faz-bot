@@ -1,5 +1,4 @@
 DOCKER_DIR := docker
-DOCKER_COMPOSE := docker-compose.yml
 SCRIPTS_DIR := scripts
 MAKESCRIPT := $(SCRIPTS_DIR)/service.sh
 .DEFAULT_GOAL := help
@@ -29,7 +28,7 @@ help:
 
 init:
 	@echo "Initializing..."
-	cp $(DOCKER_DIR)/.env.example $(DOCKER_DIR)/.env
+	cp .env.example .env
 	python -m venv .venv
 	source .venv/bin/activate
 	pip install -r requirements-dev.txt
@@ -54,7 +53,7 @@ up-all:
 	make bot act=up
 
 down-all:
-	docker-compose --file $(DOCKER_COMPOSE) down
+	docker-compose down
 
 
 api-collect:
@@ -102,19 +101,28 @@ clean:
 
 backup:
 	mkdir -p mysql/backup
-	docker-compose --file $(DOCKER_DIR)/docker-compose.yml \
+	docker-compose \
 		exec mysql sh -c 'mariadb-dump -u root -p$$MYSQL_ROOT_PASSWORD faz-cord' \
 		> mysql/backup/faz-cord_`date +%s`.sql
-	docker-compose --file $(DOCKER_DIR)/docker-compose.yml \
+	docker-compose \
 		exec mysql sh -c 'mariadb-dump -u root -p$$MYSQL_ROOT_PASSWORD faz-db' \
 		> mysql/backup/faz-db_`date +%s`.sql
 
 load-backup-fazcord:
-	docker-compose --file $(DOCKER_DIR)/docker-compose.yml \
+	docker-compose \
 		exec -T mysql sh -c 'mariadb -u root -p"$$MYSQL_ROOT_PASSWORD" faz-cord' \
 		< $(path)
 
 load-backup-fazdb:
-	docker-compose --file $(DOCKER_DIR)/docker-compose.yml \
+	docker-compose \
 		exec -T mysql sh -c 'mariadb -u root -p"$$MYSQL_ROOT_PASSWORD" faz-db' \
 		< $(path)
+
+
+reset-docker:
+	docker stop $$(docker ps -aq)
+	docker rm $$(docker ps -aq)
+	docker rmi $$(docker images -q)
+	docker volume prune -f
+	docker builder prune -f
+	docker network rm $$(docker network ls -q)
