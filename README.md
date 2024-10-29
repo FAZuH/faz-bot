@@ -59,22 +59,31 @@ cd faz-bot
 2. Run `make init` (or if you don't have make, run each line in Makefile on init section line-by-line).
 3. Fill in the `.env` file with your own values.
 4. View database revision history with `python -m alembic -n <service> history`.
-5. Run `python -m alembic -n <service> upgrade <revision>` with the revision you need.
+5. Run `python -m alembic -n <service> upgrade <revision>` with the revision you need (set revision to head if using the latest version).
 
 ### Docker Installation
 
-6. Execute `docker-compose up -d`
+6. Run `make up-all` to start all services.
 
 ### Manual Installation
 
-6. Export the environment variables: `export $(grep -v '^#' .env | xargs)`
-7. Run `mysql/init/0_init_users.sql` using your SQL client.
-8. Run the service: `python -m <module-path>`
+6. Add the following to `.env`:
+```sh
+MYSQL_HOST=localhost
+MYSQL_PORT=3306
+MYSQL_USER=faz
+MYSQL_PASSWORD=password
+MYSQL_FAZCORD_DATABASE=faz-cord
+MYSQL_FAZDB_DATABASE=faz-db
+```
+7. Export the environment variables: `export $(grep -v '^#' .env | xargs)`
+8. Run `mysql/init/0_init_users.sql` using your SQL client.
+9. Run the service: `python -m <module-path>`
 
 > [!NOTE]
 > - Make sure you have MariaDB/MySQL and atleast Python 3.12 installed.
-> - You have to do step 3 and 6 every time you open a new terminal.
-> - Argument for step 7 is the path to the __main__.py file of the service you want to run. e.g., `fazbeat.api_collect`.
+> - You have to do step 3 and 7 every time you open a new terminal.
+> - Argument for step 8 is the path to the __main__.py file of the service you want to run. e.g., `fazbeat.api_collect`.
 > - Currently database version checking is not supported on manual installation.
 
 ## Changing Database Versions
