@@ -4,6 +4,9 @@
 # Variables #
 # --------- #
 
+SCRIPTS_PATH="scripts"
+PROJECT_PATH="$(dirname "$SCRIPTS_PATH")"
+
 COMPOSE="docker-compose --file $PROJECT_PATH/docker-compose.yml"
 
 export COMPOSE

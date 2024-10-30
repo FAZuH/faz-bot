@@ -1,14 +1,12 @@
 #!/bin/bash
 
-SCRIPTS_PATH="$(dirname "$(realpath "$0")")"
+SCRIPTS_PATH="scripts"
 PROJECT_PATH="$(dirname "$SCRIPTS_PATH")"
 
 source "$SCRIPTS_PATH/_common.sh"
 loadenv
 
 # --------------------------------------------------
-
-COMPOSE="$PROJECT_PATH/docker-compose.yml"
 
 set -e
 

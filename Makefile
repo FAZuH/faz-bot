@@ -30,10 +30,10 @@ help:
 	@echo "  make rmpycache                             	# Remove __pycache__ directories"
 	@echo "  make countlines                            	# Count sum of lines of all python files"
 	@echo "  make clean                                 	# Lint, format, test, and rmpycache"
-	@echo "  make backup-fazcord                          	# Backup faz-cord database"
+	@echo "  make backup-faz-cord                          	# Backup faz-cord database"
 	@echo "  make backup-faz-wynn                          	# Backup faz-wynn database"
-	@echo "  make load-backup-fazcord path=<path>           # Load faz-cord database from a .sql backup file"
-	@echo "  make load-backup-faz-wynn path=<path>             # Load faz-wynn database from a .sql backup file"
+	@echo "  make load-backup-faz-cord path=<path>          # Load faz-cord database from a .sql backup file"
+	@echo "  make load-backup-faz-wynn path=<path>          # Load faz-wynn database from a .sql backup file"
 
 
 init:
@@ -107,13 +107,13 @@ clean:
 	make rmpycache
 
 
-backup-fazcord:
+backup-faz-cord:
 	$(BACKUPSCRIPT) backup MYSQL_FAZCORD_DATABASE
 
 backup-faz-wynn:
 	$(BACKUPSCRIPT) backup MYSQL_FAZWYNN_DATABASE
 
-load-backup-fazcord:
+load-backup-faz-cord:
 	$(BACKUPSCRIPT) load-backup MYSQL_FAZCORD_DATABASE $(path)
 
 load-backup-faz-wynn:
