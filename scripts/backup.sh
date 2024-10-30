@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SCRIPTS_PATH="scripts"
+SCRIPTS_PATH="$(dirname "$(realpath "$0")")"
 PROJECT_PATH="$(dirname "$SCRIPTS_PATH")"
 
 source "$SCRIPTS_PATH/_common.sh"
@@ -14,8 +14,8 @@ BACKUP_FP="$3"
 
 _export_backup() {
     mkdir -p "$PROJECT_PATH/mysql/backup"
-    $COMPOSE \
-        exec mysql sh -c "mariadb-dump --single-transaction -u root -p$MYSQL_ROOT_PASSWORD $DB_NAME" \
+    docker-compose \
+        exec mysql sh -c "mariadb-dump --single-transaction -u $MYSQL_USER -p$MYSQL_PASSWORD $DB_NAME" \
         > "$PROJECT_PATH/mysql/backup/${DB_NAME}_$(date +%s).sql"
 }
 
@@ -24,8 +24,8 @@ _import_backup() {
         echo "Error: Backup file path is required"
         return 1
     fi
-    $COMPOSE \
-        exec -T mysql sh -c "mariadb -u root -p$MYSQL_ROOT_PASSWORD $DB_NAME" \
+    docker-compose \
+        exec -T mysql sh -c "mariadb -u $MYSQL_USER -p$MYSQL_PASSWORD $DB_NAME" \
         < "$BACKUP_FP"
 }
 
