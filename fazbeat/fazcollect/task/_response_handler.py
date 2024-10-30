@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Iterable
 
-from fazbeat.api_collect.task.request_queue import RequestQueue
+from fazbeat.fazcollect.task.request_queue import RequestQueue
 from fazutil.api.wynn.response.guild_response import GuildResponse
 from fazutil.api.wynn.response.online_players_response import OnlinePlayersResponse
 from fazutil.api.wynn.response.player_response import PlayerResponse

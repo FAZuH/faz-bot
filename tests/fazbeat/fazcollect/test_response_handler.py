@@ -2,8 +2,8 @@ from datetime import datetime
 from unittest import TestCase
 from unittest.mock import MagicMock
 
-from fazbeat.api_collect.task._response_handler import ResponseHandler
-from fazbeat.api_collect.task.request_queue import RequestQueue
+from fazbeat.fazcollect.task._response_handler import ResponseHandler
+from fazbeat.fazcollect.task.request_queue import RequestQueue
 from fazutil.api.wynn.wynn_api import WynnApi
 
 

@@ -3,7 +3,7 @@ services:
     image: ghcr.io/fazuh/fazcord:latest
     container_name: fazcord
     build:
-      dockerfile: docker/Dockerfile.bot
+      dockerfile: docker/Dockerfile.fazcord
     restart: unless-stopped
     environment:
       MYSQL_HOST: mysql # Override .env
@@ -15,11 +15,11 @@ services:
     volumes:
       - ./logs:/app/logs
 
-  api_collect:
-    image: ghcr.io/fazuh/api_collect:latest
-    container_name: api_collect
+  fazcollect:
+    image: ghcr.io/fazuh/fazcollect:latest
+    container_name: fazcollect
     build:
-      dockerfile: docker/Dockerfile.api_collect
+      dockerfile: docker/Dockerfile.fazcollect
     restart: unless-stopped
     environment:
       MYSQL_HOST: mysql # Override .env

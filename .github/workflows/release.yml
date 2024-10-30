@@ -90,7 +90,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./docker/Dockerfile.bot
+          file: ./docker/Dockerfile.fazcord
           platforms: linux/amd64
           push: true
           tags: |
@@ -101,8 +101,8 @@ jobs:
             commit=${{ github.sha }}
             build_date=${{ env.date }}
 
-  build-api_collect:
-    name: Build api_collect Docker Image
+  build-fazcollect:
+    name: Build fazcollect Docker Image
     needs: [changelog] # Build needs the new version number
     runs-on: ubuntu-latest
     steps:
@@ -132,16 +132,16 @@ jobs:
         with:
           name: version
 
-      - name: Build and Push api_collect
+      - name: Build and Push fazcollect
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./docker/Dockerfile.api_collect
+          file: ./docker/Dockerfile.fazcollect
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/fazuh/api_collect:latest
-            ghcr.io/fazuh/api_collect:${{ needs.changelog.outputs.tag }}
+            ghcr.io/fazuh/fazcollect:latest
+            ghcr.io/fazuh/fazcollect:${{ needs.changelog.outputs.tag }}
           labels: |
             version=${{ needs.changelog.outputs.tag }}
             commit=${{ github.sha }}
@@ -149,7 +149,7 @@ jobs:
 
   release-github:
     name: Release to GitHub
-    needs: [build-fazcord, build-api_collect, changelog]
+    needs: [build-fazcord, build-fazcollect, changelog]
     if: ${{ needs.changelog.outputs.skipped != 'true' }}
     runs-on: ubuntu-latest
     steps:
@@ -186,7 +186,7 @@ jobs:
 
   deploy:
     name: Deploy to Server
-    needs: [build-fazcord, build-api_collect, changelog]
+    needs: [build-fazcord, build-fazcollect, changelog]
     runs-on: ubuntu-latest
     if: ${{ needs.changelog.outputs.skipped != 'true' }}
     steps:

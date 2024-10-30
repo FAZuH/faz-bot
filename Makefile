@@ -12,7 +12,7 @@ PYTHON := python
 
 .DEFAULT_GOAL := help
 
-.PHONY: wait-for-mysql build-all up-all down-all api_collect fazcord mysql pma test lint lint-fix format rmpycache countlines clean backup
+.PHONY: wait-for-mysql build-all up-all down-all fazcollect fazcord mysql pma test lint lint-fix format rmpycache countlines clean backup
 
 help:
 	@echo "Usage:"
@@ -20,7 +20,7 @@ help:
 	@echo "  make build-all                             	# Build all docker services"
 	@echo "  make up-all                                	# Up all docker services"
 	@echo "  make down-all                              	# Down all docker services"
-	@echo "  make api_collect act=[pull|build|up|down|bash] # Manage api_collect service"
+	@echo "  make fazcollect act=[pull|build|up|down|bash]  # Manage fazcollect service"
 	@echo "  make fazcord act=[pull|build|up|down|bash]     # Manage fazcord service"
 	@echo "  make sql act=[pull|build|up|down|bash]         # Manage sql service"
 	@echo "  make pma act=[pull|build|up|down|bash]         # Manage phpmyadmin service"
@@ -54,21 +54,21 @@ wait-for-mysql:
 build-all:
 	make sql act=build
 	make wait-for-mysql
-	make api_collect act=build
+	make fazcollect act=build
 	make fazcord act=build
 
 up-all:
 	make sql act=up
 	make wait-for-mysql
-	make api_collect act=up
+	make fazcollect act=up
 	make fazcord act=up
 
 down-all:
 	docker-compose down
 
 
-api_collect:
-	$(SERVICESCRIPT) api_collect $(act)
+fazcollect:
+	$(SERVICESCRIPT) fazcollect $(act)
 
 fazcord:
 	$(SERVICESCRIPT) fazcord $(act)

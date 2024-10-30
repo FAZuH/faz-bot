@@ -21,7 +21,7 @@ class Properties:
     MYSQL_PASSWORD: str
     FAZDB_DB_NAME: str
     FAZCORD_DB_NAME: str
-    API_COLLECT_MAX_RETRIES: int
+    FAZCOLLECT_MAX_RETRIES: int
     FAZCORD_MAX_RETRIES: int
 
     # # Additional application property classes
@@ -46,13 +46,13 @@ class Properties:
         cls.FAZCORD_DISCORD_STATUS_WEBHOOK = cls._must_get_env(
             "FAZCORD_DISCORD_STATUS_WEBHOOK"
         )
-        cls.API_COLLECT_DISCORD_LOG_WEBHOOK = cls._must_get_env(
-            "API_COLLECT_DISCORD_LOG_WEBHOOK"
+        cls.FAZCOLLECT_DISCORD_LOG_WEBHOOK = cls._must_get_env(
+            "FAZCOLLECT_DISCORD_LOG_WEBHOOK"
         )
-        cls.API_COLLECT_DISCORD_STATUS_WEBHOOK = cls._must_get_env(
-            "API_COLLECT_DISCORD_STATUS_WEBHOOK"
+        cls.FAZCOLLECT_DISCORD_STATUS_WEBHOOK = cls._must_get_env(
+            "FAZCOLLECT_DISCORD_STATUS_WEBHOOK"
         )
-        cls.API_COLLECT_MAX_RETRIES = cls._must_get_env("API_COLLECT_MAX_RETRIES", int)
+        cls.FAZCOLLECT_MAX_RETRIES = cls._must_get_env("FAZCOLLECT_MAX_RETRIES", int)
         cls.FAZCORD_MAX_RETRIES = cls._must_get_env("FAZCORD_MAX_RETRIES", int)
         cls.MYSQL_HOST = cls._must_get_env("MYSQL_HOST")
         cls.MYSQL_PORT = cls._must_get_env("MYSQL_PORT", int)

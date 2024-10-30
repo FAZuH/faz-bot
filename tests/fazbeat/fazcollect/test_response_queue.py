@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock
 
-from fazbeat.api_collect.task.response_queue import ResponseQueue
+from fazbeat.fazcollect.task.response_queue import ResponseQueue
 
 
 class TestResponseList(unittest.TestCase):

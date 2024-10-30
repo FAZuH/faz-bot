@@ -4,11 +4,11 @@ from typing import Any, Callable
 
 from loguru import logger
 
-from fazbeat.api_collect.heartbeat import Heartbeat
+from fazbeat.fazcollect.heartbeat import Heartbeat
 from fazutil.api.wynn.wynn_api import WynnApi
 from fazutil.db.fazdb.fazdb_database import FazdbDatabase
-from fazutil.properties import Properties
 from fazutil.logger_setup import LoggerSetup
+from fazutil.properties import Properties
 from fazutil.retry_handler import RetryHandler
 
 
@@ -18,8 +18,8 @@ class App:
         p = self.properties
         p.setup()
         LoggerSetup.setup(
-            "logs/fazbeat/api_collect",
-            p.API_COLLECT_DISCORD_LOG_WEBHOOK,
+            "logs/fazbeat/fazcollect",
+            p.FAZCOLLECT_DISCORD_LOG_WEBHOOK,
             p.ADMIN_DISCORD_ID,
         )
 
@@ -63,7 +63,7 @@ class App:
         """Registers retry handler to this appp"""
         register_lambda: Callable[[Callable[..., Any]], None] = (
             lambda func: RetryHandler.register(
-                func, self.properties.API_COLLECT_MAX_RETRIES, Exception
+                func, self.properties.FAZCOLLECT_MAX_RETRIES, Exception
             )
         )
 
