@@ -21,8 +21,8 @@ class CommonMigrationTest:
                 "alembic.ini", self.db_name, stdout=self._output_buffer
             )
 
-            self.__drop_all()
-            command.stamp(self.alembic_cfg, self.start_version)
+            command.ensure_version(self.alembic_cfg)
+            command.downgrade(self.alembic_cfg, "base")
 
         def test_upgrade(self):
             # Act
@@ -39,14 +39,14 @@ class CommonMigrationTest:
             command.upgrade(self.alembic_cfg, self.target_version)
 
             # Act
-            command.downgrade(self.alembic_cfg, self.start_version)
+            command.downgrade(self.alembic_cfg, "base")
 
             output = self._output_buffer.getvalue()
             self.assertEqual(output, "")
 
         @override
         def tearDown(self) -> None:
-            command.stamp(self.alembic_cfg, self.start_version)
+            command.downgrade(self.alembic_cfg, "base")
 
         # def _populate_db(self) -> None:
         #     test = CommonFazdbRepositoryTest.Test
@@ -76,13 +76,15 @@ class CommonMigrationTest:
             user = os.getenv("MYSQL_USER", None)
             password = os.getenv("MYSQL_PASSWORD", None)
             host = os.getenv("MYSQL_HOST", None)
-            db_name = os.getenv("MYSQL_FAZCORD_DATABASE", None)
+            db_name = self.db_name
+
+            section = self.alembic_cfg.get_section(self.alembic_cfg.config_ini_section)
+            assert section is not None
+
+            if int(section.get("test_mode", 0)) == 1 and db_name is not None:
+                db_name += "_test"
 
             if None in {user, password, host, db_name}:
-                section = self.alembic_cfg.get_section(
-                    self.alembic_cfg.config_ini_section
-                )
-                assert section is not None
                 return section["sqlalchemy.url"]
 
             return f"mysql+pymysql://{user}:{password}@{host}/{db_name}"
@@ -106,6 +108,7 @@ class CommonMigrationTest:
                     conn.execute(text("SET FOREIGN_KEY_CHECKS=0"))
 
                     # Get the drop statements
+                    print("dropping...")
                     result = conn.execute(
                         text(
                             """

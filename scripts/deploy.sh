@@ -1,13 +1,13 @@
 #!/bin/bash
 
 SCRIPTS_PATH="$(dirname "$(realpath "$0")")"
-PROJECT_PATH=$(dirname "$(dirname "$(realpath "$0")")")
-cd "$PROJECT_PATH" || exit
+PROJECT_PATH="$(dirname "$SCRIPTS_PATH")"
 
-echo "Pulling latest git commit in $PROJECT_PATH..."
-git pull origin main
+source "$SCRIPTS_PATH/_common.sh"
+loadenv
 
-echo "Running update script..."
+# --------------------------------------------------
+
 UPDATE_SCRIPT="$PROJECT_PATH/scripts/update.sh"
 
 $UPDATE_SCRIPT

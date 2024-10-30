@@ -1,21 +1,36 @@
 #!/bin/bash
 
+SCRIPTS_PATH="$(dirname "$(realpath "$0")")"
+PROJECT_PATH="$(dirname "$SCRIPTS_PATH")"
+
+source "$SCRIPTS_PATH/_common.sh"
+loadenv
+
+# --------------------------------------------------
+
+COMPOSE="$PROJECT_PATH/docker-compose.yml"
+
 set -e
 
-SCRIPTS_PATH="$(dirname "$(realpath "$0")")"
-COMPOSE_FILE="$SCRIPTS_PATH/docker-compose.yml"
-COMPOSE_CMD="docker-compose --file $COMPOSE_FILE"
 
-echo "Pulling latest images..."
-$COMPOSE_CMD pull
+main() {
+    cd "$PROJECT_PATH" || exit
 
-echo "Stopping and removing existing containers..."
-$COMPOSE_CMD down
+    git pull origin main
 
-echo "Starting new containers..."
-$COMPOSE_CMD up -d
+    echo "Pulling latest images..."
+    $COMPOSE pull 
 
-echo "Removing old images..."
-docker image prune -f
+    echo "Stopping and removing existing containers..."
+    $COMPOSE down
 
-echo "Update completed successfully."
+    echo "Starting new containers..."
+    $COMPOSE up -d
+
+    echo "Removing old images..."
+    $COMPOSE image prune -f
+
+    echo "Update completed successfully."
+}
+
+main

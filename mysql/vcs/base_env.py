@@ -32,9 +32,13 @@ class BaseEnv(ABC):
         host = os.getenv("MYSQL_HOST", None)
         db_name = os.getenv(self.default_schema_env_name, None)
 
+        section = self.config.get_section(self.config.config_ini_section)
+        assert section is not None
+
+        if int(section.get("test_mode", 0)) == 1 and db_name is not None:
+            db_name += "_test"
+
         if None in {user, password, host, db_name}:
-            section = self.config.get_section(self.config.config_ini_section)
-            assert section is not None
             return section["sqlalchemy.url"]
 
         return f"mysql+pymysql://{user}:{password}@{host}/{db_name}"
