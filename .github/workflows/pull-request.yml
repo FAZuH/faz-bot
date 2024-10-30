@@ -70,4 +70,5 @@ jobs:
           MYSQL_FAZDB_DATABASE: faz-db
         run: |
           cp .env-example .env
+          ./scripts/initdb.sh
           python -m pytest --cache-clear tests/
