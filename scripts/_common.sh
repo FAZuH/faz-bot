@@ -25,7 +25,7 @@ checkenv() {
         "MYSQL_PORT"
         "MYSQL_USER"
         "MYSQL_PASSWORD"
-        "MYSQL_FAZDB_DATABASE"
+        "MYSQL_FAZWYNN_DATABASE"
         "MYSQL_FAZCORD_DATABASE"
     )
 

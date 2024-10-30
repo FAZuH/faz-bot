@@ -12,7 +12,7 @@ PYTHON := python
 
 .DEFAULT_GOAL := help
 
-.PHONY: wait-for-mysql build-all up-all down-all api_collect bot mysql pma test lint lint-fix format rmpycache countlines clean backup
+.PHONY: wait-for-mysql build-all up-all down-all fazcollect fazcord mysql pma test lint lint-fix format rmpycache countlines clean backup
 
 help:
 	@echo "Usage:"
@@ -20,8 +20,8 @@ help:
 	@echo "  make build-all                             	# Build all docker services"
 	@echo "  make up-all                                	# Up all docker services"
 	@echo "  make down-all                              	# Down all docker services"
-	@echo "  make api_collect act=[pull|build|up|down|bash] # Manage api_collect service"
-	@echo "  make bot act=[pull|build|up|down|bash]         # Manage bot service"
+	@echo "  make fazcollect act=[pull|build|up|down|bash]  # Manage fazcollect service"
+	@echo "  make fazcord act=[pull|build|up|down|bash]     # Manage fazcord service"
 	@echo "  make sql act=[pull|build|up|down|bash]         # Manage sql service"
 	@echo "  make pma act=[pull|build|up|down|bash]         # Manage phpmyadmin service"
 	@echo "  make test                                  	# Run python tests"
@@ -31,9 +31,9 @@ help:
 	@echo "  make countlines                            	# Count sum of lines of all python files"
 	@echo "  make clean                                 	# Lint, format, test, and rmpycache"
 	@echo "  make backup-fazcord                          	# Backup faz-cord database"
-	@echo "  make backup-fazdb                          	# Backup faz-db database"
+	@echo "  make backup-faz-wynn                          	# Backup faz-wynn database"
 	@echo "  make load-backup-fazcord path=<path>           # Load faz-cord database from a .sql backup file"
-	@echo "  make load-backup-fazdb path=<path>             # Load faz-db database from a .sql backup file"
+	@echo "  make load-backup-faz-wynn path=<path>             # Load faz-wynn database from a .sql backup file"
 
 
 init:
@@ -54,23 +54,23 @@ wait-for-mysql:
 build-all:
 	make sql act=build
 	make wait-for-mysql
-	make api_collect act=build
-	make bot act=build
+	make fazcollect act=build
+	make fazcord act=build
 
 up-all:
 	make sql act=up
 	make wait-for-mysql
-	make api_collect act=up
-	make bot act=up
+	make fazcollect act=up
+	make fazcord act=up
 
 down-all:
 	docker-compose down
 
 
-api_collect:
-	$(SERVICESCRIPT) api_collect $(act)
+fazcollect:
+	$(SERVICESCRIPT) fazcollect $(act)
 
-bot:
+fazcord:
 	$(SERVICESCRIPT) fazcord $(act)
 
 sql:
@@ -110,14 +110,14 @@ clean:
 backup-fazcord:
 	$(BACKUPSCRIPT) backup MYSQL_FAZCORD_DATABASE
 
-backup-fazdb:
-	$(BACKUPSCRIPT) backup MYSQL_FAZDB_DATABASE
+backup-faz-wynn:
+	$(BACKUPSCRIPT) backup MYSQL_FAZWYNN_DATABASE
 
 load-backup-fazcord:
 	$(BACKUPSCRIPT) load-backup MYSQL_FAZCORD_DATABASE $(path)
 
-load-backup-fazdb:
-	$(BACKUPSCRIPT) load-backup MYSQL_FAZDB_DATABASE $(path)
+load-backup-faz-wynn:
+	$(BACKUPSCRIPT) load-backup MYSQL_FAZWYNN_DATABASE $(path)
 
 
 reset-docker:

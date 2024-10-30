@@ -52,12 +52,12 @@ create_user() {
 }
 
 create_dbs() {
-    create_db "$MYSQL_FAZDB_DATABASE"
+    create_db "$MYSQL_FAZWYNN_DATABASE"
     create_db "$MYSQL_FAZCORD_DATABASE"
 }
 
 grant_privileges() {
-    grant_privilege "$MYSQL_FAZDB_DATABASE"
+    grant_privilege "$MYSQL_FAZWYNN_DATABASE"
     grant_privilege "$MYSQL_FAZCORD_DATABASE"
     run_sql "FLUSH PRIVILEGES;"
 }
@@ -82,7 +82,7 @@ init_db() {
 
 init_dbs() {
     local python_bin="$1"
-    init_db "$python_bin" "faz-db" 
+    init_db "$python_bin" "faz-wynn" 
     init_db "$python_bin" "faz-cord" 
 }
 

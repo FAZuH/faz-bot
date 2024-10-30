@@ -7,7 +7,7 @@ from nextcord import Embed, Interaction
 
 from fazcord.bot.view._base_view import BaseView
 from fazcord.bot.view._custom_embed import CustomEmbed
-from fazcord.wynn.ingredient_util import IngredientUtil
+from fazutil.wynn.ingredient_drop_probability import IngredientDropProbability
 
 if TYPE_CHECKING:
     from fazcord.bot.bot import Bot
@@ -29,7 +29,7 @@ class UtilsIngredientProbabilityView(BaseView):
         self._loot_bonus = loot_bonus
         self._loot_quality = loot_quality
 
-        self._ing_util = IngredientUtil(
+        self._ing_util = IngredientDropProbability(
             self._base_chance, self._loot_quality, self._loot_bonus
         )
         self._embed = CustomEmbed(
@@ -43,7 +43,7 @@ class UtilsIngredientProbabilityView(BaseView):
     async def run(self) -> None:
         await self._interaction.send(embed=self._get_embed(self._ing_util))
 
-    def _get_embed(self, ing_util: IngredientUtil) -> Embed:
+    def _get_embed(self, ing_util: IngredientDropProbability) -> Embed:
         embed = self._embed.get_base()
         embed.description = (
             f"` Drop Chance  :` **{ing_util.base_probability:.2%}**\n"

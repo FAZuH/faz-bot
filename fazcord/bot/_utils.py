@@ -6,8 +6,8 @@ from typing import TYPE_CHECKING, Any, Callable
 import dateparser
 
 from fazcord.bot.errors import InvalidArgumentException, ParseException
-from fazutil.db.fazdb.model.guild_info import GuildInfo
-from fazutil.db.fazdb.model.player_info import PlayerInfo
+from fazutil.db.fazwynn.model.guild_info import GuildInfo
+from fazutil.db.fazwynn.model.player_info import PlayerInfo
 
 if TYPE_CHECKING:
     from nextcord import Guild, Interaction, PartialMessageable, Thread, User
@@ -59,7 +59,7 @@ class Utils:
         )
 
     async def must_get_wynn_guild(self, guild: str) -> GuildInfo:
-        guild_info = await self._bot.fazdb_db.guild_info.get_guild(guild)
+        guild_info = await self._bot.fazwynn_db.guild_info.get_guild(guild)
         if not guild_info:
             raise InvalidArgumentException(
                 f"Guild not found (reason: Can't find guild with name or uuid {guild})"
@@ -67,7 +67,7 @@ class Utils:
         return guild_info
 
     async def must_get_wynn_player(self, player: str) -> PlayerInfo:
-        player_info = await self._bot.fazdb_db.player_info.get_player(player)
+        player_info = await self._bot.fazwynn_db.player_info.get_player(player)
         if not player_info:
             raise InvalidArgumentException(
                 f"Player not found (reason: Can't find player with username or uuid {player})"

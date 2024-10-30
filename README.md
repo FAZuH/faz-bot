@@ -15,8 +15,8 @@ Some useful shortcuts for development are written in `Makefile`.
 
 For debugging:
 
-- `make bot [pull|build|up|down|bash]` Manage container related to fazcord service.
-- `make api_collect [pull|build|up|down|bash]` Manage container related to api_collect service.
+- `make fazcord [pull|build|up|down|bash]` Manage container related to fazcord service.
+- `make fazcollect [pull|build|up|down|bash]` Manage container related to fazcollect service.
 - `make sql [pull|build|up|down|bash]` Manage container related to mysql service.
 
 Actions:
@@ -78,7 +78,7 @@ After installing, you can just do step 5 to start all services.
 After running all the above, you just need to do step 4, 6 and 7 to start the service.
 
 > [!NOTE]
-> - Argument for step 7 is the module path to the __main__.py file of the service you want to run. e.g., `fazbeat.api_collect`
+> - Argument for step 7 is the module path to the __main__.py file of the service you want to run. e.g., `fazbeat.fazcollect`
 > - Currently database version checking is not supported on manual installation. You just have to read the error.
 
 ## Changing Database Versions
