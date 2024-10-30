@@ -8,8 +8,6 @@ loadenv
 
 # --------------------------------------------------
 
-COMPOSE="$PROJECT_PATH/docker-compose.yml"
-
 SERVICE=$1
 ACTION=$2
 
