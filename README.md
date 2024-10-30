@@ -16,7 +16,7 @@ Some useful shortcuts for development are written in `Makefile`.
 For debugging:
 
 - `make bot [pull|build|up|down|bash]` Manage container related to fazcord service.
-- `make api-collect [pull|build|up|down|bash]` Manage container related to api_collect service.
+- `make api_collect [pull|build|up|down|bash]` Manage container related to api_collect service.
 - `make sql [pull|build|up|down|bash]` Manage container related to mysql service.
 
 Actions:
@@ -64,20 +64,18 @@ cd faz-bot
 
 ### Docker Installation
 
-4. Run `make sql act=up` to pull and start a database client.
-5. Run `make initdb` to initialize the database.
-6. Run `make up-all` to start all services.
+4. Run `make sql act=up wait-for-mysql initdb up-all` to pull, initialize, and start the service in one go.
 
 After installing, you can just do step 5 to start all services.
 
 ### Manual Installation
 
 4. Export the environment variables: `source .env`
-5. Run `mysql/init/0_init_users.sql` using your SQL client as root.
 5. Run `make initdb` to initialize the database.
+6. Run `source .venv/bin/activate` to activate the virtual environment.
 7. Run the service: `python -m <module-path>`
 
-After installing, do step and `source .venv/bin/activate`
+After running all the above, you just need to do step 4, 6 and 7 to start the service.
 
 > [!NOTE]
 > - Argument for step 7 is the module path to the __main__.py file of the service you want to run. e.g., `fazbeat.api_collect`

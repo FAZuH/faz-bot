@@ -12,7 +12,7 @@ PYTHON := python
 
 .DEFAULT_GOAL := help
 
-.PHONY: wait-for-mysql build-all up-all down-all api-collect bot mysql pma test lint lint-fix format rmpycache countlines clean backup
+.PHONY: wait-for-mysql build-all up-all down-all api_collect bot mysql pma test lint lint-fix format rmpycache countlines clean backup
 
 help:
 	@echo "Usage:"
@@ -20,7 +20,7 @@ help:
 	@echo "  make build-all                             	# Build all docker services"
 	@echo "  make up-all                                	# Up all docker services"
 	@echo "  make down-all                              	# Down all docker services"
-	@echo "  make api-collect act=[pull|build|up|down|bash] # Manage api-collect service"
+	@echo "  make api_collect act=[pull|build|up|down|bash] # Manage api_collect service"
 	@echo "  make bot act=[pull|build|up|down|bash]         # Manage bot service"
 	@echo "  make sql act=[pull|build|up|down|bash]         # Manage sql service"
 	@echo "  make pma act=[pull|build|up|down|bash]         # Manage phpmyadmin service"
@@ -54,20 +54,20 @@ wait-for-mysql:
 build-all:
 	make sql act=build
 	make wait-for-mysql
-	make api-collect act=build
+	make api_collect act=build
 	make bot act=build
 
 up-all:
 	make sql act=up
 	make wait-for-mysql
-	make api-collect act=up
+	make api_collect act=up
 	make bot act=up
 
 down-all:
 	docker-compose down
 
 
-api-collect:
+api_collect:
 	$(SERVICESCRIPT) api_collect $(act)
 
 bot:
