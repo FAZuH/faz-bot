@@ -1,12 +1,22 @@
+ifneq (,$(wildcard ./.env))
+    include .env
+    export
+endif
+
 DOCKER_DIR := docker
 SCRIPTS_DIR := scripts
-MAKESCRIPT := $(SCRIPTS_DIR)/service.sh
+SERVICESCRIPT := $(SCRIPTS_DIR)/service.sh
+BACKUPSCRIPT := $(SCRIPTS_DIR)/backup.sh
+
+PYTHON := python
+
 .DEFAULT_GOAL := help
 
 .PHONY: wait-for-mysql build-all up-all down-all api-collect bot mysql pma test lint lint-fix format rmpycache countlines clean backup
 
 help:
 	@echo "Usage:"
+	@echo "  make init                                  	# Initialize project"
 	@echo "  make build-all                             	# Build all docker services"
 	@echo "  make up-all                                	# Up all docker services"
 	@echo "  make down-all                              	# Down all docker services"
@@ -15,30 +25,36 @@ help:
 	@echo "  make sql act=[pull|build|up|down|bash]         # Manage sql service"
 	@echo "  make pma act=[pull|build|up|down|bash]         # Manage phpmyadmin service"
 	@echo "  make test                                  	# Run python tests"
-	@echo "  make lint                                  	# Run python linting with Ruff"
 	@echo "  make lint-fix                              	# Run python linting with Ruff with --fix on"
 	@echo "  make format                                	# Run python formatting with Black"
 	@echo "  make rmpycache                             	# Remove __pycache__ directories"
 	@echo "  make countlines                            	# Count sum of lines of all python files"
 	@echo "  make clean                                 	# Lint, format, test, and rmpycache"
-	@echo "  make backup                                 	# Backup faz-cord and faz-db databases"
-	@echo "  make load-backup-fazdb path=<path>             # Load faz-db database from a .sql backup file"
+	@echo "  make backup-fazcord                          	# Backup faz-cord database"
+	@echo "  make backup-fazdb                          	# Backup faz-db database"
 	@echo "  make load-backup-fazcord path=<path>           # Load faz-cord database from a .sql backup file"
+	@echo "  make load-backup-fazdb path=<path>             # Load faz-db database from a .sql backup file"
 
 
 init:
 	@echo "Initializing..."
 	cp .env.example .env
-	python -m venv .venv
+	$(PYTHON) -m venv .venv
 	source .venv/bin/activate
-	pip install -r requirements-dev.txt
-	python -m alembic -n api_collect ensure_version
-	python -m alembic -n fazcord ensure_version
+	pip install alembic
+	@echo "Done!"
+
+initdb:
+	@echo "Initializing database..."
+	$(PYTHON) -m alembic -n faz-cord ensure_version
+	$(PYTHON) -m alembic -n faz-db ensure_version
+	$(PYTHON) -m alembic -n faz-cord upgrade head
+	$(PYTHON) -m alembic -n faz-db upgrade head
 	@echo "Done!"
 
 wait-for-mysql:
 	@echo "Waiting for MySQL to be ready..."
-	./$(DOCKER_DIR)/wait-for-it.sh -t 5 mysql:3306 -- echo "MySQL is ready!"
+	$(DOCKER_DIR)/wait-for-it.sh -t 5 mysql:3306 -- echo "MySQL is ready!"
 
 build-all:
 	make sql act=build
@@ -57,32 +73,29 @@ down-all:
 
 
 api-collect:
-	$(MAKESCRIPT) api_collect $(act)
+	$(SERVICESCRIPT) api_collect $(act)
 
 bot:
-	$(MAKESCRIPT) fazcord $(act)
+	$(SERVICESCRIPT) fazcord $(act)
 
 sql:
-	$(MAKESCRIPT) mysql $(act)
+	$(SERVICESCRIPT) mysql $(act)
 
 # test-sql:
-# 	$(MAKESCRIPT) test-sql $(act)
+# 	$(SERVICESCRIPT) test-sql $(act)
 
 pma:
-	$(MAKESCRIPT) phpmyadmin $(act)
+	$(SERVICESCRIPT) phpmyadmin $(act)
 
 
 test:
-	python -m pytest --disable-warnings tests/
-
-lint:
-	python -m ruff check .
+	$(PYTHON) -m pytest --disable-warnings tests/
 
 lint-fix:
-	python -m ruff check --fix .
+	$(PYTHON) -m ruff check --fix .
 
 format:
-	python -m black .
+	$(PYTHON) -m black .
 
 
 rmpycache:
@@ -93,30 +106,23 @@ countlines:
 
 
 clean:
-	@make lint-fix
-	@make format
-	@make test
-	@make rmpycache
+	make lint-fix
+	make format
+	make test
+	make rmpycache
 
 
-backup:
-	mkdir -p mysql/backup
-	docker-compose \
-		exec mysql sh -c 'mariadb-dump -u root -p$$MYSQL_ROOT_PASSWORD faz-cord' \
-		> mysql/backup/faz-cord_`date +%s`.sql
-	docker-compose \
-		exec mysql sh -c 'mariadb-dump -u root -p$$MYSQL_ROOT_PASSWORD faz-db' \
-		> mysql/backup/faz-db_`date +%s`.sql
+backup-fazcord:
+	$(BACKUPSCRIPT) backup MYSQL_FAZCORD_DATABASE
+
+backup-fazdb:
+	$(BACKUPSCRIPT) backup MYSQL_FAZDB_DATABASE
 
 load-backup-fazcord:
-	docker-compose \
-		exec -T mysql sh -c 'mariadb -u root -p"$$MYSQL_ROOT_PASSWORD" faz-cord' \
-		< $(path)
+	$(BACKUPSCRIPT) load-backup MYSQL_FAZCORD_DATABASE $(path)
 
 load-backup-fazdb:
-	docker-compose \
-		exec -T mysql sh -c 'mariadb -u root -p"$$MYSQL_ROOT_PASSWORD" faz-db' \
-		< $(path)
+	$(BACKUPSCRIPT) load-backup MYSQL_FAZDB_DATABASE $(path)
 
 
 reset-docker:
