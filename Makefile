@@ -38,18 +38,13 @@ help:
 
 init:
 	@echo "Initializing..."
-	cp .env.example .env
-	$(PYTHON) -m venv .venv
-	source .venv/bin/activate
-	pip install alembic
+	cp .env-example .env
+	$(PYTHON) -m venv .venv && source .venv/bin/activate && pip install alembic pymysql sortedcontainers
 	@echo "Done!"
 
 initdb:
 	@echo "Initializing database..."
-	$(PYTHON) -m alembic -n faz-cord ensure_version
-	$(PYTHON) -m alembic -n faz-db ensure_version
-	$(PYTHON) -m alembic -n faz-cord upgrade head
-	$(PYTHON) -m alembic -n faz-db upgrade head
+	source .venv/bin/activate && ./scripts/initdb.sh $(PYTHON)
 	@echo "Done!"
 
 wait-for-mysql:
