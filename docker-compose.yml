@@ -48,8 +48,6 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_FAZCORD_DATABASE: fazcord
-      MYSQL_FAZDB_DATABASE: fazdb
     expose:
       - 3306
     ports:
