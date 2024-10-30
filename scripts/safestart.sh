@@ -1,6 +1,12 @@
 #!/bin/bash
 
 SCRIPTS_PATH="$(dirname "$(realpath "$0")")"
+PROJECT_PATH="$(dirname "$SCRIPTS_PATH")"
+
+source "$SCRIPTS_PATH/_common.sh"
+loadenv
+
+# --------------------------------------------------
 
 PYTHON_MODULE=$1
 DB_VERSION_RANGES=$2  # Space separated list of database versions ranges

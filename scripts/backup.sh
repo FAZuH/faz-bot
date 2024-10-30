@@ -3,6 +3,11 @@
 SCRIPTS_PATH="$(dirname "$(realpath "$0")")"
 PROJECT_PATH="$(dirname "$SCRIPTS_PATH")"
 
+source "$SCRIPTS_PATH/_common.sh"
+loadenv
+
+# --------------------------------------------------
+
 COMMAND="$1"
 DB_NAME="${!2}"  # Indirect expansion of the variable name passed as $2
 BACKUP_FP="$3"

@@ -1,10 +1,17 @@
 #!/bin/bash
 
+SCRIPTS_PATH="$(dirname "$(realpath "$0")")"
+PROJECT_PATH="$(dirname "$SCRIPTS_PATH")"
+
+source "$SCRIPTS_PATH/_common.sh"
+loadenv
+
+# --------------------------------------------------
+
 DB_VERSION_RANGES=$1  # Space separated list of database versions ranges
 DB_NAMES=$2           # Space separated list of database names
 WEBHOOK_VAR_NAMES=$3  # Space separated list of webhook environment variable names
 
-SCRIPTS_PATH="$(dirname "$(realpath "$0")")"
 VERSION_CHECK_FILE="$SCRIPTS_PATH/_version_check.py"
 
 # Convert space-separated strings into arrays

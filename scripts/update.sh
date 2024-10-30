@@ -3,6 +3,11 @@
 SCRIPTS_PATH="$(dirname "$(realpath "$0")")"
 PROJECT_PATH="$(dirname "$SCRIPTS_PATH")"
 
+source "$SCRIPTS_PATH/_common.sh"
+loadenv
+
+# --------------------------------------------------
+
 COMPOSE="$PROJECT_PATH/docker-compose.yml"
 
 set -e
