@@ -6,12 +6,7 @@ services:
       dockerfile: docker/Dockerfile.bot
     restart: unless-stopped
     environment:
-      MYSQL_HOST: mysql
-      MYSQL_PORT: 3306
-      MYSQL_USER: faz
-      MYSQL_PASSWORD: password
-      MYSQL_FAZCORD_DATABASE: faz-cord
-      MYSQL_FAZDB_DATABASE: faz-db
+      MYSQL_HOST: mysql # Override .env
     env_file: .env
     depends_on:
       - mysql
@@ -27,11 +22,7 @@ services:
       dockerfile: docker/Dockerfile.api_collect
     restart: unless-stopped
     environment:
-      MYSQL_HOST: mysql
-      MYSQL_PORT: 3306
-      MYSQL_USER: faz
-      MYSQL_PASSWORD: password
-      MYSQL_FAZDB_DATABASE: faz-db
+      MYSQL_HOST: mysql # Override .env
     env_file: .env
     depends_on:
       - mysql
