@@ -196,7 +196,7 @@ class WynnTrackCog(CogBase):
 
             if type == "GUILD":
                 assert value
-                guild = await self._bot.fazdb_db.guild_info.get_guild(value)
+                guild = await self._bot.fazwynn_db.guild_info.get_guild(value)
                 if not guild:
                     raise InvalidArgumentException(
                         f"Guild {value} does not exist in faz-bot's database"
@@ -205,7 +205,7 @@ class WynnTrackCog(CogBase):
 
             elif type == "ONLINE":
                 assert value
-                player = await self._bot.fazdb_db.player_info.get_player(value)
+                player = await self._bot.fazwynn_db.player_info.get_player(value)
                 if not player:
                     raise InvalidArgumentException(
                         f"Player {value} does not exist in faz-bot's database"

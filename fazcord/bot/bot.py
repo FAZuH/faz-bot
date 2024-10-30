@@ -23,7 +23,7 @@ class Bot:
         self._app = app
 
         self._fazcord_db = app.create_fazcord_db()
-        self._fazdb_db = app.create_fazdb_db()
+        self._fazwynn_db = app.create_fazwynn_db()
 
         # set intents
         intents = Intents.default()
@@ -61,7 +61,7 @@ class Bot:
     async def _async_teardown(self) -> None:
         await self.client.close()
         await self.fazcord_db.teardown()
-        await self.fazdb_db.teardown()
+        await self.fazwynn_db.teardown()
 
     async def on_ready_setup(self) -> None:
         """Setup after the bot is ready."""
@@ -75,8 +75,8 @@ class Bot:
         return self._fazcord_db
 
     @property
-    def fazdb_db(self):
-        return self._fazdb_db
+    def fazwynn_db(self):
+        return self._fazwynn_db
 
     @property
     def cogs(self) -> CogCore:

@@ -15,7 +15,7 @@ BACKUP_FP="$3"
 _export_backup() {
     mkdir -p "$PROJECT_PATH/mysql/backup"
     docker-compose \
-        exec mysql sh -c "mariadb-dump -u root -p$MYSQL_ROOT_PASSWORD $DB_NAME" \
+        exec mysql sh -c "mariadb-dump --single-transaction -u root -p$MYSQL_ROOT_PASSWORD $DB_NAME" \
         > "$PROJECT_PATH/mysql/backup/${DB_NAME}_$(date +%s).sql"
 }
 

@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from nextcord import Interaction
 
     from fazcord.bot.bot import Bot
-    from fazutil.db.fazdb.model.worlds import Worlds
+    from fazutil.db.fazwynn.model.worlds import Worlds
 
 
 class StatWorldlistView(BasePaginationView):
@@ -31,7 +31,7 @@ class StatWorldlistView(BasePaginationView):
 
     @override
     async def run(self):
-        items = await self._bot.fazdb_db.worlds.get_worlds(self._sort_by)
+        items = await self._bot.fazwynn_db.worlds.get_worlds(self._sort_by)
         self._embed: PaginationEmbed[Worlds] = PaginationEmbed(
             self._interaction, items, title="World List", color=Color.dark_teal()
         )

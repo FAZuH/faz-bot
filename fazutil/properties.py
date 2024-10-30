@@ -19,7 +19,7 @@ class Properties:
     MYSQL_PORT: int
     MYSQL_USERNAME: str
     MYSQL_PASSWORD: str
-    FAZDB_DB_NAME: str
+    FAZWYNN_DB_NAME: str
     FAZCORD_DB_NAME: str
     FAZCOLLECT_MAX_RETRIES: int
     FAZCORD_MAX_RETRIES: int
@@ -59,7 +59,7 @@ class Properties:
         cls.MYSQL_USERNAME = cls._must_get_env("MYSQL_USER")
         cls.MYSQL_PASSWORD = cls._must_get_env("MYSQL_PASSWORD")
         cls.FAZCORD_DB_NAME = cls._must_get_env("MYSQL_FAZCORD_DATABASE")
-        cls.FAZDB_DB_NAME = cls._must_get_env("MYSQL_FAZDB_DATABASE")
+        cls.FAZWYNN_DB_NAME = cls._must_get_env("MYSQL_FAZWYNN_DATABASE")
 
     @staticmethod
     def _must_get_env[T](key: str, type_strategy: Callable[[str], T] = str) -> T:

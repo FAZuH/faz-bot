@@ -3,16 +3,16 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from fazutil.db.fazdb.model.character_history import CharacterHistory
-from fazutil.db.fazdb.model.character_info import CharacterInfo
-from fazutil.db.fazdb.model.guild_history import GuildHistory
-from fazutil.db.fazdb.model.guild_info import GuildInfo
-from fazutil.db.fazdb.model.guild_member_history import GuildMemberHistory
-from fazutil.db.fazdb.model.online_players import OnlinePlayers
-from fazutil.db.fazdb.model.player_activity_history import PlayerActivityHistory
-from fazutil.db.fazdb.model.player_history import PlayerHistory
-from fazutil.db.fazdb.model.player_info import PlayerInfo
-from fazutil.db.fazdb.model.worlds import Worlds
+from fazutil.db.fazwynn.model.character_history import CharacterHistory
+from fazutil.db.fazwynn.model.character_info import CharacterInfo
+from fazutil.db.fazwynn.model.guild_history import GuildHistory
+from fazutil.db.fazwynn.model.guild_info import GuildInfo
+from fazutil.db.fazwynn.model.guild_member_history import GuildMemberHistory
+from fazutil.db.fazwynn.model.online_players import OnlinePlayers
+from fazutil.db.fazwynn.model.player_activity_history import PlayerActivityHistory
+from fazutil.db.fazwynn.model.player_history import PlayerHistory
+from fazutil.db.fazwynn.model.player_info import PlayerInfo
+from fazutil.db.fazwynn.model.worlds import Worlds
 
 if TYPE_CHECKING:
     from fazutil.api.wynn.response.guild_response import GuildResponse

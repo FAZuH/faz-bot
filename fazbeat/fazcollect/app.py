@@ -6,7 +6,7 @@ from loguru import logger
 
 from fazbeat.fazcollect.heartbeat import Heartbeat
 from fazutil.api.wynn.wynn_api import WynnApi
-from fazutil.db.fazdb.fazdb_database import FazdbDatabase
+from fazutil.db.fazwynn.fazwynn_database import FazwynnDatabase
 from fazutil.logger_setup import LoggerSetup
 from fazutil.properties import Properties
 from fazutil.retry_handler import RetryHandler
@@ -24,12 +24,12 @@ class App:
         )
 
         self._api = WynnApi()
-        self._db = FazdbDatabase(
+        self._db = FazwynnDatabase(
             p.MYSQL_USERNAME,
             p.MYSQL_PASSWORD,
             p.MYSQL_HOST,
             p.MYSQL_PORT,
-            p.FAZDB_DB_NAME,
+            p.FAZWYNN_DB_NAME,
         )
         self._heartbeat = Heartbeat(self.api, self.db)
 
@@ -52,7 +52,7 @@ class App:
         return self._properties
 
     @property
-    def db(self) -> FazdbDatabase:
+    def db(self) -> FazwynnDatabase:
         return self._db
 
     @property

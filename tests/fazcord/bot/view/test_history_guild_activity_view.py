@@ -24,7 +24,7 @@ class TestHistoryGuildActivityView(IsolatedAsyncioTestCase):
         mock_guild_info.awaitable_attrs.members = self._mock_awaitable_attr()
 
         mock_repo = (
-            mock_bot.fazdb_db.player_activity_history.get_activities_between_period
+            mock_bot.fazwynn_db.player_activity_history.get_activities_between_period
         ) = AsyncMock()
         mock_repo.side_effect = self._get_mock_player_activity()
 

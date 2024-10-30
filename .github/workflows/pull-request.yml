@@ -32,7 +32,7 @@ jobs:
           -e MYSQL_USER=faz \
           -e MYSQL_PASSWORD=password \
           -e MYSQL_FAZCORD_DATABASE=faz-cord_test \
-          -e MYSQL_FAZDB_DATABASE=faz-db_test \
+          -e MYSQL_FAZWYNN_DATABASE=faz-wynn_test \
           -v ${GITHUB_WORKSPACE}/mysql/init:/docker-entrypoint-initdb.d \
           -d -p "3306:3306" mariadb:11.4.2
 
@@ -67,7 +67,7 @@ jobs:
           MYSQL_USER: faz
           MYSQL_PASSWORD: password
           MYSQL_FAZCORD_DATABASE: faz-cord
-          MYSQL_FAZDB_DATABASE: faz-db
+          MYSQL_FAZWYNN_DATABASE: faz-wynn
         run: |
           cp .env-example .env
           ./scripts/initdb.sh

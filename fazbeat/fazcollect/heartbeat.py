@@ -10,12 +10,12 @@ from fazutil.heartbeat.base_heartbeat import BaseHeartbeat
 
 if TYPE_CHECKING:
     from fazutil.api.wynn.wynn_api import WynnApi
-    from fazutil.db.fazdb.fazdb_database import FazdbDatabase
+    from fazutil.db.fazwynn.fazwynn_database import FazwynnDatabase
 
 
 class Heartbeat(BaseHeartbeat):
-    def __init__(self, api: WynnApi, db: FazdbDatabase) -> None:
-        super().__init__("heartbeat_fazdb")
+    def __init__(self, api: WynnApi, db: FazwynnDatabase) -> None:
+        super().__init__("heartbeat_fazcollect")
 
         request_queue = RequestQueue()
         response_queue = ResponseQueue()

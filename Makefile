@@ -31,9 +31,9 @@ help:
 	@echo "  make countlines                            	# Count sum of lines of all python files"
 	@echo "  make clean                                 	# Lint, format, test, and rmpycache"
 	@echo "  make backup-fazcord                          	# Backup faz-cord database"
-	@echo "  make backup-fazdb                          	# Backup faz-db database"
+	@echo "  make backup-faz-wynn                          	# Backup faz-wynn database"
 	@echo "  make load-backup-fazcord path=<path>           # Load faz-cord database from a .sql backup file"
-	@echo "  make load-backup-fazdb path=<path>             # Load faz-db database from a .sql backup file"
+	@echo "  make load-backup-faz-wynn path=<path>             # Load faz-wynn database from a .sql backup file"
 
 
 init:
@@ -110,14 +110,14 @@ clean:
 backup-fazcord:
 	$(BACKUPSCRIPT) backup MYSQL_FAZCORD_DATABASE
 
-backup-fazdb:
-	$(BACKUPSCRIPT) backup MYSQL_FAZDB_DATABASE
+backup-faz-wynn:
+	$(BACKUPSCRIPT) backup MYSQL_FAZWYNN_DATABASE
 
 load-backup-fazcord:
 	$(BACKUPSCRIPT) load-backup MYSQL_FAZCORD_DATABASE $(path)
 
-load-backup-fazdb:
-	$(BACKUPSCRIPT) load-backup MYSQL_FAZDB_DATABASE $(path)
+load-backup-faz-wynn:
+	$(BACKUPSCRIPT) load-backup MYSQL_FAZWYNN_DATABASE $(path)
 
 
 reset-docker:

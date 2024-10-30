@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
     from fazcord.bot.bot import Bot
     from fazutil.db.fazcord.fazcord_database import FazcordDatabase
-    from fazutil.db.fazdb.fazdb_database import FazdbDatabase
+    from fazutil.db.fazwynn.fazwynn_database import FazwynnDatabase
 
 
 class CogBase(commands.Cog):
@@ -51,10 +51,10 @@ class CogBase(commands.Cog):
             yield db, session
 
     @asynccontextmanager
-    async def _enter_fazdb_session(
+    async def _enter_fazwynn_session(
         self,
-    ) -> AsyncGenerator[tuple[FazdbDatabase, AsyncSession], None]:
-        db = self._bot.fazdb_db
+    ) -> AsyncGenerator[tuple[FazwynnDatabase, AsyncSession], None]:
+        db = self._bot.fazwynn_db
         async with db.enter_async_session() as session:
             yield db, session
 

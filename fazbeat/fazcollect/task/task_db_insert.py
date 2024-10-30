@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from fazbeat.fazcollect.task.request_queue import RequestQueue
     from fazbeat.fazcollect.task.response_queue import ResponseQueue
     from fazutil.api.wynn.wynn_api import WynnApi
-    from fazutil.db.fazdb.fazdb_database import FazdbDatabase
+    from fazutil.db.fazwynn.fazwynn_database import FazwynnDatabase
 
 
 class TaskDbInsert(ITask):
@@ -26,7 +26,7 @@ class TaskDbInsert(ITask):
     def __init__(
         self,
         api: WynnApi,
-        db: FazdbDatabase,
+        db: FazwynnDatabase,
         request_list: RequestQueue,
         response_list: ResponseQueue,
     ) -> None:
@@ -41,6 +41,7 @@ class TaskDbInsert(ITask):
         self._response_handler = ResponseHandler(self._api, self._request_list)
         self._start_time = datetime.now()
 
+    def setup(self) -> None: ...
     def teardown(self) -> None: ...
 
     def run(self) -> None:
