@@ -8,27 +8,25 @@ loadenv
 
 # --------------------------------------------------
 
-set -e
-
+VENV_ACTIVATE_PATH="$PROJECT_PATH/.venv/bin/activate"
 
 main() {
     cd "$PROJECT_PATH" || exit
 
     git pull origin main
 
-    echo "Pulling latest images..."
-    $COMPOSE pull 
+    if [ ! -f "$VENV_ACTIVATE_PATH" ]; then
+        echo "Virtual environment not found. Exiting..."
+        exit 1
+    fi
+    source "$PROJECT_PATH/.venv/bin/activate"
 
-    echo "Stopping and removing existing containers..."
-    $COMPOSE down
+    python -m alembic -n faz-cord ensure_version
+    python -m alembic -n faz-wynn ensure_version
+    python -m alembic -n faz-cord upgrade head
+    python -m alembic -n faz-wynn upgrade head
 
-    echo "Starting new containers..."
-    $COMPOSE up -d
-
-    echo "Removing old images..."
-    $COMPOSE image prune -f
-
-    echo "Update completed successfully."
+    deactivate
 }
 
 main
