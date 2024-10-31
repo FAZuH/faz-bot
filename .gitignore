@@ -10,4 +10,5 @@ __pycache__
 .jukit
 .ruff_cache
 mysql/backup
+TODO.md
 
