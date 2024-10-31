@@ -13,7 +13,7 @@ VENV_ACTIVATE_PATH="$PROJECT_PATH/.venv/bin/activate"
 main() {
     cd "$PROJECT_PATH" || exit
 
-    git pull origin main
+    git pull
 
     if [ ! -f "$VENV_ACTIVATE_PATH" ]; then
         echo "Virtual environment not found. Exiting..."
