@@ -1,13 +1,34 @@
 #!/bin/bash
 
-SCRIPTS_PATH="$(dirname "$(realpath "$0")")"
-PROJECT_PATH=$(dirname "$(dirname "$(realpath "$0")")")
-cd "$PROJECT_PATH" || exit
+SCRIPTS_PATH="scripts"
+PROJECT_PATH="$(dirname "$SCRIPTS_PATH")"
 
-echo "Pulling latest git commit in $PROJECT_PATH..."
-git pull origin main
+source "$SCRIPTS_PATH/_common.sh"
+loadenv
 
-echo "Running update script..."
+# --------------------------------------------------
+
 UPDATE_SCRIPT="$PROJECT_PATH/scripts/update.sh"
 
-$UPDATE_SCRIPT
+set -e
+
+
+main() {
+    $UPDATE_SCRIPT
+
+    echo "Pulling latest images..."
+    $COMPOSE pull 
+
+    echo "Stopping and removing existing containers..."
+    $COMPOSE down
+
+    echo "Starting new containers..."
+    $COMPOSE up -d
+
+    echo "Removing old images..."
+    $COMPOSE image prune -f
+
+    echo "Update completed successfully."
+}
+
+main

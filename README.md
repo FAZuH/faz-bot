@@ -15,8 +15,8 @@ Some useful shortcuts for development are written in `Makefile`.
 
 For debugging:
 
-- `make bot [pull|build|up|down|bash]` Manage container related to fazcord service.
-- `make api-collect [pull|build|up|down|bash]` Manage container related to api_collect service.
+- `make fazcord [pull|build|up|down|bash]` Manage container related to fazcord service.
+- `make fazcollect [pull|build|up|down|bash]` Manage container related to fazcollect service.
 - `make sql [pull|build|up|down|bash]` Manage container related to mysql service.
 
 Actions:
@@ -38,7 +38,7 @@ ssh -L 8080:localhost:8080 user@remote-ip
 ssh -L 3306:localhost:3306 user@remote-ip
 ```
 
-## Production
+## Installation
 
 You can either manually build and install the bot, or pull image from the release.
 Using docker might be easier but overheads could be a problem.
@@ -56,40 +56,43 @@ git clone https://github.com/FAZuH/faz-bot.git
 
 cd faz-bot
 ```
-2. Run `make init` (or if you don't have make, run each line in Makefile on init section line-by-line).
+2. Run `make init`
 3. Fill in the `.env` file with your own values.
-4. View database revision history with `python -m alembic -n <service> history`.
-5. Run `python -m alembic -n <service> upgrade <revision>` with the revision you need.
+
+> [!NOTE]
+> You can override python executable by setting `PYTHON` when calling make commands. e.g., `make init PYTHON=python3.13`
 
 ### Docker Installation
 
-6. Execute `docker-compose up -d`
+4. Run `make sql act=up wait-for-mysql initdb up-all` to pull, initialize, and start the service in one go.
+
+After installing, you can just do step 5 to start all services.
 
 ### Manual Installation
 
-6. Export the environment variables: `export $(grep -v '^#' .env | xargs)`
-7. Run `mysql/init/0_init_users.sql` using your SQL client.
-8. Run the service: `python -m <module-path>`
+4. Export the environment variables: `source .env`
+5. Run `make initdb` to initialize the database.
+6. Run `source .venv/bin/activate` to activate the virtual environment.
+7. Run the service: `python -m <module-path>`
+
+After running all the above, you just need to do step 4, 6 and 7 to start the service.
 
 > [!NOTE]
-> - Make sure you have MariaDB/MySQL and atleast Python 3.12 installed.
-> - You have to do step 3 and 6 every time you open a new terminal.
-> - Argument for step 7 is the path to the __main__.py file of the service you want to run. e.g., `fazbeat.api_collect`.
-> - Currently database version checking is not supported on manual installation.
+> - Argument for step 7 is the module path to the __main__.py file of the service you want to run. e.g., `fazbeat.fazcollect`
+> - Currently database version checking is not supported on manual installation. You just have to read the error.
 
 ## Changing Database Versions
 
 To upgrade or downgrade the database version, you can use `alembic` to manage the database migrations. Make sure you have it installed by running `pip install alembic`.
 
-1. Pull latest git commit: `git pull origin main`
-2. View revision GUIDs with `python -m alembic --name <db-name> history`
-3. Select the revision you want to checkout into `python -m alembic --name <db-name> upgrade <revision>`
+1. View revision GUIDs with `python -m alembic --name <db-name> history`
+2. Select the revision you want to checkout into `python -m alembic --name <db-name> upgrade <revision>`
 
-Alternatively, you can upgrade to the latest revision by running `python -m alembic --name <db-name> upgrade head`.
+Alternatively, you can upgrade straight to the latest revision by running `python -m alembic --name <db-name> upgrade head`.
 
 > [!WARNING]
 > - It is recommended to backup your database before upgrading/downgrading.
-> - Downgrading could potentially result in data loss.
+> - Downgrading might result in data loss.
 
 ## Credits
 

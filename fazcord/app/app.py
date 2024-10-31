@@ -9,9 +9,9 @@ from loguru import logger
 from fazcord.bot.bot import Bot
 from fazcord.heartbeat.heartbeat import Heartbeat
 from fazutil.db.fazcord.fazcord_database import FazcordDatabase
-from fazutil.db.fazdb.fazdb_database import FazdbDatabase
+from fazutil.db.fazwynn.fazwynn_database import FazwynnDatabase
 from fazutil.properties import Properties
-from fazutil.util.logger_setup import LoggerSetup
+from fazutil.logger_setup import LoggerSetup
 
 
 class App:
@@ -59,14 +59,14 @@ class App:
             p.FAZCORD_DB_NAME,
         )
 
-    def create_fazdb_db(self) -> FazdbDatabase:
+    def create_fazwynn_db(self) -> FazwynnDatabase:
         p = self.properties
-        return FazdbDatabase(
+        return FazwynnDatabase(
             p.MYSQL_USERNAME,
             p.MYSQL_PASSWORD,
             p.MYSQL_HOST,
             p.MYSQL_PORT,
-            p.FAZDB_DB_NAME,
+            p.FAZWYNN_DB_NAME,
         )
 
     def _get_lock(self, key: str) -> Lock:

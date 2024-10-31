@@ -1,21 +1,32 @@
 #!/bin/bash
 
-set -e
+SCRIPTS_PATH="scripts"
+PROJECT_PATH="$(dirname "$SCRIPTS_PATH")"
 
-SCRIPTS_PATH="$(dirname "$(realpath "$0")")"
-COMPOSE_FILE="$SCRIPTS_PATH/docker-compose.yml"
-COMPOSE_CMD="docker-compose --file $COMPOSE_FILE"
+source "$SCRIPTS_PATH/_common.sh"
+loadenv
 
-echo "Pulling latest images..."
-$COMPOSE_CMD pull
+# --------------------------------------------------
 
-echo "Stopping and removing existing containers..."
-$COMPOSE_CMD down
+VENV_ACTIVATE_PATH="$PROJECT_PATH/.venv/bin/activate"
 
-echo "Starting new containers..."
-$COMPOSE_CMD up -d
+main() {
+    cd "$PROJECT_PATH" || exit
 
-echo "Removing old images..."
-docker image prune -f
+    git pull origin main
 
-echo "Update completed successfully."
+    if [ ! -f "$VENV_ACTIVATE_PATH" ]; then
+        echo "Virtual environment not found. Exiting..."
+        exit 1
+    fi
+    source "$PROJECT_PATH/.venv/bin/activate"
+
+    python -m alembic -n faz-cord ensure_version
+    python -m alembic -n faz-wynn ensure_version
+    python -m alembic -n faz-cord upgrade head
+    python -m alembic -n faz-wynn upgrade head
+
+    deactivate
+}
+
+main

@@ -159,7 +159,7 @@ class TestWynnTrackCog(unittest.IsolatedAsyncioTestCase):
         )
         self.bot.fazcord_db.track_entry_association.model = MagicMock()
         self.bot.fazcord_db.track_entry_association.insert = AsyncMock()
-        self.bot.fazdb_db.guild_info.get_guild = AsyncMock(
+        self.bot.fazwynn_db.guild_info.get_guild = AsyncMock(
             return_value=MagicMock(uuid="test-uuid")
         )
 
@@ -195,7 +195,7 @@ class TestWynnTrackCog(unittest.IsolatedAsyncioTestCase):
         )
         self.bot.fazcord_db.track_entry_association.model = MagicMock()
         self.bot.fazcord_db.track_entry_association.insert = AsyncMock()
-        self.bot.fazdb_db.guild_info.get_guild = AsyncMock(
+        self.bot.fazwynn_db.guild_info.get_guild = AsyncMock(
             return_value=MagicMock(uuid="test-uuid")
         )
 
@@ -227,7 +227,7 @@ class TestWynnTrackCog(unittest.IsolatedAsyncioTestCase):
         )
         self.bot.fazcord_db.track_entry_association.model = MagicMock()
         self.bot.fazcord_db.track_entry_association.insert = AsyncMock()
-        self.bot.fazdb_db.guild_info.get_guild = AsyncMock(
+        self.bot.fazwynn_db.guild_info.get_guild = AsyncMock(
             return_value=MagicMock(uuid="test-uuid")
         )
 

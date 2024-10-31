@@ -1,89 +1,96 @@
+ifneq (,$(wildcard ./.env))
+    include .env
+    export
+endif
+
 DOCKER_DIR := docker
-DOCKER_COMPOSE := docker-compose.yml
 SCRIPTS_DIR := scripts
-MAKESCRIPT := $(SCRIPTS_DIR)/service.sh
+SERVICESCRIPT := $(SCRIPTS_DIR)/service.sh
+BACKUPSCRIPT := $(SCRIPTS_DIR)/backup.sh
+
+PYTHON := python
+
 .DEFAULT_GOAL := help
 
-.PHONY: wait-for-mysql build-all up-all down-all api-collect bot mysql pma test lint lint-fix format rmpycache countlines clean backup
+.PHONY: wait-for-mysql build-all up-all down-all fazcollect fazcord mysql pma test lint lint-fix format rmpycache countlines clean backup
 
 help:
 	@echo "Usage:"
+	@echo "  make init                                  	# Initialize project"
 	@echo "  make build-all                             	# Build all docker services"
 	@echo "  make up-all                                	# Up all docker services"
 	@echo "  make down-all                              	# Down all docker services"
-	@echo "  make api-collect act=[pull|build|up|down|bash] # Manage api-collect service"
-	@echo "  make bot act=[pull|build|up|down|bash]         # Manage bot service"
+	@echo "  make fazcollect act=[pull|build|up|down|bash]  # Manage fazcollect service"
+	@echo "  make fazcord act=[pull|build|up|down|bash]     # Manage fazcord service"
 	@echo "  make sql act=[pull|build|up|down|bash]         # Manage sql service"
 	@echo "  make pma act=[pull|build|up|down|bash]         # Manage phpmyadmin service"
 	@echo "  make test                                  	# Run python tests"
-	@echo "  make lint                                  	# Run python linting with Ruff"
 	@echo "  make lint-fix                              	# Run python linting with Ruff with --fix on"
 	@echo "  make format                                	# Run python formatting with Black"
 	@echo "  make rmpycache                             	# Remove __pycache__ directories"
 	@echo "  make countlines                            	# Count sum of lines of all python files"
 	@echo "  make clean                                 	# Lint, format, test, and rmpycache"
-	@echo "  make backup                                 	# Backup faz-cord and faz-db databases"
-	@echo "  make load-backup-fazdb path=<path>             # Load faz-db database from a .sql backup file"
-	@echo "  make load-backup-fazcord path=<path>           # Load faz-cord database from a .sql backup file"
+	@echo "  make backup-faz-cord                          	# Backup faz-cord database"
+	@echo "  make backup-faz-wynn                          	# Backup faz-wynn database"
+	@echo "  make load-backup-faz-cord path=<path>          # Load faz-cord database from a .sql backup file"
+	@echo "  make load-backup-faz-wynn path=<path>          # Load faz-wynn database from a .sql backup file"
 
 
 init:
 	@echo "Initializing..."
-	cp $(DOCKER_DIR)/.env.example $(DOCKER_DIR)/.env
-	python -m venv .venv
-	source .venv/bin/activate
-	pip install -r requirements-dev.txt
-	python -m alembic -n api_collect ensure_version
-	python -m alembic -n fazcord ensure_version
+	cp .env-example .env
+	$(PYTHON) -m venv .venv && source .venv/bin/activate && pip install alembic pymysql sortedcontainers
+	@echo "Done!"
+
+initdb:
+	@echo "Initializing database..."
+	source .venv/bin/activate && ./scripts/initdb.sh $(PYTHON)
 	@echo "Done!"
 
 wait-for-mysql:
 	@echo "Waiting for MySQL to be ready..."
-	./$(DOCKER_DIR)/wait-for-it.sh -t 5 mysql:3306 -- echo "MySQL is ready!"
+	$(DOCKER_DIR)/wait-for-it.sh -t 5 mysql:3306 -- echo "MySQL is ready!"
 
 build-all:
 	make sql act=build
 	make wait-for-mysql
-	make api-collect act=build
-	make bot act=build
+	make fazcollect act=build
+	make fazcord act=build
 
 up-all:
 	make sql act=up
 	make wait-for-mysql
-	make api-collect act=up
-	make bot act=up
+	make fazcollect act=up
+	make fazcord act=up
 
 down-all:
-	docker-compose --file $(DOCKER_COMPOSE) down
+	docker-compose down
 
 
-api-collect:
-	$(MAKESCRIPT) api_collect $(act)
+fazcollect:
+	$(SERVICESCRIPT) fazcollect $(act)
 
-bot:
-	$(MAKESCRIPT) fazcord $(act)
+fazcord:
+	$(SERVICESCRIPT) fazcord $(act)
 
 sql:
-	$(MAKESCRIPT) mysql $(act)
+	$(SERVICESCRIPT) mysql $(act)
 
 # test-sql:
-# 	$(MAKESCRIPT) test-sql $(act)
+# 	$(SERVICESCRIPT) test-sql $(act)
 
 pma:
-	$(MAKESCRIPT) phpmyadmin $(act)
+	$(SERVICESCRIPT) phpmyadmin $(act)
 
 
 test:
-	python -m pytest --disable-warnings tests/
-
-lint:
-	python -m ruff check .
+	$(PYTHON) -m pytest --disable-warnings tests/
 
 lint-fix:
-	python -m ruff check --fix .
+	$(PYTHON) -m ruff check --fix .
 
 format:
-	python -m black .
+	$(PYTHON) -m black .
 
 
 rmpycache:
@@ -94,27 +101,29 @@ countlines:
 
 
 clean:
-	@make lint-fix
-	@make format
-	@make test
-	@make rmpycache
+	make lint-fix
+	make format
+	make test
+	make rmpycache
 
 
-backup:
-	mkdir -p mysql/backup
-	docker-compose --file $(DOCKER_DIR)/docker-compose.yml \
-		exec mysql sh -c 'mariadb-dump -u root -p$$MYSQL_ROOT_PASSWORD faz-cord' \
-		> mysql/backup/faz-cord_`date +%s`.sql
-	docker-compose --file $(DOCKER_DIR)/docker-compose.yml \
-		exec mysql sh -c 'mariadb-dump -u root -p$$MYSQL_ROOT_PASSWORD faz-db' \
-		> mysql/backup/faz-db_`date +%s`.sql
+backup-faz-cord:
+	$(BACKUPSCRIPT) backup MYSQL_FAZCORD_DATABASE
 
-load-backup-fazcord:
-	docker-compose --file $(DOCKER_DIR)/docker-compose.yml \
-		exec -T mysql sh -c 'mariadb -u root -p"$$MYSQL_ROOT_PASSWORD" faz-cord' \
-		< $(path)
+backup-faz-wynn:
+	$(BACKUPSCRIPT) backup MYSQL_FAZWYNN_DATABASE
 
-load-backup-fazdb:
-	docker-compose --file $(DOCKER_DIR)/docker-compose.yml \
-		exec -T mysql sh -c 'mariadb -u root -p"$$MYSQL_ROOT_PASSWORD" faz-db' \
-		< $(path)
+load-backup-faz-cord:
+	$(BACKUPSCRIPT) load-backup MYSQL_FAZCORD_DATABASE $(path)
+
+load-backup-faz-wynn:
+	$(BACKUPSCRIPT) load-backup MYSQL_FAZWYNN_DATABASE $(path)
+
+
+reset-docker:
+	docker stop $$(docker ps -aq)
+	docker rm $$(docker ps -aq)
+	docker rmi $$(docker images -q)
+	docker volume prune -f
+	docker builder prune -f
+	docker network rm $$(docker network ls -q)

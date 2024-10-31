@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, create_autospec, patch
 from nextcord import Interaction
 
 from fazcord.bot.view.utils_crafted_probability_view import UtilsCraftedProbabilityView
-from fazcord.wynn.crafted_util import CraftedUtil
+from fazutil.wynn.crafted_roll_probability import CraftedRollProbability
 
 
 class TestUtilsCraftedProbabilityView(IsolatedAsyncioTestCase):
@@ -103,7 +103,7 @@ class TestUtilsCraftedProbabilityView(IsolatedAsyncioTestCase):
 
     @staticmethod
     def _get_mock_crafted_util() -> MagicMock:
-        ret = create_autospec(CraftedUtil, spec_set=True)
+        ret = create_autospec(CraftedRollProbability, spec_set=True)
         get_ingr = lambda x, y, z: MagicMock(min_value=x, max_value=y, boost=z)
         ret.ingredients = [
             get_ingr(1, 2, 50),
@@ -111,7 +111,7 @@ class TestUtilsCraftedProbabilityView(IsolatedAsyncioTestCase):
             get_ingr(1, 2, 50),
             get_ingr(1, 2, 50),
         ]
-        ret.craft_probs.items.return_value = {
+        ret.roll_pmfs.items.return_value = {
             4: Decimal("0.0601"),
             6: Decimal("0.2450"),
             8: Decimal("0.3749"),

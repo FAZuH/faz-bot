@@ -10,13 +10,13 @@ from nextcord.ui import Button, button
 
 from fazcord.bot.view._base_view import BaseView
 from fazcord.bot.view._custom_embed import CustomEmbed
-from fazutil.db.fazdb.model.character_history import CharacterHistory
+from fazutil.db.fazwynn.model.character_history import CharacterHistory
 
 if TYPE_CHECKING:
     from nextcord import Interaction
 
     from fazcord.bot.bot import Bot
-    from fazutil.db.fazdb.model.player_info import PlayerInfo
+    from fazutil.db.fazwynn.model.player_info import PlayerInfo
 
 
 class HistoryPlayerHistoryView(BaseView):
@@ -55,7 +55,7 @@ class HistoryPlayerHistoryView(BaseView):
         await self._interaction.edit_original_message(embed=embed, view=self)
 
     async def _get_embed(self) -> Embed:
-        db = self._bot.fazdb_db
+        db = self._bot.fazwynn_db
         embed = self._base_embed.get_base()
 
         player_hist = await db.player_history.select_between_period(

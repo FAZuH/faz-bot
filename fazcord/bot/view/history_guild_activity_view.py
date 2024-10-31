@@ -10,13 +10,13 @@ from tabulate import tabulate
 from fazcord.bot.view._base_pagination_view import BasePaginationView
 from fazcord.bot.view._pagination_embed import PaginationEmbed
 from fazcord.bot.view._view_utils import ViewUtils
-from fazutil.db.fazdb.model.player_activity_history import PlayerActivityHistory
+from fazutil.db.fazwynn.model.player_activity_history import PlayerActivityHistory
 
 if TYPE_CHECKING:
     from nextcord import Interaction
 
     from fazcord.bot.bot import Bot
-    from fazutil.db.fazdb.model.guild_info import GuildInfo
+    from fazutil.db.fazwynn.model.guild_info import GuildInfo
 
 
 class HistoryGuildActivityView(BasePaginationView):
@@ -39,7 +39,7 @@ class HistoryGuildActivityView(BasePaginationView):
     async def run(self) -> None:
         await self._guild.awaitable_attrs.members
         members = self._guild.members
-        repo = self._bot.fazdb_db.player_activity_history
+        repo = self._bot.fazwynn_db.player_activity_history
 
         for player in members:
             entities = await repo.get_activities_between_period(

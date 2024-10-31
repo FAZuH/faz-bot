@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from nextcord import Interaction
 
     from fazcord.bot.bot import Bot
-    from fazutil.db.fazdb.model.player_info import PlayerInfo
+    from fazutil.db.fazwynn.model.player_info import PlayerInfo
 
 
 class HistoryPlayerActivityView(BaseView):
@@ -30,7 +30,7 @@ class HistoryPlayerActivityView(BaseView):
         self._period_begin = period_begin
         self._period_end = period_end
 
-        self._repo = self._bot.fazdb_db.player_activity_history
+        self._repo = self._bot.fazwynn_db.player_activity_history
 
     @override
     async def run(self) -> None:
