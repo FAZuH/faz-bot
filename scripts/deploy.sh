@@ -14,7 +14,7 @@ set -e
 
 
 main() {
-    $COMPOSE up mysql
+    $COMPOSE up mysql -d
 
     $UPDATE_SCRIPT
 
