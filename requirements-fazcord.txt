@@ -17,6 +17,7 @@ MarkupSafe==3.0.2
 multidict==6.1.0
 nextcord==2.6.0
 numpy==2.1.2
+pandas==2.2.3
 propcache==0.2.0
 PyMySQL==1.1.1
 python-dateutil==2.9.0.post0
@@ -30,6 +31,7 @@ sortedcontainers==2.4.0
 SQLAlchemy==2.0.36
 tabulate==0.9.0
 typing_extensions==4.12.2
+tzdata==2024.2
 tzlocal==5.2
 urllib3==2.2.3
 yarl==1.16.0

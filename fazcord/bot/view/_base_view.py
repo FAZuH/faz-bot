@@ -53,6 +53,14 @@ class BaseView(View, ABC):
         self._bot = bot
         self._interaction = interaction
 
+    @property
+    def bot(self) -> Bot:
+        return self._bot
+
+    @property
+    def interaction(self) -> Interaction:
+        return self._interaction
+
     def _click_button(self, button: Button[Any]) -> None:
         """Modifies clicked button appearance by enabling all buttons and
         disabling the clicked button.
