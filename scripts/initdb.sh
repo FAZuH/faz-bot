@@ -1,13 +1,14 @@
 #!/bin/bash
-set -euo pipefail
 
-SCRIPTS_PATH="$(dirname "$(realpath "$0")")"
+SCRIPTS_PATH="scripts"
 PROJECT_PATH="$(dirname "$SCRIPTS_PATH")"
 
 source "$SCRIPTS_PATH/_common.sh"
 loadenv
 
 # --------------------------------------------------
+
+set -euo pipefail
 
 checkenv
 
