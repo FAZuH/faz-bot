@@ -30,8 +30,6 @@ _import_backup() {
 }
 
 main() {
-    source "$SCRIPTS_PATH/_common.sh"
-    loadenv
     case "$COMMAND" in
         "backup") _export_backup ;;
         "load-backup") _import_backup ;;
