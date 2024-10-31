@@ -21,7 +21,7 @@ validate_db_name() {
 
 run_sql() {
     local command="$1"
-    if ! $COMPOSE exec -i mysql mariadb -u root \
+    if ! docker exec -i mysql mariadb -u root \
         -p"$MYSQL_ROOT_PASSWORD" -h "$MYSQL_HOST" -P "$MYSQL_PORT" \
         -e "$command"; then
         echo "Error: Failed to execute SQL command"
