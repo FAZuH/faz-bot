@@ -1,3 +1,12 @@
+## [0.3.5](https://github.com/FAZuH/faz-bot/compare/v0.3.4...v0.3.5) (2024-10-31)
+
+
+### Bug Fixes
+
+* Fix deploy workflow ([#58](https://github.com/FAZuH/faz-bot/issues/58)) ([28d03d9](https://github.com/FAZuH/faz-bot/commit/28d03d995ea4c69c31ea886026dfa1bda27e6589))
+
+
+
 ## [0.3.4](https://github.com/FAZuH/faz-bot/compare/v0.3.3...v0.3.4) (2024-10-31)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * Fix build scripts [skip ci] ([#55](https://github.com/FAZuH/faz-bot/issues/55)) ([a3cf236](https://github.com/FAZuH/faz-bot/commit/a3cf236dc4efb79e78be2271ad1ae0b2521a67ca))
-
-
-
-# [0.3.0](https://github.com/FAZuH/faz-bot/compare/v0.2.3...v0.3.0) (2024-10-28)
-
-
-### Features
-
-* Improve fazdb relationships [skip ci] ([#49](https://github.com/FAZuH/faz-bot/issues/49)) ([f316851](https://github.com/FAZuH/faz-bot/commit/f3168518b50a74b57bbe6f716d9ff6dc42a0b960))
 
 
 
