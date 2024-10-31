@@ -14,6 +14,8 @@ set -e
 
 
 main() {
+    $COMPOSE up mysql
+
     $UPDATE_SCRIPT
 
     echo "Pulling latest images..."
@@ -26,7 +28,7 @@ main() {
     $COMPOSE up -d
 
     echo "Removing old images..."
-    $COMPOSE image prune -f
+    docker image prune -f
 
     echo "Update completed successfully."
 }
