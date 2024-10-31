@@ -1,3 +1,12 @@
+## [0.3.2](https://github.com/FAZuH/faz-bot/compare/v0.3.1...v0.3.2) (2024-10-31)
+
+
+### Bug Fixes
+
+* **ci:** fix deploy workflow ([962f4ed](https://github.com/FAZuH/faz-bot/commit/962f4edf0bffb4a12f0ad15b385a2f841ce10a86))
+
+
+
 ## [0.3.1](https://github.com/FAZuH/faz-bot/compare/v0.3.0...v0.3.1) (2024-10-31)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **bot:** Various command fixes ([#43](https://github.com/FAZuH/faz-bot/issues/43)) ([0cd8038](https://github.com/FAZuH/faz-bot/commit/0cd80385bde564092744514a550f603752d31791))
-
-
-
-## [0.2.1](https://github.com/FAZuH/faz-bot/compare/v0.2.0...v0.2.1) (2024-09-09)
-
-
-### Bug Fixes
-
-* fix missing library on api_collect ([#41](https://github.com/FAZuH/faz-bot/issues/41)) ([f3234e8](https://github.com/FAZuH/faz-bot/commit/f3234e8f24efa0864dc9301410ffed6c7c4bf047))
 
 
 
