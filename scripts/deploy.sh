@@ -14,20 +14,22 @@ set -e
 
 
 main() {
+    # 1. Make sure database is running
     $COMPOSE up mysql -d
 
+    # 2. Pull git changes and update database
     $UPDATE_SCRIPT
 
     echo "Pulling latest images..."
+    # 3. Pull latest docker images
     $COMPOSE pull 
 
-    echo "Stopping and removing existing containers..."
-    $COMPOSE down
-
     echo "Starting new containers..."
-    $COMPOSE up -d
+    # 4. Start fazcollect and fazcord service
+    $COMPOSE up fazcollect fazcord -d
 
     echo "Removing old images..."
+    # 5. Remove old images
     docker image prune -f
 
     echo "Update completed successfully."
