@@ -12,4 +12,4 @@ COPY mysql/vcs ./mysql/vcs
 
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/* && pip3 install --no-cache-dir -r requirements.txt
 
-CMD ["./scripts/safestart.sh", "fazcord", ">=1.0.0,<1.1 >=1.1.0,<1.2", "faz-cord faz-wynn", "FAZCORD_DISCORD_LOG_WEBHOOK FAZCOLLECT_DISCORD_LOG_WEBHOOK"]
+CMD ["./scripts/_safestart.sh", "fazcord", ">=1.0.0,<1.1 >=1.1.0,<1.2", "faz-cord faz-wynn", "FAZCORD_DISCORD_LOG_WEBHOOK FAZCOLLECT_DISCORD_LOG_WEBHOOK"]

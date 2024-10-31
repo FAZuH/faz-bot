@@ -14,7 +14,7 @@ DB_NAMES=$3           # Space separated list of database names
 WEBHOOK_VAR_NAMES=$4  # Space separated list of webhook environment variable names
 
 
-"$SCRIPTS_PATH/checkhealth.sh" "$DB_VERSION_RANGES" "$DB_NAMES" "$WEBHOOK_VAR_NAMES" 
+"$SCRIPTS_PATH/_checkhealth.sh" "$DB_VERSION_RANGES" "$DB_NAMES" "$WEBHOOK_VAR_NAMES" 
 
 res=$?
 if [[ "$res" != 0 ]]; then
