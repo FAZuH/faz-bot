@@ -8,6 +8,7 @@ from fazcord.bot.view._custom_embed import CustomEmbed
 
 
 class PaginationEmbed[T](CustomEmbed):
+
     def __init__(
         self,
         interaction: Interaction[Any],
