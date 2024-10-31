@@ -1,3 +1,12 @@
+## [0.3.4](https://github.com/FAZuH/faz-bot/compare/v0.3.3...v0.3.4) (2024-10-31)
+
+
+### Bug Fixes
+
+* **ci:** fix deploy workflow ([3d2baeb](https://github.com/FAZuH/faz-bot/commit/3d2baeb3a02a95b210eb9b87b6832057f0a37106))
+
+
+
 ## [0.3.3](https://github.com/FAZuH/faz-bot/compare/v0.3.2...v0.3.3) (2024-10-31)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * Improve fazdb relationships [skip ci] ([#49](https://github.com/FAZuH/faz-bot/issues/49)) ([f316851](https://github.com/FAZuH/faz-bot/commit/f3168518b50a74b57bbe6f716d9ff6dc42a0b960))
-
-
-
-## [0.2.3](https://github.com/FAZuH/faz-bot/compare/v0.2.2...v0.2.3) (2024-10-25)
-
-
-### Bug Fixes
-
-* Fix error on specific CraftedUtil arguments ([c2d2a70](https://github.com/FAZuH/faz-bot/commit/c2d2a70d9639bb110f696598eb6236b60b2e7989))
 
 
 
