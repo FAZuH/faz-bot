@@ -1,3 +1,12 @@
+## [0.3.1](https://github.com/FAZuH/faz-bot/compare/v0.3.0...v0.3.1) (2024-10-31)
+
+
+### Bug Fixes
+
+* Fix build scripts [skip ci] ([#55](https://github.com/FAZuH/faz-bot/issues/55)) ([a3cf236](https://github.com/FAZuH/faz-bot/commit/a3cf236dc4efb79e78be2271ad1ae0b2521a67ca))
+
+
+
 # [0.3.0](https://github.com/FAZuH/faz-bot/compare/v0.2.3...v0.3.0) (2024-10-28)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * fix missing library on api_collect ([#41](https://github.com/FAZuH/faz-bot/issues/41)) ([f3234e8](https://github.com/FAZuH/faz-bot/commit/f3234e8f24efa0864dc9301410ffed6c7c4bf047))
-
-
-
-# [0.2.0](https://github.com/FAZuH/faz-bot/compare/v0.1.4...v0.2.0) (2024-09-09)
-
-
-### Features
-
-* add player history command ([#38](https://github.com/FAZuH/faz-bot/issues/38)) ([53745ed](https://github.com/FAZuH/faz-bot/commit/53745ed7913c5faf8ca0a23f4af270823fd6c1c0))
 
 
 
