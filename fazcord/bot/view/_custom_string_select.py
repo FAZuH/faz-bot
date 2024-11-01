@@ -19,11 +19,6 @@ class CustomStringSelect[T: Enum](StringSelect, ABC):
         disabled: bool = False,
         row: Optional[int] = None,
     ) -> None:
-        if view is not MISSING:
-            view.add_item(self)
-        if callback is not MISSING:
-            self.callback = callback
-
         select_options: List[SelectOption] = [
             SelectOption(label=option.value, value=option.name)
             for option in self.option_enum
@@ -38,6 +33,11 @@ class CustomStringSelect[T: Enum](StringSelect, ABC):
             disabled=disabled,
             row=row,
         )
+
+        if view is not MISSING:
+            view.add_item(self)
+        if callback is not MISSING:
+            self.callback = callback
 
     def get_selected_option(self) -> T:
         if len(self.values) == 0:
