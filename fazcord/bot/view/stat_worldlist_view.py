@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import timezone
 from typing import TYPE_CHECKING, Any, Literal, override
 
-from nextcord import Color, Embed
+from nextcord import Color
 from tabulate import tabulate
 
 from fazcord.bot.view._base_pagination_view import BasePaginationView
@@ -29,16 +29,18 @@ class StatWorldlistView(BasePaginationView):
         )
         super().__init__(bot, interaction)
 
+        self._embed: PaginationEmbed[Worlds] = PaginationEmbed(
+            self._interaction, title="World List", color=Color.dark_teal()
+        )
+        self.embed.get_embed_page = self._get_embed_page
+
     @override
     async def run(self):
         items = await self._bot.fazwynn_db.worlds.get_worlds(self._sort_by)
-        self._embed: PaginationEmbed[Worlds] = PaginationEmbed(
-            self._interaction, items, title="World List", color=Color.dark_teal()
-        )
+        self.embed.items = items
         await self._interaction.send(embed=self._get_embed_page(1), view=self)
 
-    @override
-    def _get_embed_page(self, page: int) -> Embed:
+    def _get_embed_page(self, page: int) -> PaginationEmbed:
         embed = self._embed.get_base()
         embed.current_page = page
         worlds = embed.get_items(page)
@@ -67,3 +69,8 @@ class StatWorldlistView(BasePaginationView):
         )
         embed.finalize()
         return embed
+
+    @property
+    @override
+    def embed(self) -> PaginationEmbed:
+        return self._embed

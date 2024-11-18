@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+from abc import abstractmethod
 from datetime import datetime
 from typing import Any, Optional, Sequence, Union, override
 
@@ -12,7 +15,7 @@ class PaginationEmbed[T](CustomEmbed):
     def __init__(
         self,
         interaction: Interaction[Any],
-        items: Sequence[T],
+        items: Sequence[T] | None = None,
         items_per_page: int = 20,
         *,
         thumbnail_url: Optional[str] = None,
@@ -35,25 +38,17 @@ class PaginationEmbed[T](CustomEmbed):
             description=description,
             timestamp=timestamp,
         )
-        self._memento = {
-            "interaction": interaction,
-            "items": items,
-            "items_per_page": items_per_page,
-            "thumbnail_url": thumbnail_url,
-            "colour": colour,
-            "color": color,
-            "title": title,
-            "type": type,
-            "url": url,
-            "description": description,
-            "timestamp": timestamp,
-        }
+
+        if items is None:
+            items = []
         self._items = items
         self._items_per_page = items_per_page
-        self._page_count = self._get_page_count()
         self._current_page = 1
 
-    def get_items(self, page: int) -> Sequence[T]:
+    def get_items(self, page: int | None = None) -> Sequence[T]:
+        page = page or self._current_page
+        if page < 1 or page > self.page_count:
+            raise ValueError(f"Invalid page number: {page}")
         l_idx = self._items_per_page * (page - 1)
         r_idx = self._items_per_page * page
         return self._items[l_idx:r_idx]
@@ -61,7 +56,7 @@ class PaginationEmbed[T](CustomEmbed):
     def add_page_field(self) -> None:
         self.add_field(
             name="Page",
-            value=f"{self._current_page} / {self._page_count}",
+            value=f"{self._current_page} / {self.page_count}",
             inline=False,
         )
 
@@ -74,13 +69,17 @@ class PaginationEmbed[T](CustomEmbed):
     def items(self) -> Sequence[T]:
         return self._items
 
+    @items.setter
+    def items(self, items: Sequence[T]) -> None:
+        self._items = items
+
     @property
     def items_per_page(self) -> int:
         return self._items_per_page
 
     @property
     def page_count(self) -> int:
-        return self._page_count
+        return max(1, -(-len(self._items) // self._items_per_page))
 
     @property
     def current_page(self):
@@ -90,5 +89,17 @@ class PaginationEmbed[T](CustomEmbed):
     def current_page(self, value):
         self._current_page = value
 
-    def _get_page_count(self) -> int:
-        return -(-len(self._items) // self._items_per_page)
+    @abstractmethod
+    def get_embed_page(self, page: int) -> PaginationEmbed:
+        """Abstract method to get the embed for a specific page.
+
+        This method must be implemented in subclasses to define how the embed content
+        is generated for each page.
+
+        Args:
+            page (int): The page number to generate the embed for.
+
+        Returns:
+            Embed: The generated embed for the specified page.
+        """
+        ...

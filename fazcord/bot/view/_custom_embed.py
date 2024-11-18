@@ -31,8 +31,8 @@ class CustomEmbed(Embed):
             description=description,
             timestamp=timestamp,
         )
+
         self._memento = {
-            "interaction": interaction,
             "thumbnail_url": thumbnail_url,
             "colour": colour,
             "color": color,
@@ -49,7 +49,22 @@ class CustomEmbed(Embed):
 
     def get_base(self) -> Self:
         """Returns a new instance of CustomEmbed with the initial state."""
-        return self.__class__(**self._memento)
+        # return self.__class__(**self._memento)
+        self.reset()
+        return self
+
+    def reset(self) -> None:
+        self.clear_fields()
+        self.set_thumbnail(self._memento["thumbnail_url"])
+        if self._memento["colour"]:
+            self.colour = self._memento["colour"]
+        if self._memento["color"]:
+            self.color = self._memento["color"]
+        self.title = self._memento["title"]
+        self.type = self._memento["type"]
+        self.url = self._memento["url"]
+        self.description = self._memento["description"]
+        self.timestamp = self._memento["timestamp"]
 
     def finalize(self) -> None:
         """Do setup that needs to be run at the end of preparation of this object."""

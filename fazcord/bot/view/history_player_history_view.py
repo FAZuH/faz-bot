@@ -3,14 +3,14 @@ from __future__ import annotations
 from collections import defaultdict
 from datetime import datetime
 from typing import TYPE_CHECKING, Any, override
+from uuid import UUID
 
-from loguru import logger
-from nextcord import Color, Embed, SelectOption
 from nextcord.ui import StringSelect
 
-from fazcord.bot.view._base_view import BaseView
-from fazcord.bot.view._custom_embed import CustomEmbed
+from fazcord.bot.view._base_pagination_view import BasePaginationView
+from fazcord.bot.view._history_player_history_embed import HistoryPlayerHistoryEmbed
 from fazcord.bot.view._id_select import IdSelect
+from fazcord.bot.view._id_select_options import IdSelectOptions
 
 if TYPE_CHECKING:
     from nextcord import Interaction
@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from fazutil.db.fazwynn.model.player_info import PlayerInfo
 
 
-class HistoryPlayerHistoryView(BaseView):
+class HistoryPlayerHistoryView(BasePaginationView):
 
     def __init__(
         self,
@@ -34,32 +34,40 @@ class HistoryPlayerHistoryView(BaseView):
         self._period_begin = period_begin
         self._period_end = period_end
 
-        begin_ts = int(self._period_begin.timestamp())
-        end_ts = int(self._period_end.timestamp())
-        self._base_embed = CustomEmbed(
-            self._interaction,
-            title=f"Player History ({self._player.latest_username})",
-            description=f"`Period : ` <t:{begin_ts}:R> to <t:{end_ts}:R>\n\n",
-            color=Color.teal(),
+        self._character_labels: dict[str, str] = {}
+
+        self._embed = HistoryPlayerHistoryEmbed(
+            self,
+            self._player,
+            self._period_begin,
+            self._period_end,
+            self._character_labels,
         )
 
-        self._character_select = StringSelect(placeholder="Select character", row=0)
-        self._character_select.callback = self.__character_select_callback
-        self._id_select = IdSelect(view=self, callback=self.__id_select_callback, row=1)
+        self._selected_character: str | None = None
+        self._selected_id: IdSelectOptions = IdSelectOptions.ALL
 
-    async def __character_select_callback(self, interaction: Interaction) -> None:
-        # Assumption:
-        #   - length of self._character_select.values is always 1
-        self._selected = self._character_select.values[0]
-        await interaction.send(f"selected_uuid={self._selected}")
+    @override
+    async def run(self) -> None:
+        """Initial method to setup and run the view."""
+        await self._add_id_select()
+        await self._add_character_select()
 
-    async def __id_select_callback(self, interaction: Interaction) -> None:
-        self._selected = self._id_select.get_selected_option()
-        await interaction.send(
-            f"name={self._selected.name}, value={self._selected.value}"
-        )
+        await self._set_embed_fields()
+        embed = self._get_embed_page()
+        await self._interaction.send(embed=embed, view=self)
 
-    async def __add_character_select(self) -> None:
+    async def _add_id_select(self) -> None:
+        """Helper method to add ID selection during setup."""
+        self._id_select = IdSelect(self._id_select_callback)
+        self.add_item(self._id_select)
+
+    async def _add_character_select(self) -> None:
+        """Helper method to add character selection during setup."""
+        self._character_select = StringSelect(placeholder="Select character")
+        self._character_select.callback = self._character_select_callback
+        self._character_select.add_option(label="Total", value="total")
+
         await self._player.awaitable_attrs.characters
         ch_counter = defaultdict(int)
         for ch in self._player.characters:
@@ -74,63 +82,54 @@ class HistoryPlayerHistoryView(BaseView):
             # select ch_hist with max datetime
             latest_ch_hist = max(ch_hists, key=lambda x: x.datetime)
             total_level = latest_ch_hist.get_total_level()
-            nth = ch_counter[ch.type]
-            label = f"{ch.type}{nth} (Lv. {total_level})"
-            self._character_select.add_option(label=label, value=str(ch.character_uuid))
+            label = f"{ch.type}{ch_counter[ch.type]} (Lv. {total_level})"
+            uuid = str(UUID(bytes=ch.character_uuid))
+            self._character_select.add_option(label=label, value=uuid)
+            self._character_labels[uuid] = label
 
         if len(self._character_select.options) == 0:
             self._character_select.placeholder = "No character"
             self._character_select.disabled = True
 
-        self._character_select.callback = self.__character_select_callback
         self.add_item(self._character_select)
 
-    @override
-    async def run(self) -> None:
-        await self.__add_character_select()
-        embed = await self._get_embed()
-        await self._interaction.send(embed=embed, view=self)
+    async def _id_select_callback(self, interaction: Interaction) -> None:
+        """Callback for ID selection."""
+        # Length of values is always 1
+        self._selected_id = self._id_select.get_selected_option()
+        await self._set_embed_fields()
+        embed = self._get_embed_page()
+        await interaction.edit(embed=embed, view=self)
 
-    async def _get_embed(self) -> Embed:
-        # db = self._bot.fazwynn_db
-        embed = self._base_embed.get_base()
+    async def _character_select_callback(self, interaction: Interaction) -> None:
+        """Callback for character selection."""
+        # Length of values is always 1
+        self._selected_character = self._character_select.values[0]
+        if self._selected_character.lower() == "total":
+            self._selected_character = None
+        await self._set_embed_fields()
+        embed = self._get_embed_page()
+        await interaction.edit(embed=embed, view=self)
 
-        # player_hist = await db.player_history.select_between_period(self._player.uuid)
+    async def _set_embed_fields(self) -> None:
+        """Sets PaginationEmbed items with fields based on selected options."""
+        fields = await self.embed.get_fields(
+            self._selected_character, self._selected_id
+        )
+        self.embed.items = fields
 
-        #        player_hist = await db.player_history.select_between_period()
-        #
-        #        embed = self._base_embed.get_base()
-        #        embed.description += "".join(  # type: ignore
-        #            [
-        #                self._diff_str_or_blank(diff[0], diff[1], label, max_label_length)
-        #                for label, diff in d.items()
-        #            ]
-        #        )
-        #            self._player.uuid, self._period_begin, self._period_end
-        #        )
-        #        p1, p2 = player_hist[0], player_hist[-1]
-        #
-        #        max_label_length = max(
-        #            len(label) for label, data in d.items() if data[1] != data[0]
-        #        )
-        #        embed.description += "".join(  # type: ignore
-        #            [
-        #                self._diff_str_or_blank(diff[0], diff[1], label, max_label_length)
-        #                for label, diff in d.items()
-        #            ]
-        #        )
-
-        embed.finalize()
+    def _get_embed_page(self) -> HistoryPlayerHistoryEmbed:
+        embed = self.embed.get_embed_page(self.embed.current_page)
+        embed.description += "\n`Data   : ` "
+        if self._selected_character is None:
+            embed.description += "All characters"
+        else:
+            char_label = self._character_labels[self._selected_character]
+            embed.description += char_label
         return embed
 
-    # def _diff_str_or_blank(
-    #     self, before: Any, after: Any, label: str, label_space: int
-    # ) -> str:
-    #     fmt_num = lambda x: (
-    #         f"{x:,}"
-    #         if isinstance(x, int)
-    #         else f"{x:,.2f}" if isinstance(x, (float, Decimal)) else x
-    #     )
-    #     if before != after:
-    #         return f"`{label:{label_space}} : ` {fmt_num(before)} -> {fmt_num(after)}\n"
-    #     return ""
+    @property
+    @override
+    def embed(self) -> HistoryPlayerHistoryEmbed:
+        """The embed property."""
+        return self._embed
