@@ -63,6 +63,8 @@ class HistoryPlayerHistoryEmbed(PaginationEmbed[EmbedField]):
                 df_char_ = db.character_history.select_between_period_as_dataframe(
                     ch.character_uuid, self._period_begin, self._period_end
                 )
+                if len(df_char_) == 0:
+                    continue
                 character_hist = pd.concat([character_hist, df_char_])
         else:
             character_hist = db.character_history.select_between_period_as_dataframe(
