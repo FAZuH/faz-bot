@@ -3,8 +3,8 @@ from typing import Any, Callable, Optional, override
 from nextcord import SelectOption
 from nextcord.utils import MISSING
 
-from fazcord.bot.view._custom_string_select import CustomStringSelect
-from fazcord.bot.view._id_select_options import IdSelectOptions
+from fazcord.view._custom_string_select import CustomStringSelect
+from fazcord.view._id_select_options import IdSelectOptions
 
 
 class IdSelect(CustomStringSelect[IdSelectOptions]):

@@ -7,7 +7,7 @@ from loguru import logger
 from nextcord import Colour, Interaction
 from nextcord.ext import commands
 
-from fazcord.bot.view._custom_embed import CustomEmbed
+from fazcord.view._custom_embed import CustomEmbed
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession

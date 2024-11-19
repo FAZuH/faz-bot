@@ -5,9 +5,9 @@ from typing import TYPE_CHECKING, Any, override
 
 from nextcord import Color, Embed
 
-from fazcord.bot.view._base_view import BaseView
-from fazcord.bot.view._custom_embed import CustomEmbed
-from fazcord.bot.view._view_utils import ViewUtils
+from fazcord.view._base_view import BaseView
+from fazcord.view._custom_embed import CustomEmbed
+from fazcord.view._view_utils import ViewUtils
 
 if TYPE_CHECKING:
     from nextcord import Interaction

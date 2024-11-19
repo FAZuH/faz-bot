@@ -6,9 +6,9 @@ from typing import TYPE_CHECKING, Any, Literal, override
 from nextcord import Color
 from tabulate import tabulate
 
-from fazcord.bot.view._base_pagination_view import BasePaginationView
-from fazcord.bot.view._pagination_embed import PaginationEmbed
-from fazcord.bot.view._view_utils import ViewUtils
+from fazcord.view._base_pagination_view import BasePaginationView
+from fazcord.view._pagination_embed import PaginationEmbed
+from fazcord.view._view_utils import ViewUtils
 
 if TYPE_CHECKING:
     from nextcord import Interaction

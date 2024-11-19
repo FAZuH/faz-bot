@@ -4,13 +4,13 @@ from unittest.mock import MagicMock, create_autospec, patch
 
 from nextcord import Interaction
 
-from fazcord.bot.view.utils_ingredient_probability_view import (
+from fazcord.view.utils_ingredient_probability_view import (
     UtilsIngredientProbabilityView,
 )
 
 
 class TestUtilsIngredientProbabilityView(IsolatedAsyncioTestCase):
-    @patch("fazcord.bot.view.utils_ingredient_probability_view.CustomEmbed")
+    @patch("fazcord.view.utils_ingredient_probability_view.CustomEmbed")
     async def test_run(self, mock_embed: MagicMock) -> None:
         mock_bot = MagicMock()
         mock_interaction = create_autospec(Interaction, spec_set=True)

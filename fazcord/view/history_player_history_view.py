@@ -7,10 +7,10 @@ from uuid import UUID
 
 from nextcord.ui import StringSelect
 
-from fazcord.bot.view._base_pagination_view import BasePaginationView
-from fazcord.bot.view._history_player_history_embed import HistoryPlayerHistoryEmbed
-from fazcord.bot.view._id_select import IdSelect
-from fazcord.bot.view._id_select_options import IdSelectOptions
+from fazcord.view._base_pagination_view import BasePaginationView
+from fazcord.view._history_player_history_embed import HistoryPlayerHistoryEmbed
+from fazcord.view._id_select import IdSelect
+from fazcord.view._id_select_options import IdSelectOptions
 
 if TYPE_CHECKING:
     from nextcord import Interaction

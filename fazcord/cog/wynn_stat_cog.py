@@ -3,8 +3,8 @@ from typing import Any, Literal
 import nextcord
 from nextcord import Interaction
 
-from fazcord.bot.cog._base_cog import CogBase
-from fazcord.bot.view.stat_worldlist_view import StatWorldlistView
+from fazcord.cog._base_cog import CogBase
+from fazcord.view.stat_worldlist_view import StatWorldlistView
 
 
 class WynnStatCog(CogBase):

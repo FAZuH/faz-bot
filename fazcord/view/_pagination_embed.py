@@ -7,7 +7,7 @@ from typing import Any, Optional, Sequence, Union, override
 from nextcord import Colour, Interaction
 from nextcord.types.embed import EmbedType
 
-from fazcord.bot.view._custom_embed import CustomEmbed
+from fazcord.view._custom_embed import CustomEmbed
 
 
 class PaginationEmbed[T](CustomEmbed):

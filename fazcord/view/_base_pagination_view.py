@@ -6,10 +6,10 @@ from typing import TYPE_CHECKING, Any
 from nextcord import ButtonStyle, Interaction
 from nextcord.ui import Button, button
 
-from fazcord.bot.view._base_view import BaseView
+from fazcord.view._base_view import BaseView
 
 if TYPE_CHECKING:
-    from fazcord.bot.view._pagination_embed import PaginationEmbed
+    from fazcord.view._pagination_embed import PaginationEmbed
 
 
 class BasePaginationView[T](BaseView, ABC):
