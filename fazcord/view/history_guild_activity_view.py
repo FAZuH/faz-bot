@@ -7,8 +7,8 @@ from nextcord import Color
 from sortedcontainers import SortedList
 from tabulate import tabulate
 
-from fazcord.view._base_pagination_view import BasePaginationView
 from fazcord.embed.pagination_embed import PaginationEmbed
+from fazcord.view._base_pagination_view import BasePaginationView
 from fazcord.view._view_utils import ViewUtils
 from fazutil.db.fazwynn.model.player_activity_history import PlayerActivityHistory
 
@@ -27,11 +27,13 @@ class HistoryGuildActivityView(BasePaginationView):
         guild: GuildInfo,
         period_begin: datetime,
         period_end: datetime,
+        show_inactive: bool,
     ) -> None:
         super().__init__(bot, interaction, timeout=120)
         self._guild = guild
         self._period_begin = period_begin
         self._period_end = period_end
+        self._show_inactive = show_inactive
 
         self._activity_res: SortedList = SortedList()
 
@@ -65,7 +67,10 @@ class HistoryGuildActivityView(BasePaginationView):
                 entities, self._period_begin, self._period_end
             )
             activity_result = self.ActivityResult(player.latest_username, playtime)
-            if activity_result.playtime.total_seconds() < 60:
+            if (
+                not self._show_inactive
+                and activity_result.playtime.total_seconds() < 60
+            ):
                 continue
             self._activity_res.add(activity_result)
 
