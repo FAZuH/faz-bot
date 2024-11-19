@@ -37,7 +37,7 @@ class HistoryPlayerHistoryEmbed(PaginationEmbed[EmbedField]):
         desc = f"`Period : ` <t:{begin_ts}:R> to <t:{end_ts}:R>"
         super().__init__(
             view.interaction,
-            items_per_page=5,
+            items_per_page=4,
             title=title,
             description=desc,
             color=Colour.teal(),
