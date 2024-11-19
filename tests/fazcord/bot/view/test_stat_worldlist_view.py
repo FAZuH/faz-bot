@@ -5,11 +5,11 @@ from unittest.mock import AsyncMock, MagicMock, create_autospec, patch
 
 from nextcord import Interaction
 
-from fazcord.bot.view.stat_worldlist_view import StatWorldlistView
+from fazcord.view.stat_worldlist_view import StatWorldlistView
 
 
 class TestStatWorldlistView(IsolatedAsyncioTestCase):
-    @patch("fazcord.bot.view.stat_worldlist_view.PaginationEmbed")
+    @patch("fazcord.view.stat_worldlist_view.PaginationEmbed")
     async def test_run(self, mock_embed: MagicMock) -> None:
         # Prepare
         mock_bot = MagicMock()

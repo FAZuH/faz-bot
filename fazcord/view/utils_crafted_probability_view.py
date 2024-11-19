@@ -6,8 +6,8 @@ from typing import TYPE_CHECKING, Any, Callable, override
 from nextcord import ButtonStyle, Embed, Interaction
 from nextcord.ui import Button, button
 
-from fazcord.bot.view._base_view import BaseView
-from fazcord.bot.view._custom_embed import CustomEmbed
+from fazcord.view._base_view import BaseView
+from fazcord.embed.custom_embed import CustomEmbed
 from fazutil.wynn.crafted_roll_probability import CraftedRollProbability
 from fazutil.cache_util import CacheUtil
 

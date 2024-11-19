@@ -16,7 +16,7 @@ from nextcord.ext import commands
 from nextcord.ext.commands import BucketType, Cooldown, CooldownMapping
 
 from fazcord.bot.errors import ApplicationException
-from fazcord.bot.view._custom_embed import CustomEmbed
+from fazcord.embed.custom_embed import CustomEmbed
 
 if TYPE_CHECKING:
     from fazcord.bot.bot import Bot

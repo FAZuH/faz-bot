@@ -4,8 +4,8 @@ from typing import TYPE_CHECKING, Any, override
 
 from nextcord import Embed, Interaction
 
-from fazcord.bot.view._base_view import BaseView
-from fazcord.bot.view._custom_embed import CustomEmbed
+from fazcord.view._base_view import BaseView
+from fazcord.embed.custom_embed import CustomEmbed
 from fazutil.wynn.emerald_util import EmeraldUtil
 from fazutil.wynn.emeralds import Emeralds
 

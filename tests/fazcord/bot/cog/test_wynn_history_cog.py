@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from unittest.mock import AsyncMock, MagicMock, create_autospec, patch
 
 from fazcord.bot._utils import Utils
-from fazcord.bot.cog.wynn_history_cog import WynnHistoryCog
+from fazcord.cog.wynn_history_cog import WynnHistoryCog
 from fazcord.bot.errors import InvalidArgumentException, ParseException
 
 
@@ -17,7 +17,7 @@ class TestWynnHistoryCog(unittest.IsolatedAsyncioTestCase):
         self.bot.utils = self.utils
         self.wynn_history = WynnHistoryCog(self.bot)
 
-    @patch("fazcord.bot.cog.wynn_history_cog.HistoryPlayerActivityView", autospec=True)
+    @patch("fazcord.cog.wynn_history_cog.HistoryPlayerActivityView", autospec=True)
     async def test_activity_command(self, mock_invoke: MagicMock) -> None:
         mock_player = MagicMock()
         self.utils.must_get_wynn_player = AsyncMock(return_value=mock_player)
@@ -33,7 +33,7 @@ class TestWynnHistoryCog(unittest.IsolatedAsyncioTestCase):
             self.intr.created_at,
         )
 
-    @patch("fazcord.bot.cog.wynn_history_cog.HistoryGuildActivityView", autospec=True)
+    @patch("fazcord.cog.wynn_history_cog.HistoryGuildActivityView", autospec=True)
     async def test_guild_activity_command(self, mock_invoke: MagicMock) -> None:
         mock_guild = MagicMock()
         self.utils.must_get_wynn_guild = AsyncMock(return_value=mock_guild)

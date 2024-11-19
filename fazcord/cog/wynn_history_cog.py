@@ -7,11 +7,11 @@ import nextcord
 from dateparser import parse
 from nextcord import Interaction
 
-from fazcord.bot.cog._base_cog import CogBase
 from fazcord.bot.errors import InvalidArgumentException, ParseException
-from fazcord.bot.view.history_guild_activity_view import HistoryGuildActivityView
-from fazcord.bot.view.history_player_activity_view import HistoryPlayerActivityView
-from fazcord.bot.view.history_player_history_view import HistoryPlayerHistoryView
+from fazcord.cog._base_cog import CogBase
+from fazcord.view.history_guild_activity_view import HistoryGuildActivityView
+from fazcord.view.history_player_activity_view import HistoryPlayerActivityView
+from fazcord.view.history_player_history_view import HistoryPlayerHistoryView
 
 
 class WynnHistoryCog(CogBase):
@@ -45,7 +45,11 @@ class WynnHistoryCog(CogBase):
 
     @history.subcommand()
     async def guild_activity(
-        self, intr: Interaction[Any], guild: str, period: str
+        self,
+        intr: Interaction[Any],
+        guild: str,
+        period: str,
+        show_inactive: bool = False,
     ) -> None:
         """Shows players' active time in a guild between the specified time period
 
@@ -63,11 +67,7 @@ class WynnHistoryCog(CogBase):
         guild_info = await self._bot.utils.must_get_wynn_guild(guild)
         period_begin, period_end = self._parse_period(intr, period)
         await HistoryGuildActivityView(
-            self._bot,
-            intr,
-            guild_info,
-            period_begin,
-            period_end,
+            self._bot, intr, guild_info, period_begin, period_end, show_inactive
         ).run()
 
     @history.subcommand()

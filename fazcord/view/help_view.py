@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, override
 
-from nextcord import BaseApplicationCommand, Colour, Embed, Interaction
+from nextcord import BaseApplicationCommand, Colour, Interaction
 
-from fazcord.bot.view._base_pagination_view import BasePaginationView
-from fazcord.bot.view._pagination_embed import PaginationEmbed
+from fazcord.embed.pagination_embed import PaginationEmbed
+from fazcord.view._base_pagination_view import BasePaginationView
 
 if TYPE_CHECKING:
     from fazcord.bot.bot import Bot
@@ -27,13 +27,13 @@ class HelpView(BasePaginationView):
             title="Commands List",
             color=Colour.dark_blue(),
         )
+        self._embed.get_embed_page = self._get_embed_page
 
     @override
     async def run(self) -> None:
         await self._interaction.send(embed=self._get_embed_page(1), view=self)
 
-    @override
-    def _get_embed_page(self, page: int) -> Embed:
+    def _get_embed_page(self, page: int) -> PaginationEmbed:
         """Generates embed page for page nth-page"""
         # title=f"Commands List : Page [{page}/{self._page_count}]",
         embed = self._embed.get_base()
@@ -58,5 +58,8 @@ class HelpView(BasePaginationView):
     #         # NOTE: case param isrequired
     #         p_msg = f"<{p_msg}>" if p.required else f"[{p_msg}]"
     #         msglist.append(p_msg)
-    #     msg = ", ".join(msglist)
-    #     return f" `{msg}`"
+
+    @property
+    @override
+    def embed(self) -> PaginationEmbed:
+        return self._embed
