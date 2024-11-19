@@ -7,11 +7,11 @@ import nextcord
 from dateparser import parse
 from nextcord import Interaction
 
-from fazcord.bot.cog._base_cog import CogBase
+from fazcord.cog._base_cog import CogBase
 from fazcord.bot.errors import InvalidArgumentException, ParseException
-from fazcord.bot.view.history_guild_activity_view import HistoryGuildActivityView
-from fazcord.bot.view.history_player_activity_view import HistoryPlayerActivityView
-from fazcord.bot.view.history_player_history_view import HistoryPlayerHistoryView
+from fazcord.view.history_guild_activity_view import HistoryGuildActivityView
+from fazcord.view.history_player_activity_view import HistoryPlayerActivityView
+from fazcord.view.history_player_history_view import HistoryPlayerHistoryView
 
 
 class WynnHistoryCog(CogBase):

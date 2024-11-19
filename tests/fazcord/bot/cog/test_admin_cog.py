@@ -7,7 +7,7 @@ from unittest.mock import AsyncMock, MagicMock, create_autospec, patch
 
 from fazcord.bot._utils import Utils
 from fazcord.bot.bot import Bot
-from fazcord.bot.cog.admin_cog import AdminCog
+from fazcord.cog.admin_cog import AdminCog
 from fazcord.bot.errors import ApplicationException
 from fazutil.db.fazcord.fazcord_database import FazcordDatabase
 from fazutil.properties import Properties

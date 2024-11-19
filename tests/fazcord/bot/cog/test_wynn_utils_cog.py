@@ -3,7 +3,7 @@ from decimal import Decimal
 from unittest import TestCase
 from unittest.mock import MagicMock
 
-from fazcord.bot.cog.wynn_utils_cog import WynnUtilsCog
+from fazcord.cog.wynn_utils_cog import WynnUtilsCog
 from fazcord.bot.errors import InvalidArgumentException, ParseException
 
 

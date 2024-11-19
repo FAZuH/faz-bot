@@ -12,7 +12,7 @@ from sqlalchemy.exc import IntegrityError
 from fazcord.bot._checks import Checks
 from fazcord.bot._events import Events
 from fazcord.bot._utils import Utils
-from fazcord.bot.cog.cog_core import CogCore
+from fazcord.cog.cog_core import CogCore
 
 if TYPE_CHECKING:
     from fazcord.app.app import App

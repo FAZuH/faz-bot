@@ -2,15 +2,15 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Iterable
 
-from fazcord.bot.cog._base_cog import CogBase
-from fazcord.bot.cog.admin_cog import AdminCog
-from fazcord.bot.cog.help_cog import HelpCog
-from fazcord.bot.cog.info_cog import InfoCog
-from fazcord.bot.cog.wynn_analyze_cog import WynnAnalyzeCog
-from fazcord.bot.cog.wynn_history_cog import WynnHistoryCog
-from fazcord.bot.cog.wynn_stat_cog import WynnStatCog
-from fazcord.bot.cog.wynn_track_cog import WynnTrackCog
-from fazcord.bot.cog.wynn_utils_cog import WynnUtilsCog
+from fazcord.cog._base_cog import CogBase
+from fazcord.cog.admin_cog import AdminCog
+from fazcord.cog.help_cog import HelpCog
+from fazcord.cog.info_cog import InfoCog
+from fazcord.cog.wynn_analyze_cog import WynnAnalyzeCog
+from fazcord.cog.wynn_history_cog import WynnHistoryCog
+from fazcord.cog.wynn_stat_cog import WynnStatCog
+from fazcord.cog.wynn_track_cog import WynnTrackCog
+from fazcord.cog.wynn_utils_cog import WynnUtilsCog
 
 if TYPE_CHECKING:
     from fazcord.bot.bot import Bot

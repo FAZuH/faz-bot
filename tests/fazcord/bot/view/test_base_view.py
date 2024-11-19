@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 from nextcord import Button
 
-from fazcord.bot.view._base_view import BaseView
+from fazcord.view._base_view import BaseView
 
 
 class _MockView(BaseView):
