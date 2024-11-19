@@ -65,6 +65,8 @@ class SeriesParser:
         self, player_df: pd.DataFrame, char_df: pd.DataFrame
     ) -> Sequence[EmbedField]:
         lines = {}
+        if len(player_df) == 0:
+            return []
         idxmin = player_df.iloc[player_df["datetime"].idxmin()]
         idxmax = player_df.iloc[player_df["datetime"].idxmax()]
 
