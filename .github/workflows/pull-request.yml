@@ -28,6 +28,7 @@ jobs:
       - name: Set Up MariaDB
         run: |
           docker run \
+          --name mysql \
           -e MYSQL_ROOT_PASSWORD=password \
           -e MYSQL_USER=faz \
           -e MYSQL_PASSWORD=password \
