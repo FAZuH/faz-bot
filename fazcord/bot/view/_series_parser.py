@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Callable, Sequence
+from typing import Any, Callable, Container, MutableSequence, Sequence
 from uuid import UUID
 
 import pandas as pd
@@ -112,7 +112,8 @@ class SeriesParser:
                 for label, value in lines.items()
             ]
         )
-        ret = [EmbedField(name="", value=desc)]
+        ret = []
+        self._add_embed_field(ret, "", desc)
         return ret
 
     def _parser_categorical_guild(self, df: pd.DataFrame) -> Sequence[EmbedField]:
@@ -127,7 +128,8 @@ class SeriesParser:
             line = f"{formatted_ts}: {val}"
             lines.append(line)
         desc = "\n".join(lines)
-        ret = [EmbedField(name="", value=desc)]
+        ret = []
+        self._add_embed_field(ret, "Guild", desc)
         return ret
 
     def _parser_categorical_username(self, df: pd.DataFrame) -> Sequence[EmbedField]:
@@ -143,7 +145,8 @@ class SeriesParser:
             line = f"{formatted_ts}: {val}"
             lines.append(line)
         desc = "\n".join(lines)
-        ret = [EmbedField(name="", value=desc)]
+        ret = []
+        self._add_embed_field(ret, "Username", desc)
         return ret
 
     def _common_numerical_float_string_parser(
@@ -179,7 +182,7 @@ class SeriesParser:
             if prev_value is None:
                 continue
             desc = "\n".join(lines)
-            ret.append(EmbedField(name=chlabel, value=desc))
+            self._add_embed_field(ret, chlabel, desc)
         return ret
 
     def _parser_numerical_level(
@@ -291,11 +294,29 @@ class SeriesParser:
         """dungeon_completions, quest_completions, raid_completions"""
         return [EmbedField("", value="UNIMPLEMENTED")]
 
-    def _get_max_key_length(self, dict_: dict[str, Any]) -> int:
+    @staticmethod
+    def _add_embed_field(
+        container: MutableSequence[EmbedField], label: str, value: str
+    ) -> None:
+        """Handles max embed value limit of 1024 characters."""
+        while True:
+            idx = value.rfind("\n", 0, 1024)
+            if idx == -1:
+                break
+            container.append(EmbedField(name=label, value=value[:idx]))
+            label = ""  # Only the first field has a label
+            value = value[idx + 1 :]
+            if len(value) <= 1024:
+                break
+
+    @staticmethod
+    def _get_max_key_length(dict_: dict[str, Any]) -> int:
         return max(map(len, dict_.keys()))
 
-    def _diff_str_or_blank(self, value: str, label: str, label_space: int) -> str:
+    @staticmethod
+    def _diff_str_or_blank(value: str, label: str, label_space: int) -> str:
         return f"`{label:{label_space}} : ` {value}"
 
-    def _format_number(self, value: Any) -> str:
+    @staticmethod
+    def _format_number(value: Any) -> str:
         return f"{value:,}" if isinstance(value, int) else f"{value:,.2f}"
