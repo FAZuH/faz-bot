@@ -1,3 +1,14 @@
+## [0.4.1](https://github.com/FAZuH/faz-bot/compare/v0.4.0...v0.4.1) (2024-11-19)
+
+
+### Bug Fixes
+
+* Fix missing pandas dependency on fazcollect [skip ci]  [#67](https://github.com/FAZuH/faz-bot/issues/67) ([17f10fc](https://github.com/FAZuH/faz-bot/commit/17f10fc25f9cdbb8cd0ecebc8609f3c57102f68b))
+* Fix PR workflow unable to find mysql container [skip ci] [#66](https://github.com/FAZuH/faz-bot/issues/66) ([1971cb8](https://github.com/FAZuH/faz-bot/commit/1971cb80da61f8d18a480c229c2f3aec6b99e2b9))
+* Handle embed fields with value higher than max char limit ([#70](https://github.com/FAZuH/faz-bot/issues/70)) ([13af359](https://github.com/FAZuH/faz-bot/commit/13af359651078b27e5e7e588b3bf87d7b47d3c18))
+
+
+
 # [0.4.0](https://github.com/FAZuH/faz-bot/compare/v0.3.5...v0.4.0) (2024-11-19)
 
 
@@ -32,15 +43,6 @@
 ### Bug Fixes
 
 * **ci:** fix deploy workflow ([1620122](https://github.com/FAZuH/faz-bot/commit/1620122ac7b724ef272ea7756a6395402cad37c1))
-
-
-
-## [0.3.2](https://github.com/FAZuH/faz-bot/compare/v0.3.1...v0.3.2) (2024-10-31)
-
-
-### Bug Fixes
-
-* **ci:** fix deploy workflow ([962f4ed](https://github.com/FAZuH/faz-bot/commit/962f4edf0bffb4a12f0ad15b385a2f841ce10a86))
 
 
 
