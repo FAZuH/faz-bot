@@ -19,7 +19,7 @@ class LoggerSetup:
             sink=sys.stderr,
             level="DEBUG",
             backtrace=False,
-            diagnose=False,
+            diagnose=True,
         )
 
         os.makedirs(log_directory, exist_ok=True)
@@ -31,6 +31,7 @@ class LoggerSetup:
             compression="zip",
             enqueue=True,
             backtrace=True,
+            diagnose=True,
         )
 
         default_disc = {"format": cls._discord_exception_formatter, "enqueue": True}
