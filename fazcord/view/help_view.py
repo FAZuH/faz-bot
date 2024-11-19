@@ -58,3 +58,8 @@ class HelpView(BasePaginationView):
     #         # NOTE: case param isrequired
     #         p_msg = f"<{p_msg}>" if p.required else f"[{p_msg}]"
     #         msglist.append(p_msg)
+
+    @property
+    @override
+    def embed(self) -> PaginationEmbed:
+        return self._embed
