@@ -1,3 +1,17 @@
+# [0.5.0](https://github.com/FAZuH/faz-bot/compare/v0.4.1...v0.5.0) (2024-11-19)
+
+
+### Bug Fixes
+
+* Fix help command ([#76](https://github.com/FAZuH/faz-bot/issues/76)) ([28251e0](https://github.com/FAZuH/faz-bot/commit/28251e0f2959fd1119c66e60ddfd131576a0248f))
+
+
+### Features
+
+* Add show_inactive to guild_activity command [skip ci] ([#75](https://github.com/FAZuH/faz-bot/issues/75)) ([700fc56](https://github.com/FAZuH/faz-bot/commit/700fc564284eb4d623ccd1b7b865bcfb36c73a5f))
+
+
+
 ## [0.4.1](https://github.com/FAZuH/faz-bot/compare/v0.4.0...v0.4.1) (2024-11-19)
 
 
@@ -34,15 +48,6 @@
 ### Bug Fixes
 
 * **ci:** fix deploy workflow ([3d2baeb](https://github.com/FAZuH/faz-bot/commit/3d2baeb3a02a95b210eb9b87b6832057f0a37106))
-
-
-
-## [0.3.3](https://github.com/FAZuH/faz-bot/compare/v0.3.2...v0.3.3) (2024-10-31)
-
-
-### Bug Fixes
-
-* **ci:** fix deploy workflow ([1620122](https://github.com/FAZuH/faz-bot/commit/1620122ac7b724ef272ea7756a6395402cad37c1))
 
 
 
