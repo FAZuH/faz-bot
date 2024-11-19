@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from datetime import datetime as dt
 from typing import TYPE_CHECKING
 
@@ -77,3 +78,27 @@ class CharacterHistory(UniqueIdModel):
         Index(None, character_uuid),
         UniqueConstraint(unique_id),
     )
+
+    def get_total_level(self) -> int:
+        def _sum(*args: int | float) -> int:
+            ret = 0
+            for arg in args:
+                ret += math.floor(arg)
+            return ret
+
+        ret = _sum(
+            self.level,
+            self.alchemism,
+            self.armouring,
+            self.cooking,
+            self.jeweling,
+            self.scribing,
+            self.tailoring,
+            self.weaponsmithing,
+            self.woodworking,
+            self.mining,
+            self.woodcutting,
+            self.farming,
+            self.fishing,
+        )
+        return ret

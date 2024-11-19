@@ -3,7 +3,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Any
 
-from nextcord import ButtonStyle, Embed, Interaction
+from nextcord import ButtonStyle, Interaction
 from nextcord.ui import Button, button
 
 from fazcord.bot.view._base_view import BaseView
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from fazcord.bot.view._pagination_embed import PaginationEmbed
 
 
-class BasePaginationView(BaseView, ABC):
+class BasePaginationView[T](BaseView, ABC):
     """Base class for pagination views in a Discord bot using Nextcord.
 
     This class provides a base structure for pagination views that allow users to navigate
@@ -22,8 +22,6 @@ class BasePaginationView(BaseView, ABC):
     Attributes:
         _embed (PaginationEmbed): The embed object that represents the paginated content.
     """
-
-    _embed: PaginationEmbed
 
     @button(style=ButtonStyle.blurple, emoji="⏮️")
     async def first_page_callback(
@@ -38,8 +36,8 @@ class BasePaginationView(BaseView, ABC):
             interaction (Interaction[Any]): The interaction object from Discord.
         """
         await interaction.response.defer()
-        self._embed.current_page = 1
-        embed = self._get_embed_page(self._embed.current_page)
+        self.embed.current_page = 1
+        embed = self.embed.get_embed_page(self.embed.current_page)
         await interaction.edit_original_message(embed=embed)
 
     @button(style=ButtonStyle.blurple, emoji="◀️")
@@ -56,10 +54,10 @@ class BasePaginationView(BaseView, ABC):
             interaction (Interaction[Any]): The interaction object from Discord.
         """
         await interaction.response.defer()
-        self._embed.current_page -= 1
-        if self._embed.current_page == 0:
-            self._embed.current_page = self._embed.page_count
-        embed = self._get_embed_page(self._embed.current_page)
+        self.embed.current_page -= 1
+        if self.embed.current_page == 0:
+            self.embed.current_page = self.embed.page_count
+        embed = self.embed.get_embed_page(self.embed.current_page)
         await interaction.edit_original_message(embed=embed)
 
     @button(style=ButtonStyle.red, emoji="⏹️")
@@ -91,10 +89,10 @@ class BasePaginationView(BaseView, ABC):
             interaction (Interaction[Any]): The interaction object from Discord.
         """
         await interaction.response.defer()
-        self._embed.current_page += 1
-        if self._embed.current_page == (self._embed.page_count + 1):
-            self._embed.current_page = 1
-        embed = self._get_embed_page(self._embed.current_page)
+        self.embed.current_page += 1
+        if self.embed.current_page == (self.embed.page_count + 1):
+            self.embed.current_page = 1
+        embed = self.embed.get_embed_page(self.embed.current_page)
         await interaction.edit_original_message(embed=embed)
 
     @button(style=ButtonStyle.blurple, emoji="⏭️")
@@ -110,21 +108,10 @@ class BasePaginationView(BaseView, ABC):
             interaction (Interaction[Any]): The interaction object from Discord.
         """
         await interaction.response.defer()
-        self._embed.current_page = self._embed.page_count
-        embed = self._get_embed_page(self._embed.current_page)
+        self.embed.current_page = self.embed.page_count
+        embed = self.embed.get_embed_page(self.embed.current_page)
         await interaction.edit_original_message(embed=embed)
 
+    @property
     @abstractmethod
-    def _get_embed_page(self, page: int) -> Embed:
-        """Abstract method to get the embed for a specific page.
-
-        This method must be implemented in subclasses to define how the embed content
-        is generated for each page.
-
-        Args:
-            page (int): The page number to generate the embed for.
-
-        Returns:
-            Embed: The generated embed for the specified page.
-        """
-        ...
+    def embed(self) -> PaginationEmbed[T]: ...

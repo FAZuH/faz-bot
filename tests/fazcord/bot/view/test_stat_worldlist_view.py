@@ -21,14 +21,14 @@ class TestStatWorldlistView(IsolatedAsyncioTestCase):
             return_value=self._get_mock_worlds()
         )
         view = StatWorldlistView(mock_bot, mock_interaction, "Player Count")
-        embed_ins = MagicMock()
-        embed_ins.get_items.return_value = self._get_mock_worlds()
-        mock_embed.return_value.get_base.return_value = embed_ins
+        embed = MagicMock()
+        embed.get_items.return_value = self._get_mock_worlds()
+        mock_embed.return_value.get_base.return_value = embed
         # Act
         await view.run()
         # Assert
         self.assertMultiLineEqual(
-            embed_ins.description,
+            embed.description,
             "```ml\n"
             "|   No | World   |   Players | Uptime   |\n"
             "|------|---------|-----------|----------|\n"
@@ -39,9 +39,9 @@ class TestStatWorldlistView(IsolatedAsyncioTestCase):
             "|    5 | WC14    |        50 | 6m       |\n"
             "```",
         )
-        self.assertEqual(embed_ins.current_page, 1)
-        embed_ins.finalize.assert_called_once()
-        mock_interaction.send.assert_awaited_once_with(embed=embed_ins, view=view)
+        self.assertEqual(embed.current_page, 1)
+        embed.finalize.assert_called_once()
+        mock_interaction.send.assert_awaited_once_with(embed=embed, view=view)
 
     def _get_mock_worlds(self) -> Sequence[MagicMock]:
         ret = []

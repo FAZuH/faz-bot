@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from datetime import datetime
 from typing import TYPE_CHECKING, Any, Callable
 
 import dateparser
@@ -10,6 +9,8 @@ from fazutil.db.fazwynn.model.guild_info import GuildInfo
 from fazutil.db.fazwynn.model.player_info import PlayerInfo
 
 if TYPE_CHECKING:
+    from datetime import datetime
+
     from nextcord import Guild, Interaction, PartialMessageable, Thread, User
     from nextcord.abc import GuildChannel, PrivateChannel
     from sqlalchemy.ext.asyncio import AsyncSession
@@ -22,6 +23,11 @@ if TYPE_CHECKING:
 class Utils:
     def __init__(self, bot: Bot) -> None:
         self._bot = bot
+
+    @staticmethod
+    def to_relative_timestamp(datetime: datetime) -> str:
+        timestamp = datetime.timestamp()
+        return f"<t:{timestamp}:R>"
 
     async def add_to_db(
         self,

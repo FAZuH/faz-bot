@@ -10,6 +10,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from fazutil.db.fazwynn.model.base_fazwynn_model import BaseFazwynnModel
 
 if TYPE_CHECKING:
+    from fazutil.db.fazwynn.model.character_info import CharacterInfo
     from fazutil.db.fazwynn.model.guild_info import GuildInfo
     from fazutil.db.fazwynn.model.player_history import PlayerHistory
 
@@ -27,7 +28,7 @@ class PlayerInfo(BaseFazwynnModel):
     guild: Mapped[GuildInfo | None] = relationship(
         "GuildInfo", back_populates="members", lazy="selectin"
     )
-    characters: Mapped[list[PlayerInfo]] = relationship(
+    characters: Mapped[list[CharacterInfo]] = relationship(
         "CharacterInfo", back_populates="player", lazy="selectin"
     )
 

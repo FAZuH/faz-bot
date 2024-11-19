@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, Any, Sequence, override
 
-from nextcord import Color, Embed
+from nextcord import Color
 from sortedcontainers import SortedList
 from tabulate import tabulate
 
@@ -35,6 +35,22 @@ class HistoryGuildActivityView(BasePaginationView):
 
         self._activity_res: SortedList = SortedList()
 
+        begin_ts = int(self._period_begin.timestamp())
+        end_ts = int(self._period_end.timestamp())
+
+        title = f"Guild Members Activity ({guild.name})"
+        desc = f"`Guild  : `{self._guild.name}\n"
+        desc += f"`Period : `<t:{begin_ts}:R> to <t:{end_ts}:R>"
+
+        self._embed: PaginationEmbed[SortedList] = PaginationEmbed(
+            self._interaction,
+            self._activity_res,
+            title=title,
+            color=Color.teal(),
+            description=desc,
+        )
+        self.embed.get_embed_page = self._get_embed_page
+
     @override
     async def run(self) -> None:
         await self._guild.awaitable_attrs.members
@@ -53,33 +69,22 @@ class HistoryGuildActivityView(BasePaginationView):
                 continue
             self._activity_res.add(activity_result)
 
-        self._embed = PaginationEmbed(
-            self._interaction,
-            self._activity_res,
-            title="Guild Members Activity",
-            color=Color.teal(),
-        )
-        await self._interaction.send(embed=self._get_embed_page(1), view=self)
+        embed = self.embed.get_embed_page(1)
+        await self._interaction.send(embed=embed, view=self)
 
-    def _get_embed_page(self, page: int = 1) -> Embed:
-        begin_ts = int(self._period_begin.timestamp())
-        end_ts = int(self._period_end.timestamp())
-        embed = self._embed.get_base()
-        results = embed.get_items(page)
+    def _get_embed_page(self, page: int = 1) -> PaginationEmbed:
+        embed = self.embed.get_base()
+        items = embed.get_items(page)
 
-        embed.description = f"`Guild  : `{self._guild.name}\n"
-        embed.description += f"`Period : `<t:{begin_ts}:R> to <t:{end_ts}:R>"
-        if len(results) == 0:
-            embed.description = (
-                "```ml\nNo guild members were recorded online at this time period.\n```"
-            )
+        if len(items) == 0:
+            embed.description = "```ml\nNo data found.\n```"
         else:
             embed.description += (
                 "\n```ml\n"
                 + tabulate(
                     [
                         [n, res.username, res.playtime_string]  # type: ignore
-                        for n, res in enumerate(reversed(results), 1)
+                        for n, res in enumerate(items, 1)
                     ],
                     headers=["No", "Username", "Activity"],
                     tablefmt="github",
@@ -89,6 +94,11 @@ class HistoryGuildActivityView(BasePaginationView):
 
         embed.finalize()
         return embed
+
+    @property
+    @override
+    def embed(self) -> PaginationEmbed[SortedList]:
+        return self._embed
 
     @staticmethod
     def _get_activity_time(

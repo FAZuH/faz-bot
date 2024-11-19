@@ -21,8 +21,9 @@ class CommonMigrationTest:
                 "alembic.ini", self.db_name, stdout=self._output_buffer
             )
 
+            self.__drop_all()
             command.ensure_version(self.alembic_cfg)
-            command.downgrade(self.alembic_cfg, "base")
+            command.stamp(self.alembic_cfg, "base")
 
         def test_upgrade(self):
             # Act
@@ -81,10 +82,7 @@ class CommonMigrationTest:
             section = self.alembic_cfg.get_section(self.alembic_cfg.config_ini_section)
             assert section is not None
 
-            if int(section.get("test_mode", 0)) == 1 and db_name is not None:
-                db_name += "_test"
-
-            if None in {user, password, host, db_name}:
+            if None in {user, password, host}:
                 return section["sqlalchemy.url"]
 
             return f"mysql+pymysql://{user}:{password}@{host}/{db_name}"
@@ -108,7 +106,6 @@ class CommonMigrationTest:
                     conn.execute(text("SET FOREIGN_KEY_CHECKS=0"))
 
                     # Get the drop statements
-                    print("dropping...")
                     result = conn.execute(
                         text(
                             """
