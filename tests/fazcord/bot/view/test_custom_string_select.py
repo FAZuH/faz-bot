@@ -5,7 +5,7 @@ from typing import override
 from unittest import TestCase
 from unittest.mock import MagicMock
 
-from fazcord.view._custom_string_select import CustomStringSelect
+from fazcord.select.custom_string_select import CustomStringSelect
 
 
 class TestCustomStringSelect(TestCase):

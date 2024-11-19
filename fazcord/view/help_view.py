@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Any, override
 from nextcord import BaseApplicationCommand, Colour, Embed, Interaction
 
 from fazcord.view._base_pagination_view import BasePaginationView
-from fazcord.view._pagination_embed import PaginationEmbed
+from fazcord.embed.pagination_embed import PaginationEmbed
 
 if TYPE_CHECKING:
     from fazcord.bot.bot import Bot

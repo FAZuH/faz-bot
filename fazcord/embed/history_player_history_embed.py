@@ -8,9 +8,9 @@ import pandas as pd
 from nextcord import Colour
 
 from fazcord.bot.errors import ApplicationException
-from fazcord.view._embed_field import EmbedField
-from fazcord.view._id_select_options import IdSelectOptions, IdSelectOptionsType
-from fazcord.view._pagination_embed import PaginationEmbed
+from fazcord.embed.embed_field import EmbedField
+from fazcord.select.id_select_options import IdSelectOptions, IdSelectOptionsType
+from fazcord.embed.pagination_embed import PaginationEmbed
 from fazcord.view._series_parser import SeriesParser
 from fazutil.db.fazwynn.model.player_info import PlayerInfo
 

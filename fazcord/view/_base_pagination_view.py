@@ -9,7 +9,7 @@ from nextcord.ui import Button, button
 from fazcord.view._base_view import BaseView
 
 if TYPE_CHECKING:
-    from fazcord.view._pagination_embed import PaginationEmbed
+    from fazcord.embed.pagination_embed import PaginationEmbed
 
 
 class BasePaginationView[T](BaseView, ABC):

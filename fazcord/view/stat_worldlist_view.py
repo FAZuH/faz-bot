@@ -7,7 +7,7 @@ from nextcord import Color
 from tabulate import tabulate
 
 from fazcord.view._base_pagination_view import BasePaginationView
-from fazcord.view._pagination_embed import PaginationEmbed
+from fazcord.embed.pagination_embed import PaginationEmbed
 from fazcord.view._view_utils import ViewUtils
 
 if TYPE_CHECKING:

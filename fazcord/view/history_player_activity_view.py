@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Any, override
 from nextcord import Color, Embed
 
 from fazcord.view._base_view import BaseView
-from fazcord.view._custom_embed import CustomEmbed
+from fazcord.embed.custom_embed import CustomEmbed
 from fazcord.view._view_utils import ViewUtils
 
 if TYPE_CHECKING:
