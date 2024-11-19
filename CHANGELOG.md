@@ -1,3 +1,13 @@
+# [0.4.0](https://github.com/FAZuH/faz-bot/compare/v0.3.5...v0.4.0) (2024-11-19)
+
+
+### Features
+
+* Add automated backup script [skip ci] ([#56](https://github.com/FAZuH/faz-bot/issues/56)) ([5d35762](https://github.com/FAZuH/faz-bot/commit/5d3576227d96acaf48af153959789b64f50862b2))
+* Improve player history command ([#62](https://github.com/FAZuH/faz-bot/issues/62)) ([dbd0e12](https://github.com/FAZuH/faz-bot/commit/dbd0e12123d3095be9d2b0b3ac68d0da86a3f7ee))
+
+
+
 ## [0.3.5](https://github.com/FAZuH/faz-bot/compare/v0.3.4...v0.3.5) (2024-10-31)
 
 
@@ -31,15 +41,6 @@
 ### Bug Fixes
 
 * **ci:** fix deploy workflow ([962f4ed](https://github.com/FAZuH/faz-bot/commit/962f4edf0bffb4a12f0ad15b385a2f841ce10a86))
-
-
-
-## [0.3.1](https://github.com/FAZuH/faz-bot/compare/v0.3.0...v0.3.1) (2024-10-31)
-
-
-### Bug Fixes
-
-* Fix build scripts [skip ci] ([#55](https://github.com/FAZuH/faz-bot/issues/55)) ([a3cf236](https://github.com/FAZuH/faz-bot/commit/a3cf236dc4efb79e78be2271ad1ae0b2521a67ca))
 
 
 
