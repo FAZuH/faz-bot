@@ -27,7 +27,7 @@ class HistoryGuildActivityView(BasePaginationView):
         guild: GuildInfo,
         period_begin: datetime,
         period_end: datetime,
-        show_inactive: bool,
+        show_inactive: bool = False,
     ) -> None:
         super().__init__(bot, interaction, timeout=120)
         self._guild = guild

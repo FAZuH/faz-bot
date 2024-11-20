@@ -8,9 +8,9 @@ from nextcord import Interaction
 
 from fazcord.cog._base_cog import CogBase
 from fazcord.bot.errors import InvalidArgumentException, ParseException
-from fazcord.view.utils_convert_emerald_view import UtilsConvertEmeraldView
-from fazcord.view.utils_crafted_probability_view import UtilsCraftedProbabilityView
-from fazcord.view.utils_ingredient_probability_view import (
+from fazcord.view.wynn_utils.convert_emerald_view import UtilsConvertEmeraldView
+from fazcord.view.wynn_utils.crafted_probability_view import UtilsCraftedProbabilityView
+from fazcord.view.wynn_utils.ingredient_probability_view import (
     UtilsIngredientProbabilityView,
 )
 from fazutil.wynn.crafted_roll_probability import CraftedRollProbability

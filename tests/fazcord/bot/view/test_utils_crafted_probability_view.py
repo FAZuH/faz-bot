@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, create_autospec, patch
 
 from nextcord import Interaction
 
-from fazcord.view.utils_crafted_probability_view import UtilsCraftedProbabilityView
+from fazcord.view.wynn_utils.crafted_probability_view import UtilsCraftedProbabilityView
 from fazutil.wynn.crafted_roll_probability import CraftedRollProbability
 
 
@@ -30,7 +30,7 @@ class TestUtilsCraftedProbabilityView(IsolatedAsyncioTestCase):
             embed=mock_embed.return_value, view=self._view
         )
 
-    @patch("fazcord.view.utils_crafted_probability_view.CustomEmbed")
+    @patch("fazcord.view.wynn_utils.crafted_probability_view.CustomEmbed")
     async def test_get_base_embed(self, mock_embed: MagicMock) -> None:
         # Act
         self._view._get_base_embed()
@@ -50,7 +50,7 @@ class TestUtilsCraftedProbabilityView(IsolatedAsyncioTestCase):
             "- `[4]`: 1 to 2, 50% boost",
         )
 
-    @patch("fazcord.view.utils_crafted_probability_view.CustomEmbed")
+    @patch("fazcord.view.wynn_utils.crafted_probability_view.CustomEmbed")
     async def test_get_craftprobs_embed(self, mock_embed: MagicMock) -> None:
         # Act
         self._view._get_craftprobs_embed()
@@ -67,7 +67,7 @@ class TestUtilsCraftedProbabilityView(IsolatedAsyncioTestCase):
             inline=False,
         )
 
-    @patch("fazcord.view.utils_crafted_probability_view.CustomEmbed")
+    @patch("fazcord.view.wynn_utils.crafted_probability_view.CustomEmbed")
     async def test_get_atleast_embed(self, mock_embed: MagicMock) -> None:
         # Act
         self._view._get_atleast_embed()
@@ -84,7 +84,7 @@ class TestUtilsCraftedProbabilityView(IsolatedAsyncioTestCase):
             inline=False,
         )
 
-    @patch("fazcord.view.utils_crafted_probability_view.CustomEmbed")
+    @patch("fazcord.view.wynn_utils.crafted_probability_view.CustomEmbed")
     async def test_get_atmost_getcraftprobs_embed(self, mock_embed: MagicMock) -> None:
         # Act
         self._view._get_atmost_embed()

@@ -9,9 +9,9 @@ from nextcord import Interaction
 
 from fazcord.bot.errors import InvalidArgumentException, ParseException
 from fazcord.cog._base_cog import CogBase
-from fazcord.view.history_guild_activity_view import HistoryGuildActivityView
-from fazcord.view.history_player_activity_view import HistoryPlayerActivityView
-from fazcord.view.history_player_history_view import HistoryPlayerHistoryView
+from fazcord.view.wynn_history.guild_activity_view import HistoryGuildActivityView
+from fazcord.view.wynn_history.player_activity_view import HistoryPlayerActivityView
+from fazcord.view.wynn_history.player_history_view import HistoryPlayerHistoryView
 
 
 class WynnHistoryCog(CogBase):
