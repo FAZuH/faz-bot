@@ -3,8 +3,8 @@ from datetime import datetime, timedelta
 from unittest.mock import AsyncMock, MagicMock, create_autospec, patch
 
 from fazcord.bot._utils import Utils
-from fazcord.cog.wynn_history_cog import WynnHistoryCog
 from fazcord.bot.errors import InvalidArgumentException, ParseException
+from fazcord.cog.wynn_history_cog import WynnHistoryCog
 
 
 class TestWynnHistoryCog(unittest.IsolatedAsyncioTestCase):
@@ -47,6 +47,7 @@ class TestWynnHistoryCog(unittest.IsolatedAsyncioTestCase):
             mock_guild,
             self.intr.created_at - timedelta(hours=10),
             self.intr.created_at,
+            False,
         )
 
     def test_parse_period_valid_period_dates(self):

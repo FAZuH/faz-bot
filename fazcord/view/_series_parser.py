@@ -1,14 +1,15 @@
 from datetime import datetime
-from typing import Any, Callable, MutableSequence, Sequence
+from typing import Any, Callable, Sequence
 from uuid import UUID
 
 import pandas as pd
 
+from fazcord.embed._base_series_parser import BaseSeriesParser
 from fazcord.embed.embed_field import EmbedField
 from fazcord.select.id_select_options import IdSelectOptions
 
 
-class SeriesParser:
+class SeriesParser(BaseSeriesParser):
 
     def __init__(self, character_labels: dict[str, str]) -> None:
         self._character_labels = character_labels
@@ -149,16 +150,6 @@ class SeriesParser:
         self._add_embed_field(ret, "Username", desc)
         return ret
 
-    def _common_numerical_float_string_parser(
-        self, timestamp: str, value: float
-    ) -> str:
-        ret = f"{timestamp}: `{value:.2f}`"
-        return ret
-
-    def _common_numerical_int_string_parser(self, timestamp: str, value: int) -> str:
-        ret = f"{timestamp}: `{value}`"
-        return ret
-
     def _common_numerical_parser(
         self,
         player_df: pd.DataFrame,
@@ -293,30 +284,3 @@ class SeriesParser:
     ) -> Sequence[EmbedField]:
         """dungeon_completions, quest_completions, raid_completions"""
         return [EmbedField("", value="UNIMPLEMENTED")]
-
-    @staticmethod
-    def _add_embed_field(
-        container: MutableSequence[EmbedField], label: str, value: str
-    ) -> None:
-        """Handles max embed value limit of 1024 characters."""
-        while True:
-            idx = value.rfind("\n", 0, 1024)
-            if idx == -1:
-                break
-            container.append(EmbedField(name=label, value=value[:idx]))
-            label = ""  # Only the first field has a label
-            value = value[idx + 1 :]
-            if len(value) <= 1024:
-                break
-
-    @staticmethod
-    def _get_max_key_length(dict_: dict[str, Any]) -> int:
-        return max(map(len, dict_.keys()))
-
-    @staticmethod
-    def _diff_str_or_blank(value: str, label: str, label_space: int) -> str:
-        return f"`{label:{label_space}} : ` {value}"
-
-    @staticmethod
-    def _format_number(value: Any) -> str:
-        return f"{value:,}" if isinstance(value, int) else f"{value:,.2f}"
