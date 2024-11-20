@@ -3,11 +3,11 @@ from unittest.mock import MagicMock, call, create_autospec, patch
 
 from nextcord import Interaction
 
-from fazcord.view.utils_convert_emerald_view import UtilsConvertEmeraldView
+from fazcord.view.wynn_utils.convert_emerald_view import UtilsConvertEmeraldView
 
 
 class TestUtilsConvertEmeraldView(IsolatedAsyncioTestCase):
-    @patch("fazcord.view.utils_convert_emerald_view.CustomEmbed")
+    @patch("fazcord.view.wynn_utils.convert_emerald_view.CustomEmbed")
     async def test_run(self, mock_embed: MagicMock) -> None:
         # Prepare
         embed_ins = mock_embed.return_value.get_base.return_value

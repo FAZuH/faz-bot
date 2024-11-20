@@ -15,7 +15,7 @@ from fazcord.series_parser.player_history_series_parser import PlayerHistorySeri
 from fazutil.db.fazwynn.model.player_info import PlayerInfo
 
 if TYPE_CHECKING:
-    from fazcord.view.history_player_history_view import HistoryPlayerHistoryView
+    from fazcord.view.player_history_view import HistoryPlayerHistoryView
 
 
 class HistoryPlayerHistoryEmbed(PaginationEmbed[EmbedField]):

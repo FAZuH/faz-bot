@@ -5,14 +5,14 @@ from unittest.mock import AsyncMock, MagicMock, create_autospec, patch
 from nextcord import Interaction
 from sortedcontainers.sortedlist import Sequence
 
-from fazcord.view.history_guild_activity_view import HistoryGuildActivityView
+from fazcord.view.wynn_history.guild_activity_view import HistoryGuildActivityView
 
 
 class TestHistoryGuildActivityView(IsolatedAsyncioTestCase):
     @staticmethod
     async def _mock_awaitable_attr() -> None: ...
 
-    @patch("fazcord.view.history_guild_activity_view.PaginationEmbed")
+    @patch("fazcord.view.wynn_history.guild_activity_view.PaginationEmbed")
     async def test_run_not_empty(self, mock_embed: MagicMock) -> None:
         # Prepare
         mock_bot = MagicMock()

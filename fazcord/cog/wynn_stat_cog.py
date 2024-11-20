@@ -4,7 +4,7 @@ import nextcord
 from nextcord import Interaction
 
 from fazcord.cog._base_cog import CogBase
-from fazcord.view.stat_worldlist_view import StatWorldlistView
+from fazcord.view.wynn_stat.worldlist_view import StatWorldlistView
 
 
 class WynnStatCog(CogBase):
