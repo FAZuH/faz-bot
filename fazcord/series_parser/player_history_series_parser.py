@@ -9,7 +9,7 @@ from fazcord.embed.embed_field import EmbedField
 from fazcord.select.id_select_options import IdSelectOptions
 
 
-class SeriesParser(BaseSeriesParser):
+class PlayerHistorySeriesParser(BaseSeriesParser):
 
     def __init__(self, character_labels: dict[str, str]) -> None:
         self._character_labels = character_labels

@@ -11,7 +11,7 @@ from fazcord.bot.errors import ApplicationException
 from fazcord.embed.embed_field import EmbedField
 from fazcord.select.id_select_options import IdSelectOptions, IdSelectOptionsType
 from fazcord.embed.pagination_embed import PaginationEmbed
-from fazcord.series_parser.series_parser import SeriesParser
+from fazcord.series_parser.player_history_series_parser import PlayerHistorySeriesParser
 from fazutil.db.fazwynn.model.player_info import PlayerInfo
 
 if TYPE_CHECKING:
@@ -43,7 +43,7 @@ class HistoryPlayerHistoryEmbed(PaginationEmbed[EmbedField]):
             color=Colour.teal(),
         )
         self._db = view.bot.app.create_fazwynn_db()
-        self._parsers = SeriesParser(character_labels)
+        self._parsers = PlayerHistorySeriesParser(character_labels)
 
     async def get_fields(
         self, character_uuid: str | None, id: IdSelectOptions
