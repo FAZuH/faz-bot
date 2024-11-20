@@ -4,7 +4,7 @@ from uuid import UUID
 
 import pandas as pd
 
-from fazcord.embed._base_series_parser import BaseSeriesParser
+from fazcord.series_parser._base_series_parser import BaseSeriesParser
 from fazcord.embed.embed_field import EmbedField
 from fazcord.select.id_select_options import IdSelectOptions
 

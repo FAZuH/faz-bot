@@ -11,7 +11,7 @@ from fazcord.bot.errors import ApplicationException
 from fazcord.embed.embed_field import EmbedField
 from fazcord.select.id_select_options import IdSelectOptions, IdSelectOptionsType
 from fazcord.embed.pagination_embed import PaginationEmbed
-from fazcord.view._series_parser import SeriesParser
+from fazcord.series_parser.series_parser import SeriesParser
 from fazutil.db.fazwynn.model.player_info import PlayerInfo
 
 if TYPE_CHECKING:
