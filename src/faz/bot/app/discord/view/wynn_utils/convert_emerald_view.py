@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from faz.bot.app.discord.bot.bot import Bot
 
 
-class UtilsConvertEmeraldView(BaseView):
+class ConvertEmeraldView(BaseView):
     _THUMBNAIL_URL = "https://static.wikia.nocookie.net/wynncraft_gamepedia_en/images/8/8c/Experience_bottle.png/revision/latest?cb=20190118234414"
 
     def __init__(self, bot: Bot, interaction: Interaction[Any], emerald_string: str) -> None:

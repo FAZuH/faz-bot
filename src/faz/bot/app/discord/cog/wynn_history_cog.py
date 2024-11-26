@@ -10,13 +10,13 @@ from nextcord import Interaction
 from faz.bot.app.discord.bot.errors import InvalidArgumentException, ParseException
 from faz.bot.app.discord.cog._base_cog import CogBase
 from faz.bot.app.discord.view.wynn_history.guild_activity_view import (
-    HistoryGuildActivityView,
+    GuildActivityView,
 )
 from faz.bot.app.discord.view.wynn_history.player_activity_view import (
-    HistoryPlayerActivityView,
+    PlayerActivityView,
 )
 from faz.bot.app.discord.view.wynn_history.player_history_view import (
-    HistoryPlayerHistoryView,
+    PlayerHistoryView,
 )
 
 
@@ -42,7 +42,7 @@ class WynnHistoryCog(CogBase):
         """
         player_info = await self._bot.utils.must_get_wynn_player(player)
         period_begin, period_end = self._parse_period(intr, period)
-        invoke = HistoryPlayerActivityView(self._bot, intr, player_info, period_begin, period_end)
+        invoke = PlayerActivityView(self._bot, intr, player_info, period_begin, period_end)
         await invoke.run()
 
     @history.subcommand()
@@ -68,7 +68,7 @@ class WynnHistoryCog(CogBase):
         await intr.response.defer()
         guild_info = await self._bot.utils.must_get_wynn_guild(guild)
         period_begin, period_end = self._parse_period(intr, period)
-        await HistoryGuildActivityView(
+        await GuildActivityView(
             self._bot, intr, guild_info, period_begin, period_end, show_inactive
         ).run()
 
@@ -89,7 +89,7 @@ class WynnHistoryCog(CogBase):
         await intr.response.defer()
         player_info = await self._bot.utils.must_get_wynn_player(player)
         period_begin, period_end = self._parse_period(intr, period)
-        await HistoryPlayerHistoryView(self._bot, intr, player_info, period_begin, period_end).run()
+        await PlayerHistoryView(self._bot, intr, player_info, period_begin, period_end).run()
 
     # @slash_command()
     # async def guild_history(

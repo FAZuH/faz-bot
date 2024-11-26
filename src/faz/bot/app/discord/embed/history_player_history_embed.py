@@ -21,14 +21,14 @@ from faz.bot.database.fazwynn.model.player_info import PlayerInfo
 
 if TYPE_CHECKING:
     from faz.bot.app.discord.view.wynn_history.player_history_view import (
-        HistoryPlayerHistoryView,
+        PlayerHistoryView,
     )
 
 
 class HistoryPlayerHistoryEmbed(PaginationEmbed[EmbedField]):
     def __init__(
         self,
-        view: HistoryPlayerHistoryView,
+        view: PlayerHistoryView,
         player: PlayerInfo,
         period_begin: datetime,
         period_end: datetime,

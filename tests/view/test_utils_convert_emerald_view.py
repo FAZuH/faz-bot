@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, call, create_autospec, patch
 from nextcord import Interaction
 
 from faz.bot.app.discord.view.wynn_utils.convert_emerald_view import (
-    UtilsConvertEmeraldView,
+    ConvertEmeraldView,
 )
 
 
@@ -15,7 +15,7 @@ class TestUtilsConvertEmeraldView(IsolatedAsyncioTestCase):
         embed_ins = mock_embed.return_value.get_base.return_value
         mock_bot = MagicMock()
         mock_interaction = create_autospec(Interaction, spec_set=True)
-        view = UtilsConvertEmeraldView(
+        view = ConvertEmeraldView(
             mock_bot,
             mock_interaction,
             "100le",

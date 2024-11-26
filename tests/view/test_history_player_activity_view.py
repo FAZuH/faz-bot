@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, MagicMock, create_autospec, patch
 from nextcord import Color, Interaction
 
 from faz.bot.app.discord.view.wynn_history.player_activity_view import (
-    HistoryPlayerActivityView,
+    PlayerActivityView,
 )
 
 
@@ -15,7 +15,7 @@ class TestHistoryPlayerActivity(IsolatedAsyncioTestCase):
         # Prepare
         mock_bot = MagicMock()
         mock_interaction = create_autospec(Interaction, spec_set=True)
-        view = HistoryPlayerActivityView(
+        view = PlayerActivityView(
             mock_bot,
             mock_interaction,
             MagicMock(latest_username="Foo"),

@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from faz.bot.database.fazwynn.model.player_info import PlayerInfo
 
 
-class HistoryPlayerActivityView(BaseView):
+class PlayerActivityView(BaseView):
     def __init__(
         self,
         bot: Bot,

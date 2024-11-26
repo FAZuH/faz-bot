@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from faz.bot.database.fazwynn.model.guild_info import GuildInfo
 
 
-class HistoryGuildActivityView(BasePaginationView):
+class GuildActivityView(BasePaginationView):
     def __init__(
         self,
         bot: Bot,
@@ -137,11 +137,11 @@ class HistoryGuildActivityView(BasePaginationView):
             return self._playtime_string
 
         def __lt__(self, other: int) -> bool:
-            if isinstance(other, HistoryGuildActivityView.ActivityResult):
+            if isinstance(other, GuildActivityView.ActivityResult):
                 return self.playtime < other.playtime
             return NotImplemented
 
         def __eq__(self, other: object) -> bool:
-            if isinstance(other, HistoryGuildActivityView.ActivityResult):
+            if isinstance(other, GuildActivityView.ActivityResult):
                 return self.playtime == other.playtime
             return NotImplemented

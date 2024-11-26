@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from faz.bot.database.fazwynn.model.worlds import Worlds
 
 
-class StatWorldlistView(BasePaginationView):
+class WorldlistView(BasePaginationView):
     def __init__(
         self,
         bot: Bot,

@@ -18,7 +18,7 @@ class TestWynnHistoryCog(unittest.IsolatedAsyncioTestCase):
         self.wynn_history = WynnHistoryCog(self.bot)
 
     @patch(
-        "faz.bot.app.discord.cog.wynn_history_cog.HistoryPlayerActivityView",
+        "faz.bot.app.discord.cog.wynn_history_cog.PlayerActivityView",
         autospec=True,
     )
     async def test_activity_command(self, mock_invoke: MagicMock) -> None:
@@ -37,7 +37,7 @@ class TestWynnHistoryCog(unittest.IsolatedAsyncioTestCase):
         )
 
     @patch(
-        "faz.bot.app.discord.cog.wynn_history_cog.HistoryGuildActivityView",
+        "faz.bot.app.discord.cog.wynn_history_cog.GuildActivityView",
         autospec=True,
     )
     async def test_guild_activity_command(self, mock_invoke: MagicMock) -> None:

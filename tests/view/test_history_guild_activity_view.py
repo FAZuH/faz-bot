@@ -6,7 +6,7 @@ from nextcord import Interaction
 from sortedcontainers.sortedlist import Sequence
 
 from faz.bot.app.discord.view.wynn_history.guild_activity_view import (
-    HistoryGuildActivityView,
+    GuildActivityView,
 )
 
 
@@ -32,7 +32,7 @@ class TestHistoryGuildActivityView(IsolatedAsyncioTestCase):
 
         embed = mock_embed.return_value.get_base.return_value
 
-        view = HistoryGuildActivityView(
+        view = GuildActivityView(
             mock_bot,
             mock_interaction,
             mock_guild_info,
