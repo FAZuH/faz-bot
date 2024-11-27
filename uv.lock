@@ -248,7 +248,7 @@ dev = [
 requires-dist = [
     { name = "audioop-lts", specifier = ">=0.2.1" },
     { name = "dateparser", specifier = ">=1.2.0" },
-    { name = "faz-bot-core", specifier = ">=0.2.1" },
+    { name = "faz-bot-core", specifier = ">=0.3.0" },
     { name = "faz-utils", specifier = ">=0.1.2" },
     { name = "loguru", specifier = ">=0.7.2" },
     { name = "nextcord", specifier = ">=2.6.0" },
@@ -269,7 +269,7 @@ dev = [
 
 [[package]]
 name = "faz-bot-core"
-version = "0.2.1"
+version = "0.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
@@ -284,9 +284,9 @@ dependencies = [
     { name = "sortedcontainers" },
     { name = "sqlalchemy" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f2/b1/e48731480bffbd7676c414f4d6c8c6441da00828cb2fcb5bb71606aaef61/faz_bot_core-0.2.1.tar.gz", hash = "sha256:539498000ff6cca0b9200ee2a3320bb83a3bf80d904005e6f2702d080e31c9c2", size = 4968236 }
+sdist = { url = "https://files.pythonhosted.org/packages/bb/a3/0c88c8c81464d2e6667a6aea757c89ab1f692f95f2cd096db86af6d524c2/faz_bot_core-0.3.0.tar.gz", hash = "sha256:0fd0a730b4adb2fc6ba3b2d33bcf02cd90bf4fdb0844de5d554a1f836087db52", size = 4966506 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/83/98/b5d7bb39e48fcf1a4d87c7bb71827c47671c6d9ded97d6354f8b704afc9f/faz_bot_core-0.2.1-py3-none-any.whl", hash = "sha256:0053114ff9b1e5739658a7d8c45659db961f670ee062aee1fcf48af44f5f8fd4", size = 5498698 },
+    { url = "https://files.pythonhosted.org/packages/98/74/6ecf43bbc39b6289977a63d9fd6570c3d3b368a11bcca538523c2083d80e/faz_bot_core-0.3.0-py3-none-any.whl", hash = "sha256:15265c28f2c409a0b0fb7751086928bbcc6e773d7c50755267f99688ae20ecbf", size = 5497331 },
 ]
 
 [[package]]
