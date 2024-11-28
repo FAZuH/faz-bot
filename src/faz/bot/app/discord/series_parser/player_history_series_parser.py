@@ -4,42 +4,42 @@ from uuid import UUID
 
 import pandas as pd
 
-from faz.bot.app.discord.series_parser._base_series_parser import BaseSeriesParser
 from faz.bot.app.discord.embed.embed_field import EmbedField
-from faz.bot.app.discord.select.id_select_options import IdSelectOptions
+from faz.bot.app.discord.select.player_history_id_options import PlayerHistoryIdOptions
+from faz.bot.app.discord.series_parser._base_series_parser import BaseSeriesParser
 
 
 class PlayerHistorySeriesParser(BaseSeriesParser):
     def __init__(self, character_labels: dict[str, str]) -> None:
         self._character_labels = character_labels
         self._categorical_parsers: dict[
-            IdSelectOptions,
+            PlayerHistoryIdOptions,
             Callable[[pd.DataFrame], Sequence[EmbedField]],
         ] = {}
         self._numerical_parsers: dict[
-            IdSelectOptions,
+            PlayerHistoryIdOptions,
             Callable[[pd.DataFrame, pd.DataFrame], Sequence[EmbedField]],
         ] = {}
 
         cat_prsr = self._categorical_parsers
-        cat_prsr[IdSelectOptions.GUILD] = self._parser_categorical_guild
-        cat_prsr[IdSelectOptions.USERNAME] = self._parser_categorical_username
+        cat_prsr[PlayerHistoryIdOptions.GUILD] = self._parser_categorical_guild
+        cat_prsr[PlayerHistoryIdOptions.USERNAME] = self._parser_categorical_username
 
         num_prsr = self._numerical_parsers
-        num_prsr[IdSelectOptions.ALL] = self._parser_numerical_all
-        num_prsr[IdSelectOptions.LEVEL] = self._parser_numerical_level
-        num_prsr[IdSelectOptions.WARS] = self._parser_numerical_wars
-        num_prsr[IdSelectOptions.PLAYTIME] = self._parser_numerical_playtime
-        num_prsr[IdSelectOptions.MOBS_KILLED] = self._parser_numerical_mobs_killed
-        num_prsr[IdSelectOptions.CHESTS_FOUND] = self._parser_numerical_chests_found
-        num_prsr[IdSelectOptions.LOGINS] = self._parser_numerical_logins
-        num_prsr[IdSelectOptions.DEATHS] = self._parser_numerical_deaths
-        num_prsr[IdSelectOptions.CHALLENGES] = self._parser_numerical_challenges
-        num_prsr[IdSelectOptions.PROFESSIONS] = self._parser_numerical_professions
-        num_prsr[IdSelectOptions.COMPLETIONS] = self._parser_numerical_completions
+        num_prsr[PlayerHistoryIdOptions.ALL] = self._parser_numerical_all
+        num_prsr[PlayerHistoryIdOptions.LEVEL] = self._parser_numerical_level
+        num_prsr[PlayerHistoryIdOptions.WARS] = self._parser_numerical_wars
+        num_prsr[PlayerHistoryIdOptions.PLAYTIME] = self._parser_numerical_playtime
+        num_prsr[PlayerHistoryIdOptions.MOBS_KILLED] = self._parser_numerical_mobs_killed
+        num_prsr[PlayerHistoryIdOptions.CHESTS_FOUND] = self._parser_numerical_chests_found
+        num_prsr[PlayerHistoryIdOptions.LOGINS] = self._parser_numerical_logins
+        num_prsr[PlayerHistoryIdOptions.DEATHS] = self._parser_numerical_deaths
+        num_prsr[PlayerHistoryIdOptions.CHALLENGES] = self._parser_numerical_challenges
+        num_prsr[PlayerHistoryIdOptions.PROFESSIONS] = self._parser_numerical_professions
+        num_prsr[PlayerHistoryIdOptions.COMPLETIONS] = self._parser_numerical_completions
 
     def get_categorical_parser(
-        self, id: IdSelectOptions
+        self, id: PlayerHistoryIdOptions
     ) -> Callable[[pd.DataFrame], Sequence[EmbedField]]:
         ret = self._categorical_parsers.get(id, None)
         if ret is None:
@@ -47,18 +47,11 @@ class PlayerHistorySeriesParser(BaseSeriesParser):
         return ret
 
     def get_numerical_parser(
-        self, id: IdSelectOptions
+        self, id: PlayerHistoryIdOptions
     ) -> Callable[[pd.DataFrame, pd.DataFrame], Sequence[EmbedField]]:
         ret = self._numerical_parsers.get(id, None)
         if ret is None:
             raise ValueError(f"Invalid mode: {id}")
-        return ret
-
-    @staticmethod
-    def _get_formatted_timestamp(row: pd.Series) -> str:
-        dt: datetime = row["datetime"]  # type: ignore
-        timestamp = dt.timestamp()
-        ret = f"<t:{timestamp:.0f}:R>"
         return ret
 
     def _parser_numerical_all(

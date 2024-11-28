@@ -5,27 +5,23 @@ from typing import TYPE_CHECKING, Sequence, override
 from uuid import UUID
 
 import pandas as pd
+from faz.bot.database.fazwynn.model.player_info import PlayerInfo
 from nextcord import Colour
 
 from faz.bot.app.discord.bot.errors import ApplicationException
 from faz.bot.app.discord.embed.embed_field import EmbedField
-from faz.bot.app.discord.select.id_select_options import (
-    IdSelectOptions,
-    IdSelectOptionsType,
-)
 from faz.bot.app.discord.embed.pagination_embed import PaginationEmbed
-from faz.bot.app.discord.series_parser.player_history_series_parser import (
-    PlayerHistorySeriesParser,
+from faz.bot.app.discord.select.player_history_id_options import (
+    PlayerHistoryIdOptions,
+    PlayerHistoryIdOptionsType,
 )
-from faz.bot.database.fazwynn.model.player_info import PlayerInfo
+from faz.bot.app.discord.series_parser.player_history_series_parser import PlayerHistorySeriesParser
 
 if TYPE_CHECKING:
-    from faz.bot.app.discord.view.wynn_history.player_history_view import (
-        PlayerHistoryView,
-    )
+    from faz.bot.app.discord.view.wynn_history.player_history_view import PlayerHistoryView
 
 
-class HistoryPlayerHistoryEmbed(PaginationEmbed[EmbedField]):
+class PlayerHistoryEmbed(PaginationEmbed[EmbedField]):
     def __init__(
         self,
         view: PlayerHistoryView,
@@ -52,7 +48,7 @@ class HistoryPlayerHistoryEmbed(PaginationEmbed[EmbedField]):
         self._parsers = PlayerHistorySeriesParser(character_labels)
 
     async def get_fields(
-        self, character_uuid: str | None, id: IdSelectOptions
+        self, character_uuid: str | None, id: PlayerHistoryIdOptions
     ) -> Sequence[EmbedField]:
         # Prepare
         db = self._db
@@ -60,7 +56,7 @@ class HistoryPlayerHistoryEmbed(PaginationEmbed[EmbedField]):
         player_hist = db.player_history.select_between_period_as_dataframe(
             self._player.uuid, self._period_begin, self._period_end
         )
-        character_hist = pd.DataFrame()
+        df_char = pd.DataFrame()
 
         # Data: Total or Character
         if character_uuid is None:
@@ -69,11 +65,11 @@ class HistoryPlayerHistoryEmbed(PaginationEmbed[EmbedField]):
                 df_char_ = db.character_history.select_between_period_as_dataframe(
                     ch.character_uuid, self._period_begin, self._period_end
                 )
-                if len(df_char_) == 0:
+                if df_char_.empty:
                     continue
-                character_hist = pd.concat([character_hist, df_char_])
+                df_char = pd.concat([df_char, df_char_])
         else:
-            character_hist = db.character_history.select_between_period_as_dataframe(
+            df_char = db.character_history.select_between_period_as_dataframe(
                 UUID(character_uuid).bytes, self._period_begin, self._period_end
             )
 
@@ -83,19 +79,19 @@ class HistoryPlayerHistoryEmbed(PaginationEmbed[EmbedField]):
         # Numerical for Total, Character
         # All for Total, Character
         type_ = id.type
-        if type_ == IdSelectOptionsType.CATEGORICAL:
+        if type_ == PlayerHistoryIdOptionsType.CATEGORICAL:
             fields = self._get_fields_categorical(player_hist, id)
-        elif type_ == IdSelectOptionsType.NUMERICAL:
-            fields = self._get_fields_numerical(player_hist, character_hist, id)
-        elif type_ == IdSelectOptionsType.ALL:
-            fields = self._get_fields_numerical(player_hist, character_hist, id)
+        elif type_ == PlayerHistoryIdOptionsType.NUMERICAL:
+            fields = self._get_fields_numerical(player_hist, df_char, id)
+        elif type_ == PlayerHistoryIdOptionsType.ALL:
+            fields = self._get_fields_numerical(player_hist, df_char, id)
         else:
             raise ApplicationException("This should not happen")
 
         return fields
 
     def _get_fields_categorical(
-        self, player_history: pd.DataFrame, id: IdSelectOptions
+        self, player_history: pd.DataFrame, id: PlayerHistoryIdOptions
     ) -> Sequence[EmbedField]:
         parser = self._parsers.get_categorical_parser(id)
         fields = parser(player_history)
@@ -107,7 +103,7 @@ class HistoryPlayerHistoryEmbed(PaginationEmbed[EmbedField]):
         self,
         player_history: pd.DataFrame,
         character_history: pd.DataFrame,
-        id: IdSelectOptions,
+        id: PlayerHistoryIdOptions,
     ) -> Sequence[EmbedField]:
         parser = self._parsers.get_numerical_parser(id)
         fields = parser(player_history, character_history)
@@ -115,7 +111,7 @@ class HistoryPlayerHistoryEmbed(PaginationEmbed[EmbedField]):
             return [self._get_no_data_field(id)]
         return fields
 
-    def _get_no_data_field(self, id: IdSelectOptions) -> EmbedField:
+    def _get_no_data_field(self, id: PlayerHistoryIdOptions) -> EmbedField:
         ret = EmbedField(
             id.value.value,
             "No data found within the selected period of time.",
@@ -123,7 +119,7 @@ class HistoryPlayerHistoryEmbed(PaginationEmbed[EmbedField]):
         return ret
 
     @override
-    def get_embed_page(self, page: int) -> HistoryPlayerHistoryEmbed:
+    def get_embed_page(self, page: int) -> PlayerHistoryEmbed:
         """Build specific page of the PaginationEmbed."""
         embed = self.get_base()
         fields = embed.get_items(page)
