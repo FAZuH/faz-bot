@@ -40,6 +40,10 @@ dev = [
     "pytest>=8.3.3",
     "ruff>=0.7.4",
 ]
+sandbox = [
+    "ipykernel>=6.29.5",
+    "matplotlib>=3.9.2",
+]
 
 [build-system]
 requires = ["setuptools>=42"]
