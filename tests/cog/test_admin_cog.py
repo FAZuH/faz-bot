@@ -5,14 +5,14 @@ from typing import TYPE_CHECKING, AsyncGenerator
 from unittest import IsolatedAsyncioTestCase
 from unittest.mock import AsyncMock, MagicMock, create_autospec, patch
 
+from faz.bot.core.properties import Properties
+from faz.bot.database.fazcord.fazcord_database import FazcordDatabase
+from faz.bot.database.fazwynn.fazwynn_database import FazwynnDatabase
+
 from faz.bot.app.discord.bot._utils import Utils
 from faz.bot.app.discord.bot.bot import Bot
-from faz.bot.app.discord.cog.admin_cog import AdminCog
 from faz.bot.app.discord.bot.errors import ApplicationException
-from faz.bot.database.fazcord.fazcord_database import FazcordDatabase
-from faz.bot.core.properties import Properties
-
-from faz.bot.database.fazwynn.fazwynn_database import FazwynnDatabase
+from faz.bot.app.discord.cog.admin_cog import AdminCog
 
 FazwynnDatabase  # type: ignore : Let sqlalchemy load the models
 

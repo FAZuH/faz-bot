@@ -3,12 +3,10 @@ from typing import override
 from unittest import IsolatedAsyncioTestCase
 from unittest.mock import MagicMock, create_autospec, patch
 
+from faz.bot.wynn.util.crafted_roll_probability import CraftedRollProbability
 from nextcord import Interaction
 
-from faz.bot.app.discord.view.wynn_utils.crafted_probability_view import (
-    CraftedProbabilityView,
-)
-from faz.bot.wynn.util.crafted_roll_probability import CraftedRollProbability
+from faz.bot.app.discord.view.wynn_utils.crafted_probability_view import CraftedProbabilityView
 
 
 class TestUtilsCraftedProbabilityView(IsolatedAsyncioTestCase):

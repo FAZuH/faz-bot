@@ -3,11 +3,11 @@ from __future__ import annotations
 from decimal import Decimal
 from typing import TYPE_CHECKING, Any, override
 
+from faz.bot.wynn.util.ingredient_drop_probability import IngredientDropProbability
 from nextcord import Embed, Interaction
 
-from faz.bot.app.discord.view._base_view import BaseView
 from faz.bot.app.discord.embed.custom_embed import CustomEmbed
-from faz.bot.wynn.util.ingredient_drop_probability import IngredientDropProbability
+from faz.bot.app.discord.view._base_view import BaseView
 
 if TYPE_CHECKING:
     from faz.bot.app.discord.bot.bot import Bot

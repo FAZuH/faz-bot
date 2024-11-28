@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, Any, Sequence, override
 
+from faz.bot.database.fazwynn.model.player_activity_history import PlayerActivityHistory
 from nextcord import Color
 from sortedcontainers import SortedList
 from tabulate import tabulate
@@ -10,13 +11,12 @@ from tabulate import tabulate
 from faz.bot.app.discord.embed.pagination_embed import PaginationEmbed
 from faz.bot.app.discord.view._base_pagination_view import BasePaginationView
 from faz.bot.app.discord.view._view_utils import ViewUtils
-from faz.bot.database.fazwynn.model.player_activity_history import PlayerActivityHistory
 
 if TYPE_CHECKING:
+    from faz.bot.database.fazwynn.model.guild_info import GuildInfo
     from nextcord import Interaction
 
     from faz.bot.app.discord.bot.bot import Bot
-    from faz.bot.database.fazwynn.model.guild_info import GuildInfo
 
 
 class GuildActivityView(BasePaginationView):

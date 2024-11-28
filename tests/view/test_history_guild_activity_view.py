@@ -5,9 +5,7 @@ from unittest.mock import AsyncMock, MagicMock, create_autospec, patch
 from nextcord import Interaction
 from sortedcontainers.sortedlist import Sequence
 
-from faz.bot.app.discord.view.wynn_history.guild_activity_view import (
-    GuildActivityView,
-)
+from faz.bot.app.discord.view.wynn_history.guild_activity_view import GuildActivityView
 
 
 class TestHistoryGuildActivityView(IsolatedAsyncioTestCase):

@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, override
 
-from nextcord import Embed, Interaction
-
-from faz.bot.app.discord.view._base_view import BaseView
-from faz.bot.app.discord.embed.custom_embed import CustomEmbed
 from faz.bot.wynn.util.emerald_util import EmeraldUtil
 from faz.bot.wynn.util.emeralds import Emeralds
+from nextcord import Embed, Interaction
+
+from faz.bot.app.discord.embed.custom_embed import CustomEmbed
+from faz.bot.app.discord.view._base_view import BaseView
 
 if TYPE_CHECKING:
     from faz.bot.app.discord.bot.bot import Bot

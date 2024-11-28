@@ -3,9 +3,7 @@ from unittest.mock import MagicMock, call, create_autospec, patch
 
 from nextcord import Interaction
 
-from faz.bot.app.discord.view.wynn_utils.convert_emerald_view import (
-    ConvertEmeraldView,
-)
+from faz.bot.app.discord.view.wynn_utils.convert_emerald_view import ConvertEmeraldView
 
 
 class TestUtilsConvertEmeraldView(IsolatedAsyncioTestCase):

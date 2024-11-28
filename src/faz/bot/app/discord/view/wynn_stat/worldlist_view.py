@@ -6,15 +6,15 @@ from typing import TYPE_CHECKING, Any, Literal, override
 from nextcord import Color
 from tabulate import tabulate
 
-from faz.bot.app.discord.view._base_pagination_view import BasePaginationView
 from faz.bot.app.discord.embed.pagination_embed import PaginationEmbed
+from faz.bot.app.discord.view._base_pagination_view import BasePaginationView
 from faz.bot.app.discord.view._view_utils import ViewUtils
 
 if TYPE_CHECKING:
+    from faz.bot.database.fazwynn.model.worlds import Worlds
     from nextcord import Interaction
 
     from faz.bot.app.discord.bot.bot import Bot
-    from faz.bot.database.fazwynn.model.worlds import Worlds
 
 
 class WorldlistView(BasePaginationView):

@@ -5,15 +5,15 @@ from typing import TYPE_CHECKING, Any, override
 
 from nextcord import Color, Embed
 
-from faz.bot.app.discord.view._base_view import BaseView
 from faz.bot.app.discord.embed.custom_embed import CustomEmbed
+from faz.bot.app.discord.view._base_view import BaseView
 from faz.bot.app.discord.view._view_utils import ViewUtils
 
 if TYPE_CHECKING:
+    from faz.bot.database.fazwynn.model.player_info import PlayerInfo
     from nextcord import Interaction
 
     from faz.bot.app.discord.bot.bot import Bot
-    from faz.bot.database.fazwynn.model.player_info import PlayerInfo
 
 
 class PlayerActivityView(BaseView):

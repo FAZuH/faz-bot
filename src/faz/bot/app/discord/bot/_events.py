@@ -4,14 +4,7 @@ import traceback
 from typing import TYPE_CHECKING, Any
 
 from loguru import logger
-from nextcord import (
-    Activity,
-    ActivityType,
-    ApplicationCheckFailure,
-    Colour,
-    Interaction,
-    errors,
-)
+from nextcord import Activity, ActivityType, ApplicationCheckFailure, Colour, Interaction, errors
 from nextcord.ext import commands
 from nextcord.ext.commands import BucketType, Cooldown, CooldownMapping
 

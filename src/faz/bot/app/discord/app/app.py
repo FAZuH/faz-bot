@@ -4,13 +4,13 @@ from contextlib import contextmanager
 from threading import Lock
 from typing import Generator
 
+from faz.bot.core.logger_setup import LoggerSetup
+from faz.bot.core.properties import Properties
+from faz.bot.database.fazcord.fazcord_database import FazcordDatabase
+from faz.bot.database.fazwynn.fazwynn_database import FazwynnDatabase
 from loguru import logger
 
 from faz.bot.app.discord.bot.bot import Bot
-from faz.bot.database.fazcord.fazcord_database import FazcordDatabase
-from faz.bot.database.fazwynn.fazwynn_database import FazwynnDatabase
-from faz.bot.core.properties import Properties
-from faz.bot.core.logger_setup import LoggerSetup
 
 
 class App:
