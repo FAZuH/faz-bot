@@ -1,9 +1,14 @@
+from datetime import datetime
+from datetime import timedelta
 import unittest
-from datetime import datetime, timedelta
-from unittest.mock import AsyncMock, MagicMock, create_autospec, patch
+from unittest.mock import AsyncMock
+from unittest.mock import create_autospec
+from unittest.mock import MagicMock
+from unittest.mock import patch
 
 from faz.bot.app.discord.bot._utils import Utils
-from faz.bot.app.discord.bot.errors import InvalidArgumentException, ParseException
+from faz.bot.app.discord.bot.errors import InvalidArgumentException
+from faz.bot.app.discord.bot.errors import ParseException
 from faz.bot.app.discord.cog.wynn_history_cog import WynnHistoryCog
 
 

@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from abc import abstractmethod
 from datetime import datetime
-from typing import Any, Optional, Sequence, Union, override
+from typing import Any, Optional, override, Sequence, Union
 
-from nextcord import Colour, Interaction
+from nextcord import Colour
+from nextcord import Interaction
 from nextcord.types.embed import EmbedType
 
 from faz.bot.app.discord.embed.custom_embed import CustomEmbed

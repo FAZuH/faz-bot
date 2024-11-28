@@ -3,7 +3,9 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any, Optional, Self, Union
 
-from nextcord import Colour, Embed, Interaction
+from nextcord import Colour
+from nextcord import Embed
+from nextcord import Interaction
 from nextcord.types.embed import EmbedType
 
 

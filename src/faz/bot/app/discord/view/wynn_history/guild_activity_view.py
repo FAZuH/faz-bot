@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-from datetime import datetime, timedelta
-from typing import TYPE_CHECKING, Any, Sequence, override
+from datetime import datetime
+from datetime import timedelta
+from typing import Any, override, Sequence, TYPE_CHECKING
 
 from faz.bot.database.fazwynn.model.player_activity_history import PlayerActivityHistory
 from nextcord import Color

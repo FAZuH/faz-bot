@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 from contextlib import asynccontextmanager
-from typing import TYPE_CHECKING, AsyncGenerator
+from typing import AsyncGenerator, TYPE_CHECKING
 from unittest import IsolatedAsyncioTestCase
-from unittest.mock import AsyncMock, MagicMock, create_autospec, patch
+from unittest.mock import AsyncMock
+from unittest.mock import create_autospec
+from unittest.mock import MagicMock
+from unittest.mock import patch
 
 from faz.bot.core.properties import Properties
 from faz.bot.database.fazcord.fazcord_database import FazcordDatabase

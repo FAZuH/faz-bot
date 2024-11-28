@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, override
+from typing import Any, override, TYPE_CHECKING
 
-from nextcord import Color, Embed
+from nextcord import Color
+from nextcord import Embed
 
 from faz.bot.app.discord.embed.custom_embed import CustomEmbed
 from faz.bot.app.discord.view._base_view import BaseView

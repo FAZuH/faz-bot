@@ -1,20 +1,18 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Sequence, override
+from typing import override, Sequence, TYPE_CHECKING
 from uuid import UUID
 
-import pandas as pd
 from faz.bot.database.fazwynn.model.player_info import PlayerInfo
 from nextcord import Colour
+import pandas as pd
 
 from faz.bot.app.discord.bot.errors import ApplicationException
 from faz.bot.app.discord.embed.embed_field import EmbedField
 from faz.bot.app.discord.embed.pagination_embed import PaginationEmbed
-from faz.bot.app.discord.select.player_history_id_options import (
-    PlayerHistoryIdOptions,
-    PlayerHistoryIdOptionsType,
-)
+from faz.bot.app.discord.select.player_history_id_options import PlayerHistoryIdOptions
+from faz.bot.app.discord.select.player_history_id_options import PlayerHistoryIdOptionsType
 from faz.bot.app.discord.series_parser.player_history_series_parser import PlayerHistorySeriesParser
 
 if TYPE_CHECKING:

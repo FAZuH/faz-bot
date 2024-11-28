@@ -1,8 +1,13 @@
-from datetime import datetime, timedelta
+from datetime import datetime
+from datetime import timedelta
 from unittest import IsolatedAsyncioTestCase
-from unittest.mock import AsyncMock, MagicMock, create_autospec, patch
+from unittest.mock import AsyncMock
+from unittest.mock import create_autospec
+from unittest.mock import MagicMock
+from unittest.mock import patch
 
-from nextcord import Color, Interaction
+from nextcord import Color
+from nextcord import Interaction
 
 from faz.bot.app.discord.view.wynn_history.player_activity_view import PlayerActivityView
 

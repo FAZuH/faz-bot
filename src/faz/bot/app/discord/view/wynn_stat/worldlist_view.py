@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import timezone
-from typing import TYPE_CHECKING, Any, Literal, override
+from typing import Any, Literal, override, TYPE_CHECKING
 
 from nextcord import Color
 from tabulate import tabulate

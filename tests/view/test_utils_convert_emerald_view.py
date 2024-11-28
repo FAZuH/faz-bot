@@ -1,5 +1,8 @@
 from unittest import IsolatedAsyncioTestCase
-from unittest.mock import MagicMock, call, create_autospec, patch
+from unittest.mock import call
+from unittest.mock import create_autospec
+from unittest.mock import MagicMock
+from unittest.mock import patch
 
 from nextcord import Interaction
 

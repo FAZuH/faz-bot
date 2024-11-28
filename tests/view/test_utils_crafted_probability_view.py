@@ -1,7 +1,9 @@
 from decimal import Decimal
 from typing import override
 from unittest import IsolatedAsyncioTestCase
-from unittest.mock import MagicMock, create_autospec, patch
+from unittest.mock import create_autospec
+from unittest.mock import MagicMock
+from unittest.mock import patch
 
 from faz.bot.wynn.util.crafted_roll_probability import CraftedRollProbability
 from nextcord import Interaction

@@ -65,6 +65,10 @@ testpaths = [
     "tests",
 ]
 
+[tool.isort]
+profile = "google"
+line_length = 100
+
 [tool.ruff]
 exclude = [
     ".bzr",

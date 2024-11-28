@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, override
+from typing import Any, override, TYPE_CHECKING
 from uuid import UUID
 
 from nextcord.ui import StringSelect

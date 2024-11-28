@@ -1,4 +1,5 @@
-from nextcord import ApplicationCheckFailure, ApplicationError
+from nextcord import ApplicationCheckFailure
+from nextcord import ApplicationError
 
 
 class ApplicationException(ApplicationError): ...

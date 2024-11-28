@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 from decimal import Decimal
-from typing import TYPE_CHECKING, Any, Callable, override
+from typing import Any, Callable, override, TYPE_CHECKING
 
 from faz.bot.wynn.util.crafted_roll_probability import CraftedRollProbability
 from faz.utils.cache_util import CacheUtil
-from nextcord import ButtonStyle, Embed, Interaction
-from nextcord.ui import Button, button
+from nextcord import ButtonStyle
+from nextcord import Embed
+from nextcord import Interaction
+from nextcord.ui import Button
+from nextcord.ui import button
 
 from faz.bot.app.discord.embed.custom_embed import CustomEmbed
 from faz.bot.app.discord.view._base_view import BaseView

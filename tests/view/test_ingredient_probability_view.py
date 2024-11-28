@@ -1,6 +1,8 @@
 from decimal import Decimal
 from unittest import IsolatedAsyncioTestCase
-from unittest.mock import MagicMock, create_autospec, patch
+from unittest.mock import create_autospec
+from unittest.mock import MagicMock
+from unittest.mock import patch
 
 from nextcord import Interaction
 
