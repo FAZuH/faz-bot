@@ -163,6 +163,7 @@ cython_debug/
 
 # Others
 .sandbox.py
+sandbox.py
 .jukit
 .vscode
 todo.md
