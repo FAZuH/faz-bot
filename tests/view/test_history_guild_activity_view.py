@@ -1,13 +1,14 @@
 from datetime import datetime
 from unittest import IsolatedAsyncioTestCase
-from unittest.mock import AsyncMock, MagicMock, create_autospec, patch
+from unittest.mock import AsyncMock
+from unittest.mock import create_autospec
+from unittest.mock import MagicMock
+from unittest.mock import patch
 
 from nextcord import Interaction
 from sortedcontainers.sortedlist import Sequence
 
-from faz.bot.app.discord.view.wynn_history.guild_activity_view import (
-    HistoryGuildActivityView,
-)
+from faz.bot.app.discord.view.wynn_history.guild_activity_view import GuildActivityView
 
 
 class TestHistoryGuildActivityView(IsolatedAsyncioTestCase):
@@ -32,7 +33,7 @@ class TestHistoryGuildActivityView(IsolatedAsyncioTestCase):
 
         embed = mock_embed.return_value.get_base.return_value
 
-        view = HistoryGuildActivityView(
+        view = GuildActivityView(
             mock_bot,
             mock_interaction,
             mock_guild_info,

@@ -1,19 +1,20 @@
 from __future__ import annotations
 
 from decimal import Decimal
-from typing import TYPE_CHECKING, Any, override
+from typing import Any, override, TYPE_CHECKING
 
-from nextcord import Embed, Interaction
-
-from faz.bot.app.discord.view._base_view import BaseView
-from faz.bot.app.discord.embed.custom_embed import CustomEmbed
 from faz.bot.wynn.util.ingredient_drop_probability import IngredientDropProbability
+from nextcord import Embed
+from nextcord import Interaction
+
+from faz.bot.app.discord.embed.custom_embed import CustomEmbed
+from faz.bot.app.discord.view._base_view import BaseView
 
 if TYPE_CHECKING:
     from faz.bot.app.discord.bot.bot import Bot
 
 
-class UtilsIngredientProbabilityView(BaseView):
+class IngredientProbabilityView(BaseView):
     _THUMBNAIL_URL = "https://www.wynndata.tk/assets/images/items/v4//ingredients/heads/50d8ba53402f4cb0455067d068973b3d.png"
 
     def __init__(

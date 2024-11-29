@@ -1,12 +1,15 @@
-from datetime import datetime, timedelta
+from datetime import datetime
+from datetime import timedelta
 from unittest import IsolatedAsyncioTestCase
-from unittest.mock import AsyncMock, MagicMock, create_autospec, patch
+from unittest.mock import AsyncMock
+from unittest.mock import create_autospec
+from unittest.mock import MagicMock
+from unittest.mock import patch
 
-from nextcord import Color, Interaction
+from nextcord import Color
+from nextcord import Interaction
 
-from faz.bot.app.discord.view.wynn_history.player_activity_view import (
-    HistoryPlayerActivityView,
-)
+from faz.bot.app.discord.view.wynn_history.player_activity_view import PlayerActivityView
 
 
 class TestHistoryPlayerActivity(IsolatedAsyncioTestCase):
@@ -15,7 +18,7 @@ class TestHistoryPlayerActivity(IsolatedAsyncioTestCase):
         # Prepare
         mock_bot = MagicMock()
         mock_interaction = create_autospec(Interaction, spec_set=True)
-        view = HistoryPlayerActivityView(
+        view = PlayerActivityView(
             mock_bot,
             mock_interaction,
             MagicMock(latest_username="Foo"),

@@ -1,11 +1,15 @@
 from collections.abc import Sequence
-from datetime import datetime, timezone
+from datetime import datetime
+from datetime import timezone
 from unittest import IsolatedAsyncioTestCase
-from unittest.mock import AsyncMock, MagicMock, create_autospec, patch
+from unittest.mock import AsyncMock
+from unittest.mock import create_autospec
+from unittest.mock import MagicMock
+from unittest.mock import patch
 
 from nextcord import Interaction
 
-from faz.bot.app.discord.view.wynn_stat.worldlist_view import StatWorldlistView
+from faz.bot.app.discord.view.wynn_stat.worldlist_view import WorldlistView
 
 
 class TestStatWorldlistView(IsolatedAsyncioTestCase):
@@ -16,7 +20,7 @@ class TestStatWorldlistView(IsolatedAsyncioTestCase):
         mock_interaction = create_autospec(Interaction, spec_set=True)
         mock_interaction.created_at = datetime.fromtimestamp(600).replace(tzinfo=timezone.utc)
         mock_bot.fazwynn_db.worlds.get_worlds = AsyncMock(return_value=self._get_mock_worlds())
-        view = StatWorldlistView(mock_bot, mock_interaction, "Player Count")
+        view = WorldlistView(mock_bot, mock_interaction, "Player Count")
         embed = MagicMock()
         embed.get_items.return_value = self._get_mock_worlds()
         mock_embed.return_value.get_base.return_value = embed

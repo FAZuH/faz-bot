@@ -1,24 +1,22 @@
-import re
 from collections.abc import Sequence
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal
+from decimal import InvalidOperation
+import re
 from typing import Any
 
+from faz.bot.wynn.util.crafted_roll_probability import CraftedRollProbability
+from faz.bot.wynn.util.ingredient_field import IngredientField
 import nextcord
 from nextcord import Interaction
 
+from faz.bot.app.discord.bot.errors import InvalidArgumentException
+from faz.bot.app.discord.bot.errors import ParseException
 from faz.bot.app.discord.cog._base_cog import CogBase
-from faz.bot.app.discord.bot.errors import InvalidArgumentException, ParseException
-from faz.bot.app.discord.view.wynn_utils.convert_emerald_view import (
-    UtilsConvertEmeraldView,
-)
-from faz.bot.app.discord.view.wynn_utils.crafted_probability_view import (
-    UtilsCraftedProbabilityView,
-)
+from faz.bot.app.discord.view.wynn_utils.convert_emerald_view import ConvertEmeraldView
+from faz.bot.app.discord.view.wynn_utils.crafted_probability_view import CraftedProbabilityView
 from faz.bot.app.discord.view.wynn_utils.ingredient_probability_view import (
-    UtilsIngredientProbabilityView,
+    IngredientProbabilityView,
 )
-from faz.bot.wynn.util.crafted_roll_probability import CraftedRollProbability
-from faz.bot.wynn.util.ingredient_field import IngredientField
 
 
 class WynnUtilsCog(CogBase):
@@ -48,7 +46,7 @@ class WynnUtilsCog(CogBase):
             ingredient5 (str, optional): min,max[,efficiency]
             ingredient6 (str, optional): min,max[,efficiency]
         """
-        await UtilsCraftedProbabilityView(
+        await CraftedProbabilityView(
             self._bot,
             interaction,
             CraftedRollProbability(
@@ -72,7 +70,7 @@ class WynnUtilsCog(CogBase):
         Args:
             emerald_string (str, optional): Examples: "2x 1stx 1le 1eb 1e", "2.5stx 100.5le 100.2eb", "1/3x 1000eb".
         """
-        await UtilsConvertEmeraldView(self._bot, interaction, emerald_string).run()
+        await ConvertEmeraldView(self._bot, interaction, emerald_string).run()
 
     @utils.subcommand()
     async def ingredient_probability(
@@ -90,7 +88,7 @@ class WynnUtilsCog(CogBase):
             loot_quality (int, optional): Loot quality value. Defaults to 0.
         """
         parsed_base_chande = self._parse_base_chance(base_chance)
-        await UtilsIngredientProbabilityView(
+        await IngredientProbabilityView(
             self._bot, interaction, parsed_base_chande, loot_bonus, loot_quality
         ).run()
 

@@ -1,10 +1,13 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any
+from abc import ABC
+from abc import abstractmethod
+from typing import Any, TYPE_CHECKING
 
-from nextcord import ButtonStyle, Interaction
-from nextcord.ui import Button, button
+from nextcord import ButtonStyle
+from nextcord import Interaction
+from nextcord.ui import Button
+from nextcord.ui import button
 
 from faz.bot.app.discord.view._base_view import BaseView
 

@@ -1,9 +1,11 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, override
+from abc import ABC
+from abc import abstractmethod
+from typing import Any, override, TYPE_CHECKING
 
-from nextcord.ui import Button, View
+from nextcord.ui import Button
+from nextcord.ui import View
 
 if TYPE_CHECKING:
     from nextcord import Interaction

@@ -1,22 +1,23 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, override
+from typing import Any, override, TYPE_CHECKING
 
-from nextcord import Color, Embed
+from nextcord import Color
+from nextcord import Embed
 
-from faz.bot.app.discord.view._base_view import BaseView
 from faz.bot.app.discord.embed.custom_embed import CustomEmbed
+from faz.bot.app.discord.view._base_view import BaseView
 from faz.bot.app.discord.view._view_utils import ViewUtils
 
 if TYPE_CHECKING:
+    from faz.bot.database.fazwynn.model.player_info import PlayerInfo
     from nextcord import Interaction
 
     from faz.bot.app.discord.bot.bot import Bot
-    from faz.bot.database.fazwynn.model.player_info import PlayerInfo
 
 
-class HistoryPlayerActivityView(BaseView):
+class PlayerActivityView(BaseView):
     def __init__(
         self,
         bot: Bot,

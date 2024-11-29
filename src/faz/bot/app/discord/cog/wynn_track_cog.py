@@ -1,12 +1,11 @@
 from typing import Any, Iterable, Literal, override
 
-from nextcord import Interaction, slash_command
+from nextcord import Interaction
+from nextcord import slash_command
 
+from faz.bot.app.discord.bot.errors import InvalidActionException
+from faz.bot.app.discord.bot.errors import InvalidArgumentException
 from faz.bot.app.discord.cog._base_cog import CogBase
-from faz.bot.app.discord.bot.errors import (
-    InvalidActionException,
-    InvalidArgumentException,
-)
 
 
 class WynnTrackCog(CogBase):

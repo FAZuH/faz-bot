@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import Any, TYPE_CHECKING
 
 from loguru import logger
 from nextcord import Interaction
@@ -24,7 +24,7 @@ class Checks:
             return False
 
         user_id = interaction.user.id
-        is_admin = user_id == self.bot.app.properties.ADMIN_DISCORD_ID
+        is_admin = user_id == self.bot.app.properties.DEV_DISCORD_ID
 
         if not is_admin:
             logger.warning(

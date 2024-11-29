@@ -3,8 +3,9 @@ from decimal import Decimal
 from unittest import TestCase
 from unittest.mock import MagicMock
 
+from faz.bot.app.discord.bot.errors import InvalidArgumentException
+from faz.bot.app.discord.bot.errors import ParseException
 from faz.bot.app.discord.cog.wynn_utils_cog import WynnUtilsCog
-from faz.bot.app.discord.bot.errors import InvalidArgumentException, ParseException
 
 
 class TestWynnUtilsCog(TestCase):

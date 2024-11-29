@@ -1,14 +1,14 @@
 from decimal import Decimal
 from typing import override
 from unittest import IsolatedAsyncioTestCase
-from unittest.mock import MagicMock, create_autospec, patch
+from unittest.mock import create_autospec
+from unittest.mock import MagicMock
+from unittest.mock import patch
 
+from faz.bot.wynn.util.crafted_roll_probability import CraftedRollProbability
 from nextcord import Interaction
 
-from faz.bot.app.discord.view.wynn_utils.crafted_probability_view import (
-    UtilsCraftedProbabilityView,
-)
-from faz.bot.wynn.util.crafted_roll_probability import CraftedRollProbability
+from faz.bot.app.discord.view.wynn_utils.crafted_probability_view import CraftedProbabilityView
 
 
 class TestUtilsCraftedProbabilityView(IsolatedAsyncioTestCase):
@@ -18,7 +18,7 @@ class TestUtilsCraftedProbabilityView(IsolatedAsyncioTestCase):
         self._mock_interaction = create_autospec(Interaction, spec_set=True)
         self._mock_button = MagicMock()
         self._mock_craftutil = self._get_mock_crafted_util()
-        self._view = UtilsCraftedProbabilityView(
+        self._view = CraftedProbabilityView(
             self._mock_bot, self._mock_interaction, self._mock_craftutil
         )
 

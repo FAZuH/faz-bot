@@ -2,26 +2,24 @@ from __future__ import annotations
 
 from collections import defaultdict
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, override
+from typing import Any, override, TYPE_CHECKING
 from uuid import UUID
 
 from nextcord.ui import StringSelect
 
+from faz.bot.app.discord.embed.player_history_embed import PlayerHistoryEmbed
+from faz.bot.app.discord.select.player_history_id_options import PlayerHistoryIdOptions
+from faz.bot.app.discord.select.player_history_id_select import PlayerHistoryIdSelect
 from faz.bot.app.discord.view._base_pagination_view import BasePaginationView
-from faz.bot.app.discord.embed.history_player_history_embed import (
-    HistoryPlayerHistoryEmbed,
-)
-from faz.bot.app.discord.select.id_select import IdSelect
-from faz.bot.app.discord.select.id_select_options import IdSelectOptions
 
 if TYPE_CHECKING:
+    from faz.bot.database.fazwynn.model.player_info import PlayerInfo
     from nextcord import Interaction
 
     from faz.bot.app.discord.bot.bot import Bot
-    from faz.bot.database.fazwynn.model.player_info import PlayerInfo
 
 
-class HistoryPlayerHistoryView(BasePaginationView):
+class PlayerHistoryView(BasePaginationView):
     def __init__(
         self,
         bot: Bot,
@@ -37,7 +35,7 @@ class HistoryPlayerHistoryView(BasePaginationView):
 
         self._character_labels: dict[str, str] = {}
 
-        self._embed = HistoryPlayerHistoryEmbed(
+        self._embed = PlayerHistoryEmbed(
             self,
             self._player,
             self._period_begin,
@@ -46,7 +44,7 @@ class HistoryPlayerHistoryView(BasePaginationView):
         )
 
         self._selected_character: str | None = None
-        self._selected_id: IdSelectOptions = IdSelectOptions.ALL
+        self._selected_id: PlayerHistoryIdOptions = PlayerHistoryIdOptions.ALL
 
     @override
     async def run(self) -> None:
@@ -60,7 +58,7 @@ class HistoryPlayerHistoryView(BasePaginationView):
 
     async def _add_id_select(self) -> None:
         """Helper method to add ID selection during setup."""
-        self._id_select = IdSelect(self._id_select_callback)
+        self._id_select = PlayerHistoryIdSelect(self._id_select_callback)
         self.add_item(self._id_select)
 
     async def _add_character_select(self) -> None:
@@ -115,7 +113,7 @@ class HistoryPlayerHistoryView(BasePaginationView):
         fields = await self.embed.get_fields(self._selected_character, self._selected_id)
         self.embed.items = fields
 
-    def _get_embed_page(self) -> HistoryPlayerHistoryEmbed:
+    def _get_embed_page(self) -> PlayerHistoryEmbed:
         embed = self.embed.get_embed_page(self.embed.current_page)
         embed.description += "\n`Data   : ` "
         if self._selected_character is None:
@@ -127,6 +125,6 @@ class HistoryPlayerHistoryView(BasePaginationView):
 
     @property
     @override
-    def embed(self) -> HistoryPlayerHistoryEmbed:
+    def embed(self) -> PlayerHistoryEmbed:
         """The embed property."""
         return self._embed
