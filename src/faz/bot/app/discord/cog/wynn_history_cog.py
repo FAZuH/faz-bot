@@ -13,9 +13,9 @@ from faz.bot.app.discord.bot.errors import ParseException
 from faz.bot.app.discord.cog._base_cog import CogBase
 from faz.bot.app.discord.view.wynn_history.guild_activity_view import GuildActivityView
 from faz.bot.app.discord.view.wynn_history.guild_history_view import GuildHistoryView
+from faz.bot.app.discord.view.wynn_history.member_history_view import MemberHistoryView
 from faz.bot.app.discord.view.wynn_history.player_activity_view import PlayerActivityView
 from faz.bot.app.discord.view.wynn_history.player_history_view import PlayerHistoryView
-from faz.bot.app.discord.view.wynn_history.member_history_view import MemberHistoryView
 
 
 class WynnHistoryCog(CogBase):
