@@ -29,7 +29,7 @@ dependencies = [
 ]
 
 [project.scripts]
-faz-discord = "faz.bot.app.discord.__main__:main"
+faz-bot-discord = "faz.bot.app.discord.__main__:main"
 
 [project.urls]
 Source = "https://github.com/FAZuH/faz-bot-app-discord"
