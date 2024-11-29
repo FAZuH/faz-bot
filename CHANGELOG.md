@@ -1,3 +1,12 @@
+# [0.6.0](https://github.com/FAZuH/faz-bot-app-discord/compare/v0.5.1...v0.6.0) (2024-11-29)
+
+
+### Features
+
+* Add guild_history command ([#85](https://github.com/FAZuH/faz-bot-app-discord/issues/85)) ([819cafb](https://github.com/FAZuH/faz-bot-app-discord/commit/819cafbb3e3c5c890137c0e827b447daa4d6d2ae))
+
+
+
 ## [0.5.1](https://github.com/FAZuH/faz-bot-app-discord/compare/v0.5.0...v0.5.1) (2024-11-26)
 
 
@@ -34,15 +43,6 @@
 
 * Add automated backup script [skip ci] ([#56](https://github.com/FAZuH/faz-bot-app-discord/issues/56)) ([5d35762](https://github.com/FAZuH/faz-bot-app-discord/commit/5d3576227d96acaf48af153959789b64f50862b2))
 * Improve player history command ([#62](https://github.com/FAZuH/faz-bot-app-discord/issues/62)) ([dbd0e12](https://github.com/FAZuH/faz-bot-app-discord/commit/dbd0e12123d3095be9d2b0b3ac68d0da86a3f7ee))
-
-
-
-## [0.3.5](https://github.com/FAZuH/faz-bot-app-discord/compare/v0.3.4...v0.3.5) (2024-10-31)
-
-
-### Bug Fixes
-
-* Fix deploy workflow ([#58](https://github.com/FAZuH/faz-bot-app-discord/issues/58)) ([28d03d9](https://github.com/FAZuH/faz-bot-app-discord/commit/28d03d995ea4c69c31ea886026dfa1bda27e6589))
 
 
 
