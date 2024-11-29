@@ -15,6 +15,7 @@ from faz.bot.app.discord.view.wynn_history.guild_activity_view import GuildActiv
 from faz.bot.app.discord.view.wynn_history.guild_history_view import GuildHistoryView
 from faz.bot.app.discord.view.wynn_history.player_activity_view import PlayerActivityView
 from faz.bot.app.discord.view.wynn_history.player_history_view import PlayerHistoryView
+from faz.bot.app.discord.view.wynn_history.member_history_view import MemberHistoryView
 
 
 class WynnHistoryCog(CogBase):
@@ -107,10 +108,24 @@ class WynnHistoryCog(CogBase):
         period_begin, period_end = self._parse_period(intr, period)
         await GuildHistoryView(self._bot, intr, guild_info, period_begin, period_end).run()
 
-    # @slash_command()
-    # async def member_history(
-    #     self, intr: Interaction[Any], player: str, period: str
-    # ) -> None: ...
+    @history.subcommand()
+    async def member_history(self, intr: Interaction[Any], player: str, period: str) -> None:
+        """Show stat differences of a member between a time period.
+
+        Args:
+            player (str): The player name or UUID to check.
+            period (str): The time period to check. Enter an integer to show active time past the last `n` hours,
+                or enter a date-time range separated by '-' to specify a time range. Check
+                dateparser.readthedocs.io for valid date-time formats. Max period is 6 months.
+
+        Raises:
+            BadArgument: If the player is not found.
+            ParseFailure: If the period failed to be parsed
+        """
+        await intr.response.defer()
+        player_info = await self._bot.utils.must_get_wynn_player(player)
+        period_begin, period_end = self._parse_period(intr, period)
+        await MemberHistoryView(self._bot, intr, player_info, period_begin, period_end).run()
 
     def _parse_period(self, intr: Interaction[Any], period: str) -> tuple[datetime, datetime]:
         try:
