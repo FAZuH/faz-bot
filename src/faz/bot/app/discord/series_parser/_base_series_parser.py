@@ -19,6 +19,8 @@ class BaseSeriesParser(ABC):
     @staticmethod
     def _add_embed_field(container: MutableSequence[EmbedField], label: str, value: str) -> None:
         """Handles max embed value limit of 1024 characters."""
+        if "\n" not in value and len(value) <= 1024:
+            container.append(EmbedField(name=label, value=value))
         while True:
             idx = value.rfind("\n", 0, 1024)
             if idx == -1:

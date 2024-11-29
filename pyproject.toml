@@ -28,11 +28,21 @@ dependencies = [
  "tabulate>=0.9.0",
 ]
 
+[project.scripts]
+faz-bot-discord = "faz.bot.app.discord.__main__:main"
+
 [project.urls]
 Source = "https://github.com/FAZuH/faz-bot-app-discord"
 Issues = "https://github.com/FAZuH/faz-bot-app-discord/issues"
 Documentation = "https://github.com/FAZuH/faz-bot-app-discord#readme"
 
+[tool.setuptools.packages.find]
+where = ["src"]
+include = [ 
+    "faz.bot*",
+]
+
+# Common
 [dependency-groups]
 dev = [
     "alembic>=1.14.0",
@@ -50,15 +60,6 @@ sandbox = [
 [build-system]
 requires = ["setuptools>=42"]
 build-backend = "setuptools.build_meta"
-
-[tool.setuptools.packages.find]
-where = ["src"]
-include = [ 
-    "faz.bot*",
-]
-
-[project.scripts]
-faz-discord = "faz.bot.app.discord.__main__:main"
 
 [tool.pytest.ini_options]
 addopts = "-ra -q"

@@ -1,0 +1,36 @@
+services:
+  faz-bot-discord:
+    image: ghcr.io/fazuh/faz-bot-discord:latest
+    container_name: faz-bot-discord
+    restart: unless-stopped
+    environment:
+      MYSQL_HOST: mysql # Override .env
+    env_file: .env
+    expose:
+      - 8000
+    networks:
+      - faz-bot-network
+    volumes:
+      - ./logs:/app/logs
+
+  mysql:
+    image: mariadb:11.4.2
+    container_name: mysql
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - mysql:/var/lib/mysql
+    networks:
+      - faz-bot-network
+
+volumes:
+  mysql:
+    name: mysql
+    external: true
+
+networks:
+  faz-bot-network:
+    name: faz-bot-network
+    external: true

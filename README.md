@@ -55,7 +55,7 @@ Run `uv run faz-initdb` to initialize the database.
 
 ## Usage
 
-Run the app using `uv run faz-discord`.
+Run the app using `uv run faz-bot-discord`.
 
 ## Bug Reports and Feature Requests
 
