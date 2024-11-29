@@ -1,3 +1,10 @@
+## [0.6.3](https://github.com/FAZuH/faz-bot-app-discord/compare/v0.6.2...v0.6.3) (2024-11-29)
+
+
+### Build System
+
+* Add source label to Dockerfile ([3eef237](https://github.com/FAZuH/faz-bot-app-discord/commit/3eef2373537c3907a53dc40fbfba253c81df5fbf))
+
 ## [0.6.2](https://github.com/FAZuH/faz-bot-app-discord/compare/v0.6.1...v0.6.2) (2024-11-29)
 
 
@@ -15,6 +22,7 @@
 ### Miscellaneous Chores
 
 * Modify pyproject.toml [skip ci] ([2067a4a](https://github.com/FAZuH/faz-bot-app-discord/commit/2067a4aa17904393995c8990ba2c0add4ec7c6c0))
+* **release:** v0.6.2 [skip ci] ([671f0e3](https://github.com/FAZuH/faz-bot-app-discord/commit/671f0e323362681cb5320357cd0d211ffd157fa5))
 
 ## [0.6.1](https://github.com/FAZuH/faz-bot-app-discord/compare/v0.6.0...v0.6.1) (2024-11-29)
 
@@ -47,26 +55,4 @@
 
 * Separate faz-bot into multiple repostiories ([#83](https://github.com/FAZuH/faz-bot-app-discord/issues/83)) ([b465544](https://github.com/FAZuH/faz-bot-app-discord/commit/b465544201787ceb48c6954de7378d5040d06052))
 * Various refactor [skip ci] ([#80](https://github.com/FAZuH/faz-bot-app-discord/issues/80)) ([3892691](https://github.com/FAZuH/faz-bot-app-discord/commit/389269100c252afbe6605389cbf4ea6640f53511))
-
-## [0.5.0](https://github.com/FAZuH/faz-bot-app-discord/compare/v0.4.1...v0.5.0) (2024-11-19)
-
-
-### New Features
-
-* Add show_inactive to guild_activity command [skip ci] ([#75](https://github.com/FAZuH/faz-bot-app-discord/issues/75)) ([700fc56](https://github.com/FAZuH/faz-bot-app-discord/commit/700fc564284eb4d623ccd1b7b865bcfb36c73a5f))
-
-
-### Bug Fixes
-
-* Fix help command ([#76](https://github.com/FAZuH/faz-bot-app-discord/issues/76)) ([28251e0](https://github.com/FAZuH/faz-bot-app-discord/commit/28251e0f2959fd1119c66e60ddfd131576a0248f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.5.0 [skip ci] ([5c7899b](https://github.com/FAZuH/faz-bot-app-discord/commit/5c7899bd9646ae6b916c26b767fbd062d4861c7b))
-
-
-### Code Refactoring
-
-* Various refactor [skip ci] ([#74](https://github.com/FAZuH/faz-bot-app-discord/issues/74)) ([f54c5ec](https://github.com/FAZuH/faz-bot-app-discord/commit/f54c5ec33449c07bc1943c9096510f40970526ee))
 
