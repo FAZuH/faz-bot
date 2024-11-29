@@ -8,10 +8,10 @@ from unittest.mock import create_autospec
 from unittest.mock import MagicMock
 from unittest.mock import patch
 
-from faz.bot.core.properties import Properties
 from faz.bot.database.fazcord.fazcord_database import FazcordDatabase
 from faz.bot.database.fazwynn.fazwynn_database import FazwynnDatabase
 
+from faz.bot.app.discord.app._properties import Properties
 from faz.bot.app.discord.bot._utils import Utils
 from faz.bot.app.discord.bot.bot import Bot
 from faz.bot.app.discord.bot.errors import ApplicationException
@@ -37,11 +37,11 @@ class TestAdminCog(IsolatedAsyncioTestCase):
         p = Properties()
         p.setup()
         self.db = FazcordDatabase(
-            p.MYSQL_USERNAME,
+            p.MYSQL_USER,
             p.MYSQL_PASSWORD,
             p.MYSQL_HOST,
             p.MYSQL_PORT,
-            f"{p.FAZCORD_DB_NAME}_test",
+            f"{p.MYSQL_FAZCORD_DATABASE}_test",
         )
         self.db.create_all()
         await self.db.whitelist_group.truncate()

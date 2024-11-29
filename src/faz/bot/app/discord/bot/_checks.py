@@ -24,7 +24,7 @@ class Checks:
             return False
 
         user_id = interaction.user.id
-        is_admin = user_id == self.bot.app.properties.ADMIN_DISCORD_ID
+        is_admin = user_id == self.bot.app.properties.DEV_DISCORD_ID
 
         if not is_admin:
             logger.warning(

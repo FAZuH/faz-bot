@@ -5,11 +5,11 @@ from threading import Lock
 from typing import Generator
 
 from faz.bot.core.logger_setup import LoggerSetup
-from faz.bot.core.properties import Properties
 from faz.bot.database.fazcord.fazcord_database import FazcordDatabase
 from faz.bot.database.fazwynn.fazwynn_database import FazwynnDatabase
 from loguru import logger
 
+from faz.bot.app.discord.app._properties import Properties
 from faz.bot.app.discord.bot.bot import Bot
 
 
@@ -20,7 +20,7 @@ class App:
         self._properties = Properties()
         p = self.properties
         p.setup()
-        LoggerSetup.setup("logs/fazcord", p.FAZCORD_DISCORD_LOG_WEBHOOK, p.ADMIN_DISCORD_ID)
+        LoggerSetup.setup("logs", p.FAZCORD_DISCORD_LOG_WEBHOOK, p.DEV_DISCORD_ID)
 
         self._bot = Bot(self)
 
@@ -46,21 +46,21 @@ class App:
     def create_fazcord_db(self) -> FazcordDatabase:
         p = self.properties
         return FazcordDatabase(
-            p.MYSQL_USERNAME,
+            p.MYSQL_USER,
             p.MYSQL_PASSWORD,
             p.MYSQL_HOST,
             p.MYSQL_PORT,
-            p.FAZCORD_DB_NAME,
+            p.MYSQL_FAZCORD_DATABASE,
         )
 
     def create_fazwynn_db(self) -> FazwynnDatabase:
         p = self.properties
         return FazwynnDatabase(
-            p.MYSQL_USERNAME,
+            p.MYSQL_USER,
             p.MYSQL_PASSWORD,
             p.MYSQL_HOST,
             p.MYSQL_PORT,
-            p.FAZWYNN_DB_NAME,
+            p.MYSQL_FAZWYNN_DATABASE,
         )
 
     def _get_lock(self, key: str) -> Lock:
