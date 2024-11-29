@@ -1,21 +1,24 @@
 from __future__ import annotations
 
 from decimal import Decimal
-from typing import TYPE_CHECKING, Any, Callable, override
+from typing import Any, Callable, override, TYPE_CHECKING
 
-from nextcord import ButtonStyle, Embed, Interaction
-from nextcord.ui import Button, button
-
-from faz.bot.app.discord.view._base_view import BaseView
-from faz.bot.app.discord.embed.custom_embed import CustomEmbed
 from faz.bot.wynn.util.crafted_roll_probability import CraftedRollProbability
 from faz.utils.cache_util import CacheUtil
+from nextcord import ButtonStyle
+from nextcord import Embed
+from nextcord import Interaction
+from nextcord.ui import Button
+from nextcord.ui import button
+
+from faz.bot.app.discord.embed.custom_embed import CustomEmbed
+from faz.bot.app.discord.view._base_view import BaseView
 
 if TYPE_CHECKING:
     from faz.bot.app.discord.bot.bot import Bot
 
 
-class UtilsCraftedProbabilityView(BaseView):
+class CraftedProbabilityView(BaseView):
     _THUMBNAIL_URL = "https://static.wikia.nocookie.net/minecraft_gamepedia/images/b/b7/Crafting_Table_JE4_BE3.png/revision/latest/thumbnail/width/360/height/360?cb=20191229083528"
 
     def __init__(

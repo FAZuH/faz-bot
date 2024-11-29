@@ -2,8 +2,8 @@ from typing import Any
 
 import nextcord
 
-from faz.bot.app.discord.cog._base_cog import CogBase
 from faz.bot.app.discord.bot.errors import UnauthorizedLocationException
+from faz.bot.app.discord.cog._base_cog import CogBase
 from faz.bot.app.discord.view.help_view import HelpView
 
 

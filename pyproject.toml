@@ -17,7 +17,7 @@ authors = [
 dependencies = [
  "audioop-lts>=0.2.1",
  "dateparser>=1.2.0",
- "faz-bot-core>=0.2.1",
+ "faz-bot-core>=0.3.0",
  "faz-utils>=0.1.2",
  "loguru>=0.7.2",
  "nextcord>=2.6.0",
@@ -38,7 +38,13 @@ dev = [
     "alembic>=1.14.0",
     "black>=24.10.0",
     "pytest>=8.3.3",
+    "isort>=5.13.2",
     "ruff>=0.7.4",
+]
+sandbox = [
+    "ipykernel>=6.29.5",
+    "matplotlib>=3.9.2",
+    "neovim>=0.3.1",
 ]
 
 [build-system]
@@ -59,6 +65,10 @@ addopts = "-ra -q"
 testpaths = [
     "tests",
 ]
+
+[tool.isort]
+profile = "google"
+line_length = 100
 
 [tool.ruff]
 exclude = [

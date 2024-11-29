@@ -1,20 +1,21 @@
 from __future__ import annotations
 
 from contextlib import asynccontextmanager
-from typing import TYPE_CHECKING, Any, AsyncGenerator, Iterable
+from typing import Any, AsyncGenerator, Iterable, TYPE_CHECKING
 
 from loguru import logger
-from nextcord import Colour, Interaction
+from nextcord import Colour
+from nextcord import Interaction
 from nextcord.ext import commands
 
 from faz.bot.app.discord.embed.custom_embed import CustomEmbed
 
 if TYPE_CHECKING:
+    from faz.bot.database.fazcord.fazcord_database import FazcordDatabase
+    from faz.bot.database.fazwynn.fazwynn_database import FazwynnDatabase
     from sqlalchemy.ext.asyncio import AsyncSession
 
     from faz.bot.app.discord.bot.bot import Bot
-    from faz.bot.database.fazcord.fazcord_database import FazcordDatabase
-    from faz.bot.database.fazwynn.fazwynn_database import FazwynnDatabase
 
 
 class CogBase(commands.Cog):

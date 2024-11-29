@@ -1,19 +1,20 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, override
+from typing import Any, override, TYPE_CHECKING
 
-from nextcord import Embed, Interaction
-
-from faz.bot.app.discord.view._base_view import BaseView
-from faz.bot.app.discord.embed.custom_embed import CustomEmbed
 from faz.bot.wynn.util.emerald_util import EmeraldUtil
 from faz.bot.wynn.util.emeralds import Emeralds
+from nextcord import Embed
+from nextcord import Interaction
+
+from faz.bot.app.discord.embed.custom_embed import CustomEmbed
+from faz.bot.app.discord.view._base_view import BaseView
 
 if TYPE_CHECKING:
     from faz.bot.app.discord.bot.bot import Bot
 
 
-class UtilsConvertEmeraldView(BaseView):
+class ConvertEmeraldView(BaseView):
     _THUMBNAIL_URL = "https://static.wikia.nocookie.net/wynncraft_gamepedia_en/images/8/8c/Experience_bottle.png/revision/latest?cb=20190118234414"
 
     def __init__(self, bot: Bot, interaction: Interaction[Any], emerald_string: str) -> None:

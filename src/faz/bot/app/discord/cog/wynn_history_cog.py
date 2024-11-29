@@ -1,23 +1,20 @@
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import datetime
+from datetime import timedelta
 from typing import Any
 
-import nextcord
 from dateparser import parse
+import nextcord
 from nextcord import Interaction
 
-from faz.bot.app.discord.bot.errors import InvalidArgumentException, ParseException
+from faz.bot.app.discord.bot.errors import InvalidArgumentException
+from faz.bot.app.discord.bot.errors import ParseException
 from faz.bot.app.discord.cog._base_cog import CogBase
-from faz.bot.app.discord.view.wynn_history.guild_activity_view import (
-    HistoryGuildActivityView,
-)
-from faz.bot.app.discord.view.wynn_history.player_activity_view import (
-    HistoryPlayerActivityView,
-)
-from faz.bot.app.discord.view.wynn_history.player_history_view import (
-    HistoryPlayerHistoryView,
-)
+from faz.bot.app.discord.view.wynn_history.guild_activity_view import GuildActivityView
+from faz.bot.app.discord.view.wynn_history.guild_history_view import GuildHistoryView
+from faz.bot.app.discord.view.wynn_history.player_activity_view import PlayerActivityView
+from faz.bot.app.discord.view.wynn_history.player_history_view import PlayerHistoryView
 
 
 class WynnHistoryCog(CogBase):
@@ -42,7 +39,7 @@ class WynnHistoryCog(CogBase):
         """
         player_info = await self._bot.utils.must_get_wynn_player(player)
         period_begin, period_end = self._parse_period(intr, period)
-        invoke = HistoryPlayerActivityView(self._bot, intr, player_info, period_begin, period_end)
+        invoke = PlayerActivityView(self._bot, intr, player_info, period_begin, period_end)
         await invoke.run()
 
     @history.subcommand()
@@ -68,7 +65,7 @@ class WynnHistoryCog(CogBase):
         await intr.response.defer()
         guild_info = await self._bot.utils.must_get_wynn_guild(guild)
         period_begin, period_end = self._parse_period(intr, period)
-        await HistoryGuildActivityView(
+        await GuildActivityView(
             self._bot, intr, guild_info, period_begin, period_end, show_inactive
         ).run()
 
@@ -89,12 +86,26 @@ class WynnHistoryCog(CogBase):
         await intr.response.defer()
         player_info = await self._bot.utils.must_get_wynn_player(player)
         period_begin, period_end = self._parse_period(intr, period)
-        await HistoryPlayerHistoryView(self._bot, intr, player_info, period_begin, period_end).run()
+        await PlayerHistoryView(self._bot, intr, player_info, period_begin, period_end).run()
 
-    # @slash_command()
-    # async def guild_history(
-    #     self, intr: Interaction[Any], guild: str, period: str
-    # ) -> None: ...
+    @history.subcommand()
+    async def guild_history(self, intr: Interaction[Any], guild: str, period: str) -> None:
+        """Show stat differences of a guild between a time period.
+
+        Args:
+            guild (str): The guild name or UUID to check.
+            period (str): The time period to check. Enter an integer to show active time past the last `n` hours,
+                or enter a date-time range separated by '-' to specify a time range. Check
+                dateparser.readthedocs.io for valid date-time formats. Max period is 6 months.
+
+        Raises:
+            BadArgument: If the player is not found.
+            ParseFailure: If the period failed to be parsed
+        """
+        await intr.response.defer()
+        guild_info = await self._bot.utils.must_get_wynn_guild(guild)
+        period_begin, period_end = self._parse_period(intr, period)
+        await GuildHistoryView(self._bot, intr, guild_info, period_begin, period_end).run()
 
     # @slash_command()
     # async def member_history(

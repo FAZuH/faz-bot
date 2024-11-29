@@ -1,5 +1,8 @@
 from abc import ABC
+from datetime import datetime
 from typing import Any, MutableSequence
+
+import pandas as pd
 
 from faz.bot.app.discord.embed.embed_field import EmbedField
 
@@ -28,7 +31,7 @@ class BaseSeriesParser(ABC):
 
     @staticmethod
     def _get_max_key_length(dict_: dict[str, Any]) -> int:
-        return max(map(len, dict_.keys())) if len(dict_) > 0 else 0
+        return max(map(len, dict_)) if len(dict_) > 0 else 0
 
     @staticmethod
     def _diff_str_or_blank(value: str, label: str, label_space: int) -> str:
@@ -37,3 +40,12 @@ class BaseSeriesParser(ABC):
     @staticmethod
     def _format_number(value: Any) -> str:
         return f"{value:,}" if isinstance(value, int) else f"{value:,.2f}"
+
+    @staticmethod
+    def _get_formatted_timestamp(row: pd.Series) -> str:
+        if "datetime" not in row:
+            raise ValueError("Row does not contain 'datetime' column.")
+        dt: datetime = row["datetime"]  # type: ignore
+        timestamp = dt.timestamp()
+        ret = f"<t:{timestamp:.0f}:R>"
+        return ret

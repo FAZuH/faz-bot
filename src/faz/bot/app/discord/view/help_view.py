@@ -1,8 +1,10 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, override
+from typing import Any, override, TYPE_CHECKING
 
-from nextcord import BaseApplicationCommand, Colour, Interaction
+from nextcord import BaseApplicationCommand
+from nextcord import Colour
+from nextcord import Interaction
 
 from faz.bot.app.discord.embed.pagination_embed import PaginationEmbed
 from faz.bot.app.discord.view._base_pagination_view import BasePaginationView

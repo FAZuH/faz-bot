@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from abc import abstractmethod
 from datetime import datetime
-from typing import Any, Optional, Sequence, Union, override
+from typing import Any, Optional, override, Sequence, Union
 
-from nextcord import Colour, Interaction
+from nextcord import Colour
+from nextcord import Interaction
 from nextcord.types.embed import EmbedType
 
 from faz.bot.app.discord.embed.custom_embed import CustomEmbed
@@ -42,7 +43,7 @@ class PaginationEmbed[T](CustomEmbed):
             items = []
         self._items = items
         self._items_per_page = items_per_page
-        self._current_page = 1
+        self._current_page: int = 1
 
     def get_items(self, page: int | None = None) -> Sequence[T]:
         page = page or self._current_page
@@ -81,7 +82,7 @@ class PaginationEmbed[T](CustomEmbed):
         return max(1, -(-len(self._items) // self._items_per_page))
 
     @property
-    def current_page(self):
+    def current_page(self) -> int:
         return self._current_page
 
     @current_page.setter

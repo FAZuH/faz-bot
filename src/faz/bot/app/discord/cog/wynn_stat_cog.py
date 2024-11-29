@@ -4,7 +4,7 @@ import nextcord
 from nextcord import Interaction
 
 from faz.bot.app.discord.cog._base_cog import CogBase
-from faz.bot.app.discord.view.wynn_stat.worldlist_view import StatWorldlistView
+from faz.bot.app.discord.view.wynn_stat.worldlist_view import WorldlistView
 
 
 class WynnStatCog(CogBase):
@@ -25,7 +25,7 @@ class WynnStatCog(CogBase):
             sort_by (Literal["Player Count", "Time Created"], optional): The criteria to sort the worlds by.
                 Can be either "Player Count" or "Time Created". Defaults to "Time Created".
         """
-        await StatWorldlistView(self._bot, intr, sort_by).run()
+        await WorldlistView(self._bot, intr, sort_by).run()
 
     # @nextcord.slash_command(name="player")
     # async def player(self, interaction: Interaction[Any]) -> None:

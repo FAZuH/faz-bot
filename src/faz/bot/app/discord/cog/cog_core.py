@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Iterable
+from typing import Iterable, TYPE_CHECKING
 
 from faz.bot.app.discord.cog._base_cog import CogBase
 from faz.bot.app.discord.cog.admin_cog import AdminCog
