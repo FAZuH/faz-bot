@@ -47,6 +47,7 @@ jobs:
           git-user-name: "FAZuH-bot"
           git-user-email: "fazuhhh@proton.me"
           pre-commit: ./.github/.pre-commit.js
+          config-file-path: ./.github/.config.js
           version-file: ./version.json
           skip-version-file: true
           skip-git-pull: true
