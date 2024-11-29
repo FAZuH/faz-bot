@@ -43,7 +43,7 @@ class BaseSeriesParser(ABC):
 
     @staticmethod
     def _get_formatted_timestamp(row: pd.Series) -> str:
-        if "datetime" in row:
+        if "datetime" not in row:
             raise ValueError("Row does not contain 'datetime' column.")
         dt: datetime = row["datetime"]  # type: ignore
         timestamp = dt.timestamp()

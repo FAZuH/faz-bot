@@ -102,11 +102,10 @@ class WynnHistoryCog(CogBase):
             BadArgument: If the player is not found.
             ParseFailure: If the period failed to be parsed
         """
-        ...
-        # await intr.response.defer()
-        # guild_info = await self._bot.utils.must_get_wynn_guild(guild)
-        # period_begin, period_end = self._parse_period(intr, period)
-        # await GuildHistoryView(self._bot, intr, guild_info, period_begin, period_end).run()
+        await intr.response.defer()
+        guild_info = await self._bot.utils.must_get_wynn_guild(guild)
+        period_begin, period_end = self._parse_period(intr, period)
+        await GuildHistoryView(self._bot, intr, guild_info, period_begin, period_end).run()
 
     # @slash_command()
     # async def member_history(

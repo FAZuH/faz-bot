@@ -6,7 +6,7 @@ from faz.bot.app.discord.select.guild_history_id_options import GuildHistoryIdOp
 
 class GuildHistoryIdSelect(CustomStringSelect[GuildHistoryIdOptions]):
     def __init__(self, callback: Callable[..., Any]) -> None:
-        super().__init__(placeholder="Select mode")
+        super().__init__(placeholder="Select ID")
         self.callback = callback
 
     @property
