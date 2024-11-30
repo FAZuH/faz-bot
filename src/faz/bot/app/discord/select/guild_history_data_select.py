@@ -1,15 +1,15 @@
 from typing import Any, Callable, override
 
 from faz.bot.app.discord.select.custom_string_select import CustomStringSelect
-from faz.bot.app.discord.select.guild_history_id_options import GuildHistoryIdOptions
+from faz.bot.app.discord.select.guild_history_data_options import GuildHistoryDataOption
 
 
-class GuildHistoryIdSelect(CustomStringSelect[GuildHistoryIdOptions]):
+class GuildHistoryDataSelect(CustomStringSelect[GuildHistoryDataOption]):
     def __init__(self, callback: Callable[..., Any]) -> None:
         super().__init__(placeholder="Select ID")
         self.callback = callback
 
     @property
     @override
-    def option_enum(self) -> type[GuildHistoryIdOptions]:
-        return GuildHistoryIdOptions
+    def option_enum(self) -> type[GuildHistoryDataOption]:
+        return GuildHistoryDataOption

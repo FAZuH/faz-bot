@@ -4,10 +4,10 @@ from nextcord import SelectOption
 from nextcord.utils import MISSING
 
 from faz.bot.app.discord.select.custom_string_select import CustomStringSelect
-from faz.bot.app.discord.select.player_history_id_options import PlayerHistoryIdOptions
+from faz.bot.app.discord.select.player_history_data_options import PlayerHistoryDataOptions
 
 
-class PlayerHistoryIdSelect(CustomStringSelect[PlayerHistoryIdOptions]):
+class PlayerHistoryDataSelect(CustomStringSelect[PlayerHistoryDataOptions]):
     def __init__(
         self,
         callback: Callable[..., Any],
@@ -41,5 +41,5 @@ class PlayerHistoryIdSelect(CustomStringSelect[PlayerHistoryIdOptions]):
 
     @property
     @override
-    def option_enum(self) -> type[PlayerHistoryIdOptions]:
-        return PlayerHistoryIdOptions
+    def option_enum(self) -> type[PlayerHistoryDataOptions]:
+        return PlayerHistoryDataOptions

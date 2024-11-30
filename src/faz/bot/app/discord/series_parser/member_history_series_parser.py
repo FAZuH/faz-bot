@@ -46,8 +46,8 @@ class MemberHistorySeriesParser(BaseSeriesParser):
         if len(char_df) == 0 and len(member_df) == 0:
             return ret
 
-        earliest_char: pd.Series = char_df.iloc[char_df["datetime"].idxmin()]
-        latest_char: pd.Series = char_df.iloc[char_df["datetime"].idxmax()]
+        earliest_char: pd.Series = char_df.iloc[char_df["datetime"].idxmin()]  # type: ignore
+        latest_char: pd.Series = char_df.iloc[char_df["datetime"].idxmax()]  # type: ignore
 
         wars1 = earliest_char["wars"]
         wars2 = latest_char["wars"]
@@ -55,8 +55,8 @@ class MemberHistorySeriesParser(BaseSeriesParser):
         if wars1 != wars2:
             lines["Wars"] = f"{wars1} -> {wars2}"
 
-        earliest_member: pd.Series = member_df.iloc[member_df["datetime"].idxmin()]
-        latest_member: pd.Series = member_df.iloc[member_df["datetime"].idxmax()]
+        earliest_member: pd.Series = member_df.iloc[member_df["datetime"].idxmin()]  # type: ignore
+        latest_member: pd.Series = member_df.iloc[member_df["datetime"].idxmax()]  # type: ignore
 
         xp1 = earliest_member["contributed"]
         xp2 = latest_member["contributed"]

@@ -4,7 +4,7 @@ from uuid import UUID
 import pandas as pd
 
 from faz.bot.app.discord.embed.embed_field import EmbedField
-from faz.bot.app.discord.select.player_history_id_options import PlayerHistoryIdOptions
+from faz.bot.app.discord.select.player_history_data_options import PlayerHistoryDataOptions
 from faz.bot.app.discord.series_parser._base_series_parser import BaseSeriesParser
 
 
@@ -12,33 +12,33 @@ class PlayerHistorySeriesParser(BaseSeriesParser):
     def __init__(self, character_labels: dict[str, str]) -> None:
         self._character_labels = character_labels
         self._categorical_parsers: dict[
-            PlayerHistoryIdOptions,
+            PlayerHistoryDataOptions,
             Callable[[pd.DataFrame], Sequence[EmbedField]],
         ] = {}
         self._numerical_parsers: dict[
-            PlayerHistoryIdOptions,
+            PlayerHistoryDataOptions,
             Callable[[pd.DataFrame, pd.DataFrame], Sequence[EmbedField]],
         ] = {}
 
         cat_prsr = self._categorical_parsers
-        cat_prsr[PlayerHistoryIdOptions.GUILD] = self._parser_categorical_guild
-        cat_prsr[PlayerHistoryIdOptions.USERNAME] = self._parser_categorical_username
+        cat_prsr[PlayerHistoryDataOptions.GUILD] = self._parser_categorical_guild
+        cat_prsr[PlayerHistoryDataOptions.USERNAME] = self._parser_categorical_username
 
         num_prsr = self._numerical_parsers
-        num_prsr[PlayerHistoryIdOptions.ALL] = self._parser_numerical_all
-        num_prsr[PlayerHistoryIdOptions.LEVEL] = self._parser_numerical_level
-        num_prsr[PlayerHistoryIdOptions.WARS] = self._parser_numerical_wars
-        num_prsr[PlayerHistoryIdOptions.PLAYTIME] = self._parser_numerical_playtime
-        num_prsr[PlayerHistoryIdOptions.MOBS_KILLED] = self._parser_numerical_mobs_killed
-        num_prsr[PlayerHistoryIdOptions.CHESTS_FOUND] = self._parser_numerical_chests_found
-        num_prsr[PlayerHistoryIdOptions.LOGINS] = self._parser_numerical_logins
-        num_prsr[PlayerHistoryIdOptions.DEATHS] = self._parser_numerical_deaths
-        num_prsr[PlayerHistoryIdOptions.CHALLENGES] = self._parser_numerical_challenges
-        num_prsr[PlayerHistoryIdOptions.PROFESSIONS] = self._parser_numerical_professions
-        num_prsr[PlayerHistoryIdOptions.COMPLETIONS] = self._parser_numerical_completions
+        num_prsr[PlayerHistoryDataOptions.ALL] = self._parser_numerical_all
+        num_prsr[PlayerHistoryDataOptions.LEVEL] = self._parser_numerical_level
+        num_prsr[PlayerHistoryDataOptions.WARS] = self._parser_numerical_wars
+        num_prsr[PlayerHistoryDataOptions.PLAYTIME] = self._parser_numerical_playtime
+        num_prsr[PlayerHistoryDataOptions.MOBS_KILLED] = self._parser_numerical_mobs_killed
+        num_prsr[PlayerHistoryDataOptions.CHESTS_FOUND] = self._parser_numerical_chests_found
+        num_prsr[PlayerHistoryDataOptions.LOGINS] = self._parser_numerical_logins
+        num_prsr[PlayerHistoryDataOptions.DEATHS] = self._parser_numerical_deaths
+        num_prsr[PlayerHistoryDataOptions.CHALLENGES] = self._parser_numerical_challenges
+        num_prsr[PlayerHistoryDataOptions.PROFESSIONS] = self._parser_numerical_professions
+        num_prsr[PlayerHistoryDataOptions.COMPLETIONS] = self._parser_numerical_completions
 
     def get_categorical_parser(
-        self, id: PlayerHistoryIdOptions
+        self, id: PlayerHistoryDataOptions
     ) -> Callable[[pd.DataFrame], Sequence[EmbedField]]:
         ret = self._categorical_parsers.get(id, None)
         if ret is None:
@@ -46,7 +46,7 @@ class PlayerHistorySeriesParser(BaseSeriesParser):
         return ret
 
     def get_numerical_parser(
-        self, id: PlayerHistoryIdOptions
+        self, id: PlayerHistoryDataOptions
     ) -> Callable[[pd.DataFrame, pd.DataFrame], Sequence[EmbedField]]:
         ret = self._numerical_parsers.get(id, None)
         if ret is None:
