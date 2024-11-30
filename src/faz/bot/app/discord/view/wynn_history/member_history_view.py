@@ -66,10 +66,10 @@ class MemberHistoryView(BasePaginationView):
     async def run(self) -> None:
         """Initial method to setup and run the view."""
         self.add_item(self._mode_select)
+        self.add_item(self._data_select)
 
         await self.embed.setup()
-        await self._set_embed_fields()
-        embed = self.embed.get_embed_page()
+        embed = await self._get_embed_page()
         await self._interaction.send(embed=embed, view=self)
 
     async def _mode_select_callback(self, interaction: Interaction) -> None:
@@ -78,24 +78,23 @@ class MemberHistoryView(BasePaginationView):
         self._selected_mode = self._mode_select.get_selected_option()
         if self._selected_mode == MemberHistoryModeOption.OVERALL:
             self.remove_item(self._mode_select)
-        else:
+        elif self._mode_select not in self.children:
             self.add_item(self._mode_select)
-        await self._set_embed_fields()
-        embed = self.embed.get_embed_page()
+        embed = await self._get_embed_page()
         await interaction.edit(embed=embed, view=self)
 
     async def _data_select_callback(self, interaction: Interaction) -> None:
         """Callback for data selection."""
         # Length of values is always 1
         self._selected_data = self._data_select.get_selected_option()
-        await self._set_embed_fields()
-        embed = self.embed.get_embed_page()
+        embed = await self._get_embed_page()
         await interaction.edit(embed=embed, view=self)
 
-    async def _set_embed_fields(self) -> None:
+    async def _get_embed_page(self) -> MemberHistoryEmbed:
         """Sets PaginationEmbed items with fields based on selected options."""
-        fields = await self.embed.get_fields(self._selected_data, self._selected_mode)
-        self.embed.items = fields
+        await self.embed.setup_fields(self._selected_data, self._selected_mode)
+        embed = self.embed.get_embed_page()
+        return embed
 
     @property
     @override

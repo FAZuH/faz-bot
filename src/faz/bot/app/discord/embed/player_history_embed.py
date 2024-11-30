@@ -1,25 +1,22 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import override, Sequence, TYPE_CHECKING
+from typing import override, TYPE_CHECKING
 from uuid import UUID
 
 from faz.bot.database.fazwynn.model.player_info import PlayerInfo
 from nextcord import Colour
 import pandas as pd
 
-from faz.bot.app.discord.bot.errors import ApplicationException
-from faz.bot.app.discord.embed.embed_field import EmbedField
-from faz.bot.app.discord.embed.pagination_embed import PaginationEmbed
-from faz.bot.app.discord.select.player_history_data_options import PlayerHistoryDataOptions
-from faz.bot.app.discord.select.player_history_data_options import PlayerHistoryDataOptionsType
-from faz.bot.app.discord.series_parser.player_history_series_parser import PlayerHistorySeriesParser
+from faz.bot.app.discord.embed._base_wynn_history_embed import BaseWynnHistoryEmbed
+from faz.bot.app.discord.parser.player_history_field_parser import PlayerHistoryFieldParser
+from faz.bot.app.discord.select.player_history_data_option import PlayerHistoryDataOption
 
 if TYPE_CHECKING:
     from faz.bot.app.discord.view.wynn_history.player_history_view import PlayerHistoryView
 
 
-class PlayerHistoryEmbed(PaginationEmbed[EmbedField]):
+class PlayerHistoryEmbed(BaseWynnHistoryEmbed):
     def __init__(
         self,
         view: PlayerHistoryView,
@@ -28,13 +25,17 @@ class PlayerHistoryEmbed(PaginationEmbed[EmbedField]):
         period_end: datetime,
         character_labels: dict[str, str],
     ) -> None:
+        self._character_labels = character_labels
         self._period_begin = period_begin
         self._period_end = period_end
         self._player = player
+
         begin_ts = int(period_begin.timestamp())
         end_ts = int(period_end.timestamp())
+
         title = f"Player History ({player.latest_username})"
-        desc = f"`Period : ` <t:{begin_ts}:R> to <t:{end_ts}:R>"
+        desc = f"`Period   : ` <t:{begin_ts}:R> to <t:{end_ts}:R>"
+
         super().__init__(
             view.interaction,
             items_per_page=4,
@@ -42,95 +43,39 @@ class PlayerHistoryEmbed(PaginationEmbed[EmbedField]):
             description=desc,
             color=Colour.teal(),
         )
+
         self._db = view.bot.app.create_fazwynn_db()
-        self._parsers = PlayerHistorySeriesParser(character_labels)
-
-    async def get_fields(
-        self, character_uuid: str | None, id: PlayerHistoryDataOptions
-    ) -> Sequence[EmbedField]:
-        # Prepare
-        db = self._db
-        await self._player.awaitable_attrs.characters
-        player_hist = db.player_history.select_between_period_as_dataframe(
-            self._player.uuid, self._period_begin, self._period_end
-        )
-        df_char = pd.DataFrame()
-
-        # Data: Total or Character
-        if character_uuid is None:
-            # Combine all characters data into df_character
-            for ch in self._player.characters:
-                df_char_ = db.character_history.select_between_period_as_dataframe(
-                    ch.character_uuid, self._period_begin, self._period_end
-                )
-                if df_char_.empty:
-                    continue
-                df_char = pd.concat([df_char, df_char_])
-        else:
-            df_char = db.character_history.select_between_period_as_dataframe(
-                UUID(character_uuid).bytes, self._period_begin, self._period_end
-            )
-
-        # Id type: Categorical, Numerical, or All
-        #
-        # Categorical for Total
-        # Numerical for Total, Character
-        # All for Total, Character
-        type_ = id.type
-        if type_ == PlayerHistoryDataOptionsType.CATEGORICAL:
-            fields = self._get_fields_categorical(player_hist, id)
-        elif type_ == PlayerHistoryDataOptionsType.NUMERICAL:
-            fields = self._get_fields_numerical(player_hist, df_char, id)
-        elif type_ == PlayerHistoryDataOptionsType.ALL:
-            fields = self._get_fields_numerical(player_hist, df_char, id)
-        else:
-            raise ApplicationException("This should not happen")
-
-        return fields
-
-    def _get_fields_categorical(
-        self, player_history: pd.DataFrame, id: PlayerHistoryDataOptions
-    ) -> Sequence[EmbedField]:
-        parser = self._parsers.get_categorical_parser(id)
-        fields = parser(player_history)
-        if not fields:
-            return [self._get_no_data_field(id)]
-        return fields
-
-    def _get_fields_numerical(
-        self,
-        player_history: pd.DataFrame,
-        character_history: pd.DataFrame,
-        id: PlayerHistoryDataOptions,
-    ) -> Sequence[EmbedField]:
-        parser = self._parsers.get_numerical_parser(id)
-        fields = parser(player_history, character_history)
-        if not fields:
-            return [self._get_no_data_field(id)]
-        return fields
-
-    def _get_no_data_field(self, id: PlayerHistoryDataOptions) -> EmbedField:
-        ret = EmbedField(
-            id.value.value,
-            "No data found within the selected period of time.",
-        )
-        return ret
 
     @override
-    def get_embed_page(self, page: int) -> PlayerHistoryEmbed:
-        """Build specific page of the PaginationEmbed."""
-        embed = self.get_base()
-        fields = embed.get_items(page)
+    async def setup(self) -> None:
+        await self._player.awaitable_attrs.characters
+        await self._fetch_data()
 
-        if len(fields) == 0:
-            embed.description = "```ml\nNo data found.\n```"
+    @override
+    async def setup_fields(self, character_uuid: str | None, data: PlayerHistoryDataOption) -> None:
+        if character_uuid is None:
+            char_df = self._char_df
         else:
-            for field in fields:
-                embed.add_field(
-                    name=field.name,
-                    value=field.value,
-                    inline=field.inline,
-                )
+            char_df = self._char_df[self._char_df["character_uuid"] == UUID(character_uuid).bytes]
 
-        embed.finalize()
-        return embed
+        fields = PlayerHistoryFieldParser(
+            data, self._player_df, char_df, self._character_labels
+        ).get_fields()
+
+        self.items = fields or [self.get_empty_field_embed(data.value.value)]
+
+    async def _fetch_data(self) -> None:
+        await self._player.awaitable_attrs.characters
+
+        self._char_df = pd.DataFrame()
+        for ch in self._player.characters:
+            df_char_ = self._db.character_history.select_between_period_as_dataframe(
+                ch.character_uuid, self._period_begin, self._period_end
+            )
+            if df_char_.empty:
+                continue
+            self._char_df = pd.concat([self._char_df, df_char_])
+
+        self._player_df = self._db.player_history.select_between_period_as_dataframe(
+            self._player.uuid, self._period_begin, self._period_end
+        )
