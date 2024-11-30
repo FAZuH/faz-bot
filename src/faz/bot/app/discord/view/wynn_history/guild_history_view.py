@@ -3,7 +3,9 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any, override, TYPE_CHECKING
 
-from faz.bot.app.discord.embed.guild_history_embed import GuildHistoryEmbed
+from faz.bot.app.discord.embed_factory.wynn_history.guild_history_embed_factory import (
+    GuildHistoryEmbedFactory,
+)
 from faz.bot.app.discord.select.guild_history_data_options import GuildHistoryDataOption
 from faz.bot.app.discord.select.guild_history_data_select import GuildHistoryDataSelect
 from faz.bot.app.discord.select.guild_history_mode_options import GuildHistoryModeOptions
@@ -56,7 +58,7 @@ class GuildHistoryView(BasePaginationView):
         self._period_begin = period_begin
         self._period_end = period_end
 
-        self._embed = GuildHistoryEmbed(
+        self._embed = GuildHistoryEmbedFactory(
             self,
             self._guild,
             self._period_begin,
@@ -97,13 +99,13 @@ class GuildHistoryView(BasePaginationView):
         embed = await self._get_embed_page()
         await interaction.edit(embed=embed, view=self)
 
-    async def _get_embed_page(self) -> GuildHistoryEmbed:
+    async def _get_embed_page(self) -> GuildHistoryEmbedFactory:
         await self.embed.setup_fields(self._selected_data, self._selected_mode)
         embed = self.embed.get_embed_page()
         return embed
 
     @property
     @override
-    def embed(self) -> GuildHistoryEmbed:
+    def embed(self) -> GuildHistoryEmbedFactory:
         """The embed property."""
         return self._embed

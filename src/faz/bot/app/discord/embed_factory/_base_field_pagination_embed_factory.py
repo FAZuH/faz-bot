@@ -5,11 +5,11 @@ from nextcord import Colour
 from nextcord import Interaction
 from nextcord.types.embed import EmbedType
 
-from faz.bot.app.discord.embed.embed_field import EmbedField
-from faz.bot.app.discord.embed.pagination_embed import PaginationEmbed
+from faz.bot.app.discord.embed_factory.embed_field import EmbedField
+from faz.bot.app.discord.embed_factory.pagination_embed_factory import PaginationEmbedFactory
 
 
-class BaseFieldPaginationEmbed(PaginationEmbed[EmbedField]):
+class BaseFieldPaginationEmbedFactory(PaginationEmbedFactory[EmbedField]):
     def __init__(
         self,
         interaction: Interaction[Any],

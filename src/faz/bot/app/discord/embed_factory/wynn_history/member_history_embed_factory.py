@@ -3,13 +3,15 @@ from __future__ import annotations
 import asyncio
 from collections import defaultdict
 from datetime import datetime
-from typing import Self, override, TYPE_CHECKING
+from typing import override, Self, TYPE_CHECKING
 from uuid import UUID
 
 from nextcord import Colour
 import pandas as pd
 
-from faz.bot.app.discord.embed._base_wynn_history_embed import BaseWynnHistoryEmbed
+from faz.bot.app.discord.embed_factory.wynn_history._base_wynn_history_embed_factory import (
+    BaseWynnHistoryEmbedFactory,
+)
 from faz.bot.app.discord.parser.member_history_field_parser import MemberHistoryFieldParser
 
 if TYPE_CHECKING:
@@ -20,7 +22,7 @@ if TYPE_CHECKING:
     from faz.bot.app.discord.view.wynn_history.member_history_view import MemberHistoryView
 
 
-class MemberHistoryEmbed(BaseWynnHistoryEmbed):
+class MemberHistoryEmbedFactory(BaseWynnHistoryEmbedFactory):
     def __init__(
         self,
         view: MemberHistoryView,

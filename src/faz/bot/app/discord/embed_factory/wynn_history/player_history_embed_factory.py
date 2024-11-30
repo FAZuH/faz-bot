@@ -8,7 +8,9 @@ from faz.bot.database.fazwynn.model.player_info import PlayerInfo
 from nextcord import Colour
 import pandas as pd
 
-from faz.bot.app.discord.embed._base_wynn_history_embed import BaseWynnHistoryEmbed
+from faz.bot.app.discord.embed_factory.wynn_history._base_wynn_history_embed_factory import (
+    BaseWynnHistoryEmbedFactory,
+)
 from faz.bot.app.discord.parser.player_history_field_parser import PlayerHistoryFieldParser
 from faz.bot.app.discord.select.player_history_data_option import PlayerHistoryDataOption
 
@@ -16,7 +18,7 @@ if TYPE_CHECKING:
     from faz.bot.app.discord.view.wynn_history.player_history_view import PlayerHistoryView
 
 
-class PlayerHistoryEmbed(BaseWynnHistoryEmbed):
+class PlayerHistoryEmbedFactory(BaseWynnHistoryEmbedFactory):
     def __init__(
         self,
         view: PlayerHistoryView,

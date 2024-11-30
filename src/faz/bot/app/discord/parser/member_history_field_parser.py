@@ -3,7 +3,7 @@ from uuid import UUID
 
 import pandas as pd
 
-from faz.bot.app.discord.embed.embed_field import EmbedField
+from faz.bot.app.discord.embed_factory.embed_field import EmbedField
 from faz.bot.app.discord.parser._base_field_parser import BaseFieldParser
 from faz.bot.app.discord.select.member_history_data_option import MemberHistoryDataOption
 from faz.bot.app.discord.select.member_history_mode_option import MemberHistoryModeOption

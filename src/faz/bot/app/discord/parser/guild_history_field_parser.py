@@ -2,7 +2,7 @@ from typing import Callable, Sequence
 
 import pandas as pd
 
-from faz.bot.app.discord.embed.embed_field import EmbedField
+from faz.bot.app.discord.embed_factory.embed_field import EmbedField
 from faz.bot.app.discord.parser._base_field_parser import BaseFieldParser
 from faz.bot.app.discord.select.guild_history_data_options import GuildHistoryDataOption
 from faz.bot.app.discord.select.guild_history_mode_options import GuildHistoryModeOptions

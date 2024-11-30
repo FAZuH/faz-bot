@@ -4,7 +4,7 @@ from typing import Any, MutableSequence
 
 import pandas as pd
 
-from faz.bot.app.discord.embed.embed_field import EmbedField
+from faz.bot.app.discord.embed_factory.embed_field import EmbedField
 
 
 class BaseFieldParser(ABC):

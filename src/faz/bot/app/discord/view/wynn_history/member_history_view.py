@@ -3,7 +3,9 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any, override, TYPE_CHECKING
 
-from faz.bot.app.discord.embed.member_history_embed import MemberHistoryEmbed
+from faz.bot.app.discord.embed_factory.wynn_history.member_history_embed_factory import (
+    MemberHistoryEmbedFactory,
+)
 from faz.bot.app.discord.select.member_history_data_option import MemberHistoryDataOption
 from faz.bot.app.discord.select.member_history_data_select import MemberHistoryDataSelect
 from faz.bot.app.discord.select.member_history_mode_option import MemberHistoryModeOption
@@ -48,7 +50,7 @@ class MemberHistoryView(BasePaginationView):
         self._period_begin = period_begin
         self._period_end = period_end
 
-        self._embed = MemberHistoryEmbed(
+        self._embed = MemberHistoryEmbedFactory(
             self,
             self._player,
             self._period_begin,
@@ -90,7 +92,7 @@ class MemberHistoryView(BasePaginationView):
         embed = await self._get_embed_page()
         await interaction.edit(embed=embed, view=self)
 
-    async def _get_embed_page(self) -> MemberHistoryEmbed:
+    async def _get_embed_page(self) -> MemberHistoryEmbedFactory:
         """Sets PaginationEmbed items with fields based on selected options."""
         await self.embed.setup_fields(self._selected_data, self._selected_mode)
         embed = self.embed.get_embed_page()
@@ -98,6 +100,6 @@ class MemberHistoryView(BasePaginationView):
 
     @property
     @override
-    def embed(self) -> MemberHistoryEmbed:
+    def embed(self) -> MemberHistoryEmbedFactory:
         """The embed property."""
         return self._embed

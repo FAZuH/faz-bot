@@ -7,7 +7,9 @@ from uuid import UUID
 
 from nextcord.ui import StringSelect
 
-from faz.bot.app.discord.embed.player_history_embed import PlayerHistoryEmbed
+from faz.bot.app.discord.embed_factory.wynn_history.player_history_embed_factory import (
+    PlayerHistoryEmbedFactory,
+)
 from faz.bot.app.discord.select.player_history_data_option import PlayerHistoryDataOption
 from faz.bot.app.discord.select.player_history_data_select import PlayerHistoryDataSelect
 from faz.bot.app.discord.view._base_pagination_view import BasePaginationView
@@ -35,7 +37,7 @@ class PlayerHistoryView(BasePaginationView):
 
         self._character_labels: dict[str, str] = {}
 
-        self._embed = PlayerHistoryEmbed(
+        self._embed = PlayerHistoryEmbedFactory(
             self,
             self._player,
             self._period_begin,
@@ -103,7 +105,7 @@ class PlayerHistoryView(BasePaginationView):
         embed = await self._get_embed_page()
         await interaction.edit(embed=embed, view=self)
 
-    async def _get_embed_page(self) -> PlayerHistoryEmbed:
+    async def _get_embed_page(self) -> PlayerHistoryEmbedFactory:
         await self.embed.setup_fields(self._selected_character, self._selected_data)
         embed = self.embed.get_embed_page(self.embed.current_page)
         embed.description += "\n`Character : ` "
@@ -116,6 +118,6 @@ class PlayerHistoryView(BasePaginationView):
 
     @property
     @override
-    def embed(self) -> PlayerHistoryEmbed:
+    def embed(self) -> PlayerHistoryEmbedFactory:
         """The embed property."""
         return self._embed

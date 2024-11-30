@@ -6,7 +6,9 @@ from typing import override, TYPE_CHECKING
 from nextcord import Colour
 import pandas as pd
 
-from faz.bot.app.discord.embed._base_wynn_history_embed import BaseWynnHistoryEmbed
+from faz.bot.app.discord.embed_factory.wynn_history._base_wynn_history_embed_factory import (
+    BaseWynnHistoryEmbedFactory,
+)
 from faz.bot.app.discord.parser.guild_history_field_parser import GuildHistoryFieldParser
 from faz.bot.app.discord.select.guild_history_data_options import GuildHistoryDataOption
 
@@ -17,7 +19,7 @@ if TYPE_CHECKING:
     from faz.bot.app.discord.view.wynn_history.guild_history_view import GuildHistoryView
 
 
-class GuildHistoryEmbed(BaseWynnHistoryEmbed):
+class GuildHistoryEmbedFactory(BaseWynnHistoryEmbedFactory):
     def __init__(
         self,
         view: GuildHistoryView,
