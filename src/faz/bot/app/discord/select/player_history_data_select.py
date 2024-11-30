@@ -1,7 +1,6 @@
-from typing import Any, Callable, Optional, override
+from typing import Any, Callable, override
 
 from nextcord import SelectOption
-from nextcord.utils import MISSING
 
 from faz.bot.app.discord.select.custom_string_select import CustomStringSelect
 from faz.bot.app.discord.select.player_history_data_option import PlayerHistoryDataOption
@@ -11,25 +10,8 @@ class PlayerHistoryDataSelect(CustomStringSelect[PlayerHistoryDataOption]):
     def __init__(
         self,
         callback: Callable[..., Any],
-        *,
-        custom_id: str = MISSING,
-        placeholder: Optional[str] = None,
-        min_values: int = 1,
-        max_values: int = 1,
-        options: list[SelectOption] = MISSING,
-        disabled: bool = False,
-        row: Optional[int] = None,
     ) -> None:
-        placeholder = placeholder or "Select ID"
-        super().__init__(
-            custom_id=custom_id,
-            placeholder=placeholder,
-            min_values=min_values,
-            max_values=max_values,
-            options=options,
-            disabled=disabled,
-            row=row,
-        )
+        super().__init__(placeholder="Select data")
         self.callback = callback
 
     @override
