@@ -8,8 +8,8 @@ from uuid import UUID
 from nextcord.ui import StringSelect
 
 from faz.bot.app.discord.embed.player_history_embed import PlayerHistoryEmbed
-from faz.bot.app.discord.select.player_history_id_options import PlayerHistoryIdOptions
-from faz.bot.app.discord.select.player_history_id_select import PlayerHistoryIdSelect
+from faz.bot.app.discord.select.player_history_data_options import PlayerHistoryDataOptions
+from faz.bot.app.discord.select.player_history_data_select import PlayerHistoryDataSelect
 from faz.bot.app.discord.view._base_pagination_view import BasePaginationView
 
 if TYPE_CHECKING:
@@ -44,7 +44,7 @@ class PlayerHistoryView(BasePaginationView):
         )
 
         self._selected_character: str | None = None
-        self._selected_id: PlayerHistoryIdOptions = PlayerHistoryIdOptions.ALL
+        self._selected_data: PlayerHistoryDataOptions = PlayerHistoryDataOptions.ALL
 
     @override
     async def run(self) -> None:
@@ -57,8 +57,8 @@ class PlayerHistoryView(BasePaginationView):
         await self._interaction.send(embed=embed, view=self)
 
     async def _add_id_select(self) -> None:
-        """Helper method to add ID selection during setup."""
-        self._id_select = PlayerHistoryIdSelect(self._id_select_callback)
+        """Helper method to add data selection during setup."""
+        self._id_select = PlayerHistoryDataSelect(self._id_select_callback)
         self.add_item(self._id_select)
 
     async def _add_character_select(self) -> None:
@@ -93,7 +93,7 @@ class PlayerHistoryView(BasePaginationView):
     async def _id_select_callback(self, interaction: Interaction) -> None:
         """Callback for ID selection."""
         # Length of values is always 1
-        self._selected_id = self._id_select.get_selected_option()
+        self._selected_data = self._id_select.get_selected_option()
         await self._set_embed_fields()
         embed = self._get_embed_page()
         await interaction.edit(embed=embed, view=self)
@@ -110,7 +110,7 @@ class PlayerHistoryView(BasePaginationView):
 
     async def _set_embed_fields(self) -> None:
         """Sets PaginationEmbed items with fields based on selected options."""
-        fields = await self.embed.get_fields(self._selected_character, self._selected_id)
+        fields = await self.embed.get_fields(self._selected_character, self._selected_data)
         self.embed.items = fields
 
     def _get_embed_page(self) -> PlayerHistoryEmbed:

@@ -11,8 +11,8 @@ import pandas as pd
 from faz.bot.app.discord.bot.errors import ApplicationException
 from faz.bot.app.discord.embed.embed_field import EmbedField
 from faz.bot.app.discord.embed.pagination_embed import PaginationEmbed
-from faz.bot.app.discord.select.player_history_id_options import PlayerHistoryIdOptions
-from faz.bot.app.discord.select.player_history_id_options import PlayerHistoryIdOptionsType
+from faz.bot.app.discord.select.player_history_data_options import PlayerHistoryDataOptions
+from faz.bot.app.discord.select.player_history_data_options import PlayerHistoryDataOptionsType
 from faz.bot.app.discord.series_parser.player_history_series_parser import PlayerHistorySeriesParser
 
 if TYPE_CHECKING:
@@ -46,7 +46,7 @@ class PlayerHistoryEmbed(PaginationEmbed[EmbedField]):
         self._parsers = PlayerHistorySeriesParser(character_labels)
 
     async def get_fields(
-        self, character_uuid: str | None, id: PlayerHistoryIdOptions
+        self, character_uuid: str | None, id: PlayerHistoryDataOptions
     ) -> Sequence[EmbedField]:
         # Prepare
         db = self._db
@@ -77,11 +77,11 @@ class PlayerHistoryEmbed(PaginationEmbed[EmbedField]):
         # Numerical for Total, Character
         # All for Total, Character
         type_ = id.type
-        if type_ == PlayerHistoryIdOptionsType.CATEGORICAL:
+        if type_ == PlayerHistoryDataOptionsType.CATEGORICAL:
             fields = self._get_fields_categorical(player_hist, id)
-        elif type_ == PlayerHistoryIdOptionsType.NUMERICAL:
+        elif type_ == PlayerHistoryDataOptionsType.NUMERICAL:
             fields = self._get_fields_numerical(player_hist, df_char, id)
-        elif type_ == PlayerHistoryIdOptionsType.ALL:
+        elif type_ == PlayerHistoryDataOptionsType.ALL:
             fields = self._get_fields_numerical(player_hist, df_char, id)
         else:
             raise ApplicationException("This should not happen")
@@ -89,7 +89,7 @@ class PlayerHistoryEmbed(PaginationEmbed[EmbedField]):
         return fields
 
     def _get_fields_categorical(
-        self, player_history: pd.DataFrame, id: PlayerHistoryIdOptions
+        self, player_history: pd.DataFrame, id: PlayerHistoryDataOptions
     ) -> Sequence[EmbedField]:
         parser = self._parsers.get_categorical_parser(id)
         fields = parser(player_history)
@@ -101,7 +101,7 @@ class PlayerHistoryEmbed(PaginationEmbed[EmbedField]):
         self,
         player_history: pd.DataFrame,
         character_history: pd.DataFrame,
-        id: PlayerHistoryIdOptions,
+        id: PlayerHistoryDataOptions,
     ) -> Sequence[EmbedField]:
         parser = self._parsers.get_numerical_parser(id)
         fields = parser(player_history, character_history)
@@ -109,7 +109,7 @@ class PlayerHistoryEmbed(PaginationEmbed[EmbedField]):
             return [self._get_no_data_field(id)]
         return fields
 
-    def _get_no_data_field(self, id: PlayerHistoryIdOptions) -> EmbedField:
+    def _get_no_data_field(self, id: PlayerHistoryDataOptions) -> EmbedField:
         ret = EmbedField(
             id.value.value,
             "No data found within the selected period of time.",

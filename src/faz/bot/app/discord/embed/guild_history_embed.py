@@ -8,7 +8,7 @@ import pandas as pd
 
 from faz.bot.app.discord.embed.embed_field import EmbedField
 from faz.bot.app.discord.embed.pagination_embed import PaginationEmbed
-from faz.bot.app.discord.select.guild_history_id_options import GuildHistoryIdOptions
+from faz.bot.app.discord.select.guild_history_data_options import GuildHistoryDataOption
 from faz.bot.app.discord.series_parser.guild_history_series_parser import GuildHistorySeriesParser
 
 if TYPE_CHECKING:
@@ -44,7 +44,7 @@ class GuildHistoryEmbed(PaginationEmbed[EmbedField]):
         self._parsers = GuildHistorySeriesParser()
 
     async def get_fields(
-        self, mode: GuildHistoryModeOptions | GuildHistoryIdOptions
+        self, mode: GuildHistoryModeOptions | GuildHistoryDataOption
     ) -> Sequence[EmbedField]:
         # Prepare
         db = self._db

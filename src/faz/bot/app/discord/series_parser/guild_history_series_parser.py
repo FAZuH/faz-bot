@@ -3,7 +3,7 @@ from typing import Callable, Sequence
 import pandas as pd
 
 from faz.bot.app.discord.embed.embed_field import EmbedField
-from faz.bot.app.discord.select.guild_history_id_options import GuildHistoryIdOptions
+from faz.bot.app.discord.select.guild_history_data_options import GuildHistoryDataOption
 from faz.bot.app.discord.select.guild_history_mode_options import GuildHistoryModeOptions
 from faz.bot.app.discord.series_parser._base_series_parser import BaseSeriesParser
 
@@ -11,16 +11,16 @@ from faz.bot.app.discord.series_parser._base_series_parser import BaseSeriesPars
 class GuildHistorySeriesParser(BaseSeriesParser):
     def __init__(self) -> None:
         self._parsers: dict[
-            GuildHistoryModeOptions | GuildHistoryIdOptions,
+            GuildHistoryModeOptions | GuildHistoryDataOption,
             Callable[[pd.DataFrame, pd.DataFrame], Sequence[EmbedField]],
         ] = {}
         self._parsers[GuildHistoryModeOptions.OVERALL] = self._parser_overall
-        self._parsers[GuildHistoryIdOptions.MEMBER_LIST] = self._parser_historical_member_list
-        self._parsers[GuildHistoryIdOptions.GUILD_LEVEL] = self._parser_historical_guild_level
-        self._parsers[GuildHistoryIdOptions.TERRITORIES] = self._parser_historical_territories
+        self._parsers[GuildHistoryDataOption.MEMBER_LIST] = self._parser_historical_member_list
+        self._parsers[GuildHistoryDataOption.GUILD_LEVEL] = self._parser_historical_guild_level
+        self._parsers[GuildHistoryDataOption.TERRITORIES] = self._parser_historical_territories
 
     def get_parser(
-        self, mode: GuildHistoryModeOptions | GuildHistoryIdOptions
+        self, mode: GuildHistoryModeOptions | GuildHistoryDataOption
     ) -> Callable[[pd.DataFrame, pd.DataFrame], Sequence[EmbedField]]:
         ret = self._parsers.get(mode, None)
         if ret is None:
