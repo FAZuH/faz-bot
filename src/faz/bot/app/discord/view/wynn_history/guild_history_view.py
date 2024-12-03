@@ -100,7 +100,9 @@ class GuildHistoryView(BasePaginationView):
         await self._initial_send(embed)
 
     def _get_embed(self) -> Embed:
-        embed = self._embed_director.set_options(self._selected_data, self._selected_mode).construct()
+        embed = self._embed_director.set_options(
+            self._selected_data, self._selected_mode
+        ).construct()
         return embed
 
     @property

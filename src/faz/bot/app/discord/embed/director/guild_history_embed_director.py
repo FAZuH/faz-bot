@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Self, override, TYPE_CHECKING
+from typing import override, Self, TYPE_CHECKING
 
 from nextcord import Embed
 import pandas as pd
@@ -64,7 +64,12 @@ class GuildHistoryEmbedDirector(BasePaginationEmbedDirector):
         data = self._data
         mode = self._mode
         fields = self.field_builder.set_data_option(data).set_mode_option(mode).build()
-        desc = self._desc_builder.reset().add_line("Data", data.value).add_line("Mode", mode.value).build()
+        desc = (
+            self._desc_builder.reset()
+            .add_line("Data", data.value)
+            .add_line("Mode", mode.value)
+            .build()
+        )
         embed = self.prepare_default().set_description(desc).set_builder_items(fields).build()
         return embed
 

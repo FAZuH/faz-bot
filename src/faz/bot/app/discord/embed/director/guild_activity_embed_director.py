@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import timedelta
-from typing import Sequence, override, TYPE_CHECKING
+from typing import override, Sequence, TYPE_CHECKING
 
 from nextcord import Embed
 from sortedcontainers import SortedList
@@ -18,9 +18,9 @@ if TYPE_CHECKING:
     from datetime import datetime
 
     from faz.bot.database.fazwynn.model.guild_info import GuildInfo
+    from faz.bot.database.fazwynn.model.player_activity_history import PlayerActivityHistory
 
     from faz.bot.app.discord.view.wynn_history.guild_activity_view import GuildActivityView
-    from faz.bot.database.fazwynn.model.player_activity_history import PlayerActivityHistory
 
 
 class GuildActivityEmbedDirector(BasePaginationEmbedDirector):

@@ -36,7 +36,5 @@ class FieldPaginationEmbedBuilder(PaginationEmbedBuilder[EmbedField]):
         return super().build()
 
     def _add_empty_field(self, name: str, inline: bool = False) -> Self:
-        self._embed.add_field(
-            name=name, value="```No data found.\n```", inline=inline
-        )
+        self._embed.add_field(name=name, value="```No data found.\n```", inline=inline)
         return self

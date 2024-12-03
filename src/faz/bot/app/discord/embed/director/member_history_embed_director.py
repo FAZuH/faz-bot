@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from datetime import datetime
-from typing import Self, override, TYPE_CHECKING
+from typing import override, Self, TYPE_CHECKING
 from uuid import UUID
 
 from nextcord import Embed

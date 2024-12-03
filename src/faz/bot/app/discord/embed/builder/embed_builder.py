@@ -10,7 +10,9 @@ if TYPE_CHECKING:
 
 
 class EmbedBuilder:
-    def __init__(self, interaction: Interaction[Any] | None = None, initial_embed: Embed | None = None) -> None:
+    def __init__(
+        self, interaction: Interaction[Any] | None = None, initial_embed: Embed | None = None
+    ) -> None:
         self._initial_embed = self._embed = initial_embed or Embed()
         self._interaction = interaction
 

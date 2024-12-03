@@ -15,6 +15,7 @@ from faz.bot.app.discord.view._base_view import BaseView
 
 if TYPE_CHECKING:
     from nextcord import Embed
+
     from faz.bot.app.discord.bot.bot import Bot
     from faz.bot.app.discord.embed.builder.pagination_embed_builder import PaginationEmbedBuilder
 
