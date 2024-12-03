@@ -3,10 +3,9 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any, override, TYPE_CHECKING
 
-from nextcord import Color
 from nextcord import Embed
 
-from faz.bot.app.discord.embed_factory.custom_embed_factory import CustomEmbedFactory
+from faz.bot.app.discord.embed.builder.embed_builder import EmbedBuilder
 from faz.bot.app.discord.view._base_view import BaseView
 from faz.bot.app.discord.view._view_utils import ViewUtils
 
@@ -31,8 +30,6 @@ class PlayerActivityView(BaseView):
         self._period_begin = period_begin
         self._period_end = period_end
 
-        self._repo = self._bot.fazwynn_db.player_activity_history
-
     @override
     async def run(self) -> None:
         embed = await self._get_embed()
@@ -43,15 +40,21 @@ class PlayerActivityView(BaseView):
         end_ts = int(self._period_end.timestamp())
         assert self._interaction.user
 
-        embed = CustomEmbedFactory(
-            self._interaction,
-            title=f"Player Activity ({self._player.latest_username})",
-            color=Color.teal(),
+        time_period = (
+            await self._bot.fazwynn_db.player_activity_history.get_playtime_between_period(
+                self._player.uuid, self._period_begin, self._period_end
+            )
         )
-        time_period = await self._repo.get_playtime_between_period(
-            self._player.uuid, self._period_begin, self._period_end
+
+        desc = f"`Playtime : ` {ViewUtils.format_timedelta(time_period)}"
+        desc += f"\n`Period   : ` <t:{begin_ts}:R> to <t:{end_ts}:R>"
+
+        embed = (
+            EmbedBuilder(
+                self._interaction,
+            )
+            .set_title(f"Player Activity ({self._player.latest_username})")
+            .set_description(desc)
+            .build()
         )
-        embed.description = f"`Playtime : ` {ViewUtils.format_timedelta(time_period)}"
-        embed.description += f"\n`Period   : ` <t:{begin_ts}:R> to <t:{end_ts}:R>"
-        embed.finalize()
         return embed

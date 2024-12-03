@@ -1,18 +1,21 @@
 from __future__ import annotations
 
-import asyncio
 from collections import defaultdict
 from datetime import datetime
-from typing import override, Self, TYPE_CHECKING
+from typing import Self, override, TYPE_CHECKING
 from uuid import UUID
 
-from nextcord import Colour
+from nextcord import Embed
 import pandas as pd
 
-from faz.bot.app.discord.embed_factory.wynn_history._base_wynn_history_embed_factory import (
-    BaseWynnHistoryEmbedFactory,
+from faz.bot.app.discord.embed.builder.custom_description_builder import CustomDescriptionBuilder
+from faz.bot.app.discord.embed.builder.field_pagination_embed_builder import (
+    FieldPaginationEmbedBuilder,
 )
-from faz.bot.app.discord.parser.member_history_field_parser import MemberHistoryFieldParser
+from faz.bot.app.discord.embed.builder.member_history_field_builder import MemberHistoryFieldBuilder
+from faz.bot.app.discord.embed.director._base_pagination_embed_director import (
+    BasePaginationEmbedDirector,
+)
 
 if TYPE_CHECKING:
     from faz.bot.database.fazwynn.model.player_info import PlayerInfo
@@ -22,7 +25,7 @@ if TYPE_CHECKING:
     from faz.bot.app.discord.view.wynn_history.member_history_view import MemberHistoryView
 
 
-class MemberHistoryEmbedFactory(BaseWynnHistoryEmbedFactory):
+class MemberHistoryEmbedDirector(BasePaginationEmbedDirector):
     def __init__(
         self,
         view: MemberHistoryView,
@@ -36,43 +39,46 @@ class MemberHistoryEmbedFactory(BaseWynnHistoryEmbedFactory):
 
         begin_ts = int(period_begin.timestamp())
         end_ts = int(period_end.timestamp())
-        title = f"Member History ({player.latest_username})"
-        desc = f"`Period : ` <t:{begin_ts}:R> to <t:{end_ts}:R>"
-        super().__init__(
-            view.interaction,
-            items_per_page=4,
-            title=title,
-            description=desc,
-            color=Colour.teal(),
+
+        self._desc_builder = CustomDescriptionBuilder().set_builder_initial_lines(
+            [("Period", f"<t:{begin_ts}:R> to <t:{end_ts}:R>")]
         )
+        self._embed_builder = FieldPaginationEmbedBuilder(
+            view.interaction, items_per_page=4
+        ).set_builder_initial_embed(Embed(title=f"Member History ({self._player.latest_username})"))
+        self.field_builder = MemberHistoryFieldBuilder()
 
         self._db = view.bot.app.create_fazwynn_db()
 
     @override
     async def setup(self) -> None:
         await self._player.awaitable_attrs.characters
-        async with asyncio.TaskGroup() as tg:
-            tg.create_task(self._fetch_data())
-            tg.create_task(self._setup_parser())
+        self._fetch_data()
+        await self._setup_character_lables()
+        self.field_builder.set_data(self._char_df, self._member_df).set_character_labels(
+            self._character_labels
+        )
+
+    def set_options(self, data: MemberHistoryDataOption, mode: MemberHistoryModeOption) -> Self:
+        self._data = data
+        self._mode = mode
+        return self
 
     @override
-    async def setup_fields(
-        self,
-        data: MemberHistoryDataOption,
-        mode: MemberHistoryModeOption,
-    ) -> None:
-        # Prepare
-        fields = MemberHistoryFieldParser(
-            data, mode, self._char_df, self._member_df, self._character_labels
-        ).get_fields()
-        self.items = fields or [self.get_empty_field_embed(mode.value)]
-
-    @override
-    def get_embed_page(self, page: int | None = None) -> Self:
-        embed = super().get_embed_page(page)
+    def construct(self) -> Embed:
+        data = self._data
+        mode = self._mode
+        fields = self.field_builder.set_data_option(data).set_mode_option(mode).build()
+        desc = (
+            self._desc_builder.reset()
+            .add_line("Data", data.value)
+            .add_line("Mode", mode.value)
+            .build()
+        )
+        embed = self.prepare_default().set_description(desc).set_builder_items(fields).build()
         return embed
 
-    async def _fetch_data(self) -> None:
+    def _fetch_data(self) -> None:
         self._char_df = pd.DataFrame()
 
         for ch in self._player.characters:
@@ -87,7 +93,7 @@ class MemberHistoryEmbedFactory(BaseWynnHistoryEmbedFactory):
             self._player.uuid, self._period_begin, self._period_end
         )
 
-    async def _setup_parser(self) -> None:
+    async def _setup_character_lables(self) -> None:
         ch_counter = defaultdict(int)
         self._character_labels = {}
         for ch in self._player.characters:
@@ -106,3 +112,8 @@ class MemberHistoryEmbedFactory(BaseWynnHistoryEmbedFactory):
             uuid = str(UUID(bytes=ch.character_uuid))
 
             self._character_labels[uuid] = label
+
+    @property
+    @override
+    def embed_builder(self) -> FieldPaginationEmbedBuilder:
+        return self._embed_builder

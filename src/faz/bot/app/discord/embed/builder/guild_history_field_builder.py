@@ -1,26 +1,15 @@
-from typing import Callable, Sequence
+from typing import Callable, override, Self, Sequence
 
 import pandas as pd
 
-from faz.bot.app.discord.embed_factory.embed_field import EmbedField
-from faz.bot.app.discord.parser._base_field_parser import BaseFieldParser
+from faz.bot.app.discord.embed.builder._base_field_builder import BaseFieldBuilder
+from faz.bot.app.discord.embed.embed_field import EmbedField
 from faz.bot.app.discord.select.guild_history_data_options import GuildHistoryDataOption
 from faz.bot.app.discord.select.guild_history_mode_options import GuildHistoryModeOptions
 
 
-class GuildHistoryFieldParser(BaseFieldParser):
-    def __init__(
-        self,
-        mode: GuildHistoryModeOptions,
-        data: GuildHistoryDataOption,
-        guild_df: pd.DataFrame,
-        player_df: pd.DataFrame,
-    ) -> None:
-        self._mode = mode
-        self._data = data
-        self._guild_df = guild_df
-        self._player_df = player_df
-
+class GuildHistoryFieldBuilder(BaseFieldBuilder):
+    def __init__(self) -> None:
         self._parsers: dict[
             GuildHistoryModeOptions | GuildHistoryDataOption,
             Callable[[], Sequence[EmbedField]],
@@ -31,7 +20,21 @@ class GuildHistoryFieldParser(BaseFieldParser):
         self._parsers[GuildHistoryDataOption.GUILD_LEVEL] = self._parser_historical_guild_level
         self._parsers[GuildHistoryDataOption.TERRITORIES] = self._parser_historical_territories
 
-    def get_fields(self) -> Sequence[EmbedField]:
+    def set_mode_option(self, mode: GuildHistoryModeOptions) -> Self:
+        self._mode = mode
+        return self
+
+    def set_data_option(self, data: GuildHistoryDataOption) -> Self:
+        self._data = data
+        return self
+
+    def set_data(self, player_df: pd.DataFrame, guild_df: pd.DataFrame) -> Self:
+        self._player_df = player_df
+        self._guild_df = guild_df
+        return self
+
+    @override
+    def build(self) -> Sequence[EmbedField]:
         if self._mode == GuildHistoryModeOptions.OVERALL:
             parser = self._parsers[self._mode]
         else:

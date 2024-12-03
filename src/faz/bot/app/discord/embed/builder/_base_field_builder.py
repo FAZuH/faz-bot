@@ -1,13 +1,14 @@
 from abc import ABC
+from abc import abstractmethod
 from datetime import datetime
-from typing import Any, MutableSequence
+from typing import Any, MutableSequence, Sequence
 
 import pandas as pd
 
-from faz.bot.app.discord.embed_factory.embed_field import EmbedField
+from faz.bot.app.discord.embed.embed_field import EmbedField
 
 
-class BaseFieldParser(ABC):
+class BaseFieldBuilder(ABC):
     def _common_numerical_float_string_parser(self, timestamp: str, value: float) -> str:
         ret = f"{timestamp}: `{value:.2f}`"
         return ret
@@ -51,3 +52,6 @@ class BaseFieldParser(ABC):
         timestamp = dt.timestamp()
         ret = f"<t:{timestamp:.0f}:R>"
         return ret
+
+    @abstractmethod
+    def build(self) -> Sequence[EmbedField]: ...

@@ -8,7 +8,7 @@ from nextcord import Colour
 from nextcord import Interaction
 from nextcord.ext import commands
 
-from faz.bot.app.discord.embed_factory.custom_embed_factory import CustomEmbedFactory
+from faz.bot.app.discord.embed.builder.embed_builder import EmbedBuilder
 
 if TYPE_CHECKING:
     from faz.bot.database.fazcord.fazcord_database import FazcordDatabase
@@ -35,10 +35,13 @@ class CogBase(commands.Cog):
         )
 
     async def _respond_successful(self, interaction: Interaction[Any], message: str) -> None:
-        embed = CustomEmbedFactory(
-            interaction, title="Success", description=message, color=Colour.dark_green()
+        embed = (
+            EmbedBuilder(interaction)
+            .set_title("Success")
+            .set_description(message)
+            .set_colour(Colour.dark_green())
+            .build()
         )
-        embed.finalize()
         await interaction.send(embed=embed)
 
     @asynccontextmanager

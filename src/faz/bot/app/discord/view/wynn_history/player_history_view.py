@@ -7,8 +7,8 @@ from uuid import UUID
 
 from nextcord.ui import StringSelect
 
-from faz.bot.app.discord.embed_factory.wynn_history.player_history_embed_factory import (
-    PlayerHistoryEmbedFactory,
+from faz.bot.app.discord.embed.director.player_history_embed_director import (
+    PlayerHistoryEmbedDirector,
 )
 from faz.bot.app.discord.select.player_history_data_option import PlayerHistoryDataOption
 from faz.bot.app.discord.select.player_history_data_select import PlayerHistoryDataSelect
@@ -16,6 +16,7 @@ from faz.bot.app.discord.view._base_pagination_view import BasePaginationView
 
 if TYPE_CHECKING:
     from faz.bot.database.fazwynn.model.player_info import PlayerInfo
+    from nextcord import Embed
     from nextcord import Interaction
 
     from faz.bot.app.discord.bot.bot import Bot
@@ -37,7 +38,7 @@ class PlayerHistoryView(BasePaginationView):
 
         self._character_labels: dict[str, str] = {}
 
-        self._embed = PlayerHistoryEmbedFactory(
+        self._embed_director = PlayerHistoryEmbedDirector(
             self,
             self._player,
             self._period_begin,
@@ -56,9 +57,8 @@ class PlayerHistoryView(BasePaginationView):
         self.add_item(self._data_select)
         await self._add_character_select()
 
-        await self.embed.setup()
-        embed = await self._get_embed_page()
-        await self._interaction.send(embed=embed, view=self)
+        await self._embed_director.setup()
+        await self._initial_send(self._get_embed())
 
     async def _add_character_select(self) -> None:
         """Helper method to add character selection during setup."""
@@ -93,8 +93,8 @@ class PlayerHistoryView(BasePaginationView):
         """Callback for data selection."""
         # Length of values is always 1
         self._selected_data = self._data_select.get_selected_option()
-        embed = await self._get_embed_page()
-        await interaction.edit(embed=embed, view=self)
+        embed = self._get_embed()
+        await self._initial_send(embed)
 
     async def _character_select_callback(self, interaction: Interaction) -> None:
         """Callback for character selection."""
@@ -102,22 +102,16 @@ class PlayerHistoryView(BasePaginationView):
         self._selected_character = self._character_select.values[0]
         if self._selected_character.lower() == "total":
             self._selected_character = None
-        embed = await self._get_embed_page()
-        await interaction.edit(embed=embed, view=self)
+        embed = self._get_embed()
+        await self._initial_send(embed)
 
-    async def _get_embed_page(self) -> PlayerHistoryEmbedFactory:
-        await self.embed.setup_fields(self._selected_character, self._selected_data)
-        embed = self.embed.get_embed_page(self.embed.current_page)
-        embed.description += "\n`Character : ` "
-        if self._selected_character is None:
-            embed.description += "All characters"
-        else:
-            char_label = self._character_labels[self._selected_character]
-            embed.description += char_label
+    def _get_embed(self) -> Embed:
+        embed = self._embed_director.set_options(
+            self._selected_data, self._selected_character
+        ).construct()
         return embed
 
     @property
     @override
-    def embed(self) -> PlayerHistoryEmbedFactory:
-        """The embed property."""
-        return self._embed
+    def embed_director(self) -> PlayerHistoryEmbedDirector:
+        return self._embed_director

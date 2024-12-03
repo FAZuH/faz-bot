@@ -1,27 +1,16 @@
-from typing import Any, Callable, Sequence
+from typing import Any, Callable, override, Self, Sequence
 from uuid import UUID
 
 import pandas as pd
 
-from faz.bot.app.discord.embed_factory.embed_field import EmbedField
-from faz.bot.app.discord.parser._base_field_parser import BaseFieldParser
+from faz.bot.app.discord.embed.builder._base_field_builder import BaseFieldBuilder
+from faz.bot.app.discord.embed.embed_field import EmbedField
 from faz.bot.app.discord.select.player_history_data_option import PlayerHistoryDataOption
 from faz.bot.app.discord.select.player_history_data_option import PlayerHistoryDataOptionType
 
 
-class PlayerHistoryFieldParser(BaseFieldParser):
-    def __init__(
-        self,
-        data_option: PlayerHistoryDataOption,
-        player_df: pd.DataFrame,
-        char_df: pd.DataFrame,
-        character_labels: dict[str, str],
-    ) -> None:
-        self._data_option = data_option
-        self._player_df = player_df
-        self._char_df = char_df
-        self._character_labels = character_labels
-
+class PlayerHistoryFieldBuilder(BaseFieldBuilder):
+    def __init__(self) -> None:
         self._categorical_parsers: dict[
             PlayerHistoryDataOption,
             Callable[[], Sequence[EmbedField]],
@@ -48,7 +37,27 @@ class PlayerHistoryFieldParser(BaseFieldParser):
         num_prsr[PlayerHistoryDataOption.PROFESSIONS] = self._parser_numerical_professions
         num_prsr[PlayerHistoryDataOption.COMPLETIONS] = self._parser_numerical_completions
 
-    def get_fields(self) -> Sequence[EmbedField]:
+    def set_character_labels(self, character_labels: dict[str, str]) -> Self:
+        self._character_labels = character_labels
+        return self
+
+    def set_data_option(self, data_option: PlayerHistoryDataOption) -> Self:
+        self._data_option = data_option
+        return self
+
+    def set_player_data(self, player_df: pd.DataFrame) -> Self:
+        self._player_df = player_df
+        return self
+
+    def set_character_data(self, char_df: pd.DataFrame) -> Self:
+        self._char_df = char_df
+        return self
+
+    def set_data(self, player_df: pd.DataFrame, char_df: pd.DataFrame) -> Self:
+        return self.set_player_data(player_df).set_character_data(char_df)
+
+    @override
+    def build(self) -> Sequence[EmbedField]:
         if self._data_option.type == PlayerHistoryDataOptionType.CATEGORICAL:
             parser = self._get_categorical_parser(self._data_option)
         else:
@@ -120,7 +129,7 @@ class PlayerHistoryFieldParser(BaseFieldParser):
             [self._diff_str_or_blank(value, label, label_space) for label, value in lines.items()]
         )
         ret = []
-        self._add_embed_field(ret, "", desc)
+        self._add_embed_field(ret, "All", desc)
         return ret
 
     def _parser_categorical_guild(self) -> Sequence[EmbedField]:

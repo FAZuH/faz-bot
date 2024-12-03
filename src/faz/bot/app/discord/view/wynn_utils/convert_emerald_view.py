@@ -7,7 +7,7 @@ from faz.bot.wynn.util.emeralds import Emeralds
 from nextcord import Embed
 from nextcord import Interaction
 
-from faz.bot.app.discord.embed_factory.custom_embed_factory import CustomEmbedFactory
+from faz.bot.app.discord.embed.builder.embed_builder import EmbedBuilder
 from faz.bot.app.discord.view._base_view import BaseView
 
 if TYPE_CHECKING:
@@ -22,27 +22,28 @@ class ConvertEmeraldView(BaseView):
         self._emerald_string = emerald_string
         self._emeralds = Emeralds.from_string(emerald_string)
         self._emeralds.simplify()
-        self._embed = CustomEmbedFactory(
-            interaction,
-            title="Emerald Convertor",
-            color=8894804,
-            thumbnail_url=self._THUMBNAIL_URL,
-        )
 
     @override
     async def run(self):
-        embed = self._get_embed(self._emeralds)
-        await self._interaction.send(embed=embed)
+        embed = self._get_embed()
+        await self._interaction.send(embed=embed, view=self)
 
-    def _get_embed(self, emeralds: Emeralds) -> Embed:
-        set_price_tm, set_price_silverbull = EmeraldUtil.get_set_price(emeralds)
-        embed = self._embed.get_base()
-        embed.description = f"Converted: **{emeralds}**\n" f"Emeralds Total: **{emeralds.total}e**"
-        embed.add_field(name="TM Set Price", value=f"{set_price_tm.emeralds}", inline=True)
-        embed.add_field(
-            name="Silverbull Set Price",
-            value=f"{set_price_silverbull.emeralds}",
-            inline=True,
+    def _get_embed(self) -> Embed:
+        set_price_tm, set_price_silverbull = EmeraldUtil.get_set_price(self._emeralds)
+        embed = (
+            EmbedBuilder(self.interaction)
+            .set_title("Emerald Convertor")
+            .set_colour(8894804)
+            .set_thumbnail(self._THUMBNAIL_URL)
+            .set_description(
+                f"Converted: **{self._emeralds}**\n" f"Emeralds Total: **{self._emeralds.total}e**"
+            )
+            .add_field(name="TM Set Price", value=f"{set_price_tm.emeralds}", inline=True)
+            .add_field(
+                name="Silverbull Set Price",
+                value=f"{set_price_silverbull.emeralds}",
+                inline=True,
+            )
+            .build()
         )
-        embed.finalize()
         return embed
