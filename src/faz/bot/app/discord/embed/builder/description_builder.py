@@ -17,7 +17,7 @@ class DescriptionBuilder:
                 Defaults to None.
         """
         self._initial_lines = initial_lines or []
-        self._lines: list[tuple[str, str]] = []
+        self.reset()  # Copy _initial_lines to _lines
 
     def add_line(self, key: str, value: str) -> Self:
         """Add a new key-value pair line to the end of the description.
