@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 from typing import Any, Self, TYPE_CHECKING
-
 from nextcord import Embed
 
 if TYPE_CHECKING:
@@ -13,73 +11,165 @@ class EmbedBuilder:
     def __init__(
         self, interaction: Interaction[Any] | None = None, initial_embed: Embed | None = None
     ) -> None:
-        self._initial_embed = self._embed = initial_embed or Embed()
+        """
+        Initialize the EmbedBuilder.
+
+        Args:
+            interaction (Interaction[Any], optional): The interaction associated with the embed. Defaults to None.
+            initial_embed (Embed, optional): An initial embed to start with. If None, creates a new Embed. Defaults to None.
+        """
+        self._embed = initial_embed or Embed()
+        self._initial_embed = self._embed.copy()
         self._interaction = interaction
 
     def add_field(self, name: str, value: str, inline: bool = False) -> Self:
+        """
+        Adds a field to the embed.
+
+        Args:
+            name (str): The name of the field.
+            value (str): The value of the field.
+            inline (bool, optional): Whether the field should be displayed inline. Defaults to False.
+
+        Returns:
+            Self: The instance of the embed builder to allow method chaining.
+        """
         self._embed.add_field(name=name, value=value, inline=inline)
         return self
 
     def set_colour(self, colour: Colour | int) -> Self:
+        """
+        Sets the color of the embed.
+
+        Args:
+            colour (Colour | int): The color to set for the embed.
+
+        Returns:
+            Self: The instance of the embed builder to allow method chaining.
+        """
         self._embed.colour = colour
         return self
 
     def set_footer(self, text: str | None = None, icon_url: str | None = None) -> Self:
+        """
+        Sets the footer of the embed.
+
+        Args:
+            text (str, optional): The footer text. Defaults to None.
+            icon_url (str, optional): The URL of the footer icon. Defaults to None.
+
+        Returns:
+            Self: The instance of the embed builder to allow method chaining.
+        """
         self._embed.set_footer(text=text, icon_url=icon_url)
         return self
 
     def set_interaction(self, interaction: Interaction[Any]) -> Self:
+        """
+        Sets the interaction associated with the embed.
+
+        Args:
+            interaction (Interaction[Any]): The interaction to associate with the embed.
+
+        Returns:
+            Self: The instance of the embed builder to allow method chaining.
+        """
         self._interaction = interaction
         return self
 
     def set_thumbnail(self, url: str) -> Self:
+        """
+        Sets the thumbnail of the embed.
+
+        Args:
+            url (str): The URL of the thumbnail image.
+
+        Returns:
+            Self: The instance of the embed builder to allow method chaining.
+        """
         self._embed.set_thumbnail(url)
         return self
 
     def set_title(self, title: str) -> Self:
+        """
+        Sets the title of the embed.
+
+        Args:
+            title (str): The title to set for the embed.
+
+        Returns:
+            Self: The instance of the embed builder to allow method chaining.
+        """
         self._embed.title = title
         return self
 
     def set_description(self, description: str) -> Self:
+        """
+        Sets the description of the embed.
+
+        Args:
+            description (str): The description to set for the embed.
+
+        Returns:
+            Self: The instance of the embed builder to allow method chaining.
+        """
         self._embed.description = description
         return self
 
     def build(self) -> Embed:
-        """Finalize the embed construction, and return the finished product.
+        """
+        Finalize the embed construction, and return the finished product.
 
         Returns:
-            Embed: The embed object.
+            Embed: The fully constructed embed object.
         """
         self._add_author()
         return self._embed
 
     def get_embed(self) -> Embed:
-        """Get the embed without finalizing it.
+        """
+        Get the embed without finalizing it.
 
         Returns:
-            Embed: The embed object.
+            Embed: The current embed object.
         """
         return self._embed
 
     def reset_embed(self) -> Self:
-        """Resets the embed to its initial state."""
+        """
+        Resets the embed to its initial state.
+
+        Returns:
+            Self: The instance of the embed builder to allow method chaining.
+        """
         self._embed = self._initial_embed.copy()
         return self
 
     def set_builder_initial_embed(self, embed: Embed) -> Self:
-        """Sets the initial embed state for this builder.
+        """
+        Sets the initial embed state for this builder.
 
         Args:
-            embed (Embed): The embed to set.
+            embed (Embed): The embed to set as the initial state.
 
         Returns:
-            Self: The builder instance.
+            Self: The instance of the embed builder to allow method chaining.
         """
         self._initial_embed = embed
         return self
 
     def _add_author(self) -> Self:
-        """Adds author to this embed."""
+        """
+        Adds author information to the embed.
+
+        Adds the user's display name and avatar to the embed, along with the interaction's timestamp.
+
+        Returns:
+            Self: The instance of the embed builder to allow method chaining.
+
+        Raises:
+            AssertionError: If the user is None.
+        """
         user = self.interaction.user
         assert user, "User is None. Who is calling this command?"
         self._embed.set_author(
@@ -91,7 +181,11 @@ class EmbedBuilder:
 
     @property
     def interaction(self) -> Interaction[Any]:
-        """Returns the interaction associated with this embed.
+        """
+        Returns the interaction associated with this embed.
+
+        Returns:
+            Interaction[Any]: The interaction object.
 
         Raises:
             ValueError: If interaction is not set.
