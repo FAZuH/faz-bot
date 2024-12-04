@@ -6,13 +6,9 @@ from nextcord import Embed
 import pandas as pd
 
 from faz.bot.app.discord.embed.builder.description_builder import DescriptionBuilder
-from faz.bot.app.discord.embed.builder.field_pagination_embed_builder import (
-    FieldPaginationEmbedBuilder,
-)
+from faz.bot.app.discord.embed.builder.embed_builder import EmbedBuilder
 from faz.bot.app.discord.embed.builder.guild_history_field_builder import GuildHistoryFieldBuilder
-from faz.bot.app.discord.embed.director._base_pagination_embed_director import (
-    BasePaginationEmbedDirector,
-)
+from faz.bot.app.discord.embed.director._base_field_embed_director import BaseFieldEmbedDirector
 
 if TYPE_CHECKING:
     from datetime import datetime
@@ -24,7 +20,7 @@ if TYPE_CHECKING:
     from faz.bot.app.discord.view.wynn_history.guild_history_view import GuildHistoryView
 
 
-class GuildHistoryEmbedDirector(BasePaginationEmbedDirector):
+class GuildHistoryEmbedDirector(BaseFieldEmbedDirector):
     def __init__(
         self,
         view: GuildHistoryView,
@@ -39,15 +35,15 @@ class GuildHistoryEmbedDirector(BasePaginationEmbedDirector):
         begin_ts = int(period_begin.timestamp())
         end_ts = int(period_end.timestamp())
 
-        self._desc_builder = DescriptionBuilder().set_builder_initial_lines(
-            [("Period", f"<t:{begin_ts}:R> to <t:{end_ts}:R>")]
+        self._desc_builder = DescriptionBuilder([("Period", f"<t:{begin_ts}:R> to <t:{end_ts}:R>")])
+        self._embed_builder = EmbedBuilder(
+            view.interaction, Embed(title=f"Guild History ({guild.name})")
         )
-        self._embed_builder = FieldPaginationEmbedBuilder(
-            view.interaction, items_per_page=4
-        ).set_builder_initial_embed(Embed(title=f"Guild History ({guild.name})"))
         self.field_builder = GuildHistoryFieldBuilder()
 
         self._db = view.bot.app.create_fazwynn_db()
+
+        super().__init__(self._embed_builder, items_per_page=5)
 
     @override
     async def setup(self) -> None:
@@ -55,23 +51,19 @@ class GuildHistoryEmbedDirector(BasePaginationEmbedDirector):
         self.field_builder.set_data(self._player_df, self._guild_df)
 
     def set_options(self, data: GuildHistoryDataOption, mode: GuildHistoryModeOptions) -> Self:
-        self._data = data
-        self._mode = mode
-        return self
-
-    @override
-    def construct(self) -> Embed:
-        data = self._data
-        mode = self._mode
         fields = self.field_builder.set_data_option(data).set_mode_option(mode).build()
-        desc = (
+        self.set_items(fields)
+
+        description = (
             self._desc_builder.reset()
             .add_line("Data", data.value)
             .add_line("Mode", mode.value)
             .build()
         )
-        embed = self.prepare_default().set_description(desc).set_builder_items(fields).build()
-        return embed
+        embed = self._embed_builder.reset().set_description(description).get_embed()
+        self.embed_builder.set_builder_initial_embed(embed)
+
+        return self
 
     async def _fetch_data(self) -> None:
         await self._guild.awaitable_attrs.members
@@ -88,8 +80,3 @@ class GuildHistoryEmbedDirector(BasePaginationEmbedDirector):
         self._guild_df = self._db.guild_history.select_between_period_as_dataframe(
             self._guild.uuid, self._period_begin, self._period_end
         )
-
-    @property
-    @override
-    def embed_builder(self) -> FieldPaginationEmbedBuilder:
-        return self._embed_builder

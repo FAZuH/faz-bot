@@ -56,7 +56,7 @@ class CraftedProbabilityView(BaseView):
             embed_desc.append(ing_info)
         desc = "\n".join(embed_desc)
         builder = (
-            self._embed_builder.reset_embed()
+            self._embed_builder.reset()
             .set_title("Crafteds Probabilites Calculator")
             .set_colour(8894804)
             .set_thumbnail(self._THUMBNAIL_URL)

@@ -1,7 +1,10 @@
 import datetime
+
+from nextcord import Colour
+from nextcord import Embed
 import pytest
-from nextcord import Embed, Colour
-from src.faz.bot.app.discord.embed.builder.embed_builder import EmbedBuilder
+
+from faz.bot.app.discord.embed.builder.embed_builder import EmbedBuilder
 
 
 @pytest.fixture
@@ -18,12 +21,22 @@ def mock_interaction():
 
 
 @pytest.fixture
+def mock_embed_field():
+    class MockEmbedField:
+        name = "Field1"
+        value = "Value1"
+        inline = True
+
+    return MockEmbedField()
+
+
+@pytest.fixture
 def embed_builder(mock_interaction):
     return EmbedBuilder(interaction=mock_interaction)
 
 
-def test_add_field(embed_builder):
-    embed_builder.add_field(name="Field1", value="Value1", inline=True)
+def test_add_field(embed_builder, mock_embed_field):
+    embed_builder.add_field(mock_embed_field)
     embed = embed_builder.get_embed()
     assert embed.fields[0].name == "Field1"
     assert embed.fields[0].value == "Value1"
@@ -41,12 +54,6 @@ def test_set_footer(embed_builder):
     embed = embed_builder.get_embed()
     assert embed.footer.text == "Footer text"
     assert embed.footer.icon_url == "http://example.com/icon.png"
-
-
-def test_set_interaction(embed_builder, mock_interaction):
-    new_interaction = mock_interaction
-    embed_builder.set_interaction(new_interaction)
-    assert embed_builder.interaction == new_interaction
 
 
 def test_set_thumbnail(embed_builder):
@@ -67,21 +74,22 @@ def test_set_description(embed_builder):
     assert embed.description == "Test Description"
 
 
-def test_build(embed_builder):
-    embed_builder.set_title("Title").set_description("Description").add_field(
-        name="Field", value="Value"
-    )
+def test_build(embed_builder, mock_embed_field):
+    embed_builder.set_title("Title").set_description("Description").add_field(mock_embed_field)
     embed = embed_builder.build()
     assert embed.title == "Title"
     assert embed.description == "Description"
-    assert embed.fields[0].name == "Field"
-    assert embed.fields[0].value == "Value"
-    assert embed.timestamp == datetime.datetime.fromtimestamp(10).replace(tzinfo=datetime.timezone.utc)
+    assert embed.fields[0].name == "Field1"
+    assert embed.fields[0].value == "Value1"
+    assert embed.fields[0].inline is True
+    assert embed.timestamp == datetime.datetime.fromtimestamp(10).replace(
+        tzinfo=datetime.timezone.utc
+    )
 
 
 def test_reset_embed(embed_builder):
     embed_builder.set_title("Title")
-    embed_builder.reset_embed()
+    embed_builder.reset()
     embed = embed_builder.get_embed()
     assert embed.title is None
 
@@ -89,7 +97,7 @@ def test_reset_embed(embed_builder):
 def test_set_builder_initial_embed(embed_builder):
     initial_embed = Embed(title="Initial Title")
     embed_builder.set_builder_initial_embed(initial_embed)
-    embed_builder.reset_embed()
+    embed_builder.reset()
     embed = embed_builder.get_embed()
     assert embed.title == "Initial Title"
 

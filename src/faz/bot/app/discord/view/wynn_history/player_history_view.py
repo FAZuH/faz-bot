@@ -30,12 +30,16 @@ class PlayerHistoryView(BasePaginationView):
         period_begin: datetime,
         period_end: datetime,
     ) -> None:
-        super().__init__(bot, interaction)
+        self._bot = bot
+        self._interaction = interaction
         self._player = player
         self._period_begin = period_begin
         self._period_end = period_end
 
         self._character_labels: dict[str, str] = {}
+        self._selected_character: str | None = None
+        self._selected_data: PlayerHistoryDataOption = PlayerHistoryDataOption.ALL
+        self._data_select = PlayerHistoryDataSelect(self._id_select_callback)
 
         self._embed_director = PlayerHistoryEmbedDirector(
             self,
@@ -44,11 +48,7 @@ class PlayerHistoryView(BasePaginationView):
             self._period_end,
             self._character_labels,
         )
-
-        self._selected_character: str | None = None
-        self._selected_data: PlayerHistoryDataOption = PlayerHistoryDataOption.ALL
-
-        self._data_select = PlayerHistoryDataSelect(self._id_select_callback)
+        super().__init__(bot, interaction, self._embed_director)
 
     @override
     async def run(self) -> None:
@@ -106,9 +106,4 @@ class PlayerHistoryView(BasePaginationView):
         await self._edit_message_page(interaction)
 
     def set_embed_director_options(self) -> None:
-        self.embed_director.set_options(self._selected_data, self._selected_character)
-
-    @property
-    @override
-    def embed_director(self) -> PlayerHistoryEmbedDirector:
-        return self._embed_director
+        self._embed_director.set_options(self._selected_data, self._selected_character)
