@@ -165,4 +165,3 @@ class BasePaginationView[T](BaseView, ABC):
             self._add_navigation_buttons()
         else:
             self._remove_navigation_buttons()
-        

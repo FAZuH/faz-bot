@@ -9,7 +9,6 @@ from nextcord import Interaction
 
 from faz.bot.app.discord.embed.builder.embed_builder import EmbedBuilder
 from faz.bot.app.discord.embed.director._base_field_embed_director import BaseFieldEmbedDirector
-
 from faz.bot.app.discord.embed.embed_field import EmbedField
 from faz.bot.app.discord.view._base_pagination_view import BasePaginationView
 
@@ -46,6 +45,7 @@ class HelpView(BasePaginationView):
     #         # NOTE: case param isrequired
     #         p_msg = f"<{p_msg}>" if p.required else f"[{p_msg}]"
     #         msglist.append(p_msg)
+
 
 class _HelpEmbedDirector(BaseFieldEmbedDirector):
     def __init__(self, view: HelpView) -> None:
