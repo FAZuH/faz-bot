@@ -101,7 +101,7 @@ class GuildHistoryView(BasePaginationView):
 
     def set_embed_director_options(self) -> None:
         self.embed_director.set_options(self._selected_data, self._selected_mode)
-
+    
     @property
     @override
     def embed_director(self) -> GuildHistoryEmbedDirector:

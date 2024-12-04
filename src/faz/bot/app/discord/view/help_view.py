@@ -53,11 +53,14 @@ class HelpView(BasePaginationView):
 class _HelpEmbedDirector(BasePaginationEmbedDirector):
     def __init__(self, view: HelpView) -> None:
         self._view = view
-        self._embed_builder = PaginationEmbedBuilder(
-            view.interaction,
-            items=view._commands,
-            items_per_page=5,
+        self._embed_builder = (
+            PaginationEmbedBuilder(
+                view.interaction,
+                items=view._commands,
+                items_per_page=5,
+            )
         )
+
 
     @override
     async def setup(self) -> None:
