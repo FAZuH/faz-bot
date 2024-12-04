@@ -8,7 +8,7 @@ from faz.bot.database.fazwynn.model.player_info import PlayerInfo
 from nextcord import Embed
 import pandas as pd
 
-from faz.bot.app.discord.embed.builder.custom_description_builder import CustomDescriptionBuilder
+from faz.bot.app.discord.embed.builder.description_builder import DescriptionBuilder
 from faz.bot.app.discord.embed.builder.field_pagination_embed_builder import (
     FieldPaginationEmbedBuilder,
 )
@@ -39,7 +39,7 @@ class PlayerHistoryEmbedDirector(BasePaginationEmbedDirector):
         begin_ts = int(period_begin.timestamp())
         end_ts = int(period_end.timestamp())
 
-        self._desc_builder = CustomDescriptionBuilder().set_builder_initial_lines(
+        self._desc_builder = DescriptionBuilder().set_builder_initial_lines(
             [("Period", f"<t:{begin_ts}:R> to <t:{end_ts}:R>")]
         )
         self._embed_builder = FieldPaginationEmbedBuilder(
