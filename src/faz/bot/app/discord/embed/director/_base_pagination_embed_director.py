@@ -35,6 +35,18 @@ class BasePaginationEmbedDirector(ABC):
         embed = self.prepare_default().build()
         return embed
 
+    def construct_page(self, page: int) -> Embed:
+        """Construct an embed page.
+
+        Args:
+            page (int): Page of the embed to construct.
+
+        Returns:
+            Embed: Constructed embed.
+        """
+        self.embed_builder.set_builder_page(page)
+        return self.construct()
+
     @property
     @abstractmethod
     def embed_builder(self) -> PaginationEmbedBuilder:

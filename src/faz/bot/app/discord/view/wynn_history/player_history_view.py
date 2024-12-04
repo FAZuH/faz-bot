@@ -16,7 +16,6 @@ from faz.bot.app.discord.view._base_pagination_view import BasePaginationView
 
 if TYPE_CHECKING:
     from faz.bot.database.fazwynn.model.player_info import PlayerInfo
-    from nextcord import Embed
     from nextcord import Interaction
 
     from faz.bot.app.discord.bot.bot import Bot
@@ -58,7 +57,8 @@ class PlayerHistoryView(BasePaginationView):
         await self._add_character_select()
 
         await self._embed_director.setup()
-        await self._initial_send(self._get_embed())
+        self.set_embed_director_options()
+        await self._initial_send_message()
 
     async def _add_character_select(self) -> None:
         """Helper method to add character selection during setup."""
@@ -93,8 +93,8 @@ class PlayerHistoryView(BasePaginationView):
         """Callback for data selection."""
         # Length of values is always 1
         self._selected_data = self._data_select.get_selected_option()
-        embed = self._get_embed()
-        await self._initial_send(embed)
+        self.set_embed_director_options()
+        await self._edit_message_page(interaction)
 
     async def _character_select_callback(self, interaction: Interaction) -> None:
         """Callback for character selection."""
@@ -102,14 +102,11 @@ class PlayerHistoryView(BasePaginationView):
         self._selected_character = self._character_select.values[0]
         if self._selected_character.lower() == "total":
             self._selected_character = None
-        embed = self._get_embed()
-        await self._initial_send(embed)
+        self.set_embed_director_options()
+        await self._edit_message_page(interaction)
 
-    def _get_embed(self) -> Embed:
-        embed = self._embed_director.set_options(
-            self._selected_data, self._selected_character
-        ).construct()
-        return embed
+    def set_embed_director_options(self) -> None:
+        self.embed_director.set_options(self._selected_data, self._selected_character)
 
     @property
     @override

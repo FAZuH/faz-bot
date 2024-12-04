@@ -26,19 +26,11 @@ class HelpView(BasePaginationView):
     ) -> None:
         super().__init__(bot, interaction)
         self._commands = commands
-
-        self._embed_builder: PaginationEmbedBuilder[BaseApplicationCommand] = (
-            PaginationEmbedBuilder(
-                self._interaction,
-                items=commands,
-                items_per_page=5,
-            )
-        )
+        self._embed_director = _HelpEmbedDirector(self)
 
     @override
     async def run(self) -> None:
-        embed = self._get_embed()
-        await self._interaction.send(embed=embed, view=self)
+        await self._initial_send_message()
 
     # def _get_parameters(self, parameters: dict[str, ApplicationCommandOption]) -> str:
     #     if not parameters:
@@ -52,8 +44,31 @@ class HelpView(BasePaginationView):
     #         p_msg = f"<{p_msg}>" if p.required else f"[{p_msg}]"
     #         msglist.append(p_msg)
 
-    def _get_embed(self) -> Embed:
-        builder = self._embed_builder
+    @property
+    @override
+    def embed_director(self) -> BasePaginationEmbedDirector:
+        return self._embed_director
+
+
+class _HelpEmbedDirector(BasePaginationEmbedDirector):
+    def __init__(self, view: HelpView) -> None:
+        self._view = view
+        self._embed_builder = (
+            PaginationEmbedBuilder(
+                view.interaction,
+                items=view._commands,
+                items_per_page=5,
+            )
+        )
+
+
+    @override
+    async def setup(self) -> None:
+        pass
+
+    @override
+    def construct(self) -> Embed:
+        builder = self.embed_builder
         for cmd in builder.get_items():
             builder.add_field(
                 name=f"/{cmd.qualified_name}",
@@ -70,26 +85,5 @@ class HelpView(BasePaginationView):
 
     @property
     @override
-    def embed_director(self) -> PaginationEmbedBuilder:
+    def embed_builder(self) -> PaginationEmbedBuilder[BaseApplicationCommand]:
         return self._embed_builder
-
-
-class _HelpEmbedDirector(BasePaginationEmbedDirector):
-    def __init__(self, view: HelpView) -> None:
-        self._view = view
-
-    @override
-    async def setup(self) -> None:
-        pass
-
-    @override
-    def construct(self, page: int | None = None) -> Embed:
-        if page:
-            self._view.embed_builder.set_builder_page(page)
-        embed = self._view._get_embed()
-        return embed
-
-    @property
-    @override
-    def embed_builder(self) -> PaginationEmbedBuilder:
-        return self._view.embed_director

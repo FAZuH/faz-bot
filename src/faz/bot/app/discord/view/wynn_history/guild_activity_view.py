@@ -39,8 +39,7 @@ class GuildActivityView(BasePaginationView):
     @override
     async def run(self) -> None:
         await self._embed_director.setup()
-        embed = self._embed_director.construct()
-        await self._initial_send(embed)
+        await self._initial_send_message()
 
     @property
     @override

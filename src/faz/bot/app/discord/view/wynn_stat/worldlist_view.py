@@ -26,7 +26,7 @@ class WorldlistView(BasePaginationView):
     @override
     async def run(self):
         await self._embed_director.setup()
-        await self._initial_send(self._embed_director.construct())
+        await self._initial_send_message()
 
     @property
     @override

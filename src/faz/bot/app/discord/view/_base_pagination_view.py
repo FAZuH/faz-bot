@@ -14,8 +14,6 @@ from faz.bot.app.discord.embed.director._base_pagination_embed_director import (
 from faz.bot.app.discord.view._base_view import BaseView
 
 if TYPE_CHECKING:
-    from nextcord import Embed
-
     from faz.bot.app.discord.bot.bot import Bot
     from faz.bot.app.discord.embed.builder.pagination_embed_builder import PaginationEmbedBuilder
 
@@ -43,6 +41,7 @@ class BasePaginationView[T](BaseView, ABC):
         super().__init__(
             bot, interaction, timeout=timeout, auto_defer=auto_defer, prevent_update=prevent_update
         )
+        self._buttons_added = False
 
         self._first_page_button = Button(style=ButtonStyle.blurple, emoji="⏮️")
         self._first_page_button.callback = self.first_page_callback
@@ -56,7 +55,10 @@ class BasePaginationView[T](BaseView, ABC):
         self._last_page_button.callback = self.last_page_callback
 
     def _add_navigation_buttons(self) -> None:
+        """Adds page navigation buttons to the view. Does not add if page count is less than 2."""
         if not self.embed_builder.page_count > 1:
+            return
+        if self._buttons_added:
             return
         self.add_item(self._first_page_button)
         self.add_item(self._previous_page_button)
@@ -66,6 +68,9 @@ class BasePaginationView[T](BaseView, ABC):
         self._buttons_added = True
 
     def _remove_navigation_buttons(self) -> None:
+        """Adds page navigation buttons to the view."""
+        if not self._buttons_added:
+            return
         self.remove_item(self._first_page_button)
         self.remove_item(self._previous_page_button)
         self.remove_item(self._stop_button)
@@ -84,7 +89,7 @@ class BasePaginationView[T](BaseView, ABC):
         """
         await interaction.response.defer()
         new_page = 1
-        await self._send_page(interaction, new_page)
+        await self._edit_message_page(interaction, new_page)
 
     async def previous_page_callback(self, interaction: Interaction[Any]) -> None:
         """Handles the callback for the 'Previous Page' button.
@@ -99,7 +104,7 @@ class BasePaginationView[T](BaseView, ABC):
         await interaction.response.defer()
         curr_page = self.embed_builder.current_page
         new_page = self.embed_builder.page_count if curr_page == 1 else curr_page - 1
-        await self._send_page(interaction, new_page)
+        await self._edit_message_page(interaction, new_page)
 
     async def stop_callback(self, interaction: Interaction[Any]) -> None:
         """Handles the callback for the 'Stop' button.
@@ -126,7 +131,7 @@ class BasePaginationView[T](BaseView, ABC):
         await interaction.response.defer()
         curr_page = self.embed_builder.current_page
         new_page = 1 if curr_page == self.embed_builder.page_count else curr_page + 1
-        await self._send_page(interaction, new_page)
+        await self._edit_message_page(interaction, new_page)
 
     async def last_page_callback(self, interaction: Interaction[Any]) -> None:
         """Handles the callback for the 'Last Page' button.
@@ -139,16 +144,19 @@ class BasePaginationView[T](BaseView, ABC):
         """
         await interaction.response.defer()
         new_page = self.embed_builder.page_count
-        await self._send_page(interaction, new_page)
+        await self._edit_message_page(interaction, new_page)
 
-    async def _send_page(self, interaction: Interaction[Any], new_page: int) -> None:
-        self.embed_builder.set_builder_page(new_page)
-        embed = self.embed_director.construct()
-        await interaction.edit_original_message(embed=embed, view=self)
-
-    async def _initial_send(self, embed: Embed) -> None:
+    async def _initial_send_message(self) -> None:
+        """Add page navigation buttons and send the initial message with the embed."""
+        embed = self.embed_director.construct_page(1)
         self._add_navigation_buttons()
         await self.interaction.send(embed=embed, view=self)
+
+    async def _edit_message_page(self, interaction: Interaction[Any], new_page: int = 1) -> None:
+        """Set the embed builder to a new page, construct an embed, and edit the message with the new embed."""
+        embed = self.embed_director.construct_page(new_page)
+        self._add_navigation_buttons()
+        await interaction.edit(embed=embed, view=self)
 
     @property
     @abstractmethod

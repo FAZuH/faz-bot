@@ -14,7 +14,6 @@ from faz.bot.app.discord.view._base_pagination_view import BasePaginationView
 
 if TYPE_CHECKING:
     from faz.bot.database.fazwynn.model.guild_info import GuildInfo
-    from nextcord import Embed
     from nextcord import Interaction
 
     from faz.bot.app.discord.bot.bot import Bot
@@ -78,8 +77,9 @@ class GuildHistoryView(BasePaginationView):
         """Initial method to setup and run the view."""
         self.add_item(self._mode_select)
 
-        await self._embed_director.setup()
-        await self._initial_send(self._get_embed())
+        await self.embed_director.setup()
+        self.set_embed_director_options()
+        await self._initial_send_message()
 
     async def _mode_select_callback(self, interaction: Interaction[Any]) -> None:
         """Callback for mode selection."""
@@ -89,22 +89,19 @@ class GuildHistoryView(BasePaginationView):
             self.remove_item(self._data_select)
         elif self._data_select not in self.children:
             self.add_item(self._data_select)
-        embed = self._get_embed()
-        await self._initial_send(embed)
+        self.set_embed_director_options()
+        await self._edit_message_page(interaction)
 
     async def _data_select_callback(self, interaction: Interaction[Any]) -> None:
         """Callback for data selection."""
         # Length of values is always 1
         self._selected_data = self._data_select.get_selected_option()
-        embed = self._get_embed()
-        await self._initial_send(embed)
+        self.set_embed_director_options()
+        await self._edit_message_page(interaction)
 
-    def _get_embed(self) -> Embed:
-        embed = self._embed_director.set_options(
-            self._selected_data, self._selected_mode
-        ).construct()
-        return embed
-
+    def set_embed_director_options(self) -> None:
+        self.embed_director.set_options(self._selected_data, self._selected_mode)
+    
     @property
     @override
     def embed_director(self) -> GuildHistoryEmbedDirector:
