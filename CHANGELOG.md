@@ -1,4 +1,25 @@
+## [0.6.4](https://github.com/FAZuH/faz-bot-app-discord/compare/v0.6.3...v0.6.4) (2024-12-04)
+
+
+### Miscellaneous Chores
+
+* Update README.md [skip ci] ([1cece48](https://github.com/FAZuH/faz-bot-app-discord/commit/1cece48c0d67ae9a4560a973be6453db3b21cc87))
+* Update README.md [skip ci] ([0636c08](https://github.com/FAZuH/faz-bot-app-discord/commit/0636c08049176fb3903b3f6cb5b1e2efed07f239))
+* Update uv.lock [skip ci] ([3cc1f86](https://github.com/FAZuH/faz-bot-app-discord/commit/3cc1f8625da73a405b92501bb4528ab966bb64b5))
+
+
+### Code Refactoring
+
+* Refactor ([#96](https://github.com/FAZuH/faz-bot-app-discord/issues/96)) ([08b2315](https://github.com/FAZuH/faz-bot-app-discord/commit/08b231581cb996661a0fd70357c8328c4d4e66ad))
+* Rename id to data [skip ci] ([#93](https://github.com/FAZuH/faz-bot-app-discord/issues/93)) ([46e5355](https://github.com/FAZuH/faz-bot-app-discord/commit/46e53550d0aab84dd694ded782ad6f48c6aa7f6b))
+* Various refactor ([#94](https://github.com/FAZuH/faz-bot-app-discord/issues/94)) ([a754f3e](https://github.com/FAZuH/faz-bot-app-discord/commit/a754f3e6fd35313d1b4ab18e165c18e0f325334d))
+
 ## [0.6.3](https://github.com/FAZuH/faz-bot-app-discord/compare/v0.6.2...v0.6.3) (2024-11-29)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.6.3 [skip ci] ([20f712e](https://github.com/FAZuH/faz-bot-app-discord/commit/20f712e77aa9eaed48bcc65e603a71588ef0f0af))
 
 
 ### Build System
@@ -42,17 +63,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.6.0 [skip ci] ([d060586](https://github.com/FAZuH/faz-bot-app-discord/commit/d0605861c8c91b4c5012330d65b59bff2bde714b))
-
-## [0.5.1](https://github.com/FAZuH/faz-bot-app-discord/compare/v0.5.0...v0.5.1) (2024-11-26)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.5.1 [skip ci] ([0a718a7](https://github.com/FAZuH/faz-bot-app-discord/commit/0a718a7f9c5543466d67283eb7df31af0d297a79))
-
-
-### Code Refactoring
-
-* Separate faz-bot into multiple repostiories ([#83](https://github.com/FAZuH/faz-bot-app-discord/issues/83)) ([b465544](https://github.com/FAZuH/faz-bot-app-discord/commit/b465544201787ceb48c6954de7378d5040d06052))
-* Various refactor [skip ci] ([#80](https://github.com/FAZuH/faz-bot-app-discord/issues/80)) ([3892691](https://github.com/FAZuH/faz-bot-app-discord/commit/389269100c252afbe6605389cbf4ea6640f53511))
 
