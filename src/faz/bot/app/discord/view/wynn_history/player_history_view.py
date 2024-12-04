@@ -7,9 +7,11 @@ from uuid import UUID
 
 from nextcord.ui import StringSelect
 
-from faz.bot.app.discord.embed.player_history_embed import PlayerHistoryEmbed
-from faz.bot.app.discord.select.player_history_id_options import PlayerHistoryIdOptions
-from faz.bot.app.discord.select.player_history_id_select import PlayerHistoryIdSelect
+from faz.bot.app.discord.embed.director.player_history_embed_director import (
+    PlayerHistoryEmbedDirector,
+)
+from faz.bot.app.discord.select.player_history_data_option import PlayerHistoryDataOption
+from faz.bot.app.discord.select.player_history_data_select import PlayerHistoryDataSelect
 from faz.bot.app.discord.view._base_pagination_view import BasePaginationView
 
 if TYPE_CHECKING:
@@ -28,38 +30,35 @@ class PlayerHistoryView(BasePaginationView):
         period_begin: datetime,
         period_end: datetime,
     ) -> None:
-        super().__init__(bot, interaction)
+        self._bot = bot
+        self._interaction = interaction
         self._player = player
         self._period_begin = period_begin
         self._period_end = period_end
 
         self._character_labels: dict[str, str] = {}
+        self._selected_character: str | None = None
+        self._selected_data: PlayerHistoryDataOption = PlayerHistoryDataOption.ALL
+        self._data_select = PlayerHistoryDataSelect(self._id_select_callback)
 
-        self._embed = PlayerHistoryEmbed(
+        self._embed_director = PlayerHistoryEmbedDirector(
             self,
             self._player,
             self._period_begin,
             self._period_end,
             self._character_labels,
         )
-
-        self._selected_character: str | None = None
-        self._selected_id: PlayerHistoryIdOptions = PlayerHistoryIdOptions.ALL
+        super().__init__(bot, interaction, self._embed_director)
 
     @override
     async def run(self) -> None:
         """Initial method to setup and run the view."""
-        await self._add_id_select()
+        self.add_item(self._data_select)
         await self._add_character_select()
 
-        await self._set_embed_fields()
-        embed = self._get_embed_page()
-        await self._interaction.send(embed=embed, view=self)
-
-    async def _add_id_select(self) -> None:
-        """Helper method to add ID selection during setup."""
-        self._id_select = PlayerHistoryIdSelect(self._id_select_callback)
-        self.add_item(self._id_select)
+        await self._embed_director.setup()
+        self.set_embed_director_options()
+        await self._initial_send_message()
 
     async def _add_character_select(self) -> None:
         """Helper method to add character selection during setup."""
@@ -91,12 +90,11 @@ class PlayerHistoryView(BasePaginationView):
         self.add_item(self._character_select)
 
     async def _id_select_callback(self, interaction: Interaction) -> None:
-        """Callback for ID selection."""
+        """Callback for data selection."""
         # Length of values is always 1
-        self._selected_id = self._id_select.get_selected_option()
-        await self._set_embed_fields()
-        embed = self._get_embed_page()
-        await interaction.edit(embed=embed, view=self)
+        self._selected_data = self._data_select.get_selected_option()
+        self.set_embed_director_options()
+        await self._edit_message_page(interaction)
 
     async def _character_select_callback(self, interaction: Interaction) -> None:
         """Callback for character selection."""
@@ -104,27 +102,8 @@ class PlayerHistoryView(BasePaginationView):
         self._selected_character = self._character_select.values[0]
         if self._selected_character.lower() == "total":
             self._selected_character = None
-        await self._set_embed_fields()
-        embed = self._get_embed_page()
-        await interaction.edit(embed=embed, view=self)
+        self.set_embed_director_options()
+        await self._edit_message_page(interaction)
 
-    async def _set_embed_fields(self) -> None:
-        """Sets PaginationEmbed items with fields based on selected options."""
-        fields = await self.embed.get_fields(self._selected_character, self._selected_id)
-        self.embed.items = fields
-
-    def _get_embed_page(self) -> PlayerHistoryEmbed:
-        embed = self.embed.get_embed_page(self.embed.current_page)
-        embed.description += "\n`Data   : ` "
-        if self._selected_character is None:
-            embed.description += "All characters"
-        else:
-            char_label = self._character_labels[self._selected_character]
-            embed.description += char_label
-        return embed
-
-    @property
-    @override
-    def embed(self) -> PlayerHistoryEmbed:
-        """The embed property."""
-        return self._embed
+    def set_embed_director_options(self) -> None:
+        self._embed_director.set_options(self._selected_data, self._selected_character)

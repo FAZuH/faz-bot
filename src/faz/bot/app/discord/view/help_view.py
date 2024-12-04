@@ -4,9 +4,12 @@ from typing import Any, override, TYPE_CHECKING
 
 from nextcord import BaseApplicationCommand
 from nextcord import Colour
+from nextcord import Embed
 from nextcord import Interaction
 
-from faz.bot.app.discord.embed.pagination_embed import PaginationEmbed
+from faz.bot.app.discord.embed.builder.embed_builder import EmbedBuilder
+from faz.bot.app.discord.embed.director._base_field_embed_director import BaseFieldEmbedDirector
+from faz.bot.app.discord.embed.embed_field import EmbedField
 from faz.bot.app.discord.view._base_pagination_view import BasePaginationView
 
 if TYPE_CHECKING:
@@ -20,34 +23,16 @@ class HelpView(BasePaginationView):
         interaction: Interaction[Any],
         commands: list[BaseApplicationCommand],
     ) -> None:
-        super().__init__(bot, interaction)
+        self._bot = bot
+        self._interaction = interaction
         self._commands = commands
-        self._embed = PaginationEmbed(
-            self._interaction,
-            commands,
-            5,
-            title="Commands List",
-            color=Colour.dark_blue(),
-        )
-        self._embed.get_embed_page = self._get_embed_page
+
+        self._embed_director = _HelpEmbedDirector(self)
+        super().__init__(bot, interaction, self._embed_director)
 
     @override
     async def run(self) -> None:
-        await self._interaction.send(embed=self._get_embed_page(1), view=self)
-
-    def _get_embed_page(self, page: int) -> PaginationEmbed:
-        """Generates embed page for page nth-page"""
-        # title=f"Commands List : Page [{page}/{self._page_count}]",
-        embed = self._embed.get_base()
-        embed.set_footer(text="[text] means optional. <text> means required")
-        for cmd in embed.get_items(page):
-            embed.add_field(
-                name=f"/{cmd.qualified_name}",
-                value=cmd.description or "No brief description given",
-                inline=False,
-            )
-        embed.finalize()
-        return embed
+        await self._initial_send_message()
 
     # def _get_parameters(self, parameters: dict[str, ApplicationCommandOption]) -> str:
     #     if not parameters:
@@ -61,7 +46,27 @@ class HelpView(BasePaginationView):
     #         p_msg = f"<{p_msg}>" if p.required else f"[{p_msg}]"
     #         msglist.append(p_msg)
 
-    @property
+
+class _HelpEmbedDirector(BaseFieldEmbedDirector):
+    def __init__(self, view: HelpView) -> None:
+        self._view = view
+        self._commands = view._commands
+
+        initial_embed = Embed(title="Commands List", colour=Colour.dark_blue()).set_footer(
+            text="[text] means optional. <text> means required"
+        )
+        self._embed_builder = EmbedBuilder(view.interaction, initial_embed=initial_embed)
+
+        super().__init__(self._embed_builder, items_per_page=5)
+
     @override
-    def embed(self) -> PaginationEmbed:
-        return self._embed
+    async def setup(self) -> None:
+        items = [
+            EmbedField(
+                name=f"/{cmd.qualified_name}",
+                value=cmd.description or "No brief description given",
+                inline=False,
+            )
+            for cmd in self._commands
+        ]
+        self.set_items(items)

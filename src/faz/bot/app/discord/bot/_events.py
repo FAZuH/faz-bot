@@ -16,7 +16,7 @@ from nextcord.ext.commands import Cooldown
 from nextcord.ext.commands import CooldownMapping
 
 from faz.bot.app.discord.bot.errors import ApplicationException
-from faz.bot.app.discord.embed.custom_embed import CustomEmbed
+from faz.bot.app.discord.embed.builder.embed_builder import EmbedBuilder
 
 if TYPE_CHECKING:
     from faz.bot.app.discord.bot.bot import Bot
@@ -113,13 +113,14 @@ class Events:
         self, interaction: Interaction[Any], exception: Exception
     ) -> None:
         description = f"An unexpected error occurred while executing the command: \n**{exception}**"
-        embed = CustomEmbed(
-            interaction,
-            title="Unexpected Error",
-            description=description,
-            color=Colour.dark_red(),
-        )
-        embed.finalize()
+        embed = (
+            EmbedBuilder(
+                interaction,
+            )
+            .set_title("Unexpected Error")
+            .set_description(description)
+            .set_colour(Colour.dark_red())
+        ).build()
         is_admin = await self._bot.checks.is_admin(interaction)
         if is_admin:
             tb = traceback.format_exception(exception)
@@ -133,8 +134,13 @@ class Events:
         self, interaction: Interaction[Any], exception: ApplicationException
     ) -> None:
         description = f"**{exception}**"
-        embed = CustomEmbed(interaction, title="Error", description=description, color=Colour.red())
-        embed.finalize()
+        embed = (
+            EmbedBuilder(interaction)
+            .set_title("Error")
+            .set_description(description)
+            .set_colour(Colour.red())
+            .build()
+        )
         await interaction.send(embed=embed)
         logger.opt(exception=exception).warning(description, discord=True)
 
@@ -147,12 +153,13 @@ class Events:
         self, interaction: Interaction[Any], exception: ApplicationCheckFailure
     ) -> None:
         description = f"**{exception}**"
-        embed = CustomEmbed(
-            interaction,
-            title="Error",
-            description=description,
-            color=Colour.dark_teal(),
+        embed = (
+            EmbedBuilder(interaction)
+            .set_title("Error")
+            .set_description(description)
+            .set_colour(Colour.dark_teal())
+            .build()
         )
-        embed.finalize()
+        # embed.finalize()
         await interaction.send(embed=embed)
         logger.opt(exception=exception).warning(description, discord=True)

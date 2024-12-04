@@ -50,8 +50,16 @@ class BaseView(View, ABC):
                 Defaults to True.
         """
         super().__init__(timeout=timeout, auto_defer=auto_defer, prevent_update=prevent_update)
-        self._bot = bot
         self._interaction = interaction
+        self._bot = bot
+
+    @abstractmethod
+    async def run(self) -> None:
+        """Abstract method to run the view.
+
+        This method must be implemented in subclasses to define the behavior of the view.
+        """
+        ...
 
     @property
     def bot(self) -> Bot:
@@ -92,11 +100,3 @@ class BaseView(View, ABC):
         """
         self.clear_items()
         await self._interaction.edit_original_message(view=self)
-
-    @abstractmethod
-    async def run(self):
-        """Abstract method to run the view.
-
-        This method must be implemented in subclasses to define the behavior of the view.
-        """
-        ...

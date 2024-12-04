@@ -1,18 +1,20 @@
 from __future__ import annotations
 
 from abc import ABC
-from abc import abstractmethod
 from typing import Any, TYPE_CHECKING
 
 from nextcord import ButtonStyle
-from nextcord import Interaction
 from nextcord.ui import Button
-from nextcord.ui import button
 
 from faz.bot.app.discord.view._base_view import BaseView
 
 if TYPE_CHECKING:
-    from faz.bot.app.discord.embed.pagination_embed import PaginationEmbed
+    from nextcord import Interaction
+
+    from faz.bot.app.discord.bot.bot import Bot
+    from faz.bot.app.discord.embed.director._base_pagination_embed_director import (
+        BasePaginationEmbedDirector,
+    )
 
 
 class BasePaginationView[T](BaseView, ABC):
@@ -26,8 +28,59 @@ class BasePaginationView[T](BaseView, ABC):
         _embed (PaginationEmbed): The embed object that represents the paginated content.
     """
 
-    @button(style=ButtonStyle.blurple, emoji="⏮️")
-    async def first_page_callback(self, button: Button[Any], interaction: Interaction[Any]) -> None:
+    def __init__(
+        self,
+        bot: Bot,
+        interaction: Interaction[Any],
+        embed_director: BasePaginationEmbedDirector,
+        *,
+        timeout: float | None = 180,
+        auto_defer: bool = True,
+        prevent_update: bool = True,
+    ) -> None:
+        super().__init__(
+            bot, interaction, timeout=timeout, auto_defer=auto_defer, prevent_update=prevent_update
+        )
+        self._embed_director = embed_director
+
+        self._buttons_added = False
+
+        self._first_page_button = Button(style=ButtonStyle.blurple, emoji="⏮️")
+        self._first_page_button.callback = self.first_page_callback
+        self._previous_page_button = Button(style=ButtonStyle.blurple, emoji="◀️")
+        self._previous_page_button.callback = self.previous_page_callback
+        self._stop_button = Button(style=ButtonStyle.red, emoji="⏹️")
+        self._stop_button.callback = self.stop_callback
+        self._next_page_button = Button(style=ButtonStyle.blurple, emoji="▶️")
+        self._next_page_button.callback = self.next_page_callback
+        self._last_page_button = Button(style=ButtonStyle.blurple, emoji="⏭️")
+        self._last_page_button.callback = self.last_page_callback
+
+    def _add_navigation_buttons(self) -> None:
+        """Adds page navigation buttons to the view. Does not add if page count is less than 2."""
+        if not self._embed_director.page_count > 1:
+            return
+        if self._buttons_added:
+            return
+        self.add_item(self._first_page_button)
+        self.add_item(self._previous_page_button)
+        self.add_item(self._stop_button)
+        self.add_item(self._next_page_button)
+        self.add_item(self._last_page_button)
+        self._buttons_added = True
+
+    def _remove_navigation_buttons(self) -> None:
+        """Adds page navigation buttons to the view."""
+        if not self._buttons_added:
+            return
+        self.remove_item(self._first_page_button)
+        self.remove_item(self._previous_page_button)
+        self.remove_item(self._stop_button)
+        self.remove_item(self._next_page_button)
+        self.remove_item(self._last_page_button)
+        self._buttons_added = False
+
+    async def first_page_callback(self, interaction: Interaction[Any]) -> None:
         """Handles the callback for the 'First Page' button.
 
         This method sets the embed to the first page and updates the message.
@@ -37,14 +90,10 @@ class BasePaginationView[T](BaseView, ABC):
             interaction (Interaction[Any]): The interaction object from Discord.
         """
         await interaction.response.defer()
-        self.embed.current_page = 1
-        embed = self.embed.get_embed_page(self.embed.current_page)
-        await interaction.edit_original_message(embed=embed)
+        new_page = 1
+        await self._edit_message_page(interaction, new_page)
 
-    @button(style=ButtonStyle.blurple, emoji="◀️")
-    async def previous_page_callback(
-        self, button: Button[Any], interaction: Interaction[Any]
-    ) -> None:
+    async def previous_page_callback(self, interaction: Interaction[Any]) -> None:
         """Handles the callback for the 'Previous Page' button.
 
         This method navigates to the previous page of the embed. If the current page
@@ -55,14 +104,11 @@ class BasePaginationView[T](BaseView, ABC):
             interaction (Interaction[Any]): The interaction object from Discord.
         """
         await interaction.response.defer()
-        self.embed.current_page -= 1
-        if self.embed.current_page == 0:
-            self.embed.current_page = self.embed.page_count
-        embed = self.embed.get_embed_page(self.embed.current_page)
-        await interaction.edit_original_message(embed=embed)
+        curr_page = self._embed_director.current_page
+        new_page = self._embed_director.page_count if curr_page == 1 else curr_page - 1
+        await self._edit_message_page(interaction, new_page)
 
-    @button(style=ButtonStyle.red, emoji="⏹️")
-    async def stop_callback(self, button: Button[Any], interaction: Interaction[Any]) -> None:
+    async def stop_callback(self, interaction: Interaction[Any]) -> None:
         """Handles the callback for the 'Stop' button.
 
         This method stops the pagination by calling the `on_timeout` method, which
@@ -74,8 +120,7 @@ class BasePaginationView[T](BaseView, ABC):
         """
         await self.on_timeout()
 
-    @button(style=ButtonStyle.blurple, emoji="▶️")
-    async def next_page_callback(self, button: Button[Any], interaction: Interaction[Any]) -> None:
+    async def next_page_callback(self, interaction: Interaction[Any]) -> None:
         """Handles the callback for the 'Next Page' button.
 
         This method navigates to the next page of the embed. If the current page is
@@ -86,14 +131,11 @@ class BasePaginationView[T](BaseView, ABC):
             interaction (Interaction[Any]): The interaction object from Discord.
         """
         await interaction.response.defer()
-        self.embed.current_page += 1
-        if self.embed.current_page == (self.embed.page_count + 1):
-            self.embed.current_page = 1
-        embed = self.embed.get_embed_page(self.embed.current_page)
-        await interaction.edit_original_message(embed=embed)
+        curr_page = self._embed_director.current_page
+        new_page = 1 if curr_page == self._embed_director.page_count else curr_page + 1
+        await self._edit_message_page(interaction, new_page)
 
-    @button(style=ButtonStyle.blurple, emoji="⏭️")
-    async def last_page_callback(self, button: Button[Any], interaction: Interaction[Any]) -> None:
+    async def last_page_callback(self, interaction: Interaction[Any]) -> None:
         """Handles the callback for the 'Last Page' button.
 
         This method sets the embed to the last page and updates the message.
@@ -103,10 +145,23 @@ class BasePaginationView[T](BaseView, ABC):
             interaction (Interaction[Any]): The interaction object from Discord.
         """
         await interaction.response.defer()
-        self.embed.current_page = self.embed.page_count
-        embed = self.embed.get_embed_page(self.embed.current_page)
-        await interaction.edit_original_message(embed=embed)
+        new_page = self._embed_director.page_count
+        await self._edit_message_page(interaction, new_page)
 
-    @property
-    @abstractmethod
-    def embed(self) -> PaginationEmbed[T]: ...
+    async def _initial_send_message(self) -> None:
+        """Add page navigation buttons and send the initial message with the embed."""
+        embed = self._embed_director.construct_page(1)
+        self._manage_navigation_button()
+        await self.interaction.send(embed=embed, view=self)
+
+    async def _edit_message_page(self, interaction: Interaction[Any], new_page: int = 1) -> None:
+        """Set the embed builder to a new page, construct an embed, and edit the message with the new embed."""
+        embed = self._embed_director.construct_page(new_page)
+        self._manage_navigation_button()
+        await interaction.edit(embed=embed, view=self)
+
+    def _manage_navigation_button(self) -> None:
+        if self._embed_director.page_count > 1:
+            self._add_navigation_buttons()
+        else:
+            self._remove_navigation_buttons()
