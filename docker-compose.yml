@@ -2,6 +2,8 @@ services:
   faz-bot-discord:
     image: ghcr.io/fazuh/faz-bot-discord:latest
     container_name: faz-bot-discord
+    build:
+      context: .
     restart: unless-stopped
     environment:
       MYSQL_HOST: mysql # Override .env
