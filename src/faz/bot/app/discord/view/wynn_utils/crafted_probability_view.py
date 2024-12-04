@@ -12,6 +12,7 @@ from nextcord.ui import Button
 from nextcord.ui import button
 
 from faz.bot.app.discord.embed.builder.embed_builder import EmbedBuilder
+from faz.bot.app.discord.embed.embed_field import EmbedField
 from faz.bot.app.discord.view._base_view import BaseView
 
 if TYPE_CHECKING:
@@ -73,17 +74,21 @@ class CraftedProbabilityView(BaseView):
             result = f"Roll: **{value}**, Chance: **{probability * 100:.2f}%** (1 in {one_in_n:,})"
             if len(embed_fields_values + f"{result}\n") > 1024:
                 builder.add_field(
-                    name="Probabilities" if is_first_embed else "",
-                    value=embed_fields_values,
-                    inline=False,
+                    EmbedField(
+                        name="Probabilities" if is_first_embed else "",
+                        value=embed_fields_values,
+                        inline=False,
+                    )
                 )
                 embed_fields_values = ""
                 is_first_embed = False
             embed_fields_values += f"{result}\n"
         builder.add_field(
-            name="Probabilities" if is_first_embed else "",
-            value=embed_fields_values,
-            inline=False,
+            EmbedField(
+                name="Probabilities" if is_first_embed else "",
+                value=embed_fields_values,
+                inline=False,
+            )
         )
         embed = builder.build()
         return embed
@@ -100,18 +105,22 @@ class CraftedProbabilityView(BaseView):
             )
             if len(field_value + f"{line}\n") > 1024:
                 builder.add_field(
-                    name="Probabilities" if is_first_embed else "",
-                    value=field_value,
-                    inline=False,
+                    EmbedField(
+                        name="Probabilities" if is_first_embed else "",
+                        value=field_value,
+                        inline=False,
+                    )
                 )
                 field_value = ""
                 is_first_embed = False
             cmlr_prob -= prob
             field_value += f"{line}\n"
         builder.add_field(
-            name="Probabilities" if is_first_embed else "",
-            value=field_value,
-            inline=False,
+            EmbedField(
+                name="Probabilities" if is_first_embed else "",
+                value=field_value,
+                inline=False,
+            )
         )
         embed = builder.build()
         return embed
@@ -127,17 +136,21 @@ class CraftedProbabilityView(BaseView):
             line = f"Roll: **atmost {val}**, Chance: **{cml_prob * 100:.2f}%** (1 in {one_in_n:,})"
             if len(field_value + f"{line}\n") > 1024:
                 builder.add_field(
-                    name="Probabilities" if is_first_embed else "",
-                    value=field_value,
-                    inline=False,
+                    EmbedField(
+                        name="Probabilities" if is_first_embed else "",
+                        value=field_value,
+                        inline=False,
+                    )
                 )
                 field_value = ""
                 is_first_embed = False
             field_value += f"{line}\n"
         builder.add_field(
-            name="Probabilities" if is_first_embed else "",
-            value=field_value,
-            inline=False,
+            EmbedField(
+                name="Probabilities" if is_first_embed else "",
+                value=field_value,
+                inline=False,
+            )
         )
         embed = builder.build()
         return embed

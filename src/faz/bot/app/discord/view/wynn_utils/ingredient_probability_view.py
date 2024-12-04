@@ -8,6 +8,7 @@ from nextcord import Embed
 from nextcord import Interaction
 
 from faz.bot.app.discord.embed.builder.embed_builder import EmbedBuilder
+from faz.bot.app.discord.embed.embed_field import EmbedField
 from faz.bot.app.discord.view._base_view import BaseView
 
 if TYPE_CHECKING:
@@ -59,8 +60,10 @@ class IngredientProbabilityView(BaseView):
         one_in_n = 1 / ing_util.boosted_probability
         embed = (
             self._embed_builder.add_field(
-                name="Boosted Drop Chance",
-                value=f"**{ing_util.boosted_probability:.2%}** OR **1 in {one_in_n:.2f}** mobs",
+                EmbedField(
+                    name="Boosted Drop Chance",
+                    value=f"**{ing_util.boosted_probability:.2%}** OR **1 in {one_in_n:.2f}** mobs",
+                )
             )
             .set_description(desc)
             .build()
