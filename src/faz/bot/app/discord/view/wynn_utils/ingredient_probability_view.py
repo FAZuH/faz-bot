@@ -7,7 +7,7 @@ from faz.bot.wynn.util.ingredient_drop_probability import IngredientDropProbabil
 from nextcord import Embed
 from nextcord import Interaction
 
-from faz.bot.app.discord.embed.custom_embed import CustomEmbed
+from faz.bot.app.discord.embed.builder.embed_builder import EmbedBuilder
 from faz.bot.app.discord.view._base_view import BaseView
 
 if TYPE_CHECKING:
@@ -33,11 +33,16 @@ class IngredientProbabilityView(BaseView):
         self._ing_util = IngredientDropProbability(
             self._base_chance, self._loot_quality, self._loot_bonus
         )
-        self._embed = CustomEmbed(
-            self._interaction,
-            title="Ingredient Chance Calculator",
-            color=472931,
-            thumbnail_url=self._THUMBNAIL_URL,
+        self._embed_builder = (
+            EmbedBuilder(
+                self._interaction,
+                # title="Ingredient Chance Calculator",
+                # color=472931,
+                # thumbnail_url=self._THUMBNAIL_URL,
+            )
+            .set_title("Ingredient Chance Calculator")
+            .set_colour(472931)
+            .set_thumbnail(self._THUMBNAIL_URL)
         )
 
     @override
@@ -45,17 +50,19 @@ class IngredientProbabilityView(BaseView):
         await self._interaction.send(embed=self._get_embed(self._ing_util))
 
     def _get_embed(self, ing_util: IngredientDropProbability) -> Embed:
-        embed = self._embed.get_base()
-        embed.description = (
+        desc = (
             f"` Drop Chance  :` **{ing_util.base_probability:.2%}**\n"
             f"` Loot Bonus   :` **{ing_util.loot_bonus}%**\n"
             f"` Loot Quality :` **{ing_util.loot_quality}%**\n"
             f"` Loot Boost   :` **{ing_util.loot_boost}%**"
         )
         one_in_n = 1 / ing_util.boosted_probability
-        embed.add_field(
-            name="Boosted Drop Chance",
-            value=f"**{ing_util.boosted_probability:.2%}** OR **1 in {one_in_n:.2f}** mobs",
+        embed = (
+            self._embed_builder.add_field(
+                name="Boosted Drop Chance",
+                value=f"**{ing_util.boosted_probability:.2%}** OR **1 in {one_in_n:.2f}** mobs",
+            )
+            .set_description(desc)
+            .build()
         )
-        embed.finalize()
         return embed
