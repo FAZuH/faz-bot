@@ -7,7 +7,7 @@ from nextcord import Embed
 from sortedcontainers import SortedList
 from tabulate import tabulate
 
-from faz.bot.app.discord.embed.builder.custom_description_builder import CustomDescriptionBuilder
+from faz.bot.app.discord.embed.builder.description_builder import DescriptionBuilder
 from faz.bot.app.discord.embed.builder.pagination_embed_builder import PaginationEmbedBuilder
 from faz.bot.app.discord.embed.director._base_pagination_embed_director import (
     BasePaginationEmbedDirector,
@@ -40,7 +40,7 @@ class GuildActivityEmbedDirector(BasePaginationEmbedDirector):
         begin_ts = int(period_begin.timestamp())
         end_ts = int(period_end.timestamp())
 
-        self._desc_builder = CustomDescriptionBuilder().set_builder_initial_lines(
+        self._desc_builder = DescriptionBuilder().set_builder_initial_lines(
             [("Period", f"<t:{begin_ts}:R> to <t:{end_ts}:R>")]
         )
         self._embed_builder = PaginationEmbedBuilder(

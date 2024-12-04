@@ -2,7 +2,7 @@ from copy import copy
 from typing import Self
 
 
-class CustomDescriptionBuilder:
+class DescriptionBuilder:
     def __init__(self, initial_lines: list[tuple[str, str]] | None = None) -> None:
         self._initial_lines = initial_lines or []
         self._lines: list[tuple[str, str]] = []
