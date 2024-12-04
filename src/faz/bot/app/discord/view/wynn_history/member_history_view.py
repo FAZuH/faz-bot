@@ -63,7 +63,7 @@ class MemberHistoryView(BasePaginationView):
             period_begin,
             period_end,
         )
-        
+
         super().__init__(bot, interaction, self._embed_director)
 
     @override
