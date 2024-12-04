@@ -50,8 +50,8 @@ class BaseView(View, ABC):
                 Defaults to True.
         """
         super().__init__(timeout=timeout, auto_defer=auto_defer, prevent_update=prevent_update)
-        self._bot = bot
         self._interaction = interaction
+        self._bot = bot
 
     @abstractmethod
     async def run(self) -> None:

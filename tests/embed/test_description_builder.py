@@ -1,4 +1,4 @@
-from src.faz.bot.app.discord.embed.builder.description_builder import DescriptionBuilder
+from faz.bot.app.discord.embed.builder.description_builder import DescriptionBuilder
 
 
 def test_add_line():

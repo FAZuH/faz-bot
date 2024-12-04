@@ -1,17 +1,14 @@
 from __future__ import annotations
 
 from datetime import timedelta
-from typing import override, Sequence, TYPE_CHECKING
+from typing import Iterable, override, TYPE_CHECKING
 
 from nextcord import Embed
 from sortedcontainers import SortedList
-from tabulate import tabulate
 
 from faz.bot.app.discord.embed.builder.description_builder import DescriptionBuilder
-from faz.bot.app.discord.embed.builder.pagination_embed_builder import PaginationEmbedBuilder
-from faz.bot.app.discord.embed.director._base_pagination_embed_director import (
-    BasePaginationEmbedDirector,
-)
+from faz.bot.app.discord.embed.builder.embed_builder import EmbedBuilder
+from faz.bot.app.discord.embed.director._base_table_embed_director import BaseTableEmbedDirector
 from faz.bot.app.discord.view._view_utils import ViewUtils
 
 if TYPE_CHECKING:
@@ -23,7 +20,7 @@ if TYPE_CHECKING:
     from faz.bot.app.discord.view.wynn_history.guild_activity_view import GuildActivityView
 
 
-class GuildActivityEmbedDirector(BasePaginationEmbedDirector):
+class GuildActivityEmbedDirector(BaseTableEmbedDirector):
     def __init__(
         self,
         view: GuildActivityView,
@@ -40,49 +37,30 @@ class GuildActivityEmbedDirector(BasePaginationEmbedDirector):
         begin_ts = int(period_begin.timestamp())
         end_ts = int(period_end.timestamp())
 
-        self._desc_builder = DescriptionBuilder().set_builder_initial_lines(
-            [("Period", f"<t:{begin_ts}:R> to <t:{end_ts}:R>")]
+        self._desc_builder = DescriptionBuilder([("Period", f"<t:{begin_ts}:R> to <t:{end_ts}:R>")])
+        self._embed_builder = EmbedBuilder(
+            view.interaction, Embed(title=f"Guild Member Activity ({guild.name})")
         )
-        self._embed_builder = PaginationEmbedBuilder(
-            view.interaction, items_per_page=10
-        ).set_builder_initial_embed(Embed(title=f"Guild Member Activity ({guild.name})"))
 
         self._db = view.bot.app.create_fazwynn_db()
+
+        super().__init__(self._embed_builder, item_header=["#", "Username", "Activity"])
 
     @override
     async def setup(self) -> None:
         await self._fetch_data()
-        self._embed_builder.set_builder_items(self._items)
+        self._parse_items()
 
-    @override
-    def construct(self) -> Embed:
-        builder = self.embed_builder
-        page = builder.current_page
-        items = builder.get_items(page)
-
-        if len(items) == 0:
-            description = "```ml\nNo data found.\n```"
-        else:
-            description = (
-                "\n```ml\n"
-                + tabulate(
-                    [
-                        [n, res.username, res.playtime_string]  # type: ignore
-                        for n, res in enumerate(items, 1)
-                    ],
-                    headers=["No", "Username", "Activity"],
-                    tablefmt="github",
-                )
-                + "\n```"
-            )
-
-        embed = self.prepare_default().set_builder_page(page).set_description(description).build()
-        return embed
+    def _parse_items(self) -> None:
+        parsed_items = [
+            (n, item.username, item.playtime_string) for n, item in enumerate(self._activities, 1)
+        ]
+        self.set_items(parsed_items)
 
     async def _fetch_data(self) -> None:
         await self._guild.awaitable_attrs.members
 
-        self._items = SortedList()
+        self._activities: Iterable[_ActivityResult] = SortedList()
         for player in self._guild.members:
             entities = await self._db.player_activity_history.get_activities_between_period(
                 player.uuid, self._period_begin, self._period_end
@@ -91,11 +69,11 @@ class GuildActivityEmbedDirector(BasePaginationEmbedDirector):
             activity_result = _ActivityResult(player.latest_username, playtime)
             if not self._show_inactive and activity_result.playtime.total_seconds() < 60:
                 continue
-            self._items.add(activity_result)
+            self._activities.add(activity_result)
 
     @staticmethod
     def _get_activity_time(
-        entities: Sequence[PlayerActivityHistory],
+        entities: Iterable[PlayerActivityHistory],
         period_begin: datetime,
         period_end: datetime,
     ) -> timedelta:
@@ -110,11 +88,6 @@ class GuildActivityEmbedDirector(BasePaginationEmbedDirector):
             res += off - on
         ret = timedelta(seconds=res)
         return ret
-
-    @property
-    @override
-    def embed_builder(self) -> PaginationEmbedBuilder:
-        return self._embed_builder
 
 
 class _ActivityResult:

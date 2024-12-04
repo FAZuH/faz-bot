@@ -27,7 +27,8 @@ class GuildActivityView(BasePaginationView):
         period_end: datetime,
         show_inactive: bool = False,
     ) -> None:
-        super().__init__(bot, interaction, timeout=120)
+        self._bot = bot
+        self._interaction = interaction
         self._guild = guild
         self._period_begin = period_begin
         self._period_end = period_end
@@ -35,13 +36,9 @@ class GuildActivityView(BasePaginationView):
         self._embed_director = GuildActivityEmbedDirector(
             self, guild, period_begin, period_end, show_inactive
         )
+        super().__init__(bot, interaction, self._embed_director)
 
     @override
     async def run(self) -> None:
         await self._embed_director.setup()
         await self._initial_send_message()
-
-    @property
-    @override
-    def embed_director(self) -> GuildActivityEmbedDirector:
-        return self._embed_director

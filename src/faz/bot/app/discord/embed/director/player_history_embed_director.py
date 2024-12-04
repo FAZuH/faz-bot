@@ -9,20 +9,16 @@ from nextcord import Embed
 import pandas as pd
 
 from faz.bot.app.discord.embed.builder.description_builder import DescriptionBuilder
-from faz.bot.app.discord.embed.builder.field_pagination_embed_builder import (
-    FieldPaginationEmbedBuilder,
-)
+from faz.bot.app.discord.embed.builder.embed_builder import EmbedBuilder
 from faz.bot.app.discord.embed.builder.player_history_field_builder import PlayerHistoryFieldBuilder
-from faz.bot.app.discord.embed.director._base_pagination_embed_director import (
-    BasePaginationEmbedDirector,
-)
+from faz.bot.app.discord.embed.director._base_field_embed_director import BaseFieldEmbedDirector
 from faz.bot.app.discord.select.player_history_data_option import PlayerHistoryDataOption
 
 if TYPE_CHECKING:
     from faz.bot.app.discord.view.wynn_history.player_history_view import PlayerHistoryView
 
 
-class PlayerHistoryEmbedDirector(BasePaginationEmbedDirector):
+class PlayerHistoryEmbedDirector(BaseFieldEmbedDirector):
     def __init__(
         self,
         view: PlayerHistoryView,
@@ -38,32 +34,23 @@ class PlayerHistoryEmbedDirector(BasePaginationEmbedDirector):
 
         begin_ts = int(period_begin.timestamp())
         end_ts = int(period_end.timestamp())
+        initial_embed = Embed(title=f"Player History ({player.latest_username})")
 
-        self._desc_builder = DescriptionBuilder().set_builder_initial_lines(
-            [("Period", f"<t:{begin_ts}:R> to <t:{end_ts}:R>")]
-        )
-        self._embed_builder = FieldPaginationEmbedBuilder(
-            view.interaction, items_per_page=4
-        ).set_builder_initial_embed(Embed(title=f"Player History ({player.latest_username})"))
-        self.field_builder = PlayerHistoryFieldBuilder().set_character_labels(character_labels)
+        self._desc_builder = DescriptionBuilder([("Period", f"<t:{begin_ts}:R> to <t:{end_ts}:R>")])
+        self._embed_builder = EmbedBuilder(view.interaction, initial_embed)
+        self._field_builder = PlayerHistoryFieldBuilder().set_character_labels(character_labels)
 
         self._db = view.bot.app.create_fazwynn_db()
+
+        super().__init__(self._embed_builder, items_per_page=5)
 
     @override
     async def setup(self) -> None:
         """Async initialization method. Must be run once."""
         await self._fetch_data()
-        self.field_builder.set_data(self._player_df, self._char_df)
+        self._field_builder.set_data(self._player_df, self._char_df)
 
     def set_options(self, data: PlayerHistoryDataOption, character_uuid: str | None = None) -> Self:
-        self._data = data
-        self._character_uuid = character_uuid
-        return self
-
-    @override
-    def construct(self) -> Embed:
-        character_uuid = self._character_uuid
-        data = self._data
         if character_uuid is None:
             char_df = self._char_df
             char_label = "All characters"
@@ -73,16 +60,19 @@ class PlayerHistoryEmbedDirector(BasePaginationEmbedDirector):
             ]
             char_label = self._character_labels[character_uuid]
 
-        fields = self.field_builder.set_data_option(data).set_character_data(char_df).build()
-        desc = (
+        description = (
             self._desc_builder.reset()
             .add_line("Charater", char_label)
             .add_line("Data", data.value.value)
             .build()
         )
-        embed = self.prepare_default().set_description(desc).set_builder_items(fields).build()
+        embed = self._embed_builder.reset().set_description(description).get_embed()
+        self.embed_builder.set_builder_initial_embed(embed)
 
-        return embed
+        fields = self._field_builder.set_data_option(data).set_character_data(char_df).build()
+        self.set_items(fields)
+
+        return self
 
     async def _fetch_data(self) -> None:
         await self._player.awaitable_attrs.characters
@@ -99,8 +89,3 @@ class PlayerHistoryEmbedDirector(BasePaginationEmbedDirector):
         self._player_df = self._db.player_history.select_between_period_as_dataframe(
             self._player.uuid, self._period_begin, self._period_end
         )
-
-    @property
-    @override
-    def embed_builder(self) -> FieldPaginationEmbedBuilder:
-        return self._embed_builder

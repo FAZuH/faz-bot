@@ -1,10 +1,14 @@
 from __future__ import annotations
-from typing import Any, Self, TYPE_CHECKING
+
+from typing import Any, Iterable, Self, TYPE_CHECKING
+
 from nextcord import Embed
 
 if TYPE_CHECKING:
     from nextcord import Colour
     from nextcord import Interaction
+
+    from faz.bot.app.discord.embed.embed_field import EmbedField
 
 
 class EmbedBuilder:
@@ -18,11 +22,11 @@ class EmbedBuilder:
             interaction (Interaction[Any], optional): The interaction associated with the embed. Defaults to None.
             initial_embed (Embed, optional): An initial embed to start with. If None, creates a new Embed. Defaults to None.
         """
-        self._embed = initial_embed or Embed()
-        self._initial_embed = self._embed.copy()
+        self._initial_embed = initial_embed or Embed()
+        self._embed = self._initial_embed.copy()
         self._interaction = interaction
 
-    def add_field(self, name: str, value: str, inline: bool = False) -> Self:
+    def add_field(self, field: EmbedField) -> Self:
         """
         Adds a field to the embed.
 
@@ -34,7 +38,21 @@ class EmbedBuilder:
         Returns:
             Self: The instance of the embed builder to allow method chaining.
         """
-        self._embed.add_field(name=name, value=value, inline=inline)
+        self._embed.add_field(name=field.name, value=field.value, inline=field.inline)
+        return self
+
+    def add_fields(self, fields: Iterable[EmbedField]) -> Self:
+        """
+        Adds multiple fields to the embed.
+
+        Args:
+            fields (list[EmbedField]): A list of fields to add to the embed.
+
+        Returns:
+            Self: The instance of the embed builder to allow method chaining.
+        """
+        for field in fields:
+            self.add_field(field)
         return self
 
     def set_colour(self, colour: Colour | int) -> Self:
@@ -62,19 +80,6 @@ class EmbedBuilder:
             Self: The instance of the embed builder to allow method chaining.
         """
         self._embed.set_footer(text=text, icon_url=icon_url)
-        return self
-
-    def set_interaction(self, interaction: Interaction[Any]) -> Self:
-        """
-        Sets the interaction associated with the embed.
-
-        Args:
-            interaction (Interaction[Any]): The interaction to associate with the embed.
-
-        Returns:
-            Self: The instance of the embed builder to allow method chaining.
-        """
-        self._interaction = interaction
         return self
 
     def set_thumbnail(self, url: str) -> Self:
@@ -126,16 +131,7 @@ class EmbedBuilder:
         self._add_author()
         return self._embed
 
-    def get_embed(self) -> Embed:
-        """
-        Get the embed without finalizing it.
-
-        Returns:
-            Embed: The current embed object.
-        """
-        return self._embed
-
-    def reset_embed(self) -> Self:
+    def reset(self) -> Self:
         """
         Resets the embed to its initial state.
 
@@ -144,6 +140,15 @@ class EmbedBuilder:
         """
         self._embed = self._initial_embed.copy()
         return self
+
+    def get_embed(self) -> Embed:
+        """
+        Get the embed without finalizing it.
+
+        Returns:
+            Embed: The current embed object.
+        """
+        return self._embed
 
     def set_builder_initial_embed(self, embed: Embed) -> Self:
         """
