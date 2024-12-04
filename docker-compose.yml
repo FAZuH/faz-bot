@@ -25,6 +25,18 @@ services:
     networks:
       - faz-bot-network
 
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: password
+    ports:
+      - "127.0.0.1:8080:80"
+    networks:
+      - faz-bot-network
+
 volumes:
   mysql:
     name: mysql
