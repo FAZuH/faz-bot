@@ -1,8 +1,16 @@
+## [0.6.5](https://github.com/FAZuH/faz-bot-app-discord/compare/v0.6.4...v0.6.5) (2024-12-04)
+
+
+### Bug Fixes
+
+* Fix unexpected error when running util commands ([742bb1d](https://github.com/FAZuH/faz-bot-app-discord/commit/742bb1d01a7092851bd0f066732f72616eb97f7c))
+
 ## [0.6.4](https://github.com/FAZuH/faz-bot-app-discord/compare/v0.6.3...v0.6.4) (2024-12-04)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.6.4 [skip ci] ([8d11978](https://github.com/FAZuH/faz-bot-app-discord/commit/8d119783eefb02db8576d51caed2ce156f9f74a2))
 * Update README.md [skip ci] ([1cece48](https://github.com/FAZuH/faz-bot-app-discord/commit/1cece48c0d67ae9a4560a973be6453db3b21cc87))
 * Update README.md [skip ci] ([0636c08](https://github.com/FAZuH/faz-bot-app-discord/commit/0636c08049176fb3903b3f6cb5b1e2efed07f239))
 * Update uv.lock [skip ci] ([3cc1f86](https://github.com/FAZuH/faz-bot-app-discord/commit/3cc1f8625da73a405b92501bb4528ab966bb64b5))
@@ -51,16 +59,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.6.1 [skip ci] ([2b7c218](https://github.com/FAZuH/faz-bot-app-discord/commit/2b7c218afa7e72b9739a845c32b62de10036e4dc))
-
-## [0.6.0](https://github.com/FAZuH/faz-bot-app-discord/compare/v0.5.1...v0.6.0) (2024-11-29)
-
-
-### New Features
-
-* Add guild_history command ([#85](https://github.com/FAZuH/faz-bot-app-discord/issues/85)) ([819cafb](https://github.com/FAZuH/faz-bot-app-discord/commit/819cafbb3e3c5c890137c0e827b447daa4d6d2ae))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.6.0 [skip ci] ([d060586](https://github.com/FAZuH/faz-bot-app-discord/commit/d0605861c8c91b4c5012330d65b59bff2bde714b))
 
