@@ -53,7 +53,8 @@ class GuildHistoryView(BasePaginationView):
         period_begin: datetime,
         period_end: datetime,
     ) -> None:
-        super().__init__(bot, interaction)
+        self._bot = bot
+        self._interaction = interaction
         self._guild = guild
         self._period_begin = period_begin
         self._period_end = period_end
@@ -61,7 +62,6 @@ class GuildHistoryView(BasePaginationView):
         self._options: str | None = None
         self._selected_mode: GuildHistoryModeOptions = GuildHistoryModeOptions.OVERALL
         self._selected_data: GuildHistoryDataOption = GuildHistoryDataOption.MEMBER_LIST
-
         self._mode_select = GuildHistoryModeSelect(self._mode_select_callback)
         self._data_select = GuildHistoryDataSelect(self._data_select_callback)
 
@@ -71,13 +71,14 @@ class GuildHistoryView(BasePaginationView):
             period_begin,
             period_end,
         )
+        super().__init__(bot, interaction, self._embed_director)
 
     @override
     async def run(self) -> None:
         """Initial method to setup and run the view."""
         self.add_item(self._mode_select)
 
-        await self.embed_director.setup()
+        await self._embed_director.setup()
         self.set_embed_director_options()
         await self._initial_send_message()
 
@@ -100,9 +101,4 @@ class GuildHistoryView(BasePaginationView):
         await self._edit_message_page(interaction)
 
     def set_embed_director_options(self) -> None:
-        self.embed_director.set_options(self._selected_data, self._selected_mode)
-
-    @property
-    @override
-    def embed_director(self) -> GuildHistoryEmbedDirector:
-        return self._embed_director
+        self._embed_director.set_options(self._selected_data, self._selected_mode)

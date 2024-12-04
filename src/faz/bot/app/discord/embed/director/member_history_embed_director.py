@@ -8,14 +8,10 @@ from uuid import UUID
 from nextcord import Embed
 import pandas as pd
 
-from faz.bot.app.discord.embed.builder.custom_description_builder import CustomDescriptionBuilder
-from faz.bot.app.discord.embed.builder.field_pagination_embed_builder import (
-    FieldPaginationEmbedBuilder,
-)
+from faz.bot.app.discord.embed.builder.description_builder import DescriptionBuilder
+from faz.bot.app.discord.embed.builder.embed_builder import EmbedBuilder
 from faz.bot.app.discord.embed.builder.member_history_field_builder import MemberHistoryFieldBuilder
-from faz.bot.app.discord.embed.director._base_pagination_embed_director import (
-    BasePaginationEmbedDirector,
-)
+from faz.bot.app.discord.embed.director._base_field_embed_director import BaseFieldEmbedDirector
 
 if TYPE_CHECKING:
     from faz.bot.database.fazwynn.model.player_info import PlayerInfo
@@ -25,7 +21,7 @@ if TYPE_CHECKING:
     from faz.bot.app.discord.view.wynn_history.member_history_view import MemberHistoryView
 
 
-class MemberHistoryEmbedDirector(BasePaginationEmbedDirector):
+class MemberHistoryEmbedDirector(BaseFieldEmbedDirector):
     def __init__(
         self,
         view: MemberHistoryView,
@@ -40,15 +36,15 @@ class MemberHistoryEmbedDirector(BasePaginationEmbedDirector):
         begin_ts = int(period_begin.timestamp())
         end_ts = int(period_end.timestamp())
 
-        self._desc_builder = CustomDescriptionBuilder().set_builder_initial_lines(
-            [("Period", f"<t:{begin_ts}:R> to <t:{end_ts}:R>")]
+        self._desc_builder = DescriptionBuilder([("Period", f"<t:{begin_ts}:R> to <t:{end_ts}:R>")])
+        self._embed_builder = EmbedBuilder(
+            view.interaction, Embed(title=f"Member History ({self._player.latest_username})")
         )
-        self._embed_builder = FieldPaginationEmbedBuilder(
-            view.interaction, items_per_page=4
-        ).set_builder_initial_embed(Embed(title=f"Member History ({self._player.latest_username})"))
         self.field_builder = MemberHistoryFieldBuilder()
 
         self._db = view.bot.app.create_fazwynn_db()
+
+        super().__init__(self._embed_builder, items_per_page=5)
 
     @override
     async def setup(self) -> None:
@@ -60,23 +56,19 @@ class MemberHistoryEmbedDirector(BasePaginationEmbedDirector):
         )
 
     def set_options(self, data: MemberHistoryDataOption, mode: MemberHistoryModeOption) -> Self:
-        self._data = data
-        self._mode = mode
-        return self
-
-    @override
-    def construct(self) -> Embed:
-        data = self._data
-        mode = self._mode
         fields = self.field_builder.set_data_option(data).set_mode_option(mode).build()
-        desc = (
+        self.set_items(fields)
+
+        description = (
             self._desc_builder.reset()
             .add_line("Data", data.value)
             .add_line("Mode", mode.value)
             .build()
         )
-        embed = self.prepare_default().set_description(desc).set_builder_items(fields).build()
-        return embed
+        embed = self._embed_builder.reset().set_description(description).get_embed()
+        self.embed_builder.set_builder_initial_embed(embed)
+
+        return self
 
     def _fetch_data(self) -> None:
         self._char_df = pd.DataFrame()
@@ -112,8 +104,3 @@ class MemberHistoryEmbedDirector(BasePaginationEmbedDirector):
             uuid = str(UUID(bytes=ch.character_uuid))
 
             self._character_labels[uuid] = label
-
-    @property
-    @override
-    def embed_builder(self) -> FieldPaginationEmbedBuilder:
-        return self._embed_builder

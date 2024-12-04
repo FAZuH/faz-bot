@@ -7,10 +7,9 @@ from nextcord import Colour
 from nextcord import Embed
 from nextcord import Interaction
 
-from faz.bot.app.discord.embed.builder.pagination_embed_builder import PaginationEmbedBuilder
-from faz.bot.app.discord.embed.director._base_pagination_embed_director import (
-    BasePaginationEmbedDirector,
-)
+from faz.bot.app.discord.embed.builder.embed_builder import EmbedBuilder
+from faz.bot.app.discord.embed.director._base_field_embed_director import BaseFieldEmbedDirector
+from faz.bot.app.discord.embed.embed_field import EmbedField
 from faz.bot.app.discord.view._base_pagination_view import BasePaginationView
 
 if TYPE_CHECKING:
@@ -24,9 +23,12 @@ class HelpView(BasePaginationView):
         interaction: Interaction[Any],
         commands: list[BaseApplicationCommand],
     ) -> None:
-        super().__init__(bot, interaction)
+        self._bot = bot
+        self._interaction = interaction
         self._commands = commands
+
         self._embed_director = _HelpEmbedDirector(self)
+        super().__init__(bot, interaction, self._embed_director)
 
     @override
     async def run(self) -> None:
@@ -44,43 +46,27 @@ class HelpView(BasePaginationView):
     #         p_msg = f"<{p_msg}>" if p.required else f"[{p_msg}]"
     #         msglist.append(p_msg)
 
-    @property
-    @override
-    def embed_director(self) -> BasePaginationEmbedDirector:
-        return self._embed_director
 
-
-class _HelpEmbedDirector(BasePaginationEmbedDirector):
+class _HelpEmbedDirector(BaseFieldEmbedDirector):
     def __init__(self, view: HelpView) -> None:
         self._view = view
-        self._embed_builder = PaginationEmbedBuilder(
-            view.interaction,
-            items=view._commands,
-            items_per_page=5,
+        self._commands = view._commands
+
+        initial_embed = Embed(title="Commands List", colour=Colour.dark_blue()).set_footer(
+            text="[text] means optional. <text> means required"
         )
+        self._embed_builder = EmbedBuilder(view.interaction, initial_embed=initial_embed)
+
+        super().__init__(self._embed_builder, items_per_page=5)
 
     @override
     async def setup(self) -> None:
-        pass
-
-    @override
-    def construct(self) -> Embed:
-        builder = self.embed_builder
-        for cmd in builder.get_items():
-            builder.add_field(
+        items = [
+            EmbedField(
                 name=f"/{cmd.qualified_name}",
                 value=cmd.description or "No brief description given",
                 inline=False,
             )
-        embed = (
-            builder.set_footer(text="[text] means optional. <text> means required")
-            .set_title("Commands List")
-            .set_colour(Colour.dark_blue())
-            .build()
-        )
-        return embed
-
-    @property
-    @override
-    def embed_builder(self) -> PaginationEmbedBuilder[BaseApplicationCommand]:
-        return self._embed_builder
+            for cmd in self._commands
+        ]
+        self.set_items(items)

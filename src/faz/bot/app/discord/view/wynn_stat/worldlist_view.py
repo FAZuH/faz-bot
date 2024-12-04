@@ -18,17 +18,14 @@ class WorldlistView(BasePaginationView):
         interaction: Interaction[Any],
         sort_by: Literal["Player Count", "Time Created"],
     ) -> None:
+        self._bot = bot
+        self._interaction = interaction
         self._sort_by: Literal["player", "time"] = "player" if sort_by == "Player Count" else "time"
-        super().__init__(bot, interaction)
 
         self._embed_director = WorldlistEmbedDirector(self, self._sort_by)
+        super().__init__(bot, interaction, self._embed_director)
 
     @override
     async def run(self):
         await self._embed_director.setup()
         await self._initial_send_message()
-
-    @property
-    @override
-    def embed_director(self) -> WorldlistEmbedDirector:
-        return self._embed_director

@@ -45,7 +45,8 @@ class MemberHistoryView(BasePaginationView):
         period_begin: datetime,
         period_end: datetime,
     ) -> None:
-        super().__init__(bot, interaction)
+        self._bot = bot
+        self._interaction = interaction
         self._player = player
         self._period_begin = period_begin
         self._period_end = period_end
@@ -53,7 +54,6 @@ class MemberHistoryView(BasePaginationView):
         self._options: str | None = None
         self._selected_mode: MemberHistoryModeOption = MemberHistoryModeOption.OVERALL
         self._selected_data: MemberHistoryDataOption = MemberHistoryDataOption.WARS
-
         self._mode_select = MemberHistoryModeSelect(self._mode_select_callback)
         self._data_select = MemberHistoryDataSelect(self._data_select_callback)
 
@@ -63,6 +63,8 @@ class MemberHistoryView(BasePaginationView):
             period_begin,
             period_end,
         )
+
+        super().__init__(bot, interaction, self._embed_director)
 
     @override
     async def run(self) -> None:
@@ -94,8 +96,3 @@ class MemberHistoryView(BasePaginationView):
     def set_embed_director_options(self) -> None:
         """Set options for embed director."""
         self._embed_director.set_options(self._selected_data, self._selected_mode)
-
-    @property
-    @override
-    def embed_director(self) -> MemberHistoryEmbedDirector:
-        return self._embed_director
