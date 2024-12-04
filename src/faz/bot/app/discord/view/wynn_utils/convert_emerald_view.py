@@ -8,6 +8,7 @@ from nextcord import Embed
 from nextcord import Interaction
 
 from faz.bot.app.discord.embed.builder.embed_builder import EmbedBuilder
+from faz.bot.app.discord.embed.embed_field import EmbedField
 from faz.bot.app.discord.view._base_view import BaseView
 
 if TYPE_CHECKING:
@@ -38,11 +39,15 @@ class ConvertEmeraldView(BaseView):
             .set_description(
                 f"Converted: **{self._emeralds}**\n" f"Emeralds Total: **{self._emeralds.total}e**"
             )
-            .add_field(name="TM Set Price", value=f"{set_price_tm.emeralds}", inline=True)
             .add_field(
-                name="Silverbull Set Price",
-                value=f"{set_price_silverbull.emeralds}",
-                inline=True,
+                EmbedField(name="TM Set Price", value=f"{set_price_tm.emeralds}", inline=True)
+            )
+            .add_field(
+                EmbedField(
+                    name="Silverbull Set Price",
+                    value=f"{set_price_silverbull.emeralds}",
+                    inline=True,
+                )
             )
             .build()
         )
