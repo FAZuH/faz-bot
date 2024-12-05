@@ -1,9 +1,21 @@
+## [0.6.6](https://github.com/FAZuH/faz-bot-app-discord/compare/v0.6.5...v0.6.6) (2024-12-05)
+
+
+### Miscellaneous Chores
+
+* Add autotyping and slotscheck formatting tools ([#99](https://github.com/FAZuH/faz-bot-app-discord/issues/99)) ([a7e7656](https://github.com/FAZuH/faz-bot-app-discord/commit/a7e76560aa9f40186612885a2a7a1f2e289a14df))
+
 ## [0.6.5](https://github.com/FAZuH/faz-bot-app-discord/compare/v0.6.4...v0.6.5) (2024-12-04)
 
 
 ### Bug Fixes
 
 * Fix unexpected error when running util commands ([742bb1d](https://github.com/FAZuH/faz-bot-app-discord/commit/742bb1d01a7092851bd0f066732f72616eb97f7c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.6.5 [skip ci] ([dddda3d](https://github.com/FAZuH/faz-bot-app-discord/commit/dddda3d902c3be5e317802dd89963c7051e75672))
 
 ## [0.6.4](https://github.com/FAZuH/faz-bot-app-discord/compare/v0.6.3...v0.6.4) (2024-12-04)
 
@@ -52,11 +64,4 @@
 
 * Modify pyproject.toml [skip ci] ([2067a4a](https://github.com/FAZuH/faz-bot-app-discord/commit/2067a4aa17904393995c8990ba2c0add4ec7c6c0))
 * **release:** v0.6.2 [skip ci] ([671f0e3](https://github.com/FAZuH/faz-bot-app-discord/commit/671f0e323362681cb5320357cd0d211ffd157fa5))
-
-## [0.6.1](https://github.com/FAZuH/faz-bot-app-discord/compare/v0.6.0...v0.6.1) (2024-11-29)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.6.1 [skip ci] ([2b7c218](https://github.com/FAZuH/faz-bot-app-discord/commit/2b7c218afa7e72b9739a845c32b62de10036e4dc))
 
