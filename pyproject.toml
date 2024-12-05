@@ -50,6 +50,8 @@ dev = [
     "pytest>=8.3.3",
     "isort>=5.13.2",
     "ruff>=0.7.4",
+    "autotyping>=24.9.0",
+    "slotscheck>=0.19.1",
 ]
 sandbox = [
     "ipykernel>=6.29.5",

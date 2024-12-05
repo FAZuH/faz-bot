@@ -25,7 +25,7 @@ class ConvertEmeraldView(BaseView):
         self._emeralds.simplify()
 
     @override
-    async def run(self):
+    async def run(self) -> None:
         embed = self._get_embed()
         await self._interaction.send(embed=embed, view=self)
 

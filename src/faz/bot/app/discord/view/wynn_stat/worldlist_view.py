@@ -26,6 +26,6 @@ class WorldlistView(BasePaginationView):
         super().__init__(bot, interaction, self._embed_director)
 
     @override
-    async def run(self):
+    async def run(self) -> None:
         await self._embed_director.setup()
         await self._initial_send_message()
