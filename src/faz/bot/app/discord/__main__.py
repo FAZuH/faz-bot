@@ -18,7 +18,7 @@ def main() -> None:
     finally:
         app.stop()
 
-        async def _cleanup_logger_queue():
+        async def _cleanup_logger_queue() -> None:
             await logger.complete()
 
         asyncio.run(_cleanup_logger_queue())
