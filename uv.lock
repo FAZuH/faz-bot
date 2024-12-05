@@ -380,6 +380,7 @@ dev = [
     { name = "isort" },
     { name = "pytest" },
     { name = "ruff" },
+    { name = "slotscheck" },
 ]
 sandbox = [
     { name = "ipykernel" },
@@ -410,6 +411,7 @@ dev = [
     { name = "isort", specifier = ">=5.13.2" },
     { name = "pytest", specifier = ">=8.3.3" },
     { name = "ruff", specifier = ">=0.7.4" },
+    { name = "slotscheck", specifier = ">=0.19.1" },
 ]
 sandbox = [
     { name = "ipykernel", specifier = ">=6.29.5" },
@@ -1290,6 +1292,18 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/71/39/171f1c67cd00715f190ba0b100d606d440a28c93c7714febeca8b79af85e/six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926", size = 34041 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/d9/5a/e7c31adbe875f2abbb91bd84cf2dc52d792b5a01506781dbcf25c91daf11/six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254", size = 11053 },
+]
+
+[[package]]
+name = "slotscheck"
+version = "0.19.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "click" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/4b/57/6fcb8df11e7c76eb87b23bfa931408e47f051c6161749c531b4060a45516/slotscheck-0.19.1.tar.gz", hash = "sha256:6146b7747f8db335a00a66b782f86011b74b995f61746dc5b36a9e77d5326013", size = 16050 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/da/32/bd569256267f80b76b87d21a09795741a175778b954bee1d7b1a89852b6f/slotscheck-0.19.1-py3-none-any.whl", hash = "sha256:bff9926f8d6408ea21b6c6bbaa4389cea1682962e73ee4f30084b6d2b89260ee", size = 16995 },
 ]
 
 [[package]]
